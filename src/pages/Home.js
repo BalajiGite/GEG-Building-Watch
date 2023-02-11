@@ -4,6 +4,7 @@ import {
   Card,
   Col,
   Row,
+  Rate,
   Typography,
   Tooltip,
   Progress,
@@ -12,6 +13,7 @@ import {
   Button,
   Radio,
 } from "antd";
+
 import { ToTopOutlined } from "@ant-design/icons";
 import Paragraph from "antd/lib/typography/Paragraph";
 
@@ -35,17 +37,17 @@ import WeatherInfo from "./dashboard/WeatherInfo";
 import ColumnChart from "../components/chart/dashboard/ColumnChart";
 
 
-
-
-
 import ConsumptionProfile from "../components/chart/dashboard/ConsumptionProfile";
 import BaseLoadPeakLoad from "../components/chart/dashboard/BaseLoadPeakLoad";
 
 
 const { RangePicker } = DatePicker;
 
-function Home(props) {
+function Home() {
   const { Title } = Typography;
+
+
+
 
   const onChange = (e) => console.log(`radio checked:${e.target.value}`);
 
@@ -91,14 +93,7 @@ function Home(props) {
 
 
 
-
-
-
-
-
-
-
-  const count = [
+const count = [
     {
       today: "Consumption",
       title: "8087.3kWh",
@@ -279,7 +274,7 @@ function Home(props) {
   const provinceData = ["site", ""];
   const cityData = {
     site: ["select", "all site", "site A", "site B"],
-   
+
   };
   const [cities, setCities] = useState(cityData[provinceData[0]]);
   const [secondCity, setSecondCity] = useState(cityData[provinceData[0]][0]);
@@ -294,7 +289,7 @@ function Home(props) {
   return (
     <>
       <Row>
-        <Col span={17}>
+        <Col span={15}>
           <Select
             style={{
               width: 160,
@@ -324,11 +319,20 @@ function Home(props) {
               value: city,
             }))}
           />
+
         </Col>
-        <Col>
-          Reting Star
+        <Col span={5} style={{ textAlign: "center" }}> <h2>{"Neighbour Rating"}</h2></Col>
+        <Col span={4} style={{ textAlign: "center" }}>
+          <Rate allowHalf defaultValue={3.5}
+            count={5}
+            style={{ color: "#749452" }}
+          />
         </Col>
+
+
       </Row>
+
+
 
       <Row align="middle" gutter={24}>
         <Col span={6} xs={24} sm={24} md={12} lg={5} xl={5}>
@@ -394,7 +398,7 @@ function Home(props) {
         </Row>
         <Row gutter={[24, 0]}>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
-            <ConsumptionProfile/>
+            <ConsumptionProfile />
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
             <BaseLoadPeakLoad />
