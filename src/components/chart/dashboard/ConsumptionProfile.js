@@ -1,13 +1,12 @@
-import React from 'react';
-import { Row,Table,  } from 'antd';
-import styles from './style.css'
-import Highcharts from 'highcharts' //core
+import React from 'react'
+import {Card, } from 'antd';
+import Highcharts, { color } from 'highcharts' 
 import HighchartsReact from 'highcharts-react-official';
+import styles from '../dashboard/styles.css'
 
-function ConsuProfile() {
-  let tsXaxis = [];
-  let seriesBaseLoadPeakLoad = [];
-  let loadHCOption = {
+function ConsumptionProfile() {
+
+  let energyHCOption = {
     chart: {
       zoomType: 'xy',
       marginBottom:80
@@ -21,53 +20,53 @@ function ConsuProfile() {
       enabled: false
     },
     xAxis: [{
-        categories: tsXaxis,
-        crosshair: true
+        categories: ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'],
+        crosshair: true 
     }],
-    yAxis: [{ // Primary yAxis
+    yAxis: [{
         labels: {
             format: '{value}°C',
             style: {
-                //color: Highcharts.getOptions().colors[2]
+                
             }
         },
         title: {
             text: 'Temperature(°C)',
             style: {
-                //color: Highcharts.getOptions().colors[2]
+               
             }
         },
         opposite: true
 
-    }, { // Secondary yAxis
+    }, { 
         gridLineWidth: 0,
         title: {
             text: 'Electricity(Kwh)',
             style: {
-                //color:"#ce6927"
+                
             }
         },
         labels: {
             format: '{value} Kwh',
             style: {
-                //color: "#ce6927"
+                
             }
         },
-        //opposite: true
+        
 
     }],
     tooltip: {
         shared: true
     },
     legend: {
-        //layout: 'horizontal',
+        
         align: 'center',
         x: 0,
         verticalAlign: 'bottom',
         y: 0,
         floating: true,
         backgroundColor:
-           // Highcharts.defaultOptions.legend.backgroundColor || // theme
+          
             'rgba(255,255,255,0.25)'
     },
     plotOptions: {
@@ -75,7 +74,46 @@ function ConsuProfile() {
           lineWidth: 2
       }
     },
-    series: seriesBaseLoadPeakLoad,
+    series: [{
+        name: 'Electricity',
+        type: 'column',
+        yAxis: 1,
+        data: [50,60,70,80,90,100,110,150,170,190,210,230,250,270,250,230,200,180,150,120,90,60,40,30],
+        tooltip: {
+            valueSuffix: ' Kwh'
+        },
+        color:"#ce6927"
+      },
+      {
+        name: '5.0*',
+        type:'line',
+        yAxis: 1,
+        data: [55,65,75,85,95,105,115,155,175,195,215,235,255,275,255,235,205,185,155,125,95,65,45,35],
+        marker: {
+          enabled: false
+        },
+    },
+      {
+        name: '6.0*',
+        type:'line',
+        yAxis: 1,
+        data: [30,50,40,20,60,90,50,70,30,60,120,130,70,190,90,170,60,170,30,90,60,30,20,10],
+      
+      },
+      
+      {
+
+        name: 'Temperature',
+        type:'line',
+        data: [25,55,69,88,55,55,96,98,96,67,25,55,70,88,10,55,96,98,96,97,20,10,22,15
+           ],
+           marker: {
+            enabled: false
+      }
+      
+    },
+    ],
+
     responsive: {
         rules: [{
             condition: {
@@ -111,24 +149,21 @@ function ConsuProfile() {
         }]
     }
   }
-  
 
-  
+
   return (
-    <>
-         <Row style={{ marginBottom: 20, marginTop: 50  }} gutter={[20, 20]}>
-                    <h2 className={styles.title1} style={{textAlign:'left'}}>{"Base Load, Peak Load"}</h2>
-                    <div style={{width:"100%", marginBottom:10, textAlign: 'center'}}>
-                        {/* <DualAxes {...config} /> */}
-                        <HighchartsReact
-                          highcharts={Highcharts}
-                          options={loadHCOption}
-                        />
-                    </div>
-                </Row>
-
-    </>
+   
+         <Card style={{  marginTop:20 }}>
+    <h2 className={styles.title1} style={{textAlign:'center'}}>{"Consumption Profile"}</h2>
+    <div style={{width:"100%", marginBottom:10, textAlign: 'center'}}>
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={energyHCOption}
+        />
+       
+    </div>
+    </Card>
   )
 }
 
-export default ConsuProfile;
+export default ConsumptionProfile

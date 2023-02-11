@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Rate, Select, DatePicker, Space } from "antd";
+import { Select, DatePicker, Space } from "antd";
 import {
   Card,
   Col,
@@ -33,8 +33,14 @@ import EnergyCost from "./dashboard/EnergyCost";
 import Co2 from "./dashboard/Co2";
 import WeatherInfo from "./dashboard/WeatherInfo";
 import ColumnChart from "../components/chart/dashboard/ColumnChart";
-import DashboardChart from "../components/chart/dashboard/ConsuProfile";
-import ConsuProfile from "../components/chart/dashboard/ConsuProfile";
+
+
+
+
+
+import ConsumptionProfile from "../components/chart/dashboard/ConsumptionProfile";
+import BaseLoadPeakLoad from "../components/chart/dashboard/BaseLoadPeakLoad";
+
 
 const { RangePicker } = DatePicker;
 
@@ -81,6 +87,17 @@ function Home(props) {
       <path d="M26.2 46q-4.2 0-7.875-1.6t-6.4-4.325Q9.2 37.35 7.6 33.675 6 30 6 25.8q0-7.3 4.65-12.875T22.5 6q-.9 4.9.55 9.625 1.45 4.725 5 8.275 3.55 3.55 8.275 5.025Q41.05 30.4 46 29.5q-1.3 7.2-6.9 11.85Q33.5 46 26.2 46Zm0-3q5 0 9.1-2.85t6.6-7.25q-4.5-.4-8.65-2.075Q29.1 29.15 25.95 26q-3.2-3.15-4.85-7.275-1.65-4.125-2.05-8.575-4.4 2.4-7.225 6.525Q9 20.8 9 25.8q0 7.15 5.025 12.175T26.2 43Zm-.3-17Z" />
     </svg>,
   ];
+
+
+
+
+
+
+
+
+
+
+
   const count = [
     {
       today: "Consumption",
@@ -117,6 +134,8 @@ function Home(props) {
       Wind: "6.3m/s",
     },
   ];
+
+
 
   const list = [
     {
@@ -260,7 +279,7 @@ function Home(props) {
   const provinceData = ["site", ""];
   const cityData = {
     site: ["select", "all site", "site A", "site B"],
-    // gav: ["Nanjing", "Suzhou", "Zhenjiang"],
+   
   };
   const [cities, setCities] = useState(cityData[provinceData[0]]);
   const [secondCity, setSecondCity] = useState(cityData[provinceData[0]][0]);
@@ -275,7 +294,7 @@ function Home(props) {
   return (
     <>
       <Row>
-        <Col span={16}>
+        <Col span={17}>
           <Select
             style={{
               width: 160,
@@ -306,18 +325,8 @@ function Home(props) {
             }))}
           />
         </Col>
-
-        {/* <Col span={3}>
-         
-          </Col> */}
-        <h1> Neighbour Raiting</h1>
-        <Col span={4} style={{ textAlign: "right" }}>
-          <Rate
-            allowHalf
-            defaultValue={4.5}
-            count={5}
-            style={{ color: "#749452" }}
-          />
+        <Col>
+          Reting Star
         </Col>
       </Row>
 
@@ -383,22 +392,19 @@ function Home(props) {
             <ColumnChart />
           </Col>
         </Row>
+        <Row gutter={[24, 0]}>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
+            <ConsumptionProfile/>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
+            <BaseLoadPeakLoad />
+          </Col>
+        </Row>
       </div>
-      <Row gutter={[24, 0]} style={{ marginTop: 20 }}>
-        <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
-          <Card bordered={false} className="">
-            {/* <ConsuProfile/> */}
-            consumption profileChart
-          </Card>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
-          <Card bordered={false} className="">
-            Base Load, Peak Load
-          </Card>
-        </Col>
-      </Row>
     </>
   );
 }
 
 export default Home;
+
+
