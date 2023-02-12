@@ -321,7 +321,7 @@ const count = [
           />
 
         </Col>
-        <Col span={5} style={{ textAlign: "center" }}> <h2>{"Neighbour Rating"}</h2></Col>
+        <Col span={5} style={{ textAlign: "center" }}> <h2>{"NABERS Rating"}</h2></Col>
         <Col span={4} style={{ textAlign: "center" }}>
           <Rate allowHalf defaultValue={3.5}
             count={5}
