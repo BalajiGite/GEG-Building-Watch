@@ -1,6 +1,22 @@
 import { useState } from "react";
-import { useContext } from "react";
-import { Select, DatePicker, Space, Card, Col, Row } from "antd";
+import { Select, DatePicker, Space } from "antd";
+import {
+  Card,
+  Col,
+  Row,
+  Rate,
+  Typography,
+  Tooltip,
+  Progress,
+  Upload,
+  message,
+  Button,
+  Radio,
+} from "antd";
+
+import { ToTopOutlined } from "@ant-design/icons";
+import Paragraph from "antd/lib/typography/Paragraph";
+
 import Echart from "../components/chart/dashboard/EChart";
 import LineChart from "../components/chart/dashboard/LineChart";
 import Consumption from "./dashboard/Consumption";
@@ -8,11 +24,22 @@ import EnergyCost from "./dashboard/EnergyCost";
 import Co2 from "./dashboard/Co2";
 import WeatherInfo from "./dashboard/WeatherInfo";
 import ColumnChart from "../components/chart/dashboard/ColumnChart";
-import { AppContext } from "../App";
+
+
+import ConsumptionProfile from "../components/chart/dashboard/ConsumptionProfile";
+import BaseLoadPeakLoad from "../components/chart/dashboard/BaseLoadPeakLoad";
+
 
 const { RangePicker } = DatePicker;
-function Home(props) {
-  const context = useContext(AppContext);
+
+function Home() {
+  const { Title } = Typography;
+
+
+
+
+  const onChange = (e) => console.log(`radio checked:${e.target.value}`);
+
   const consumption = [
     <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48" key={0}>
       <path d="M23.25 26.5v7.8q0 .6.575.75.575.15.825-.4l5.8-12.05q.2-.4-.025-.75t-.625-.35h-4.75v-7.9q0-.6-.575-.75-.575-.15-.825.4L17.5 25.4q-.2.4.025.75t.625.35ZM24 44q-4.1 0-7.75-1.575-3.65-1.575-6.375-4.3-2.725-2.725-4.3-6.375Q4 28.1 4 24t1.575-7.75q1.575-3.65 4.3-6.375 2.725-2.725 6.375-4.3Q19.9 4 24 4t7.75 1.575q3.65 1.575 6.375 4.3 2.725 2.725 4.3 6.375Q44 19.9 44 24t-1.575 7.75q-1.575 3.65-4.3 6.375-2.725 2.725-6.375 4.3Q28.1 44 24 44Zm0-20Zm0 17q7 0 12-5t5-12q0-7-5-12T24 7q-7 0-12 5T7 24q0 7 5 12t12 5Z" />
@@ -34,7 +61,11 @@ function Home(props) {
       <path d="M26.2 46q-4.2 0-7.875-1.6t-6.4-4.325Q9.2 37.35 7.6 33.675 6 30 6 25.8q0-7.3 4.65-12.875T22.5 6q-.9 4.9.55 9.625 1.45 4.725 5 8.275 3.55 3.55 8.275 5.025Q41.05 30.4 46 29.5q-1.3 7.2-6.9 11.85Q33.5 46 26.2 46Zm0-3q5 0 9.1-2.85t6.6-7.25q-4.5-.4-8.65-2.075Q29.1 29.15 25.95 26q-3.2-3.15-4.85-7.275-1.65-4.125-2.05-8.575-4.4 2.4-7.225 6.525Q9 20.8 9 25.8q0 7.15 5.025 12.175T26.2 43Zm-.3-17Z" />
     </svg>,
   ];
-  const count = [
+
+
+
+
+const count = [
     {
       today: "Consumption",
       title: "8087.3kWh",
@@ -71,10 +102,151 @@ function Home(props) {
     },
   ];
 
+
+
+  const list = [
+    {
+      img: ava1,
+      Title: "Soft UI Shopify Version",
+      bud: "$14,000",
+      progress: <Progress percent={60} size="small" />,
+      member: (
+        <div className="avatar-group mt-2">
+          <Tooltip placement="bottom" title="Ryan Tompson">
+            <img className="tootip-img" src={team1} alt="" />
+          </Tooltip>
+          <Tooltip placement="bottom" title="Romina Hadid">
+            <img className="tootip-img" src={team2} alt="" />
+          </Tooltip>
+          <Tooltip placement="bottom" title="Alexander Smith">
+            <img className="tootip-img" src={team3} alt="" />
+          </Tooltip>
+          <Tooltip placement="bottom" title="Jessica Doe">
+            <img className="tootip-img" src={team4} alt="" />
+          </Tooltip>
+        </div>
+      ),
+    },
+    {
+      img: ava2,
+      Title: "Progress Track",
+      bud: "$3,000",
+      progress: <Progress percent={10} size="small" />,
+      member: (
+        <div className="avatar-group mt-2">
+          <Tooltip placement="bottom" title="Ryan Tompson">
+            <img className="tootip-img" src={team1} alt="" />
+          </Tooltip>
+          <Tooltip placement="bottom" title="Romina Hadid">
+            <img className="tootip-img" src={team2} alt="" />
+          </Tooltip>
+        </div>
+      ),
+    },
+    {
+      img: ava3,
+      Title: "Fix Platform Errors",
+      bud: "Not Set",
+      progress: <Progress percent={100} size="small" status="active" />,
+      member: (
+        <div className="avatar-group mt-2">
+          <Tooltip placement="bottom" title="Ryan Tompson">
+            <img className="tootip-img" src={team1} alt="" />
+          </Tooltip>
+          <Tooltip placement="bottom" title="Romina Hadid">
+            <img className="tootip-img" src={team1} alt="" />
+          </Tooltip>
+          <Tooltip placement="bottom" title="Alexander Smith">
+            <img className="tootip-img" src={team3} alt="" />
+          </Tooltip>
+        </div>
+      ),
+    },
+    {
+      img: ava4,
+      Title: "Launch new Mobile App",
+      bud: "$20,600",
+      progress: <Progress percent={100} size="small" status="active" />,
+      member: (
+        <div className="avatar-group mt-2">
+          <Tooltip placement="bottom" title="Ryan Tompson">
+            <img className="tootip-img" src={team1} alt="" />
+          </Tooltip>
+          <Tooltip placement="bottom" title="Romina Hadid">
+            <img className="tootip-img" src={team2} alt="" />
+          </Tooltip>
+        </div>
+      ),
+    },
+    {
+      img: ava5,
+      Title: "Add the New Landing Page",
+      bud: "$4,000",
+      progress: <Progress percent={80} size="small" />,
+      member: (
+        <div className="avatar-group mt-2">
+          <Tooltip placement="bottom" title="Ryan Tompson">
+            <img className="tootip-img" src={team1} alt="" />
+          </Tooltip>
+          <Tooltip placement="bottom" title="Romina Hadid">
+            <img className="tootip-img" src={team2} alt="" />
+          </Tooltip>
+          <Tooltip placement="bottom" title="Alexander Smith">
+            <img className="tootip-img" src={team3} alt="" />
+          </Tooltip>
+          <Tooltip placement="bottom" title="Jessica Doe">
+            <img className="tootip-img" src={team4} alt="" />
+          </Tooltip>
+        </div>
+      ),
+    },
+
+    {
+      img: ava6,
+      Title: "Redesign Online Store",
+      bud: "$2,000",
+      progress: (
+        <Progress
+          percent={100}
+          size="small"
+          status="exception"
+          format={() => "Cancel"}
+        />
+      ),
+      member: (
+        <div className="avatar-group mt-2">
+          <Tooltip placement="bottom" title="Ryan Tompson">
+            <img className="tootip-img" src={team1} alt="" />
+          </Tooltip>
+          <Tooltip placement="bottom" title="Romina Hadid">
+            <img className="tootip-img" src={team2} alt="" />
+          </Tooltip>
+        </div>
+      ),
+    },
+  ];
+
+  const uploadProps = {
+    name: "file",
+    action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
+    headers: {
+      authorization: "authorization-text",
+    },
+    onChange(info) {
+      if (info.file.status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === "done") {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
   const provinceData = ["site", ""];
   const cityData = {
     site: ["select", "all site", "site A", "site B"],
-    // gav: ["Nanjing", "Suzhou", "Zhenjiang"],
+
   };
   const [cities, setCities] = useState(cityData[provinceData[0]]);
   const [secondCity, setSecondCity] = useState(cityData[provinceData[0]][0]);
@@ -90,7 +262,7 @@ function Home(props) {
   return (
     <div style={{color:'red'}}>
       <Row>
-        <Col span={16}>
+        <Col span={15}>
           <Select
             style={{
               width: 160,
@@ -120,8 +292,20 @@ function Home(props) {
               value: city,
             }))}
           />
+
         </Col>
+        <Col span={5} style={{ textAlign: "center" }}> <h2>{"NABERS Rating"}</h2></Col>
+        <Col span={4} style={{ textAlign: "center" }}>
+          <Rate allowHalf defaultValue={3.5}
+            count={5}
+            style={{ color: "#749452" }}
+          />
+        </Col>
+
+
       </Row>
+
+
 
       <Row align="middle" gutter={24}>
         <Col span={6} xs={24} sm={24} md={12} lg={5} xl={5}>
@@ -185,9 +369,19 @@ function Home(props) {
             <ColumnChart />
           </Col>
         </Row>
+        <Row gutter={[24, 0]}>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
+            <ConsumptionProfile />
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
+            <BaseLoadPeakLoad />
+          </Col>
+        </Row>
       </div>
-    </div>
+    </>
   );
 }
 
 export default Home;
+
+
