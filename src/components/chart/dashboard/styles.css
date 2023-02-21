@@ -1,0 +1,56 @@
+.contact {
+    text-align: right;
+    color: #1e608f;
+    font-weight: 600;
+    margin-top: 20px;
+}
+
+.companyName {
+    display: inline-flex;;
+    width: 100%;
+    height: 40px;
+}
+
+.companyName h1 {
+    font-weight: 600;
+    color: #a4a4a4;
+}
+
+.companyName .textLeft {
+    display: inline-flex;
+    height: 100%;
+}
+
+.textLeft span {
+    margin-left: 10px;
+    font-size: 30px;
+    color: #5f8db0;
+    margin-top: -2px;
+}
+.textRight {
+    display: inline-flex;
+    height: 100%;
+    margin-left: 10px;
+    align-items: center;
+}
+
+.textRight h2{
+    color: #004a80;
+}
+
+
+.textRight p{
+    color: #004a80;
+    font-weight: 600;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+
+.headerIcons:global(.ant-col) {
+    min-height: 80px !important;
+}
+
+.a4 {  
+    width: 21cm;
+    height: 29.7cm; 
+  }
