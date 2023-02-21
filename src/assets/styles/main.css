@@ -3395,3 +3395,7 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile .header-
   font-size: 25px;
   font-family: Helvetica, Arial, sans-serif;
 }
+
+.rate-stars:hover{
+ color: rgb(171, 162, 162)!important;
+}
