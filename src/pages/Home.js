@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState ,useContext} from "react";
 import { Select, DatePicker, Space } from "antd";
+import { AppContext } from "../App";
 import {
   Card,
   Col,
@@ -45,8 +46,15 @@ const { RangePicker } = DatePicker;
 
 function Home() {
   const { Title } = Typography;
+  const [rating,setRating] = useState(3)
 
+  const handleRatingChange = (newValue)=>{
+    setRating(newValue)
+    console.log(`the new value is ${newValue}`)
+  }
 
+  const context = useContext(AppContext);
+  const dark = '#454545'
 
 
   const onChange = (e) => console.log(`radio checked:${e.target.value}`);
@@ -321,11 +329,27 @@ const count = [
           />
 
         </Col>
-        <Col span={5} style={{ textAlign: "center" }}> <h2>{"NABERS Rating"}</h2></Col>
+        <Col span={5} style={{ textAlign: "center" }}> <h2 style={{color:context.backgroundColor === dark? "white":''}}>{"NABERS Rating"}</h2></Col>
         <Col span={4} style={{ textAlign: "center" }}>
-          <Rate allowHalf defaultValue={3.5}
-            count={5}
-            style={{ color: "#749452" }}
+        <Rate
+           className="rate-stars"
+          allowClear={false}
+            allowHalf
+            count={6}
+            
+            // onHoverChange={handleRatingChange}
+            // onFocus={handleOnFocus}
+            value={rating}
+            onChange={handleRatingChange}
+            style={
+              (rating > 0) & (rating <= 2)
+                ? { color: "red" }
+                : (rating < 4) & (rating > 2)
+                ? { color: "orange" }
+                : rating >= 4
+                ? { color: "green" }
+                : { color: "yellow" }
+            }
           />
         </Col>
 

@@ -4,7 +4,15 @@ import { Form, Input, Table } from "antd";
 import { Button, Row, Col, Modal } from "antd";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
-import { addAlerts, deleteAlerts, editAlerts, getAlertsList } from '../services/alertsService'
+import { getAlertConfList } from "../services/alertConfService";
+import {
+  addAlerts,
+  deleteAlerts,
+  editAlerts,
+  getAlertsList,
+} from "../services/alertsService";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import AlertModel from "./AlertConfiguration";
 
 const layout = {
   labelCol: {
@@ -14,13 +22,19 @@ const layout = {
     span: 16,
   },
 };
+
+const FREQUENCY = ["Daily", "Weekly", "Monthly"];
 const OPTIONS = ["Apples", "Nails", "Bananas", "Helicopters"];
 function Alerts() {
   const [selectedItems, setSelectedItems] = useState([]);
-  const [isLoading , setIsLoading] = useState(false);
-  const [form] = Form.useForm()
-  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
-
+  const [confModal, setConfModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [confList, setConfList] = useState([]);
+  const [selectedRecord, setSelectedRecord] = useState();
+  const [form] = Form.useForm();
+  // const [confForm] = Form.useForm();
+  const filteredOptions = OPTIONS.filter((O) => !selectedItems.includes(O));
+  const filteredFrequency = FREQUENCY.filter((O) => !selectedItems.includes(O));
   const validateMessages = {
     required: "${label} is required!",
     types: {
@@ -32,13 +46,38 @@ function Alerts() {
     },
   };
   const [open, setOpen] = useState(false);
-  console.log(open);
+  // console.log(open);
+let resp = []
+  const onAlertClick = async (record) => {
+    try {
+      resp = await getAlertConfList();
+    
+    } catch (error) {}
+
+    populateConfList(record,resp)
+    setSelectedRecord(record);
+    onOpenConf();
+  };
+
+  const populateConfList = (record, data) => {
+    let alertConfigurations = [];
+    alertConfigurations = data?.filter((item) => item.alertId === record.id);
+    setConfList(alertConfigurations);
+  };
+
+  const onOpenConf = () => {
+    setConfModal(true);
+  };
+
+  const onCloseConf = () => {
+    setConfModal(false);
+  };
 
   const onCancelModal = () => {
     setOpen(false);
-    setAlertsId()
+    setAlertsId();
     form.resetFields();
-  }
+  };
   const columns = [
     {
       title: "Project No",
@@ -56,37 +95,83 @@ function Alerts() {
       key: "3",
     },
     {
-      title: "Client Name",
-      dataIndex: "clientname",
+      title: "Building",
+      dataIndex: "building",
       key: "4",
     },
     {
-      title: "Client Agent Name",
-      dataIndex: "clientagentname",
+      title: "Asset",
+      dataIndex: "asset",
       key: "5",
     },
     {
-      title: "PTL",
-      dataIndex: "ptl",
+      title: "Monitor Point",
+      dataIndex: "monitorpoint",
       key: "6",
     },
     {
-      title: "Project Group",
-      dataIndex: "projectgroup",
+      title: "Measure",
+      dataIndex: "measure",
       key: "7",
     },
     {
-      title: "Actions",
-      dataIndex: "delete",
+      title: "Alert Name",
+      dataIndex: "alertname",
       key: "8",
       render: (text, record, index) => (
         <>
-          <a onClick={()=>{onEdit(record)}}>EDIT</a>
-          <Divider type="vertical"/>
-          <a onClick={()=>{onDelete(record.id)}}>DELETE</a>
+          <a
+            onClick={() => {
+              onAlertClick(record);
+            }}
+          >
+            {record.alertname}
+          </a>
         </>
-      )
-    }
+      ),
+    },
+    {
+      title: "Lower Threshhold %",
+      dataIndex: "lowerthreshold",
+      key: "9",
+    },
+    {
+      title: "Upper Threshhold %",
+      dataIndex: "upperthreshold",
+      key: "10",
+    },
+    {
+      title: "Frequency Type",
+      dataIndex: "frequencytype",
+      key: "11",
+    },
+    {
+      title: "Active",
+      dataIndex: "active",
+      key: "12",
+    },
+    {
+      title: "On Demand",
+      dataIndex: "demand",
+      key: "13",
+    },
+
+    {
+      title: "Actions",
+      dataIndex: "delete",
+      key: "14",
+      render: (text, record, index) => (
+        <>
+          <a
+            onClick={() => {
+              onDelete(record.id);
+            }}
+          >
+            <RiDeleteBin6Line size={22} />
+          </a>
+        </>
+      ),
+    },
   ];
 
   const [post, setPost] = useState({});
@@ -95,52 +180,47 @@ function Alerts() {
 
   let data = [];
   const getData = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       const resp = await getAlertsList();
-      console.log(resp)
-      setPost(resp)
-      setloading(false)
-      setIsLoading(false)
-
-    } catch (error) {
-    }
+      console.log(resp);
+      setPost(resp);
+      setloading(false);
+      setIsLoading(false);
+    } catch (error) {}
   };
 
   const setData = async (formData) => {
     try {
-      if(AlertsId){
+      if (AlertsId) {
         const resp = await editAlerts(AlertsId, formData);
-      }else{
+      } else {
         const resp = await addAlerts(formData);
       }
-      onCancelModal()
-      getData() 
+      onCancelModal();
+      getData();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
   const onDelete = async (id) => {
     try {
       const resp = await deleteAlerts(id);
-      getData()
-    } catch (error) {
-    }
+      getData();
+    } catch (error) {}
   };
 
   const onEdit = async (record) => {
     form.setFieldsValue(record);
-    setAlertsId(record.id)
-    setOpen(true)
+    setAlertsId(record.id);
+    setOpen(true);
   };
 
-  data = loading
-    ? []
-    : post
+  data = loading ? [] : post;
 
   useEffect(() => {
-    getData()
+    getData();
   }, []);
 
   return (
@@ -167,36 +247,35 @@ function Alerts() {
           form={form}
           validateMessages={validateMessages}
         >
-
-          <Row justify={'center'} gutter={[30, 30]}>
+          <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
                 name={"projectno"}
                 label="Project No"
                 labelCol={{ span: 4 }}
                 wrapperCol={{ span: 18 }}
-              // rules={[{ required: "" }]}
+                // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
             </Col>
           </Row>
 
-          <Row justify={'center'} gutter={[30, 30]}>
+          <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
                 name={"projectname"}
                 label="Project Name"
                 labelCol={{ span: 4 }}
                 wrapperCol={{ span: 18 }}
-              // rules={[{ required: "" }]}
+                // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
             </Col>
           </Row>
 
-          <Row justify={'center'} gutter={[30, 30]}>
+          <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
                 name={"projecttype"}
@@ -208,68 +287,151 @@ function Alerts() {
                   placeholder="Select Project"
                   value={selectedItems}
                   onChange={setSelectedItems}
-                  size='large'
+                  size="large"
                   style={{ width: "100%" }}
-
                   options={filteredOptions.map((item, index) => ({
                     value: item,
                     label: item,
-                    key: index
+                    key: index,
                   }))}
                 />
               </Form.Item>
             </Col>
           </Row>
 
-          <Row justify={'center'} gutter={[30, 30]}>
-            <Col span={24}>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={11}>
               <Form.Item
-                name={"clientname"}
-                label="Client Name"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-              // rules={[{ required: "" }]}
+                name={"building"}
+                label="Building"
+                labelCol={{ span: 8 }}
+                wrapperCol={{ span: 16 }}
+                // rules={[{ required: "" }]}
+              >
+                <Input className="form_input" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name={"asset"}
+                label="Asset"
+                labelCol={{ span: 5 }}
+                wrapperCol={{ span: 16 }}
+
+                // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
             </Col>
           </Row>
 
-          <Row justify={'center'} gutter={[30, 30]}>
-            <Col span={24}>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={11}>
               <Form.Item
-                name={"clientagentname"}
-                label="Client Agent Name"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-              // rules={[{ required: "" }]}
+                name={"monitorpoint"}
+                label="Monitor Point"
+                labelCol={{ span: 8 }}
+                wrapperCol={{ span: 16 }}
+                // rules={[{ required: "" }]}
+              >
+                <Input className="form_input" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name={"measure"}
+                label="Measure"
+                labelCol={{ span: 5 }}
+                wrapperCol={{ span: 16 }}
+
+                // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
             </Col>
           </Row>
-          <Row justify={'center'} gutter={[30, 30]}>
-            <Col span={24}>
+
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={11}>
               <Form.Item
-                name={"ptl"}
-                label="PTL"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-              // rules={[{ required: "" }]}
+                name={"lowerthreshold"}
+                label="Lower Threshold (%)"
+                labelCol={{ span: 8 }}
+                wrapperCol={{ span: 8 }}
+                // rules={[{ required: "" }]}
+              >
+                <Input className="form_input" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name={"alertname"}
+                label="Alert Name"
+                labelCol={{ span: 5 }}
+                wrapperCol={{ span: 16 }}
+                // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
             </Col>
           </Row>
-         
-          <Row justify={'center'} gutter={[30, 30]}>
-            <Col span={24}>
+
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={11}>
               <Form.Item
-                name={"projectgroup"}
-                label="Project Group"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-              // rules={[{ required: "" }]}
+                name={"upperthreshold"}
+                label="Upper Threshold (%)"
+                labelCol={{ span: 8 }}
+                wrapperCol={{ span: 8 }}
+                // rules={[{ required: "" }]}
+              >
+                <Input className="form_input" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name={"frequencytype"}
+                label="Frequency"
+                labelCol={{ span: 5 }}
+                wrapperCol={{ span: 16 }}
+                // rules={[{ required: "" }]}
+              >
+                <Select
+                  placeholder="Frequency"
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                  size="large"
+                  style={{ width: "100%" }}
+                  options={filteredFrequency.map((item, index) => ({
+                    value: item,
+                    label: item,
+                    key: index,
+                  }))}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={11}>
+              <Form.Item
+                name={"active"}
+                label="Active"
+                labelCol={{ span: 8 }}
+                wrapperCol={{ span: 16 }}
+                // rules={[{ required: "" }]}
+              >
+                <Input className="form_input" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name={"demand"}
+                label="On Demand"
+                labelCol={{ span: 5 }}
+                wrapperCol={{ span: 16 }}
+
+                // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -282,30 +444,44 @@ function Alerts() {
               span: 16,
             }}
           >
-            <Row >
+            <Row>
               <Button type="primary" htmlType="submit">
                 Submit
               </Button>
-
-              <Button type="" style={{ marginLeft: 10 }} htmlType="" onClick={() => onCancelModal()} >
+              <Button
+                type=""
+                style={{ marginLeft: 10 }}
+                htmlType="button"
+                onClick={() => onCancelModal()}
+              >
                 Cancel
               </Button>
-              
             </Row>
           </Form.Item>
         </Form>
-      </Modal>
+      </Modal>{" "}
       <Spin spinning={isLoading}>
-
-      <Table
-        columns={columns}
-        dataSource={data}
-        rowKey={"id"}
-        scroll={{
-          x: 1000,
-        }}
+        <Table
+          columns={columns}
+          dataSource={data}
+          rowKey={"id"}
+          scroll={{
+            x: 1000,
+          }}
         />
-        </Spin>
+      </Spin>
+      <AlertModel
+        onOpenConf={onOpenConf}
+        onCloseConf={onCloseConf}
+        confModal={confModal}
+        // confForm={confForm}
+        confList={confList}
+        setSelectedRecord={setSelectedRecord}
+        selectedRecord={selectedRecord}
+        setConfList={setConfList}
+        populateConfList={populateConfList}
+     
+      />
     </>
   );
 }
