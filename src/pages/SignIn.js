@@ -11,7 +11,8 @@ import {
   Input,
   Switch,
 } from "antd";
-import signinbg from "../assets/images/eleTower.jpg";
+import signinbg from "../assets/images/illustration.jpg";
+import signinLogo from "../assets/images/logo.jpg";
 import {
   DribbbleOutlined,
   TwitterOutlined,
@@ -122,7 +123,9 @@ export default class SignIn extends Component {
                 lg={{ span: 6, offset: 2 }}
                 md={{ span: 12 }}
               >
-                <Title className="mb-15">Sign In</Title>
+                <Title className="mb-15">
+                   <img src={signinLogo} alt="Grosvenor Engineering Group" />
+                </Title>
                 <Title className="font-regular text-muted" level={5}>
                   Enter your email and password to sign in
                 </Title>
@@ -178,12 +181,6 @@ export default class SignIn extends Component {
                       SIGN IN
                     </Button>
                   </Form.Item>
-                  <p className="font-semibold text-muted">
-                    Don't have an account?{" "}
-                    <Link to="/sign-up" className="text-dark font-bold">
-                      Sign Up
-                    </Link>
-                  </p>
                 </Form>
               </Col>
               <Col
