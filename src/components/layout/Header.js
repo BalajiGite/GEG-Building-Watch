@@ -1,10 +1,10 @@
 import { useState, useEffect, useContext } from "react";
 import { Form, Upload } from "antd";
-import{ IoIosSettings} from 'react-icons/io'
+import { IoIosSettings } from "react-icons/io";
 // import ImageUploading from 'react-images-uploading';
 import React from "react";
 import { AppContext } from "../../App";
-import {IoSettingsOutline} from 'react-icons/io5'
+import { IoSettingsOutline } from "react-icons/io5";
 import {
   Row,
   Col,
@@ -169,7 +169,7 @@ const menu = (
     )}
   />
 );
-const dark = '#454545'
+const dark = "#454545";
 
 const toggler = [
   <svg
@@ -182,8 +182,6 @@ const toggler = [
     <path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path>
   </svg>,
 ];
-
-
 
 function Header({
   placement,
@@ -227,8 +225,12 @@ function Header({
 
   return (
     <>
-      <div  style={{color:context.sidenavColor}} className="setting-drwer" onClick={showDrawer}>
-    <  IoIosSettings/>
+      <div
+        style={{ color: context.sidenavColor }}
+        className="setting-drwer"
+        onClick={showDrawer}
+      >
+        <IoIosSettings />
       </div>
       <Row gutter={[24, 0]}>
         <Col span={24} md={6}>
@@ -274,9 +276,7 @@ function Header({
         </Col>
         <Col span={24} md={18} className="header-control">
           <Button type="link" onClick={showDrawer}>
-       
-
-     <IoSettingsOutline/>    
+            <IoSettingsOutline />
           </Button>
           <Button
             type="link"
@@ -301,14 +301,27 @@ function Header({
                 style={{ backgroundColor: context.backgroundColor }}
               >
                 <div className="header-top">
-                  <Title level={4} style={{color:context.backgroundColor===dark?'white':''}}>
+                  <Title
+                    level={4}
+                    style={{
+                      color: context.backgroundColor === dark ? "white" : "",
+                    }}
+                  >
                     Configuration
                     <Text className="subtitle">See our dashboard options.</Text>
                   </Title>
                 </div>
 
                 <div className="sidebar-color">
-                  <Title style={{color:context.backgroundColor===dark?'white':''}} level={5}> Color</Title>
+                  <Title
+                    style={{
+                      color: context.backgroundColor === dark ? "white" : "",
+                    }}
+                    level={5}
+                  >
+                    {" "}
+                    Color
+                  </Title>
                   <div className="theme-color mb-2">
                     <ButtonContainer>
                       <Button
@@ -348,9 +361,23 @@ function Header({
                       >
                         1
                       </Button>
+                      <Button
+                        type=""
+                        style={{ backgroundColor: "rgb(28, 136, 178)" }}
+                        onClick={() => handleSidenavColor(" rgb(28, 136, 178)")}
+                      >
+                        1
+                      </Button>
                     </ButtonContainer>
                   </div>
-                  <Title style={{color:context.backgroundColor===dark?'white':''}} level={5}>background Color</Title>
+                  <Title
+                    style={{
+                      color: context.backgroundColor === dark ? "white" : "",
+                    }}
+                    level={5}
+                  >
+                    background Color
+                  </Title>
                   <div className="theme-color mb-2">
                     <ButtonContainer>
                       <Button
@@ -389,11 +416,27 @@ function Header({
                       >
                         1
                       </Button>
+                      <Button
+                        type=""
+                        style={{ backgroundColor: "rgb(28, 136, 178)" }}
+                        onClick={() =>
+                          handleBackgroundColor(" rgb(28, 136, 178)")
+                        }
+                      >
+                        1
+                      </Button>
                     </ButtonContainer>
                   </div>
 
                   <div className="sidebarnav-color mb-2">
-                    <Title style={{color:context.backgroundColor===dark?'white':''}} level={5}>Sidenav Type</Title>
+                    <Title
+                      style={{
+                        color: context.backgroundColor === dark ? "white" : "",
+                      }}
+                      level={5}
+                    >
+                      Sidenav Type
+                    </Title>
                     <Text>Choose between 2 different sidenav types.</Text>
                     <ButtonContainer className="trans">
                       <Button
@@ -422,7 +465,14 @@ function Header({
                   <Row gutter>
                     <Col xs={24} md={24} lg={24}>
                       <div className="sideheaderlogo">
-                        <Text style={{color:context.backgroundColor===dark?'white':''}}>LOGO</Text>
+                        <Text
+                          style={{
+                            color:
+                              context.backgroundColor === dark ? "white" : "",
+                          }}
+                        >
+                          LOGO
+                        </Text>
                         <div>
                           <Upload
                             showUploadList={false}
@@ -436,10 +486,13 @@ function Header({
 
                         <div>
                           <Form.Item
-                           
                             name="hight"
                             label=""
-                            style={{ marginTop: 15,color:context.backgroundColor===dark?'white':''}}
+                            style={{
+                              marginTop: 15,
+                              color:
+                                context.backgroundColor === dark ? "white" : "",
+                            }}
                           >
                             HEIGHT
                             <Input
@@ -450,7 +503,17 @@ function Header({
                         </div>
                         <div>
                           <Form.Item>
-                           <span  style={{color:context.backgroundColor===dark?'white':''}} > APP ICON </span>
+                            <span
+                              style={{
+                                color:
+                                  context.backgroundColor === dark
+                                    ? "white"
+                                    : "",
+                              }}
+                            >
+                              {" "}
+                              APP ICON{" "}
+                            </span>
                             <Input
                               style={{ width: "310px" }}
                               value="{{app.application builder}}"
@@ -464,7 +527,14 @@ function Header({
                   <Row>
                     <Col className="middle2" xs={24} md={24} lg={24}>
                       <div className="themes">
-                        <small style={{color:context.backgroundColor===dark?'white':''}} >Themes</small>
+                        <small
+                          style={{
+                            color:
+                              context.backgroundColor === dark ? "white" : "",
+                          }}
+                        >
+                          Themes
+                        </small>
                       </div>
 
                       <Button className="btnheaderGeg">Geg</Button>
