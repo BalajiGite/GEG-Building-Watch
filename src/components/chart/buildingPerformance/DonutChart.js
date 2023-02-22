@@ -39,17 +39,17 @@ class Donut extends Component {
 
   render() {
     return (
-      <Col span={24}>
-        <Row justify="space-between" gutter={[16, 16]}>
+      // <Col span={24}>
+        <Row justify="space-around" gutter={[16, 16]}>
           <Card className="donutcard">
             <small>Portfollo Source Water Type Consumption Split</small>
-            <Col span={8}>
+            <Col span={7} md={7}>
               <div className="donut">
                 <Chart
                   options={this.state.options}
                   series={this.state.series}
                   type="donut"
-                  width="390"
+                  width="370"
                 />
               </div>
             </Col>
@@ -57,7 +57,7 @@ class Donut extends Component {
 
           <Card className="donutcardSecond">
             <small>Portfollo Source Water Type Consumption Split</small>
-            <Col span={8}>
+            <Col span={8} md={7}>
               <div className="donut">
                 <Chart
                   options={this.state1.options1}
@@ -70,7 +70,7 @@ class Donut extends Component {
           </Card>
           <Card className="donutcardThird">
             <small>Portfollo Downstream Water Type Consumption Split</small>
-            <Col span={8}>
+            <Col span={7}>
               <div className="donut">
                 <Chart
                   options={this.state2.options2}
@@ -82,7 +82,7 @@ class Donut extends Component {
             </Col>
           </Card>
         </Row>
-      </Col>
+      // </Col>
     );
   }
 }
