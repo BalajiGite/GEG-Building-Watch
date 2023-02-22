@@ -45,7 +45,7 @@ function BuildingPerformance() {
         <Col className="gutter-row" span={6}>
           <Card>
             <Row>
-            {fireAlarm}
+              {fireAlarm}
               {/* <Col style={{ width: "10%" }}></Col> */}
               <Col style={{ width: "71%" }}>
                 Fire Alarm
@@ -57,7 +57,7 @@ function BuildingPerformance() {
         <Col className="gutter-row" span={6}>
           <Card>
             <Row justify="cenetr">
-            {modefan}
+              {modefan}
               {/* <Col style={{ width: "10%" }}></Col> */}
               <Col style={{ width: "71%" }}>
                 Ventilation Services
@@ -69,7 +69,7 @@ function BuildingPerformance() {
         <Col className="gutter-row" span={6}>
           <Card>
             <Row>
-            {electric}
+              {electric}
               {/* <Col style={{ width: "10%" }}></Col> */}
               <Col style={{ width: "71%" }}>
                 Electrical Services
@@ -81,9 +81,8 @@ function BuildingPerformance() {
         <Col className="gutter-row" span={6}>
           <Card>
             <Row>
-            {water}
-              
-              
+              {water}
+
               <Col style={{ width: "71%" }}>
                 Water Services
                 {/* {ckeck} */}
@@ -93,48 +92,65 @@ function BuildingPerformance() {
         </Col>
       </Row>
 
-      <Row style={{marginTop:20 ,}} gutter={[24, 0]}>
-        <Col xs={24} sm={24} md={12} lg={12} xl={12}  className="mb-24">
-          <Card bordered={false} style={{height:450}} className="criclebox h-full">
+      <Row style={{ marginTop: 20 }} gutter={[24, 0]}>
+        <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
+          <Card
+            bordered={false}
+            style={{ height: 450 }}
+            className="criclebox h-full"
+          >
             <Mixchart />
           </Card>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
-          <Card bordered={false} style={{height:450}} className="criclebox h-full">
-            <MeterChart style={{}}/>
+          <Card
+            bordered={false}
+            style={{ height: 450 }}
+            className="criclebox h-full"
+          >
+            <MeterChart style={{}} />
           </Card>
         </Col>
       </Row>
-      <Row style={{marginTop:''}} gutter={[24, 0]}>
+      <Row style={{ marginTop: "" }} gutter={[24, 0]}>
         <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
-          <Card bordered={false} style={{height:440}} className="criclebox h-full">
-          <WaterChart/>
+          <Card
+            bordered={false}
+            style={{ height: 440 }}
+            className="criclebox h-full"
+          >
+            <WaterChart />
           </Card>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
-          <Card bordered={false} style={{height:440}} className="criclebox h-full">
-            <MeterChartS/>
+          <Card
+            bordered={false}
+            style={{ height: 440 }}
+            className="criclebox h-full"
+          >
+            <MeterChartS />
           </Card>
         </Col>
       </Row>
-
 
       <Row>
-        <Donut />
+        <Col span={24}>
+          <Card>
+            <Donut />
+          </Card>
+        </Col>
       </Row>
       <Card style={{ marginTop: 20 }}>
         <Row className="stacked">
           <StackedChart />
         </Row>
       </Card>
-          
 
-
-
-
-    <Row>
-      <DonutS/>
-    </Row>
+      <Card style={{ marginTop: 20 }} >
+        <Row justify="center">
+          <DonutS />
+        </Row>
+      </Card>
     </>
   );
 }

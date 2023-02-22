@@ -19,7 +19,7 @@ class DonutS extends Component {
 
   render() {
     return (
-      <Card style={{ width: 1300, marginTop: 20 }}>
+      <Card style={{  marginTop: 20 }}>
         <Col span={24}>
           <Row>
             <div className="donut">

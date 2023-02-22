@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "antd";
+import { Button, Col, Row } from "antd";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
@@ -11,9 +11,6 @@ const ReportChart = (props) => {
   const changeChartType = (type) => {
     setChartType(type);
   };
-
- 
- 
 
   return (
     <div>
@@ -27,21 +24,42 @@ const ReportChart = (props) => {
             enabled: false,
           },
           title: "Report Chart",
-          series: series
+          series: series,
         }}
       />
-      <Button style={{ width: 260, }} onClick={() => changeChartType("line")}>
-        Line
-      </Button>
-      <Button style={{ width: 260 ,marginLeft:47}} onClick={() => changeChartType("column")}>
-        Column
-      </Button>
-      <Button style={{ width: 260 ,marginLeft:47}} onClick={() => changeChartType("area")}>
-        Area
-      </Button>
-      <Button style={{ width: 260 ,marginLeft:47}} onClick={() => changeChartType("bar")}>
-        Bar{" "}
-      </Button>
+      <Row>
+        <Col span={6}>
+          <Button
+            style={{ width: 260 }}
+            onClick={() => changeChartType("line")}
+          >
+            Line
+          </Button>
+        </Col>
+        <Col span={6}>
+          <Button
+            style={{ width: 260 }}
+            onClick={() => changeChartType("column")}
+          >
+            Column
+          </Button>
+        </Col>
+        <Col span={6}>
+          {" "}
+          <Button
+            style={{ width: 260 }}
+            onClick={() => changeChartType("area")}
+          >
+            Area
+          </Button>
+        </Col>
+        <Col span={6}>
+          {" "}
+          <Button style={{ width: 260 }} onClick={() => changeChartType("bar")}>
+            Bar{" "}
+          </Button>
+        </Col>
+      </Row>
     </div>
   );
 };

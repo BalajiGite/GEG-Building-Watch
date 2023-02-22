@@ -118,93 +118,90 @@ export default class SignIn extends Component {
       <>
         <Layout className="">
           <Content className="">
-            <Row>
+            <Row gutter={[16, 0]}>
               <Col
-                className=""
-                style={{ minHeight: 700 }}
-                xs={{ span: 24 }}
-                lg={{ span: 17 }}
-                xxl={{ span: 17 }}
-                md={{ span: 12 }}
+                xs={24}
+                sm={24}
+                md={12}
+                lg={17}
+                xl={17}
+                xxl={17}
+                className="signIn"
               >
                 <Image
                   src={signinbg}
                   alt=""
-                  height={849}
-                  width={1100}
+                  Height="100%"
+                  width="100%"
                   preview={false}
                 />
               </Col>
-              <Col
-                xs={{ span: 24, offset: 0 }}
-                lg={{ span: 6 }}
-                xxl={{ span: 6 }}
-                md={{ span: 12 }}
-                style={{ marginTop: 50, marginLeft: 15 }}
-              >
-                <Title className="mb-15">
-                  <Image src={signinLogo} alt="Grosvenor Engineering Group" />
-                </Title>
-                <Title
-                  className="font-regular text-muted"
-                  level={5}
-                  style={{ marginTop: 50 }}
-                >
-                  <h4>Sign in with your organizational account</h4>
-                </Title>
-                <Form
-                  onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
-                  layout="vertical"
-                  className="row-col"
-                >
-                  <Form.Item
-                    className="username"
-                    label="Email"
-                    name="email"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your email!",
-                      },
-                    ]}
+              <Col xs={24} sm={24} md={12} lg={7} xl={7} xxl={7} className="">
+                <Col style={{ marginTop: 60, marginLeft: 10 }}>
+                  <Title className="">
+                    <Image src={signinLogo} alt="Grosvenor Engineering Group" />
+                  </Title>
+                  <Title
+                    className="font-regular text-muted"
+                    level={5}
+                    style={{ marginTop: 50 }}
                   >
-                    <Input placeholder="Email" />
-                  </Form.Item>
-
-                  <Form.Item
-                    className="username"
-                    label="Password"
-                    name="password"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your password!",
-                      },
-                    ]}
+                    <h5>Enter your email and password to signin</h5>
+                  </Title>
+                  <Form
+                    onFinish={onFinish}
+                    onFinishFailed={onFinishFailed}
+                    layout="vertical"
+                    className="row-col"
                   >
-                    <Input placeholder="Password" />
-                  </Form.Item>
-
-                  <Form.Item
-                    name="remember"
-                    className="aligin-center"
-                    valuePropName="checked"
-                  >
-                    <Switch defaultChecked onChange={onChange} />
-                    Remember me
-                  </Form.Item>
-
-                  <Form.Item>
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      style={{ width: "100%" }}
+                    <Form.Item
+                      className="username"
+                      label="Email"
+                      name="email"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input your email!",
+                        },
+                      ]}
                     >
-                      SIGN IN
-                    </Button>
-                  </Form.Item>
-                </Form>
+                      <Input placeholder="Email" />
+                    </Form.Item>
+
+                    <Form.Item
+                      className="username"
+                      label="Password"
+                      name="password"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input your password!",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="Password" />
+                    </Form.Item>
+
+                    <Form.Item
+                      name="remember"
+                      className="aligin-center"
+                      valuePropName="checked"
+                    >
+                      <Switch defaultChecked onChange={onChange} />
+                      Remember me
+                    </Form.Item>
+
+                    <Form.Item>
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        style={{ width: "100%" }}
+                      >
+                        SIGN IN
+                      </Button>
+                    </Form.Item>
+                  </Form>
+                </Col>
               </Col>
             </Row>
           </Content>
