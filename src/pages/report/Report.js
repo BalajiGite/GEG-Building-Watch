@@ -79,7 +79,7 @@ function Report(props) {
     }
     let checkIfPresent = false;
     let tmpId  = fromNode?.itemData?.id + toNode?.itemData?.id
-    const presetNode = toNode?.children?.find(item=> item?.itemData?.id == tmpId)
+    const presetNode = toNode?.children?.find(item=> item?.itemData?.id === tmpId)
     if(presetNode){
       checkIfPresent = true; 
     }else{
@@ -236,6 +236,7 @@ function Report(props) {
       if (!item.isDirectory) {
         temp.push({
           data: item.series,
+          name:item.name
         });
       }
     });

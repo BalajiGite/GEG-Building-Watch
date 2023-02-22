@@ -49,6 +49,7 @@ function Alerts() {
   // console.log(open);
 let resp = []
   const onAlertClick = async (record) => {
+    debugger
     try {
       resp = await getAlertConfList();
     
