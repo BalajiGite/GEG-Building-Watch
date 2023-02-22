@@ -87,6 +87,7 @@ function ConsumptionProfile() {
       {
         name: '5.0*',
         type:'line',
+        dashStyle: 'shortdot',
         yAxis: 1,
         data: [55,65,75,85,95,105,115,155,175,195,215,235,255,275,255,235,205,185,155,125,95,65,45,35],
         marker: {
@@ -96,6 +97,7 @@ function ConsumptionProfile() {
       {
         name: '6.0*',
         type:'line',
+        dashStyle: 'shortdot',
         yAxis: 1,
         data: [30,50,40,20,60,90,50,70,30,60,120,130,70,190,90,170,60,170,30,90,60,30,20,10],
       
@@ -104,7 +106,8 @@ function ConsumptionProfile() {
       {
 
         name: 'Temperature',
-        type:'line',
+        type:'spline',
+        color:"#f25852",
         data: [25,55,69,88,55,55,96,98,96,67,25,55,70,88,10,55,96,98,96,97,20,10,22,15
            ],
            marker: {

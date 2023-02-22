@@ -329,8 +329,8 @@ const count = [
           />
 
         </Col>
-        <Col span={5} style={{ textAlign: "center" }}> <h2 style={{color:context.backgroundColor === dark? "white":''}}>{"NABERS Rating"}</h2></Col>
-        <Col span={4} style={{ textAlign: "center" }}>
+        <Col span={4} style={{ textAlign: "right", alignSelf:"flex-end" }}> <h2 style={{color:context.backgroundColor === dark? "white":''}}>{"NABERS"}</h2></Col>
+        <Col span={5} style={{ textAlign: "center" }}>
         <Rate
            className="rate-stars"
           allowClear={false}
@@ -343,12 +343,12 @@ const count = [
             onChange={handleRatingChange}
             style={
               (rating > 0) & (rating <= 2)
-                ? { color: "red" }
+                ? { color: "red" , fontSize: 30}
                 : (rating < 4) & (rating > 2)
-                ? { color: "orange" }
+                ? { color: "orange", fontSize: 30 }
                 : rating >= 4
-                ? { color: "green" }
-                : { color: "yellow" }
+                ? { color: "green", fontSize: 30 }
+                : { color: "yellow", fontSize: 30 }
             }
           />
         </Col>
