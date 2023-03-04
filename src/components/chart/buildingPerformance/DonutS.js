@@ -11,38 +11,48 @@ class DonutS extends Component {
         stroke: {
           width: 0,
         },
-        labels: ["Williams Sonoma", "Office"],
+        labels: ["Rainwater", "Potable"],
       },
       series: [95, 5],
+      responsive: [{
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200
+          },
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }]
     };
   }
 
   render() {
     return (
-      <Card style={{  marginTop: 20 }}>
-        <Col span={24}>
-          <Row>
-            <div className="donut">
-              <small>Portfollo Comfort Summary</small>
-              <Chart
-                options={this.state.options}
-                series={this.state.series}
-                type="donut"
-                width="390"
-              />
-            </div>
-
-            <div className="donuttext">
-              <p>Name</p>
-              <p>Williams Sonoma</p>
-            </div>
-            <div className="donuttext1">
-              <p>Percentage of Time within Comfort Boundary</p>
-              <p>96.61</p>
-            </div>
-          </Row>
+      <Row>
+        {/* <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          <div className="donut">
+            <small>Portfollo Comfort Summary</small>
+            <Chart
+              options={this.state.options}
+              series={this.state.series}
+              type="donut"
+              // width="515"
+            />
+          </div>
+        </Col> */}
+        <Col xs={24} sm={24} md={24} lg={24} xl={24} className="mb a24">
+            <small>Portfollo Source Water Type Consumption Split</small>
+            <Chart
+              options={this.state.options}
+              series={this.state.series}
+              type="donut"
+               width="360"
+            />
+         
         </Col>
-      </Card>
+      </Row>
     );
   }
 }

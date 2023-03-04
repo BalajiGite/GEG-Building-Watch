@@ -3271,20 +3271,8 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile .header-
   background: #f1f7ff;
 }
 
-.stacked {
-  justify-content: center;
-  align-items: center;
-}
 
-.donuttext {
-  margin-top: 80px;
-  margin-left: 20px;
-}
 
-.donuttext1 {
-  margin-top: 80px;
-  margin-left: 230px;
-}
 
 /* bootstrap-demo is a custom classname to increases the specificity of our styles. It can be anything. 
  * The idea is that it is easy to extend/override builtin styles with very little effort.
