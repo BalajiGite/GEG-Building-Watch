@@ -1,10 +1,8 @@
 import React from "react";
 import { Row, Col, Card } from "antd";
-
 import Donut from "../components/chart/buildingPerformance/DonutChart";
 import Mixchart from "../components/chart/buildingPerformance/Mixchart";
 import StackedChart from "../components/chart/buildingPerformance/StackedChart";
-
 import DonutS from "../components/chart/buildingPerformance/DonutS";
 import WaterChart from "../components/chart/buildingPerformance/WaterChart";
 import MeterChart from "../components/chart/buildingPerformance/MeterChart";
@@ -135,24 +133,32 @@ function BuildingPerformance() {
 
       <Row>
         <Col span={24}>
-          <Card>
-            <Donut />
+          <Donut />
+        </Col>
+      </Row>
+
+      <Row gutter={[24, 0]}>
+        <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          <Card style={{ height: 480, width: "100%" }}>
+            <StackedChart />
+          </Card>
+        </Col>
+
+        <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          <Card
+            style={{
+              height: 480,
+              width: "100%",
+              display: "inline-flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <DonutS />
           </Card>
         </Col>
       </Row>
-      <Card style={{ marginTop: 20 }}>
-        <Row className="stacked">
-          <StackedChart />
-        </Row>
-      </Card>
-
-      <Card style={{ marginTop: 20 }} >
-        <Row justify="center">
-          <DonutS />
-        </Row>
-      </Card>
     </>
   );
 }
-
 export default BuildingPerformance;

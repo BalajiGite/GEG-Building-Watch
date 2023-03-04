@@ -33,7 +33,7 @@ function Meter() {
     },
   };
   const [open, setOpen] = useState(false);
-  console.log(open);
+  // console.log(open);
 
   const onCancelModal = () => {
     setOpen(false);
@@ -150,7 +150,7 @@ function Meter() {
     setIsLoading(true)
     try {
       const resp = await getMeterList();
-      console.log(resp)
+      // console.log(resp)
       setPost(resp)
       setloading(false)
       setIsLoading(false)
