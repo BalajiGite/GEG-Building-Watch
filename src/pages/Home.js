@@ -1,4 +1,4 @@
-import { useState ,useContext} from "react";
+import { useState, useContext } from "react";
 import { Select, DatePicker, Space } from "antd";
 import { AppContext } from "../App";
 import {
@@ -37,25 +37,22 @@ import Co2 from "./dashboard/Co2";
 import WeatherInfo from "./dashboard/WeatherInfo";
 import ColumnChart from "../components/chart/dashboard/ColumnChart";
 
-
 import ConsumptionProfile from "../components/chart/dashboard/ConsumptionProfile";
 import BaseLoadPeakLoad from "../components/chart/dashboard/BaseLoadPeakLoad";
-
 
 const { RangePicker } = DatePicker;
 
 function Home() {
   const { Title } = Typography;
-  const [rating,setRating] = useState(3)
+  const [rating, setRating] = useState(3);
 
-  const handleRatingChange = (newValue)=>{
-    setRating(newValue)
-    console.log(`the new value is ${newValue}`)
-  }
+  const handleRatingChange = (newValue) => {
+    setRating(newValue);
+    console.log(`the new value is ${newValue}`);
+  };
 
   const context = useContext(AppContext);
-  const dark = '#454545'
-
+  const dark = "#454545";
 
   const onChange = (e) => console.log(`radio checked:${e.target.value}`);
 
@@ -98,10 +95,7 @@ function Home() {
     </svg>,
   ];
 
-
-
-
-const count = [
+  const count = [
     {
       today: "Consumption",
       title: "8087.3kWh",
@@ -137,8 +131,6 @@ const count = [
       Wind: "6.3m/s",
     },
   ];
-
-
 
   const list = [
     {
@@ -282,7 +274,6 @@ const count = [
   const provinceData = ["site", ""];
   const cityData = {
     site: ["select", "all site", "site A", "site B"],
-
   };
   const [cities, setCities] = useState(cityData[provinceData[0]]);
   const [secondCity, setSecondCity] = useState(cityData[provinceData[0]][0]);
@@ -327,23 +318,28 @@ const count = [
               value: city,
             }))}
           />
-
         </Col>
-        <Col span={4} style={{ textAlign: "right", alignSelf:"flex-end" }}> <h2 style={{color:context.backgroundColor === dark? "white":''}}>{"NABERS"}</h2></Col>
+        <Col span={4} style={{ textAlign: "right", alignSelf: "flex-end" }}>
+          {" "}
+          <h2
+            style={{ color: context.backgroundColor === dark ? "white" : "" }}
+          >
+            {"NABERS"}
+          </h2>
+        </Col>
         <Col span={5} style={{ textAlign: "center" }}>
-        <Rate
-           className="rate-stars"
-          allowClear={false}
+          <Rate
+            className="rate-stars"
+            allowClear={false}
             allowHalf
             count={6}
-            
             // onHoverChange={handleRatingChange}
             // onFocus={handleOnFocus}
             value={rating}
             onChange={handleRatingChange}
             style={
               (rating > 0) & (rating <= 2)
-                ? { color: "red" , fontSize: 30}
+                ? { color: "red", fontSize: 30 }
                 : (rating < 4) & (rating > 2)
                 ? { color: "orange", fontSize: 30 }
                 : rating >= 4
@@ -352,11 +348,7 @@ const count = [
             }
           />
         </Col>
-
-
       </Row>
-
-
 
       <Row align="middle" gutter={24}>
         <Col span={6} xs={24} sm={24} md={12} lg={5} xl={5}>
@@ -420,6 +412,7 @@ const count = [
             <ColumnChart />
           </Col>
         </Row>
+
         <Row gutter={[24, 0]}>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
             <ConsumptionProfile />
@@ -434,5 +427,3 @@ const count = [
 }
 
 export default Home;
-
-

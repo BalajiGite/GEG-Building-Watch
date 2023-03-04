@@ -50,13 +50,14 @@ function SatckedChart() {
         ]
         });
         
+        
         return () => {
         
         };
     }, []);
   return (
     <div className='stacked' id='stacked'>
-
+         
 
     </div>
   )
