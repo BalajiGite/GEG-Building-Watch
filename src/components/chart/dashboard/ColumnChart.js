@@ -29,7 +29,7 @@ function ColumnChart() {
     setIsLoading(true)
     try {
       const resp = await getColumnChartData();
-      console.log("chartData",resp?.dashboardColumnChart);
+      // console.log("chartData",resp?.dashboardColumnChart);
       setChartData(resp?.dashboardColumnChart);
       setIsLoading(false)
     } catch (error) {

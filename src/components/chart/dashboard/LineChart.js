@@ -11,7 +11,7 @@ function LineChart() {
     setIsLoading(true)
     try {
       const resp = await getPortfolioChartData();
-      console.log("chartData", resp?.portFolioChart);
+      // console.log("chartData", resp?.portFolioChart);
       setChartData(resp?.portFolioChart);
       setIsLoading(false)
     } catch (error) {

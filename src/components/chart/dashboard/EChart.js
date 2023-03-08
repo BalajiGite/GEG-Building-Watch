@@ -14,7 +14,7 @@ function EChart() {
     setIsLoading(true)
     try {
       const resp = await getConsumptionChartData();
-      console.log("chartData", resp?.consumptionChart);
+      // console.log("chartData", resp?.consumptionChart);
       setChartData(resp?.consumptionChart);
       setIsLoading(false)
     } catch (error) {
