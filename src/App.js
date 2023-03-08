@@ -1,7 +1,7 @@
 import { Switch, Route, Redirect } from "react-router-dom";
 import Home from "./pages/Home";
 import Sites from "./pages/Sites";
-import Building from "./pages/Building";
+import Building from "./pages/building/Building";
 import Meter from "./pages/Meter";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
