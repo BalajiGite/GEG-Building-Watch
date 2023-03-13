@@ -39,6 +39,7 @@ import ColumnChart from "../components/chart/dashboard/ColumnChart";
 
 import ConsumptionProfile from "../components/chart/dashboard/ConsumptionProfile";
 import BaseLoadPeakLoad from "../components/chart/dashboard/BaseLoadPeakLoad";
+import NebersRate from "./NebersRate";
 
 const { RangePicker } = DatePicker;
 
@@ -327,8 +328,10 @@ function Home() {
             {"NABERS"}
           </h2>
         </Col>
+          {/* <NebersRate/> */}
         <Col span={5} style={{ textAlign: "center" }}>
           <Rate
+          disabled
             className="rate-stars"
             allowClear={false}
             allowHalf

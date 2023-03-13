@@ -9,7 +9,7 @@ import LeftTreeDataItems from "../../assets/data/LeftTreeDataItems";
 import RightTreeDataItems from "../../assets/data/RightTreeDataItem";
 import ReportChart from "./ReportChart";
 import _ from "lodash";
-
+import * as XLSX from "xlsx";
 
 const onChange = (date, dateString) => {
   console.log(date, dateString);
@@ -52,7 +52,7 @@ function Report(props) {
   };
 
   const onDragChange = (e) => {
-    unselectTreeNodes()
+    unselectTreeNodes();
     if (e.fromComponent === e.toComponent) {
       const fromNode = findNode(getTreeView(e.fromData), e.fromIndex);
       const toNode = findNode(getTreeView(e.toData), calculateToIndex(e));
@@ -72,17 +72,18 @@ function Report(props) {
 
     const fromNode = _.cloneDeep(findNode(fromTreeView, e.fromIndex));
     const toNode = findNode(toTreeView, calculateToIndex(e));
-    
-    
+
     if (e.dropInsideItem || toNode == null || !toNode?.itemData?.isDirectory) {
       return;
     }
     let checkIfPresent = false;
-    let tmpId  = fromNode?.itemData?.id + toNode?.itemData?.id
-    const presetNode = toNode?.children?.find(item=> item?.itemData?.id === tmpId)
-    if(presetNode){
-      checkIfPresent = true; 
-    }else{
+    let tmpId = fromNode?.itemData?.id + toNode?.itemData?.id;
+    const presetNode = toNode?.children?.find(
+      (item) => item?.itemData?.id === tmpId
+    );
+    if (presetNode) {
+      checkIfPresent = true;
+    } else {
       fromNode.itemData.id = tmpId;
     }
 
@@ -100,7 +101,7 @@ function Report(props) {
       if (selectedItem.parentId === fromNode.itemData.parentId) {
         return true;
       } else {
-        fromNode.itemData.id = fromNode.id + toNode.parentId
+        fromNode.itemData.id = fromNode.id + toNode.parentId;
       }
     }
     moveNode(fromNode, toNode, fromItems, toItems, e.dropInsideItem);
@@ -170,15 +171,14 @@ function Report(props) {
 
     moveChildren(fromNode, fromItems, toItems);
 
-  
     if (isDropInsideItem) {
       fromNode.itemData.parentId = toNode.itemData.id;
     } else {
-      fromNode.itemData.parentId =  toNode.itemData.id 
-          // ? toNode.itemData.parentId
-          //   ? toNode.itemData.id
-          //   : undefined
-          // : undefined;
+      fromNode.itemData.parentId = toNode.itemData.id;
+      // ? toNode.itemData.parentId
+      //   ? toNode.itemData.id
+      //   : undefined
+      // : undefined;
     }
     // console.log(fromItems, toItems)
   };
@@ -236,39 +236,62 @@ function Report(props) {
       if (!item.isDirectory) {
         temp.push({
           data: item.series,
-          name:item.name
+          name: item.name,
         });
       }
     });
     setSelectedReports(temp);
   };
- 
 
   const runReport = () => {
     setSeries(selectedReports);
+    console.log(selectedReports);
   };
 
+  const exportReportInExcel = (data, fileName) => {
+    // debugger;
+    const temp = [];
+    data.map((item) => {
+      temp.push({
+        name: item.name,
+        data: item.data.toString(),
+      });
+    });
+    var wscols = [{ wch: 30 }, { wch: 100 }];
+
+    const sheetName = "Sheet";
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(temp);
+    worksheet["!cols"] = wscols;
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+    XLSX.writeFile(workbook, fileName);
+  };
 
   const unselectTreeNodes = () => {
-    rightTreeViewRef?.current?.instance?.unselectAll()
-    setSelectedReports([])
-  }
+    rightTreeViewRef?.current?.instance?.unselectAll();
+    setSelectedReports([]);
+  };
 
   const deleteReport = () => {
-    const temp=[];
-    const selectedNodes = rightTreeViewRef?.current?.instance?.getSelectedNodes().map((node) => node.itemData);
-    const reports = selectedNodes.filter(item => !item.isDirectory)
-    if(reports.length>0){
-      rightTreeItems?.map(item=>{
-        const toBeDeleted = reports?.findIndex(reportItem=> reportItem?.id == item?.id)
-        if(toBeDeleted === -1){
-          temp.push(item)
+    const temp = [];
+    const selectedNodes = rightTreeViewRef?.current?.instance
+      ?.getSelectedNodes()
+      .map((node) => node.itemData);
+    const reports = selectedNodes.filter((item) => !item.isDirectory);
+    if (reports.length > 0) {
+      rightTreeItems?.map((item) => {
+        const toBeDeleted = reports?.findIndex(
+          (reportItem) => reportItem?.id == item?.id
+        );
+        if (toBeDeleted === -1) {
+          temp.push(item);
         }
-      })
+      });
     }
-    unselectTreeNodes([])
-    setSeries([])
-    setRightTreeItems([...temp])
+    unselectTreeNodes([]);
+    setSeries([]);
+    setRightTreeItems([...temp]);
   };
 
   return (
@@ -276,12 +299,11 @@ function Report(props) {
       <Row>
         <Col span={12}>
           <Card style={{ backgroundColor: "rgb(28, 136, 178)", height: 500 }}>
-            <Row style={{height: 40,marginBottom: 10 }}>
+            <Row style={{ height: 40, marginBottom: 10 }}>
               <Col span={12}>
                 <h3 style={{ color: "white" }}>Meter Tree</h3>
               </Col>
               <Col span={12}>
-
                 <p style={{ color: "white", textAlign: "end" }}>
                   (Drag requested files {arrow} toFavourites or Reporting){" "}
                 </p>
@@ -340,19 +362,35 @@ function Report(props) {
           </Card>
         </Col>
 
-
         <Col span={12}>
           <Card style={{ backgroundColor: "rgb(28, 136, 178)", height: 500 }}>
             <Row style={{ height: 40, marginBottom: 10 }}>
               <Col span={8}>
                 <h3 style={{ color: "white", paddingLeft: 10 }}>Reporting</h3>
               </Col>
-              <Col span={10}>
-                <Button type="secondary" onClick={runReport} disabled={selectedReports.length == 0}>
+              <Col span={15}>
+                <Button
+                  className=""
+                  type="secondary"
+                  onClick={runReport}
+                  disabled={selectedReports.length == 0}
+                >
                   Run Report
-                </Button>
-                {" "}
-                <Button type="secondary" onClick={deleteReport} disabled={selectedReports.length == 0}>
+                </Button>{" "}
+                <Button
+                  type="secondary"
+                  onClick={() =>
+                    exportReportInExcel(selectedReports, "Report.xlsx")
+                  }
+                  disabled={selectedReports.length == 0}
+                >
+                  Export Report
+                </Button>{" "}
+                <Button
+                  type="secondary"
+                  onClick={deleteReport}
+                  disabled={selectedReports.length == 0}
+                >
                   Delete Report
                 </Button>
               </Col>
@@ -413,8 +451,7 @@ function Report(props) {
       </Row>
       <Row style={{ marginTop: 10 }}>
         <Col span={24}>
-
-          {(series.length > 0) ? (
+          {series.length > 0 ? (
             <Card style={{ height: 500 }}>
               <ReportChart series={series} />
             </Card>

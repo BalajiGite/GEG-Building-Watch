@@ -27,10 +27,12 @@ const FREQUENCY = ["Daily", "Weekly", "Monthly"];
 const OPTIONS = ["Apples", "Nails", "Bananas", "Helicopters"];
 function Alerts() {
   const [selectedItems, setSelectedItems] = useState([]);
+  const [tempData, setTempData] = useState();
   const [confModal, setConfModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [confList, setConfList] = useState([]);
   const [selectedRecord, setSelectedRecord] = useState();
+  const [searchText, setSearchText] = useState();
   const [form] = Form.useForm();
   // const [confForm] = Form.useForm();
   const filteredOptions = OPTIONS.filter((O) => !selectedItems.includes(O));
@@ -47,15 +49,14 @@ function Alerts() {
   };
   const [open, setOpen] = useState(false);
   // console.log(open);
-let resp = []
+  let resp = [];
   const onAlertClick = async (record) => {
-    debugger
+    debugger;
     try {
       resp = await getAlertConfList();
-    
     } catch (error) {}
 
-    populateConfList(record,resp)
+    populateConfList(record, resp);
     setSelectedRecord(record);
     onOpenConf();
   };
@@ -84,41 +85,167 @@ let resp = []
       title: "Project No",
       dataIndex: "projectno",
       key: "1",
+      sorter: (a, b) => a.projectno - b.projectno,
     },
     {
       title: "Project Name",
       dataIndex: "projectname",
       key: "2",
+      sorter: (a, b) => a.projectname - b.projectname,
+      filters: [
+        {
+          text: "Type 1",
+          value: "Amour",
+        },
+        {
+          text: "Type 2",
+          value: "type 1",
+        },
+        {
+          text: "Type 3",
+          value: "type",
+        },
+      ],
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.projectname.startsWith(value),
     },
     {
       title: "Project Type",
       dataIndex: "projecttype",
       key: "3",
+      sorter: (a, b) => a.projecttype - b.projecttype,
+      filters: [
+        {
+          text: "Type 1",
+          value: "Amour",
+        },
+        {
+          text: "Type 2",
+          value: "type 1",
+        },
+        {
+          text: "Type 3",
+          value: "type",
+        },
+      ],
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.projecttype.startsWith(value),
     },
     {
       title: "Building",
       dataIndex: "building",
       key: "4",
+      sorter: (a, b) => a.building - b.building,
+      filters: [
+        {
+          text: "Type 1",
+          value: "Amour",
+        },
+        {
+          text: "Type 2",
+          value: "type 1",
+        },
+        {
+          text: "Type 3",
+          value: "type",
+        },
+      ],
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.building.startsWith(value),
     },
     {
       title: "Asset",
       dataIndex: "asset",
       key: "5",
+      sorter: (a, b) => a.asset - b.asset,
+      filters: [
+        {
+          text: "Type 1",
+          value: "Amour",
+        },
+        {
+          text: "Type 2",
+          value: "type 1",
+        },
+        {
+          text: "Type 3",
+          value: "type",
+        },
+      ],
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.asset.startsWith(value),
     },
     {
       title: "Monitor Point",
       dataIndex: "monitorpoint",
       key: "6",
+      sorter: (a, b) => a.monitorpoint - b.monitorpoint,
+      filters: [
+        {
+          text: "Type 1",
+          value: "Amour",
+        },
+        {
+          text: "Type 2",
+          value: "type 1",
+        },
+        {
+          text: "Type 3",
+          value: "type",
+        },
+      ],
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.monitorpoint.startsWith(value),
     },
     {
       title: "Measure",
       dataIndex: "measure",
       key: "7",
+      sorter: (a, b) => a.measure - b.measure,
+      filters: [
+        {
+          text: "Type 1",
+          value: "Amour",
+        },
+        {
+          text: "Type 2",
+          value: "type 1",
+        },
+        {
+          text: "Type 3",
+          value: "type",
+        },
+      ],
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.measure.startsWith(value),
     },
     {
       title: "Alert Name",
       dataIndex: "alertname",
       key: "8",
+      filters: [
+        {
+          text: "Type 1",
+          value: "Amour",
+        },
+        {
+          text: "Type 2",
+          value: "type 1",
+        },
+        {
+          text: "Type 3",
+          value: "type",
+        },
+      ],
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.alertname.startsWith(value),
       render: (text, record, index) => (
         <>
           <a
@@ -135,26 +262,82 @@ let resp = []
       title: "Lower Threshhold %",
       dataIndex: "lowerthreshold",
       key: "9",
+      sorter: (a, b) => a.lowerthreshold - b.lowerthreshold,
+      filters: [
+        {
+          text: "Type 1",
+          value: "Amour",
+        },
+        {
+          text: "Type 2",
+          value: "type 1",
+        },
+        {
+          text: "Type 3",
+          value: "type",
+        },
+      ],
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.lowerthreshold.startsWith(value),
     },
     {
       title: "Upper Threshhold %",
       dataIndex: "upperthreshold",
       key: "10",
+      sorter: (a, b) => a.upperthreshold - b.upperthreshold,
+      filters: [
+        {
+          text: "Type 1",
+          value: "Amour",
+        },
+        {
+          text: "Type 2",
+          value: "type 1",
+        },
+        {
+          text: "Type 3",
+          value: "type",
+        },
+      ],
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.upperthreshold.startsWith(value),
     },
     {
       title: "Frequency Type",
       dataIndex: "frequencytype",
       key: "11",
+      sorter: (a, b) => a.frequencytype - b.frequencytype,
+      filters: [
+        {
+          text: "Type 1",
+          value: "Amour",
+        },
+        {
+          text: "Type 2",
+          value: "type 1",
+        },
+        {
+          text: "Type 3",
+          value: "type",
+        },
+      ],
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.frequencytype.startsWith(value),
     },
     {
       title: "Active",
       dataIndex: "active",
       key: "12",
+      sorter: (a, b) => a.active - b.active,
     },
     {
       title: "On Demand",
       dataIndex: "demand",
       key: "13",
+      sorter: (a, b) => a.demand - b.demand,
     },
 
     {
@@ -184,8 +367,9 @@ let resp = []
     setIsLoading(true);
     try {
       const resp = await getAlertsList();
-      console.log(resp);
+      // console.log(resp);
       setPost(resp);
+      setTempData(resp);
       setloading(false);
       setIsLoading(false);
     } catch (error) {}
@@ -220,6 +404,38 @@ let resp = []
 
   data = loading ? [] : post;
 
+  // const filter = (text) => {
+  //   const filterData = data.filter((record) => {
+  //     record.projectno.toString().includes(text.toString());
+  //   });
+  //   setTempData(filterData);
+  // };
+
+  const filter = (text) => {
+    const filterData = data.filter(
+      (record) =>
+        record.projectname.toLowerCase().includes(text.toLowerCase()) ||
+        record.projectno.toString().includes(text.toLowerCase()) ||
+        record.projecttype.toLowerCase().includes(text.toLowerCase()) ||
+        record.building.toLowerCase().includes(text.toLowerCase()) ||
+        record.asset.toLowerCase().includes(text.toLowerCase()) ||
+        record.monitorpoint.toLowerCase().includes(text.toLowerCase()) ||
+        record.measure.toString().includes(text.toLowerCase()) ||
+        record.alertname.toLowerCase().includes(text.toLowerCase()) ||
+        record.lowerthreshold.toLowerCase().includes(text.toLowerCase()) ||
+        record.upperthreshold.toLowerCase().includes(text.toLowerCase()) ||
+        record.frequencytype.toLowerCase().includes(text.toLowerCase())
+    );
+    setTempData(filterData);
+  };
+  const onChangeText = (text) => {
+    // console.log(text);
+    setSearchText(text);
+    filter(text);
+    if (text === "" || !text) {
+      setPost(post);
+    }
+  };
   useEffect(() => {
     getData();
   }, []);
@@ -230,6 +446,18 @@ let resp = []
       <Button className="mb-5" type="primary" onClick={() => setOpen(true)}>
         Create New
       </Button>
+      <Row>
+        <Col span={17}></Col>
+
+        <Col span={7} style={{ marginBottom: 10 }}>
+          <Input
+            size="small"
+            placeholder="search here ..."
+            value={searchText}
+            onChange={(e) => onChangeText(e.target.value)}
+          />
+        </Col>
+      </Row>
       <Modal
         style={{ textAlign: "left" }}
         title="Create New Alerts"
@@ -464,7 +692,7 @@ let resp = []
       <Spin spinning={isLoading}>
         <Table
           columns={columns}
-          dataSource={data}
+          dataSource={tempData}
           rowKey={"id"}
           scroll={{
             x: 1000,
@@ -481,7 +709,6 @@ let resp = []
         selectedRecord={selectedRecord}
         setConfList={setConfList}
         populateConfList={populateConfList}
-     
       />
     </>
   );
