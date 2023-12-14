@@ -12,6 +12,7 @@ import {
 import { GrEdit } from "react-icons/gr";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import React, { useEffect, useState } from "react";
+import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
 import {
   addAlertConf,
   deleteAlertConf,

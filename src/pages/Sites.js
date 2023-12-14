@@ -4,6 +4,7 @@ import { Form, Input, Table } from "antd";
 import { Button, Row, Col, Modal } from "antd";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
+import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
 import {
   addSites,
   deleteSites,
@@ -217,6 +218,13 @@ function Sites() {
     setIsLoading(true);
     try {
       const resp = await getSitesList();
+      const states = await getApiDataFromAws("queryType=state")
+      const body = {
+        funcName: 'createStateRecordsFromJson',
+        recList: [{ stateName: 'TestState123FromGEMS' }]
+    };
+      const postStates = await postApiDataToAws(body)
+      console.log(states);
       console.log(resp);
       setPost(resp);
       setTemp(resp);

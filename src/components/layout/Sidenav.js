@@ -135,6 +135,7 @@ function Sidenav({ color }) {
       </div>
       <hr />
       <Menu theme="light" mode="inline">
+        {/*
         <Menu.Item key="1">
           <NavLink to="/dashboard">
             <span
@@ -162,6 +163,7 @@ function Sidenav({ color }) {
             </span>
           </NavLink>
         </Menu.Item>
+        */}
         <Menu.Item key="2">
           <NavLink to="/sites">
             <span
@@ -212,6 +214,7 @@ function Sidenav({ color }) {
             </span>
           </NavLink>
         </Menu.Item>
+        {/**
         <Menu.Item key="4">
           <NavLink to="/buildingPerformance">
             <span
@@ -239,6 +242,7 @@ function Sidenav({ color }) {
             </span>
           </NavLink>
         </Menu.Item>
+         */}
         <Menu.Item key="5">
           <NavLink to="/meter">
             <span
@@ -290,6 +294,7 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item>
 
+       {/** 
         <Menu.Item key="7">
           <NavLink to="/report">
             <span
@@ -314,7 +319,8 @@ function Sidenav({ color }) {
             </span>
           </NavLink>
         </Menu.Item>
-
+        */}
+        {/*
         <Menu.Item className="menu-item-header" key="8">
           Account Pages
         </Menu.Item>
@@ -336,7 +342,7 @@ function Sidenav({ color }) {
           {/* <NavLink to="/sign-up">
             <span className="icon">{signup}</span>
             <span className="label">Sign Up</span>
-          </NavLink> */}
+          </NavLink> //}
         </Menu.Item>
         <Menu.Item key="12">
           <NavLink to="/config">
@@ -350,7 +356,7 @@ function Sidenav({ color }) {
               Config
             </span>
           </NavLink>
-        </Menu.Item>
+        </Menu.Item> */}
       </Menu>
     </>
   );

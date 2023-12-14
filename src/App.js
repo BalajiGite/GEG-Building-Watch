@@ -57,7 +57,7 @@ function App() {
               <Route exact path="/alert" component={Alert} />
               <Route exact path="/config" component={Config} />
               <Route exact path="/report" component={Report} />
-              <Redirect from="*" to="/dashboard" />
+              <Redirect from="*" to="/building" />
             </Main>
           </Switch>
         </div>
