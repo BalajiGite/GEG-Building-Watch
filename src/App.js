@@ -1,7 +1,7 @@
 import { Switch, Route, Redirect } from "react-router-dom";
 import Home from "./pages/Home";
 import Sites from "./pages/Sites";
-import Building from "./pages/building/Building";
+import Projects from "./pages/projects/projects";
 import Meter from "./pages/Meter";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
@@ -47,7 +47,7 @@ function App() {
             <Main>
               <Route exact path="/dashboard" component={Home} />
               <Route exact path="/sites" component={Sites} />
-              <Route exact path="/building" component={Building} />
+              <Route exact path="/projects" component={Projects} />
               <Route
                 exact
                 path="/buildingPerformance"
@@ -57,7 +57,7 @@ function App() {
               <Route exact path="/alert" component={Alert} />
               <Route exact path="/config" component={Config} />
               <Route exact path="/report" component={Report} />
-              <Redirect from="*" to="/building" />
+              <Redirect from="*" to="/sites" />
             </Main>
           </Switch>
         </div>
