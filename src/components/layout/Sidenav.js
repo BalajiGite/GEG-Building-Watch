@@ -195,7 +195,7 @@ function Sidenav({ color }) {
             </span>
           </NavLink>
         </Menu.Item>
-        <Menu.Item key="5">
+        <Menu.Item key="3">
           <NavLink to="/meter">
             <span
               className="icon"
@@ -221,12 +221,12 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item>
 
-        <Menu.Item key="3">
+        <Menu.Item key="4">
           <NavLink to="/point">
             <span
               className="icon"
               style={{
-                background: page === "/point" ? color : "",
+                backgroundColor: page === "point" ? color : "",
               }}
             >
               <img src={pointIcon} alt="pointIcon" />
@@ -247,9 +247,12 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item>
 
-        <Menu.Item key="4">
+        <Menu.Item key="5">
           <NavLink to="/config">
-            <span className="icon">
+            <span className="icon" 
+            style={{
+              backgroundColor:page === "config"? color: "",
+            }}>
               <img src={configIcon} alt="configIcon" />
             </span>
             <span
@@ -267,7 +270,7 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item>
 
-        <Menu.Item key="5">
+        <Menu.Item key="6">
           <NavLink to="/alert">
             <span
               className="icon"
@@ -292,7 +295,7 @@ function Sidenav({ color }) {
             </span>
           </NavLink>
         </Menu.Item>
-        <Menu.Item key="6">
+        <Menu.Item key="7">
           <NavLink to="/profile">
             <span
               className="icon"

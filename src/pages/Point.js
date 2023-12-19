@@ -1,3 +1,4 @@
+import "reactjs-popup/dist/index.css";
 
 export default function Point(){
 
