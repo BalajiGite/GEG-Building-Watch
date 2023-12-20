@@ -1,12 +1,6 @@
 import { Menu } from "antd";
 import { useContext } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import sitesIcons from "../../assets/images/sidebar.svg/Sites.svg";
-import meterIcon from "../../assets/images/sidebar.svg/Meter.svg";
-import pointIcon from "../../assets/images/sidebar.svg/Point.svg";
-import configIcon from "../../assets/images/sidebar.svg/Config.svg";
-import alertsIcon from "../../assets/images/sidebar.svg/Alerts.svg";
-import profileIcon from "../../assets/images/sidebar.svg/Kwh.svg";
 // import logo from "../../assets/images/buildlogo.jpg";
 import { AppContext } from "../../App";
 function Sidenav({ color }) {
@@ -60,7 +54,7 @@ function Sidenav({ color }) {
     </svg>,
   ];
 
-  const projects = [
+  const buildings = [
     <svg
       width="20"
       height="20"
@@ -137,11 +131,10 @@ function Sidenav({ color }) {
   return (
     <>
       <div className="brand">
-        <img src={context.logoUrl} alt=""  width={150} />
+        <img src={context.logoUrl} alt="" height={60} width={110} />
       </div>
       <hr />
       <Menu theme="light" mode="inline">
-        {/*
         <Menu.Item key="1">
           <NavLink to="/dashboard">
             <span
@@ -169,7 +162,6 @@ function Sidenav({ color }) {
             </span>
           </NavLink>
         </Menu.Item>
-        */}
         <Menu.Item key="2">
           <NavLink to="/sites">
             <span
@@ -178,7 +170,7 @@ function Sidenav({ color }) {
                 background: page === "sites" ? color : "",
               }}
             >
-              <img src={sitesIcons} alt="sites_svg icons" />
+              {sites}
             </span>
             <span
               style={{
@@ -196,158 +188,31 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item>
         <Menu.Item key="3">
-          <NavLink to="/meter">
+          <NavLink to="/building">
             <span
               className="icon"
               style={{
-                background: page === "meter" ? color : "",
+                background: page === "building" ? color : "",
               }}
             >
-              <img src={meterIcon} alt="meterIcon" />
+              {buildings}
             </span>
             <span
               style={{
                 color:
-                  (context.backgroundColor === dark) & (page === "meter")
+                  (context.backgroundColor === dark) & (page === "building")
                     ? "black"
-                    : (context.backgroundColor === dark) & (page !== "meter")
+                    : (context.backgroundColor === dark) & (page !== "building")
                     ? "white"
                     : "black",
               }}
               className="label"
             >
-              Meter
+              Buildings
             </span>
           </NavLink>
         </Menu.Item>
-
         <Menu.Item key="4">
-          <NavLink to="/point">
-            <span
-              className="icon"
-              style={{
-                backgroundColor: page === "point" ? color : "",
-              }}
-            >
-              <img src={pointIcon} alt="pointIcon" />
-            </span>
-            <span
-              style={{
-                color:
-                  (context.backgroundColor === dark) & (page === "point")
-                    ? "black"
-                    : (context.backgroundColor === dark) & (page !== "point")
-                    ? "white"
-                    : "black",
-              }}
-              className="label"
-            >
-              Point
-            </span>
-          </NavLink>
-        </Menu.Item>
-
-        <Menu.Item key="5">
-          <NavLink to="/config">
-            <span className="icon" 
-            style={{
-              backgroundColor:page === "config"? color: "",
-            }}>
-              <img src={configIcon} alt="configIcon" />
-            </span>
-            <span
-              style={{
-                color: (context.backgroundColor === dark ? "white" : "black")
-                  ? "black"
-                  : (context.backgroundColor === dark) & (page !== "config")
-                  ? "white"
-                  : "black",
-              }}
-              className="label"
-            >
-              Config
-            </span>
-          </NavLink>
-        </Menu.Item>
-
-        <Menu.Item key="6">
-          <NavLink to="/alert">
-            <span
-              className="icon"
-              style={{
-                background: page === "alert" ? color : "",
-              }}
-            >
-              <img src={alertsIcon} alt="alertIcon" />
-            </span>
-            <span
-              style={{
-                color:
-                  (context.backgroundColor === dark) & (page === "alert")
-                    ? "black"
-                    : (context.backgroundColor === dark) & (page !== "alert")
-                    ? "white"
-                    : "black",
-              }}
-              className="label"
-            >
-              Alert
-            </span>
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="7">
-          <NavLink to="/profile">
-            <span
-              className="icon"
-              style={{
-                backgroundColor: page === "profile" ? color : "",
-              }}
-            >
-              <img src={profileIcon} alt="profieIcon" />
-            </span>
-            <span
-              style={{
-                color:
-                  (context.backgroundColor === dark) & (page === "profile")
-                    ? "black"
-                    : (context.backgroundColor === dark) & (page !== "profile")
-                    ? "white"
-                    : "black",
-              }}
-              className="label"
-            >
-              Profile
-            </span>
-          </NavLink>
-        </Menu.Item>
-
-        {/* <Menu.Item key="5">
-          <NavLink to="/projects">
-            <span
-              className="icon"
-              style={{
-                background: page === "projects" ? color : "",
-              }}
-            >
-              {projects}
-            </span>
-            <span
-              style={{
-                color:
-                  (context.backgroundColor === dark) & (page === "projects")
-                    ? "black"
-                    : (context.backgroundColor === dark) & (page !== "projects")
-                    ? "white"
-                    : "black",
-              }}
-              className="label"
-            >
-              Projects
-            </span>
-          </NavLink>
-          </Menu.Item> */}
-        {/**
-        <Menu.Item key="5">
           <NavLink to="/buildingPerformance">
             <span
               className="icon"
@@ -374,9 +239,57 @@ function Sidenav({ color }) {
             </span>
           </NavLink>
         </Menu.Item>
-         */}
+        <Menu.Item key="5">
+          <NavLink to="/meter">
+            <span
+              className="icon"
+              style={{
+                background: page === "meter" ? color : "",
+              }}
+            >
+              {meter}
+            </span>
+            <span
+              style={{
+                color:
+                  (context.backgroundColor === dark) & (page === "meter")
+                    ? "black"
+                    : (context.backgroundColor === dark) & (page !== "meter")
+                    ? "white"
+                    : "black",
+              }}
+              className="label"
+            >
+              Meter
+            </span>
+          </NavLink>
+        </Menu.Item>
+        <Menu.Item key="6">
+          <NavLink to="/alert">
+            <span
+              className="icon"
+              style={{
+                background: page === "alert" ? color : "",
+              }}
+            >
+              {alert}
+            </span>
+            <span
+              style={{
+                color:
+                  (context.backgroundColor === dark) & (page === "alert")
+                    ? "black"
+                    : (context.backgroundColor === dark) & (page !== "alert")
+                    ? "white"
+                    : "black",
+              }}
+              className="label"
+            >
+              Alert
+            </span>
+          </NavLink>
+        </Menu.Item>
 
-        {/** 
         <Menu.Item key="7">
           <NavLink to="/report">
             <span
@@ -401,8 +314,7 @@ function Sidenav({ color }) {
             </span>
           </NavLink>
         </Menu.Item>
-        */}
-        {/*
+
         <Menu.Item className="menu-item-header" key="8">
           Account Pages
         </Menu.Item>
@@ -424,8 +336,21 @@ function Sidenav({ color }) {
           {/* <NavLink to="/sign-up">
             <span className="icon">{signup}</span>
             <span className="label">Sign Up</span>
-          </NavLink> //}
-            </Menu.Item> */}
+          </NavLink> */}
+        </Menu.Item>
+        <Menu.Item key="12">
+          <NavLink to="/config">
+            <span className="icon">{config}</span>
+            <span
+              style={{
+                color: context.backgroundColor === dark ? "white" : "black",
+              }}
+              className="label"
+            >
+              Config
+            </span>
+          </NavLink>
+        </Menu.Item>
       </Menu>
     </>
   );
