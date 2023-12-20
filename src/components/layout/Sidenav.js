@@ -216,7 +216,7 @@ function Sidenav({ color }) {
               }}
               className="label"
             >
-              Meter
+              Meters
             </span>
           </NavLink>
         </Menu.Item>
@@ -242,7 +242,7 @@ function Sidenav({ color }) {
               }}
               className="label"
             >
-              Point
+              Points
             </span>
           </NavLink>
         </Menu.Item>
@@ -291,7 +291,7 @@ function Sidenav({ color }) {
               }}
               className="label"
             >
-              Alert
+              Email Alerts
             </span>
           </NavLink>
         </Menu.Item>
@@ -316,7 +316,7 @@ function Sidenav({ color }) {
               }}
               className="label"
             >
-              Profile
+              Target Profile
             </span>
           </NavLink>
         </Menu.Item>
