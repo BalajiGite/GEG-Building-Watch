@@ -1,8 +1,9 @@
 import { Switch, Route, Redirect } from "react-router-dom";
 import Home from "./pages/Home";
 import Sites from "./pages/Sites";
-import Projects from "./pages/projects/projects";
 import Meter from "./pages/Meter";
+import Point from "./pages/Point";
+import Projects from "./pages/projects/projects";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Main from "./components/layout/Main";
@@ -12,6 +13,7 @@ import "./assets/styles/responsive.css";
 import "devextreme/dist/css/dx.light.css";
 import Config from "./pages/Config";
 import Alert from "./pages/Alert";
+import Profile from "./pages/Profile";
 import BuildingPerformance from "./pages/BuildingPerformance";
 import React, { useState } from "react";
 import Report from "./pages/report/Report";
@@ -19,7 +21,7 @@ import Report from "./pages/report/Report";
 export const AppContext = React.createContext();
 function App() {
   const [logoUrl, setLogoUrl] = useState(
-    require("../src/assets/images/buildlogo.jpg")
+    require("../src/assets/images/verdeos_logo.png")
   );
 
   const [sidenavColor, setSidenavColor] = useState("#1C88B2");
@@ -54,8 +56,10 @@ function App() {
                 component={BuildingPerformance}
               />
               <Route exact path="/meter" component={Meter} />
+              <Route exact path="/point" component={Point} />
               <Route exact path="/alert" component={Alert} />
               <Route exact path="/config" component={Config} />
+              <Route exact path="/profile" component={Profile}/>
               <Route exact path="/report" component={Report} />
               <Redirect from="*" to="/sites" />
             </Main>
