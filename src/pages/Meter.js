@@ -27,6 +27,12 @@ function Meter() {
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm();
   const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
+  const [meters, setMeters] = useState([]);
+  const [loading, setloading] = useState(true);
+  const [MeterId, setMeterId] = useState();
+  const [searchText,setSearchText] = useState()
+  const [tempData,setTempData] = useState()
+
 
   const validateMessages = {
     required: "${label} is required!",
@@ -49,322 +55,127 @@ function Meter() {
 
   const columns = [
     {
-      title: "Project No.",
-      dataIndex: "projectno",
+      title: "ID",
+      dataIndex: "id",
       key: "1",
-      sorter: (a, b) => a.projectno - b.projectno,
-    },
-    {
-      title: "Project Name",
-      dataIndex: "projectname",
-      key: "2",
-      sorter: (a, b) => a.projectname - b.projectname,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.projectname.startsWith(value),
-      // width: "30%",
-    },
-    {
-      title: "Project Type",
-      dataIndex: "projecttype",
-      key: "3",
-      sorter: (a, b) => a.projecttype - b.projecttype,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.projecttype.startsWith(value),
-      // width: "30%",
-    },
-    {
-      title: "Building",
-      dataIndex: "building",
-      key: "4",
-      sorter: (a, b) => a.building - b.building,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.building.startsWith(value),
-      // width: "30%",
-    },
-    {
-      title: "Asset",
-      dataIndex: "asset",
-      key: "5",
-      sorter: (a, b) => a.asset - b.asset,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.asset.startsWith(value),
-      // width: "30%",
+      sorter: (a, b) => a.id.localeCompare(b.id),
     },
     {
       title: "Name",
       dataIndex: "name",
-      key: "6",
-      sorter: (a, b) => a.name - b.name,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
+      key: "2",
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      filters: Array.from(new Set(meters.map(item => item.name))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
       filterMode: "tree",
       filterSearch: true,
       onFilter: (value, record) => record.name.startsWith(value),
-      // width: "30%",
     },
     {
-      title: "MPID",
-      dataIndex: "mpid",
+      title: "Equip",
+      dataIndex: "equip",
+      key: "3",
+      sorter: (a, b) => a.equip.localeCompare(b.equip),
+      filters: Array.from(new Set(meters.map(item => item.equip))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.equip.startsWith(value),
+    },
+    {
+      title: "Electricity",
+      dataIndex: "elec",
+      key: "4",
+      sorter: (a, b) => a.elec.localeCompare(b.elec),
+      filters: Array.from(new Set(meters.map(item => item.elec))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.elec.startsWith(value),
+    },
+    {
+      title: "Gate Meter",
+      dataIndex: "gateMeter",
+      key: "5",
+      sorter: (a, b) => a.gateMeter.localeCompare(b.gateMeter),
+      filters: Array.from(new Set(meters.map(item => item.gateMeter))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.gateMeter.startsWith(value),
+    },
+    {
+      title: "GEG Equipment Type",
+      dataIndex: "gegEquipType",
+      key: "6",
+      sorter: (a, b) => a.gegEquipType.localeCompare(b.gegEquipType),
+      filters: Array.from(new Set(meters.map(item => item.gegEquipType))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.gegEquipType.startsWith(value),
+    },
+    {
+      title: "GEG Nabers Inclusion Percent",
+      dataIndex: "gegNabersInclusionPercent",
       key: "7",
-      sorter: (a, b) => a.mpid - b.mpid,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
+      sorter: (a, b) => a.gegNabersInclusionPercent - b.gegNabersInclusionPercent,
+      filters: Array.from(new Set(meters.map(item => item.gegNabersInclusionPercent))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
       filterMode: "tree",
       filterSearch: true,
-      onFilter: (value, record) => record.mpid.startsWith(value),
-      // width: "30%",
+      onFilter: (value, record) => record.gegNabersInclusionPercent.startsWith(value),
     },
     {
-      title: "Cumulative",
-      dataIndex: "cumulative",
+      title: "Level Reference",
+      dataIndex: "levelRef",
       key: "8",
-      sorter: (a, b) => a.projectNo - b.projectNo,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
+      sorter: (a, b) => a.levelRef.localeCompare(b.levelRef),
+      filters: Array.from(new Set(meters.map(item => item.levelRef))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
       filterMode: "tree",
       filterSearch: true,
-      onFilter: (value, record) => record.cumulative.startsWith(value),
-      // width: "30%",
+      onFilter: (value, record) => record.levelRef.startsWith(value),
     },
     {
-      title: "Energy Type",
-      dataIndex: "energyType",
+      title: "Meter",
+      dataIndex: "meter",
       key: "9",
-      sorter: (a, b) => a.energyType - b.energyType,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
+      sorter: (a, b) => a.meter.localeCompare(b.meter),
+      filters: Array.from(new Set(meters.map(item => item.meter))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
       filterMode: "tree",
       filterSearch: true,
-      onFilter: (value, record) => record.energyType.startsWith(value),
-      // width: "30%",
+      onFilter: (value, record) => record.meter.startsWith(value),
     },
     {
-      title: "Energy Profile",
-      dataIndex: "energyProfile",
+      title: "Site Reference",
+      dataIndex: "siteRef",
       key: "10",
-      sorter: (a, b) => a.energyProfile - b.energyProfile,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
+      sorter: (a, b) => a.siteRef.localeCompare(b.siteRef),
+      filters: Array.from(new Set(meters.map(item => item.siteRef))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
       filterMode: "tree",
       filterSearch: true,
-      onFilter: (value, record) => record.energyProfile.startsWith(value),
-      // width: "30%",
-    },
-    {
-      title: "Monitor Interval Name",
-      dataIndex: "monitorIntervalName",
-      key: "11",
-      sorter: (a, b) => a.monitorIntervalName - b.monitorIntervalName,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.monitorIntervalName.startsWith(value),
-      // width: "30%",
-    },
-    {
-      title: "Asset Served",
-      dataIndex: "assetServed",
-      key: "12",
-      sorter: (a, b) => a.assetServed - b.assetServed,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.assetServed.startsWith(value),
-      // width: "30%",
-    },
-    {
-      title: "Components",
-      dataIndex: "components",
-      key: "13",
-      sorter: (a, b) => a.components - b.components,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.components.startsWith(value),
-      // width: "30%",
-    },
-    {
-      title: "Db",
-      dataIndex: "db",
-      key: "14",
-      sorter: (a, b) => a.db - b.db,
-    },
-    {
-      title: "Holidays",
-      dataIndex: "holidays",
-      key: "15",
-      sorter: (a, b) => a.holidays - b.holidays,
-    },
-    {
-      title: "Target",
-      dataIndex: "target",
-      key: "16",
-      sorter: (a, b) => a.target - b.target,
-    },
-    {
-      title: "Alert",
-      dataIndex: "alert",
-      key: "17",
-      sorter: (a, b) => a.alert - b.alert,
+      onFilter: (value, record) => record.siteRef.startsWith(value),
     },
     {
       title: "Actions",
@@ -391,21 +202,17 @@ function Meter() {
       ),
     },
   ];
-
-  const [post, setPost] = useState({});
-  const [loading, setloading] = useState(true);
-  const [MeterId, setMeterId] = useState();
-  const [searchText,setSearchText] = useState()
-  const [tempData,setTempData] = useState()
+  
 
   let data = [];
   const getData = async () => {
     setIsLoading(true);
     try {
       const resp = await getMeterList();
+      const meterData = await getApiDataFromAws("queryType=elecMeters")
       // console.log(resp)
-      setPost(resp);
-      setTempData(resp)
+      setMeters(meterData);
+      setTempData(meterData)
       setloading(false);
       setIsLoading(false);
     } catch (error) {}
@@ -438,7 +245,7 @@ function Meter() {
     setOpen(true);
   };
 
-  data = loading ? [] : post;
+  data = loading ? [] : meters;
 
 
 
@@ -466,7 +273,7 @@ function Meter() {
   const onChangeText =  (text) =>{
     filter(text)
     if(!searchText | searchText == ""){
-       setPost(post)
+       setMeters(meters)
     }
 
   }

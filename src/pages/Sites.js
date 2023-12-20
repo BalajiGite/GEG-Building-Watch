@@ -262,7 +262,6 @@ function Sites() {
   const getData = async () => {
     setIsLoading(true);
     try {
-      const resp = await getSitesList();
 
       const sites = await getApiDataFromAws("queryType=site")
       // console.log(sites)

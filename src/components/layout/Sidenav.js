@@ -216,7 +216,7 @@ function Sidenav({ color }) {
               }}
               className="label"
             >
-              Meter
+              Meters
             </span>
           </NavLink>
         </Menu.Item>
