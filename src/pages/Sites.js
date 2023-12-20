@@ -4,6 +4,7 @@ import { Form, Input, Table } from "antd";
 import { Button, Row, Col, Modal } from "antd";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
+import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
 import {
   addSites,
   deleteSites,
@@ -25,13 +26,12 @@ function Sites() {
   const [searchText, setSearchText] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [post, setPost] = useState({});
+  const [siteData, setSiteData] = useState({});
   const [loading, setloading] = useState(true);
   const [SitesId, setSitesId] = useState();
-  const [temp, setTemp] = useState();
+  const [site, setSite] = useState([]);
   const [open, setOpen] = useState(false);
   // console.log(open);
-
   const [form] = Form.useForm();
   const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
 
@@ -51,178 +51,231 @@ function Sites() {
     setSitesId();
     form.resetFields();
   };
+
+
   const columns = [
     {
-      title: "Project No",
-      dataIndex: "projectno",
+      title: "Id",
+      dataIndex: "id",
       key: "1",
-      sorter: (a, b) => a.projectno - b.projectno,
+      sorter: (a, b) => a.id.localeCompare(b.id),
     },
     {
-      title: "Project Name",
-      dataIndex: "projectname",
+      title: "Name",
+      dataIndex: "name",
       key: "2",
-      sorter: (a, b) => a.projectname - b.projectname,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      filters: Array.from(new Set(site.map(item => item.name))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
       filterMode: "tree",
       filterSearch: true,
-      onFilter: (value, record) => record.projectname.startsWith(value),
-      // width: "30%",
+      onFilter: (value, record) => record.name.startsWith(value),
     },
     {
-      title: "Project Type",
-      dataIndex: "projecttype",
+      title: "Area",
+      dataIndex: "area",
       key: "3",
-      sorter: (a, b) => a.projecttype - b.projecttype,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
+      sorter: (a, b) => a.area - b.area,
+      filters: Array.from(new Set(site.map(item => item.area))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
       filterMode: "tree",
       filterSearch: true,
-      onFilter: (value, record) => record.projecttype.startsWith(value),
-      // width: "30%",
+      onFilter: (value, record) => record.area.startsWith(value),
     },
-
     {
-      title: "Client Name",
-      dataIndex: "clientname",
+      title: "Project ID",
+      dataIndex: "projId",
       key: "4",
-      sorter: (a, b) => a.clientname - b.clientname,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
+      sorter: (a, b) => a.projId.localeCompare(b.projId),
+      filters: Array.from(new Set(site.map(item => item.projId))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
       filterMode: "tree",
       filterSearch: true,
-      onFilter: (value, record) => record.clientname.startsWith(value),
-      // width: "30%",
+      onFilter: (value, record) => record.projId.startsWith(value),
     },
     {
-      title: "Client Agent Name",
-      dataIndex: "clientagentname",
+      title: "Site",
+      dataIndex: "site",
       key: "5",
-      sorter: (a, b) => a.clientagentname - b.clientagentname,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
+      sorter: (a, b) => (a.site === b.site ? 0 : a.site ? -1 : 1),
+      render: (text) => (text ? "True" : "False"),
+      filters: Array.from(new Set(site.map(item => item.site))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
       filterMode: "tree",
       filterSearch: true,
-      onFilter: (value, record) => record.clientagentname.startsWith(value),
-      // width: "30%",
+      onFilter: (value, record) => record.site.startsWith(value),
     },
-
     {
-      title: "PTL",
-      dataIndex: "ptl",
+      title: "ARMS Project ID",
+      dataIndex: "armsProjectId",
       key: "6",
-      sorter: (a, b) => a.ptl - b.ptl,
-    },
-    {
-      title: "Project Group",
-      dataIndex: "projectgroup",
-      key: "7",
-      sorter: (a, b) => a.projectgroup - b.projectgroup,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
+      sorter: (a, b) => a.armsProjectId.localeCompare(b.armsProjectId),
+      filters: Array.from(new Set(site.map(item => item.armsProjectId))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
       filterMode: "tree",
       filterSearch: true,
-      onFilter: (value, record) => record.projectgroup.startsWith(value),
-      // width: "30%",
+      onFilter: (value, record) => record.armsProjectId.startsWith(value),
+    },
+    {
+      title: "Tz",
+      dataIndex: "tz",
+      key: "7",
+      sorter: (a, b) => a.tz.localeCompare(b.tz),
+      filters: Array.from(new Set(site.map(item => item.tz))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.tz.startsWith(value),
+    },
+    {
+      title: "ARMS Project",
+      dataIndex: "armsProj",
+      key: "8",
+      sorter: (a, b) => a.armsProj.localeCompare(b.armsProj),
+      filters: Array.from(new Set(site.map(item => item.armsProj))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.armsProj.startsWith(value),
+    },
+    {
+      title: "Observes Holidays",
+      dataIndex: "observesHolidays",
+      key: "9",
+      sorter: (a, b) => a.observesHolidays.localeCompare(b.observesHolidays),
+      render: (text) => (text ? "True" : "False"),
+      filters: Array.from(new Set(site.map(item => item.observesHolidays))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.observesHolidays.startsWith(value),
+    },
+    {
+      title: "Geographical Country",
+      dataIndex: "geoCountry",
+      key: "10",
+      sorter: (a, b) => a.geoCountry.localeCompare(b.geoCountry),
+      filters: Array.from(new Set(site.map(item => item.geoCountry))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.geoCountry.startsWith(value),
+    },
+    {
+      title: "Geographical Address",
+      dataIndex: "geoAddress",
+      key: "11",
+      sorter: (a, b) => a.geoAddress.localeCompare(b.geoAddress),
+      filters: Array.from(new Set(site.map(item => item.geoAddress))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.geoAddress.startsWith(value),
+    },
+    {
+      title: "Longitude",
+      dataIndex: "long",
+      key: "12",
+      sorter: (a, b) => a.long.localeCompare(b.long),
+    },
+    {
+      title: "Latitude",
+      dataIndex: "lat",
+      key: "13",
+      sorter: (a, b) => a.lat.localeCompare(b.lat),
+    },
+    {
+      title: "State",
+      dataIndex: "stateRef",
+      key: "14",
+      sorter: (a, b) => a.stateRef.localeCompare(b.stateRef),
+      filters: Array.from(new Set(site.map(item => item.stateRef))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.stateRef.startsWith(value),
+    },
+    {
+      title: "Region",
+      dataIndex: "regionRef",
+      key: "15",
+      sorter: (a, b) => a.regionRef.localeCompare(b.regionRef),
+      filters: Array.from(new Set(site.map(item => item.regionRef))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.regionRef.startsWith(value),
+    },
+    {
+      title: "Weather Station",
+      dataIndex: "weatherStationRef",
+      key: "16",
+      sorter: (a, b) => a.weatherStationRef.localeCompare(b.weatherStationRef),
+      filters: Array.from(new Set(site.map(item => item.weatherStationRef))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.weatherStationRef.startsWith(value),
     },
     {
       title: "Actions",
       dataIndex: "delete",
-      key: "8",
+      key: "17",
       render: (text, record, index) => (
         <>
-          <a
-            onClick={() => {
-              onEdit(record);
-            }}
-          >
-            EDIT
-          </a>
+          <a onClick={() => onEdit(record)}>EDIT</a>
           <Divider type="vertical" />
-          <a
-            onClick={() => {
-              onDelete(record.id);
-            }}
-          >
-            DELETE
-          </a>
+          <a onClick={() => onDelete(record.id)}>DELETE</a>
         </>
       ),
     },
   ];
+
 
   let data = [];
   const getData = async () => {
     setIsLoading(true);
     try {
       const resp = await getSitesList();
-      console.log(resp);
-      setPost(resp);
-      setTemp(resp);
+
+      const sites = await getApiDataFromAws("queryType=site")
+      // console.log(sites)
+      const body = {
+        funcName: 'createStateRecordsFromJson',
+        recList: [{ stateName: 'TestState123FromGEMS' }]
+      };
+      //const addSites = await postApiDataToAws(body)
+      setSiteData(sites);
+      setSite(sites);
       setloading(false);
       setIsLoading(false);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const setData = async (formData) => {
@@ -243,7 +296,7 @@ function Sites() {
     try {
       const resp = await deleteSites(id);
       getData();
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const onEdit = async (record) => {
@@ -256,27 +309,25 @@ function Sites() {
     setSearchText(text);
     filter(text);
     if (text === "" || !text) {
-      setPost(post);
+      setSite(siteData);
     }
   };
 
-  data = loading ? [] : post;
-
   const filter = (text) => {
     // debugger
-    const filteredData = data.filter(
+    const filteredData = site.filter(
       (record) =>
-        record.projectname.toLowerCase().includes(text.toLowerCase()) ||
-        record.projecttype.toLowerCase().includes(text.toLowerCase()) ||
-        record.projectno.toString().includes(text.toLowerCase()) ||
-        record.clientname.toLowerCase().includes(searchText.toLowerCase()) ||
-        record.clientagentname
+        record.name.toLowerCase().includes(text.toLowerCase()) ||
+        record.area.toLowerCase().includes(text.toLowerCase()) ||
+        record.projId.toString().includes(text.toLowerCase()) ||
+        record.stateRef.toLowerCase().includes(searchText.toLowerCase()) ||
+        record.regionRef
           .toLowerCase()
           .includes(searchText.toLowerCase()) ||
-        record.ptl.toLowerCase().includes(searchText.toLowerCase()) ||
-        record.projectgroup.toLowerCase().includes(searchText.toLowerCase())
+        record.weatherStationRef.toLowerCase().includes(searchText.toLowerCase()) ||
+        record.armsProj.toLowerCase().includes(searchText.toLowerCase())
     );
-    setTemp(filteredData);
+    setSite(filteredData);
   };
   useEffect(() => {
     getData();
@@ -301,8 +352,8 @@ function Sites() {
         </Col>
       </Row>
       <Modal
-        style={{ textAlign: "left" }}
-        title="Create New Sites"
+        style={{ textAlign: "left", backgroundColor: "#001629" }}
+        title="Add New Sites"
         centered
         open={open}
         onCancel={() => onCancelModal()}
@@ -321,11 +372,11 @@ function Sites() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"projectnumber"}
-                label="Project No"
+                name={"name"}
+                label="Site Name"
                 labelCol={{ span: 4 }}
                 wrapperCol={{ span: 18 }}
-                // rules={[{ required: "" }]}
+              // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -335,11 +386,11 @@ function Sites() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"projectname"}
-                label="Project Name"
+                name={"site"}
+                label="Site ID"
                 labelCol={{ span: 4 }}
                 wrapperCol={{ span: 18 }}
-                // rules={[{ required: "" }]}
+              // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -349,10 +400,52 @@ function Sites() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"projecttype"}
-                label="Project Types"
+                name={"area"}
+                label="Area"
                 labelCol={{ span: 4 }}
                 wrapperCol={{ span: 18 }}
+              >
+                <Input className="form_input" />
+
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name={"armsProj"}
+                label="Arms Prj"
+                labelCol={{ span: 4 }}
+                wrapperCol={{ span: 18 }}
+              // rules={[{ required: "" }]}
+              >
+                <Input className="form_input" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name={"armsProjectId"}
+                label="Arms Proj ID"
+                labelCol={{ span: 4 }}
+                wrapperCol={{ span: 18 }}
+              // rules={[{ required: "" }]}
+              >
+                <Input className="form_input" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name={"projId"}
+                label="Select Proj ID"
+                labelCol={{ span: 4 }}
+                wrapperCol={{ span: 18 }}
+              // rules={[{ required: "" }]}
               >
                 <Select
                   placeholder="Select Project"
@@ -360,12 +453,14 @@ function Sites() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                  options={filteredOptions.map((item, index) => ({
-                    value: item,
-                    label: item,
-                    key: index,
-                  }))}
-                />
+                >
+                  {site.map((item, index) => (
+                    <Select.Option key={index} value={item.projId}>
+                      {item.projId}
+                    </Select.Option>
+                  ))}
+                </Select>
+                {/* <Input className="form_input" /> */}
               </Form.Item>
             </Col>
           </Row>
@@ -373,25 +468,109 @@ function Sites() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"clientname"}
-                label="Client Name"
+                name={"tz"}
+                label="Select TZ"
                 labelCol={{ span: 4 }}
                 wrapperCol={{ span: 18 }}
-                // rules={[{ required: "" }]}
+              // rules={[{ required: "" }]}
               >
-                <Input className="form_input" />
+                <Select 
+                placeholder="Select TZ"
+                style={{width:"100%"}}
+                value={selectedItems}
+                onChange={setSelectedItems}
+                >
+                  {site.map((item,index) => 
+                  (
+                    <Select.Option key={index} item={item.tz}>{item.tz}</Select.Option>
+                  ))}
+                </Select>
+              
+                {/* <Input className="form_input" /> */}
               </Form.Item>
             </Col>
           </Row>
-
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"clientagentname"}
-                label="Client Agent Name"
+                name={"observesHolidays"}
+                label="Select Observe Holidays"
                 labelCol={{ span: 4 }}
                 wrapperCol={{ span: 18 }}
-                // rules={[{ required: "" }]}
+              // rules={[{required:""}]}
+              >
+                <Select 
+                placeholder ="Select Observe Holidays"
+                size="large"
+                style={{width:"100%"}}
+                value={selectedItems}
+                onChange={setSelectedItems}
+                >
+                  {site.map((item,index) => 
+                  (
+                    <Select.Option key={index} item={item.observesHolidays}>{item.observesHolidays}</Select.Option>
+                  ))}
+                </Select>
+                {/* <Input className="form_input" /> */}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name={"regionRef"}
+                label="Select Region ID"
+                labelCol={{ span: 4 }}
+                wrapperCol={{ span: 18 }}
+              // rules={[{required:""}]}
+              >
+                <Select 
+                placeholder="Select Region ID"
+                value={selectedItems}
+                onChange={setSearchText}
+                style={{width:"100%"}}
+                >
+                  {site.map((item,index) => 
+                  (
+                    <Select.Option key={index} item={item.regionRef}>{item.regionRef}</Select.Option>
+                  ))}
+                </Select>
+                {/* <Input className="form_input" /> */}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name={"geoCountry"}
+                label="Select Geo Country"
+                labelCol={{ span: 4 }}
+                wrapperCol={{ span: 18 }}
+              // rules={[{required:""}]}
+              >
+                <Select 
+                placeholder="Select Geo Country"
+                value={selectedItems}
+                onChange={setSearchText}
+                style={{width:"100%"}}
+                >
+                  {site.map((item,index) => 
+                  (
+                    <Select.Option key={index} item={item.geoCountry}>{item.geoCountry}</Select.Option>
+                  ))}
+                </Select>
+                {/* <Input className="form_input" /> */}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name={"geoAddress"}
+                label="Geo Address"
+                labelCol={{ span: 4 }}
+                wrapperCol={{ span: 18 }}
+              // rules={[{required:""}]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -400,31 +579,16 @@ function Sites() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"ptl"}
-                label="PTL"
+                name={""}
+                label="Help"
                 labelCol={{ span: 4 }}
                 wrapperCol={{ span: 18 }}
-                // rules={[{ required: "" }]}
+              // rules={[{required:""}]}
               >
                 <Input className="form_input" />
               </Form.Item>
             </Col>
           </Row>
-
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"projectgroup"}
-                label="Project Group"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-          </Row>
-
           <Form.Item
             wrapperCol={{
               offset: 11,
@@ -432,17 +596,21 @@ function Sites() {
             }}
           >
             <Row>
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-              <Button
-                type=""
-                style={{ marginLeft: 10 }}
-                htmlType=""
-                onClick={() => onCancelModal()}
-              >
-                Cancel
-              </Button>
+              <Col span={20} style={{ display: "flex", justifyContent: "end" }} >
+
+                <Button
+                  type=""
+                  htmlType=""
+                  onClick={() => onCancelModal()}
+                >
+                  Cancel
+                </Button>
+                <Button type="primary"
+                  style={{ marginLeft: 10 }}
+                  htmlType="submit">
+                  Save
+                </Button>
+              </Col>
             </Row>
           </Form.Item>
         </Form>
@@ -450,7 +618,7 @@ function Sites() {
       <Spin spinning={isLoading}>
         <Table
           columns={columns}
-          dataSource={temp}
+          dataSource={site}
           rowKey={"id"}
           scroll={{
             x: 1000,

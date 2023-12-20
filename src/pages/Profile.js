@@ -6,8 +6,7 @@ import React from 'react';
   
   return (
     <div className="App">
-      
-    
+        Profile Page
     </div>
   );
 }

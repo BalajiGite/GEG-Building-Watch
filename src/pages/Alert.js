@@ -5,6 +5,7 @@ import { Button, Row, Col, Modal } from "antd";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { getAlertConfList } from "../services/alertConfService";
+import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
 import {
   addAlerts,
   deleteAlerts,

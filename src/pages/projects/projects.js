@@ -6,6 +6,7 @@ import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { FcCalendar } from "react-icons/fc";
 import { GrTarget } from "react-icons/gr";
+import { getApiDataFromAws, postApiDataToAws } from "../../services/apis";
 import {
   addBuilding,
   deleteBuilding,
