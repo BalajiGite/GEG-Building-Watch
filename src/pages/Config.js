@@ -1,4 +1,7 @@
 import React from "react";
+import Region from "../components/widgets/Region";
+import State from "../components/widgets/State";
+import Level from "../components/widgets/Level";
 // import Divider from "antd";
 // import { Col,Row,Text,Title,Card,Paragraph,RightOutlined } from 'antd'
 // import Paragraph from "antd/lib/typography/Paragraph";
@@ -112,105 +115,31 @@ const props = {
 };
 function Config() {
   const [open, setOpen] = useState(false);
+  const [defaultTable, setDefaultTable] = useState(true);
+  const [widgets, setWidgets] = useState(null);
+
+      const changeWidgets = (widget) => {
+        setDefaultTable(false);
+        setWidgets(widget);
+      }
+      const currentDefaultTable = () => {
+        setDefaultTable(true);
+        setWidgets(null);
+      }
+
   return (
     <>
-      <Card>
-        <div className="colors">
-          <h2>Colors</h2>
-        </div>
-        <Row>
-          <Col xl={11} xs={24} sm={24} md={11}>
-            <Form.Item
-              style={{
-                marginTop: 15,
-              }}
-              name="hight"
-              label=""
-            >
-              {/* <p>Colors can be entered as any valid CSS color (salmon, #fff, #ffffff, rgb(255, 255, 255))
-</p> */}
-              PRIMARY
-              <Input
-                style={{ width: "100%" }}
-                placeholder="eg salmon (optional)"
-              />
-            </Form.Item>
-            <Form.Item
-              style={{
-                marginTop: 15,
-              }}
-              name="hight"
-              label=""
-            >
-              ACTIVE
-              <Input
-                style={{ width: "100%" }}
-                placeholder="eg salmon (optional)"
-              />
-            </Form.Item>
-            <Form.Item
-              style={{
-                marginTop: 15,
-              }}
-              name="hight"
-              label=""
-            >
-              TEXT
-              <Input
-                style={{ width: "100%" }}
-                placeholder="eg salmon (optional)"
-              />
-            </Form.Item>
-          </Col>
-
-          <Col
-            xl={12}
-            xs={24}
-            sm={24}
-            md={11}
-            style={{
-              marginLeft: 40,
-            }}
-          >
-            <Form.Item
-              style={{
-                marginTop: 15,
-              }}
-              name="hight"
-              label=""
-            >
-              TEXT ON PRIMARY
-              <Input
-                style={{ width: "100%" }}
-                placeholder="eg salmon (optional)"
-              />
-            </Form.Item>
-            <Form.Item
-              style={{
-                marginTop: 15,
-              }}
-              name="hight"
-              label=""
-            >
-              TEXT ON ACTIVE
-              <Input
-                style={{ width: "100%" }}
-                placeholder="eg salmon (optional)"
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-      </Card>
-
-      <Row className="colors">{/* <h2>Constent Energy </h2> */}</Row>
-      <Row className="">
+      <Row className="" >
         <Col xl={24} xs={24} sm={24} md={24}>
           <Card direction="vertical" style={{ width: 1280, marginTop: 20 }}>
             <Collapse collapsible="icon" bordered={false}>
               <Panel header="Energy Constant Table" key="1">
                 <>
+                <Button type="button" onClick={currentDefaultTable}>State</Button>
+                  <Button type="button" onClick={()=> changeWidgets(1)}>Region</Button>
+                  <Button type="button" onClick={()=> changeWidgets(2)}>Level</Button>
                   <Button
-                    className="mb-4"
+                    className="mb-4 ml-4"
                     type="primary"
                     onClick={() => setOpen(true)}
                   >
@@ -335,20 +264,113 @@ function Config() {
                       </Form.Item>
                     </Form>
                   </Modal>
-                  <Table
+                  {defaultTable ? (<Table
                     bordered
                     columns={columns}
                     dataSource={data}
                     scroll={{
                       x: 1000,
                     }}
-                  />
+                  />): (<>
+                  {widgets===1 && <Region/>}
+                  {widgets===2 && <Level/>}
+                  </>)}
                 </>
               </Panel>
             </Collapse>
           </Card>
         </Col>
       </Row>
+
+      <Card>
+        <div className="colors">
+          <h2>Colors</h2>
+        </div>
+        <Row>
+          <Col xl={11} xs={24} sm={24} md={11}>
+            <Form.Item
+              style={{
+                marginTop: 15,
+              }}
+              name="hight"
+              label=""
+            >
+              {/* <p>Colors can be entered as any valid CSS color (salmon, #fff, #ffffff, rgb(255, 255, 255))
+</p> */}
+              PRIMARY
+              <Input
+                style={{ width: "100%" }}
+                placeholder="eg salmon (optional)"
+              />
+            </Form.Item>
+            <Form.Item
+              style={{
+                marginTop: 15,
+              }}
+              name="hight"
+              label=""
+            >
+              ACTIVE
+              <Input
+                style={{ width: "100%" }}
+                placeholder="eg salmon (optional)"
+              />
+            </Form.Item>
+            <Form.Item
+              style={{
+                marginTop: 15,
+              }}
+              name="hight"
+              label=""
+            >
+              TEXT
+              <Input
+                style={{ width: "100%" }}
+                placeholder="eg salmon (optional)"
+              />
+            </Form.Item>
+          </Col>
+
+          <Col
+            xl={12}
+            xs={24}
+            sm={24}
+            md={11}
+            style={{
+              marginLeft: 40,
+            }}
+          >
+            <Form.Item
+              style={{
+                marginTop: 15,
+              }}
+              name="hight"
+              label=""
+            >
+              TEXT ON PRIMARY
+              <Input
+                style={{ width: "100%" }}
+                placeholder="eg salmon (optional)"
+              />
+            </Form.Item>
+            <Form.Item
+              style={{
+                marginTop: 15,
+              }}
+              name="hight"
+              label=""
+            >
+              TEXT ON ACTIVE
+              <Input
+                style={{ width: "100%" }}
+                placeholder="eg salmon (optional)"
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Card>
+
+      <Row className="colors">{/* <h2>Constent Energy </h2> */}</Row>
     </>
   );
 }

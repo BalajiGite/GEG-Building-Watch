@@ -1370,6 +1370,10 @@ img {
   margin-bottom: 1.5rem !important;
 }
 
+.ml-4{
+  margin-left: 1.5rem;
+}
+
 .gradent {
   background: url("../images/info-card-2.jpg") no-repeat center top;
   background-size: cover;
