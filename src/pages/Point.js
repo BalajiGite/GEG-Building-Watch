@@ -179,7 +179,7 @@ export default function Point() {
   };
 
   const onEdit = async (record) => {
-    form.setFieldValue(record);
+    form.setFieldsValue(record);
     SetPointsId(record.id);
     setOpen(true);
   };
