@@ -28,7 +28,9 @@ export default function Point() {
   const [pointData, setPointData] = useState({});
   const [loading, setloading] = useState(true);
   const [PointsId, SetPointsId] = useState();
+  const [siteListData, setSiteListData] = useState([]);
   const [point, setPoint] = useState([]);
+  const [meterOptions, setMeterOptions] = useState([]);
   const [open, setOpen] = useState(false);
 
   const [form] = Form.useForm();
@@ -149,6 +151,8 @@ export default function Point() {
     try {
       
       const points = await getApiDataFromAws("queryType=elecPoints");
+      const sitesList = await getApiDataFromAws("queryType=dropdownSite");
+      setSiteListData(sitesList);
       setPointData(points);
       setPoint(points);
       setloading(false);
@@ -167,6 +171,13 @@ export default function Point() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const onSiteNameChange = (value) => {
+    // Fetch the corresponding armsProjectIds based on the selected siteName
+    const selectedSite = siteListData.find((item) => item.id === value);
+    //setMeterOptions(selectedSite);
+
   };
 
   const onDelete = async (id) => {
@@ -292,13 +303,26 @@ export default function Point() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"armsProj"}
+                name={"siteName"}
                 label="Select Site Name"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
                 // rules={[{ required: "" }]}
               >
-                <Input className="form_input" />
+                <Select
+                  placeholder="Select Site Name"
+                  value={selectedItems}
+                  onChange={(value) => {
+                    onSiteNameChange(value);
+                  }}
+                  style={{ width: "100%" }}
+                >
+                 { siteListData.length > 0 &&
+                  siteListData.map((item , index)=> (
+                    <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
+                  ))
+                 }
+                </Select>
               </Form.Item>
             </Col>
           </Row>
@@ -306,13 +330,23 @@ export default function Point() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"armsProjectId"}
+                name={"meterDis"}
                 label="Select Meter Dis"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
                 // rules={[{ required: "" }]}
               >
-                <Input className="form_input" />
+                <Select
+                  placeholder="Select Meter Dis"
+                  value={selectedItems}
+                  style={{ width: "100%" }}
+                >
+                 { meterOptions.length > 0 &&
+                  meterOptions.map((item , index)=> (
+                    <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
+                  ))
+                 }
+                </Select>
               </Form.Item>
             </Col>
           </Row>
