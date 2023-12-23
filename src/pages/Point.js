@@ -21,16 +21,14 @@ const layout = {
   },
 };
 
-const OPTIONS = ["Apples", "Orange", "Bananas", "Mangoes"];
-
 export default function Point() {
   const [searchText, setSearchText] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [siteData, setSiteData] = useState({});
+  const [pointData, setPointData] = useState({});
   const [loading, setloading] = useState(true);
   const [SitesId, setSitesId] = useState();
-  const [site, setSite] = useState([]);
+  const [point, setPoint] = useState([]);
   const [open, setOpen] = useState(false);
 
   const [form] = Form.useForm();
@@ -53,6 +51,7 @@ export default function Point() {
     form.resetFields();
   };
 
+  
   const columns = [
     {
       title: "Id",
@@ -65,214 +64,71 @@ export default function Point() {
       dataIndex: "name",
       key: "2",
       sorter: (a, b) => a.name.localeCompare(b.name),
-      filters: Array.from(new Set(site.map((item) => item.name))).map(
-        (name, index) => ({
-          text: name,
-          value: name,
-        })
-      ),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.name.startsWith(value),
     },
     {
-      title: "Area",
-      dataIndex: "area",
+      title: "Geg Point Type",
+      dataIndex: "gegPointType",
       key: "3",
-      sorter: (a, b) => a.area - b.area,
-      filters: Array.from(new Set(site.map((item) => item.area))).map(
-        (name, index) => ({
-          text: name,
-          value: name,
-        })
-      ),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.area.startsWith(value),
+      sorter: (a, b) => a.gegPointType.localeCompare(b.gegPointType),
     },
     {
-      title: "Project ID",
-      dataIndex: "projId",
+      title: "Unit",
+      dataIndex: "unit",
       key: "4",
-      sorter: (a, b) => a.projId.localeCompare(b.projId),
-      filters: Array.from(new Set(site.map((item) => item.projId))).map(
-        (name, index) => ({
-          text: name,
-          value: name,
-        })
-      ),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.projId.startsWith(value),
+      sorter: (a, b) => a.unit.localeCompare(b.unit),
     },
     {
-      title: "Site",
-      dataIndex: "site",
+      title: "Import",
+      dataIndex: "import",
       key: "5",
-      sorter: (a, b) => (a.site === b.site ? 0 : a.site ? -1 : 1),
-      render: (text) => (text ? "True" : "False"),
-      filters: Array.from(new Set(site.map((item) => item.site))).map(
-        (name, index) => ({
-          text: name,
-          value: name,
-        })
-      ),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.site.startsWith(value),
+      sorter: (a, b) => a.import.localeCompare(b.import),
     },
     {
-      title: "ARMS Project ID",
-      dataIndex: "armsProjectId",
+      title: "Active",
+      dataIndex: "active",
       key: "6",
-      sorter: (a, b) => a.armsProjectId.localeCompare(b.armsProjectId),
-      filters: Array.from(new Set(site.map((item) => item.armsProjectId))).map(
-        (name, index) => ({
-          text: name,
-          value: name,
-        })
-      ),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.armsProjectId.startsWith(value),
+      sorter: (a, b) => a.active.localeCompare(b.active),
     },
     {
-      title: "Tz",
-      dataIndex: "tz",
+      title: "Elec",
+      dataIndex: "elec",
       key: "7",
-      sorter: (a, b) => a.tz.localeCompare(b.tz),
-      filters: Array.from(new Set(site.map((item) => item.tz))).map(
-        (name, index) => ({
-          text: name,
-          value: name,
-        })
-      ),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.tz.startsWith(value),
+      sorter: (a, b) => a.elec.localeCompare(b.elec),
     },
     {
-      title: "ARMS Project",
-      dataIndex: "armsProj",
+      title: "Sensor",
+      dataIndex: "sensor",
       key: "8",
-      sorter: (a, b) => a.armsProj.localeCompare(b.armsProj),
-      filters: Array.from(new Set(site.map((item) => item.armsProj))).map(
-        (name, index) => ({
-          text: name,
-          value: name,
-        })
-      ),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.armsProj.startsWith(value),
+      sorter: (a, b) => a.sensor.localeCompare(b.sensor),
     },
     {
-      title: "Observes Holidays",
-      dataIndex: "observesHolidays",
+      title: "Point",
+      dataIndex: "point",
       key: "9",
-      sorter: (a, b) => a.observesHolidays.localeCompare(b.observesHolidays),
-      render: (text) => (text ? "True" : "False"),
-      filters: Array.from(
-        new Set(site.map((item) => item.observesHolidays))
-      ).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.observesHolidays.startsWith(value),
+      sorter: (a, b) => a.point.localeCompare(b.point),
     },
     {
-      title: "Geographical Country",
-      dataIndex: "geoCountry",
+      title: "Energy",
+      dataIndex: "energy",
       key: "10",
-      sorter: (a, b) => a.geoCountry.localeCompare(b.geoCountry),
-      filters: Array.from(new Set(site.map((item) => item.geoCountry))).map(
-        (name, index) => ({
-          text: name,
-          value: name,
-        })
-      ),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.geoCountry.startsWith(value),
+      sorter: (a, b) => a.energy.localeCompare(b.energy),
     },
     {
-      title: "Geographical Address",
-      dataIndex: "geoAddress",
+      title: "Nem12Id",
+      dataIndex: "nem12Id",
       key: "11",
-      sorter: (a, b) => a.geoAddress.localeCompare(b.geoAddress),
-      filters: Array.from(new Set(site.map((item) => item.geoAddress))).map(
-        (name, index) => ({
-          text: name,
-          value: name,
-        })
-      ),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.geoAddress.startsWith(value),
+      sorter: (a, b) => a.nem12Id.localeCompare(b.nem12Id),
     },
     {
-      title: "Longitude",
-      dataIndex: "long",
+      title: "EquipRef",
+      dataIndex: "equipRef",
       key: "12",
-      sorter: (a, b) => a.long.localeCompare(b.long),
-    },
-    {
-      title: "Latitude",
-      dataIndex: "lat",
-      key: "13",
-      sorter: (a, b) => a.lat.localeCompare(b.lat),
-    },
-    {
-      title: "State",
-      dataIndex: "stateRef",
-      key: "14",
-      sorter: (a, b) => a.stateRef.localeCompare(b.stateRef),
-      filters: Array.from(new Set(site.map((item) => item.stateRef))).map(
-        (name, index) => ({
-          text: name,
-          value: name,
-        })
-      ),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.stateRef.startsWith(value),
-    },
-    {
-      title: "Region",
-      dataIndex: "regionRef",
-      key: "15",
-      sorter: (a, b) => a.regionRef.localeCompare(b.regionRef),
-      filters: Array.from(new Set(site.map((item) => item.regionRef))).map(
-        (name, index) => ({
-          text: name,
-          value: name,
-        })
-      ),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.regionRef.startsWith(value),
-    },
-    {
-      title: "Weather Station",
-      dataIndex: "weatherStationRef",
-      key: "16",
-      sorter: (a, b) => a.weatherStationRef.localeCompare(b.weatherStationRef),
-      filters: Array.from(
-        new Set(site.map((item) => item.weatherStationRef))
-      ).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.weatherStationRef.startsWith(value),
+      sorter: (a, b) => a.equipRef.localeCompare(b.equipRef),
     },
     {
       title: "Actions",
-      dataIndex: "delete",
-      key: "17",
+      dataIndex: "actions",
+      key: "13",
       render: (text, record, index) => (
         <>
           <a onClick={() => onEdit(record)}>EDIT</a>
@@ -281,21 +137,20 @@ export default function Point() {
         </>
       ),
     },
+    // Add more columns as needed
   ];
+  
+  // Use the 'columns' array in your component
+  console.log(columns);
+  
 
-  let data = [];
   const getData = async () => {
     setIsLoading(true);
     try {
-      const resp = await getSitesList();
-      const sites = await getApiDataFromAws("queryType=site");
-
-      const body = {
-        funcName: "createStateRecordsFromJson",
-        recList: [{ stateName: "TestState123FromGEMS" }],
-      };
-      setSiteData(sites);
-      setSite(sites);
+      
+      const points = await getApiDataFromAws("queryType=elecPoints");
+      setPointData(points);
+      setPoint(points);
       setloading(false);
       setIsLoading(false);
     } catch (error) {}
@@ -333,12 +188,12 @@ export default function Point() {
     setSearchText(text);
     filter(text);
     if (text === "" || !text) {
-      setSiteData(siteData);
+      setPointData(pointData);
     }
   };
 
   const filter = (text) => {
-    const filteredData = site.filter(
+    const filteredData = point.filter(
       (record) =>
         record.name.toLowerCase().includes(text.toLowerCase()) ||
         record.area.toLowerCase().includes(text.toLowerCase()) ||
@@ -350,7 +205,7 @@ export default function Point() {
           .includes(searchText.toLowerCase()) ||
         record.armsProj.toLowerCase().includes(searchText.toLowerCase())
     );
-    setSite(filteredData);
+    setPoint(filteredData);
   };
   useEffect(() => {
     getData();
@@ -476,7 +331,7 @@ export default function Point() {
                   size="large"
                   style={{ width: "100%" }}
                 >
-                  {site.map((item, index) => (
+                  {point.map((item, index) => (
                     <Select.Option key={index} value={item.projId}>
                       {item.projId}
                     </Select.Option>
@@ -502,7 +357,7 @@ export default function Point() {
                   value={selectedItems}
                   onChange={setSelectedItems}
                 >
-                  {site.map((item, index) => (
+                  {point.map((item, index) => (
                     <Select.Option key={index} item={item.tz}>
                       {item.tz}
                     </Select.Option>
@@ -529,7 +384,7 @@ export default function Point() {
                   value={selectedItems}
                   onChange={setSelectedItems}
                 >
-                  {site.map((item, index) => (
+                  {point.map((item, index) => (
                     <Select.Option key={index} item={item.observesHolidays}>
                       {item.observesHolidays}
                     </Select.Option>
@@ -554,7 +409,7 @@ export default function Point() {
                   onChange={setSearchText}
                   style={{ width: "100%" }}
                 >
-                  {site.map((item, index) => (
+                  {point.map((item, index) => (
                     <Select.Option key={index} item={item.regionRef}>
                       {item.regionRef}
                     </Select.Option>
@@ -579,7 +434,7 @@ export default function Point() {
                   onChange={setSearchText}
                   style={{ width: "100%" }}
                 >
-                  {site.map((item, index) => (
+                  {point.map((item, index) => (
                     <Select.Option key={index} item={item.geoCountry}>
                       {item.geoCountry}
                     </Select.Option>
@@ -641,7 +496,7 @@ export default function Point() {
       <Spin spinning={isLoading}>
         <Table
           columns={columns}
-          dataSource={site}
+          dataSource={point}
           rowKey={"id"}
           scroll={{
             x: 1000,
