@@ -132,8 +132,8 @@ function Config() {
       <Row className="" >
         <Col xl={24} xs={24} sm={24} md={24}>
           <Card direction="vertical" style={{ width: 1280, marginTop: 20 }}>
-            <Collapse collapsible="icon" bordered={false}>
-              <Panel header="Energy Constant Table" key="1">
+            {/* <Collapse collapsible="icon" bordered={false}> */}
+              {/* <Panel header="Energy Constant Table" key="1"> */}
                 <>
                 <Button type="button" onClick={currentDefaultTable}>State</Button>
                   <Button type="button" onClick={()=> changeWidgets(1)}>Region</Button>
@@ -276,101 +276,11 @@ function Config() {
                   {widgets===2 && <Level/>}
                   </>)}
                 </>
-              </Panel>
-            </Collapse>
+              {/* </Panel> */}
+           
           </Card>
         </Col>
       </Row>
-
-      <Card>
-        <div className="colors">
-          <h2>Colors</h2>
-        </div>
-        <Row>
-          <Col xl={11} xs={24} sm={24} md={11}>
-            <Form.Item
-              style={{
-                marginTop: 15,
-              }}
-              name="hight"
-              label=""
-            >
-              {/* <p>Colors can be entered as any valid CSS color (salmon, #fff, #ffffff, rgb(255, 255, 255))
-</p> */}
-              PRIMARY
-              <Input
-                style={{ width: "100%" }}
-                placeholder="eg salmon (optional)"
-              />
-            </Form.Item>
-            <Form.Item
-              style={{
-                marginTop: 15,
-              }}
-              name="hight"
-              label=""
-            >
-              ACTIVE
-              <Input
-                style={{ width: "100%" }}
-                placeholder="eg salmon (optional)"
-              />
-            </Form.Item>
-            <Form.Item
-              style={{
-                marginTop: 15,
-              }}
-              name="hight"
-              label=""
-            >
-              TEXT
-              <Input
-                style={{ width: "100%" }}
-                placeholder="eg salmon (optional)"
-              />
-            </Form.Item>
-          </Col>
-
-          <Col
-            xl={12}
-            xs={24}
-            sm={24}
-            md={11}
-            style={{
-              marginLeft: 40,
-            }}
-          >
-            <Form.Item
-              style={{
-                marginTop: 15,
-              }}
-              name="hight"
-              label=""
-            >
-              TEXT ON PRIMARY
-              <Input
-                style={{ width: "100%" }}
-                placeholder="eg salmon (optional)"
-              />
-            </Form.Item>
-            <Form.Item
-              style={{
-                marginTop: 15,
-              }}
-              name="hight"
-              label=""
-            >
-              TEXT ON ACTIVE
-              <Input
-                style={{ width: "100%" }}
-                placeholder="eg salmon (optional)"
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-      </Card>
-
-      <Row className="colors">{/* <h2>Constent Energy </h2> */}</Row>
     </>
   );
 }

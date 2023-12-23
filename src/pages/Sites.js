@@ -367,6 +367,7 @@ function Sites() {
           style={{ maxWidth: 1000 }}
           form={form}
           validateMessages={validateMessages}
+          
         >
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>

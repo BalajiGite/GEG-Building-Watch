@@ -296,11 +296,11 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item>
         <Menu.Item key="7">
-          <NavLink to="/profile">
+          <NavLink to="/targets">
             <span
               className="icon"
               style={{
-                backgroundColor: page === "profile" ? color : "",
+                backgroundColor: page === "targets" ? color : "",
               }}
             >
               <img src={profileIcon} alt="profieIcon" />
@@ -316,7 +316,7 @@ function Sidenav({ color }) {
               }}
               className="label"
             >
-              Target Profile
+              Targets
             </span>
           </NavLink>
         </Menu.Item>

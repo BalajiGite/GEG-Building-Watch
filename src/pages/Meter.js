@@ -11,6 +11,7 @@ import {
   editMeter,
   getMeterList,
 } from "../services/meterService";
+import { Item } from "devextreme-react/accordion";
 
 const layout = {
   labelCol: {
@@ -302,6 +303,7 @@ function Meter() {
           />
         </Col>
       </Row>
+
       <Modal
         style={{ textAlign: "left" }}
         title="Create New Meter"
@@ -319,14 +321,14 @@ function Meter() {
           style={{ maxWidth: 1000 }}
           form={form}
           validateMessages={validateMessages}
-          layout="vertical"
+
         >
           <Row justify={"center"} gutter={[30, 30]} >
-            <Col span={20}>
+            <Col span={24}>
               <Form.Item
-                name={"projectNo"}
+                name={"name"}
                 label="Meter Additional Name"
-                // labelCol={{ span: 4 }}
+                labelCol={{ span: 4 }}
                 wrapperCol={{ span: 18 }}
                 // rules={[{ required: "" }]}
               >
@@ -336,11 +338,11 @@ function Meter() {
           </Row>
 
           <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={20}>
+            <Col span={24}>
               <Form.Item
-                name={"projectName"}
-                label="GEG Equip Type"
-                // labelCol={{ span: 4 }}
+                name={"gegEquipType"}
+                label="Geg Equip Type"
+                labelCol={{ span: 4 }}
                 wrapperCol={{ span: 18 }}
                 // rules={[{ required: "" }]}
               >
@@ -350,11 +352,11 @@ function Meter() {
           </Row>
 
           <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={20}>
+            <Col span={24}>
               <Form.Item
-                name={"projectType"}
+                name={"siteRef"}
                 label="Select Site"
-                // labelCol={{ span: 4 }}
+                labelCol={{ span: 4 }}
                 wrapperCol={{ span: 18 }}
               >
                 <Select
@@ -363,22 +365,23 @@ function Meter() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                  options={filteredOptions.map((item, index) => ({
-                    value: item,
-                    label: item,
-                    key: index,
-                  }))}
-                />
+                >
+                  {
+                    [...new Set(meters.map(item =>item.siteRef))].map((item, index)=>(
+                      <Select.Option key={index} value={item}>{item}</Select.Option>
+                    ))
+                  }
+                </Select>
               </Form.Item>
             </Col>
           </Row>
 
           <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={20}>
+            <Col span={24}>
               <Form.Item
-                name={"building"}
+                name={"levelRef"}
                 label="Select Level"
-                // labelCol={{ span: 4 }}
+                labelCol={{ span: 4 }}
                 wrapperCol={{ span: 18 }}
                 // rules={[{ required: "" }]}
               >
@@ -388,35 +391,22 @@ function Meter() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                  options={filteredOptions.map((item, index) => ({
-                    value: item,
-                    label: item,
-                    key: index,
-                  }))}
-                />
-                {/* <Input className="form_input" /> */}
+                 
+               >
+                  {[...new Set(meters.map(item=>item.levelRef))].map((item,index)=>(
+                    <Select.Option key={index} value={item}>{item}</Select.Option>
+                  ))}
+                </Select>
               </Form.Item>
             </Col>
-            {/* <Col span={12}>
-              <Form.Item
-                name={"asset"}
-                label="Asset"
-                labelCol={{ span: 5 }}
-                wrapperCol={{ span: 16 }}
-
-                // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col> */}
           </Row>
 
           <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={20}>
+            <Col span={24}>
               <Form.Item
-                name={"name"}
+                name={"gegNabersInclusionPercent"}
                 label="Geg Nabers Inclusion Percent"
-                // labelCol={{ span: 4 }}
+                labelCol={{ span: 4 }}
                 wrapperCol={{ span: 18 }}
                 // rules={[{ required: "" }]}
               >
@@ -438,11 +428,11 @@ function Meter() {
           </Row>
 
           <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={20}>
+            <Col span={24}>
               <Form.Item
                 name={"cumulative"}
                 label="Geg Nabers Exclusion Percent"
-                // labelCol={{ span: 8 }}
+                labelCol={{ span: 4 }}
                 wrapperCol={{ span: 18 }}
                 // rules={[{ required: "" }]}
               >
@@ -452,11 +442,11 @@ function Meter() {
           </Row>
 
           <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={20}>
+            <Col span={24}>
               <Form.Item
-                name={"energyProfile"}
+                name={"meter"}
                 label="Select Sub-meter of "
-                // labelCol={{ span: 8 }}
+                labelCol={{ span: 4 }}
                 wrapperCol={{ span: 18 }}
                 // rules={[{ required: "" }]}
               >
@@ -466,24 +456,24 @@ function Meter() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                  options={filteredOptions.map((item, index) => ({
-                    value: item,
-                    label: item,
-                    key: index,
-                  }))}
-                />
+                >
+                  {[...new Set(meters.map(item => item.meter))].map((item, index)=>(
+                    <Select.Option key={index} value={item}>{item}</Select.Option>
+                    
+                  ))}
+                </Select>
                 {/* <Input className="form_input" /> */}
               </Form.Item>
             </Col>
           </Row>
 
           <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={20}>
+            <Col span={24}>
               <Form.Item
-                name={"assetServed"}
+                name={"gateMeter"}
                 label="Select Is Gate Meter"
                 // rules={[{ required: "" }]}
-                // labelCol={{ span: 8 }}
+                labelCol={{ span: 4 }}
                 wrapperCol={{ span: 18 }}
               >
                  <Select
@@ -492,23 +482,24 @@ function Meter() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                  options={filteredOptions.map((item, index) => ({
-                    value: item,
-                    label: item,
-                    key: index,
-                  }))}
-                />
+                >
+                  {
+                    [...new Set(meters.map(item =>item.gateMeter))].map((Item,index)=>(
+                      <Select.Option key ={index} value={Item}>{Item}</Select.Option>
+                    ))
+                  }
+                </Select>
                 {/* <Input className="form_input" /> */}
               </Form.Item>
             </Col>
           </Row>
 
           <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={20}>
+            <Col span={24}>
               <Form.Item
                 name={"db"}
                 label="Help"
-                // labelCol={{ span: 8 }}
+                labelCol={{ span: 4 }}
                 wrapperCol={{ span: 18 }}
                 // rules={[{ required: "" }]}
               >
@@ -523,7 +514,7 @@ function Meter() {
             }}
           >
             <Row>
-              <Col span={18}>
+              <Col span={24}>
               <Button type="primary" htmlType="submit">
                 Submit
               </Button>

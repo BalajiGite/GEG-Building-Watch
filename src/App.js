@@ -13,7 +13,7 @@ import "./assets/styles/responsive.css";
 import "devextreme/dist/css/dx.light.css";
 import Config from "./pages/Config";
 import Alert from "./pages/Alert";
-import Profile from "./pages/Profile";
+import Targets from "./pages/Targets";
 import BuildingPerformance from "./pages/BuildingPerformance";
 import React, { useState } from "react";
 import Report from "./pages/report/Report";
@@ -59,7 +59,7 @@ function App() {
               <Route exact path="/point" component={Point} />
               <Route exact path="/alert" component={Alert} />
               <Route exact path="/config" component={Config} />
-              <Route exact path="/profile" component={Profile}/>
+              <Route exact path="/targets" component={Targets}/>
               <Route exact path="/report" component={Report} />
               <Redirect from="*" to="/sites" />
             </Main>
