@@ -31,8 +31,8 @@ function Meter() {
   const [meters, setMeters] = useState([]);
   const [loading, setloading] = useState(true);
   const [MeterId, setMeterId] = useState();
-  const [searchText,setSearchText] = useState()
-  const [tempData,setTempData] = useState()
+  const [searchText, setSearchText] = useState()
+  const [tempData, setTempData] = useState()
 
 
   const validateMessages = {
@@ -203,7 +203,7 @@ function Meter() {
       ),
     },
   ];
-  
+
 
   let data = [];
   const getData = async () => {
@@ -216,7 +216,7 @@ function Meter() {
       setTempData(meterData)
       setloading(false);
       setIsLoading(false);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const setData = async (formData) => {
@@ -237,7 +237,7 @@ function Meter() {
     try {
       const resp = await deleteMeter(id);
       getData();
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const onEdit = async (record) => {
@@ -254,27 +254,27 @@ function Meter() {
     // debugger
     const filterData = data.filter(
       (record) =>
-      record.projectno.toLowerCase().includes(text.toLowerCase()) ||
+        record.projectno.toLowerCase().includes(text.toLowerCase()) ||
         record.projectname.toLowerCase().includes(text.toLowerCase()) ||
         record.projecttype.toLowerCase().includes(text.toLowerCase()) ||
         record.building.toLowerCase().includes(text.toLowerCase()) ||
-        record.asset.toLowerCase().includes(text.toLowerCase()) || 
+        record.asset.toLowerCase().includes(text.toLowerCase()) ||
         record.name.toLowerCase().includes(text.toLowerCase()) ||
         record.mpid.toString().includes(text.toLowerCase()) ||
-      // record.zone.cumulative().includes(text.toLowerCase()) 
-      record.energyType.toLowerCase().includes(text.toLowerCase()) ||
-      record.energyProfile.toLowerCase().includes(text.toLowerCase()) ||
-      record.monitorIntervalName.toLowerCase().includes(text.toLowerCase())  ||
-      record.assetServed.toLowerCase().includes(text.toLowerCase()) || 
-      record.components.toLowerCase().includes(text.toLowerCase())     
+        // record.zone.cumulative().includes(text.toLowerCase()) 
+        record.energyType.toLowerCase().includes(text.toLowerCase()) ||
+        record.energyProfile.toLowerCase().includes(text.toLowerCase()) ||
+        record.monitorIntervalName.toLowerCase().includes(text.toLowerCase()) ||
+        record.assetServed.toLowerCase().includes(text.toLowerCase()) ||
+        record.components.toLowerCase().includes(text.toLowerCase())
 
     );
     setTempData(filterData);
   };
-  const onChangeText =  (text) =>{
+  const onChangeText = (text) => {
     filter(text)
-    if(!searchText | searchText == ""){
-       setMeters(meters)
+    if (!searchText | searchText == "") {
+      setMeters(meters)
     }
 
   }
@@ -290,11 +290,11 @@ function Meter() {
       </Button>
       <Row>
         <Col span={17}>
-         
+
         </Col>
-        
-        <Col span={7} style={{ marginBottom: 10}}>
-        
+
+        <Col span={7} style={{ marginBottom: 10 }}>
+
           <Input
             size="small"
             placeholder="search here ..."
@@ -310,13 +310,14 @@ function Meter() {
         centered
         open={open}
         onCancel={() => onCancelModal()}
-        width={1000}
+        width={700}
         footer={null}
         maskClosable={false}
       >
         <Form
           {...layout}
           name="nest-messages"
+          layout="vertical"
           onFinish={setData}
           style={{ maxWidth: 1000 }}
           form={form}
@@ -328,9 +329,9 @@ function Meter() {
               <Form.Item
                 name={"name"}
                 label="Meter Additional Name"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                // rules={[{ required: "" }]}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+              // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -342,9 +343,9 @@ function Meter() {
               <Form.Item
                 name={"gegEquipType"}
                 label="Geg Equip Type"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                // rules={[{ required: "" }]}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+              // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -356,8 +357,8 @@ function Meter() {
               <Form.Item
                 name={"siteRef"}
                 label="Select Site"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
               >
                 <Select
                   placeholder="Select Site"
@@ -367,7 +368,7 @@ function Meter() {
                   style={{ width: "100%" }}
                 >
                   {
-                    [...new Set(meters.map(item =>item.siteRef))].map((item, index)=>(
+                    [...new Set(meters.map(item => item.siteRef))].map((item, index) => (
                       <Select.Option key={index} value={item}>{item}</Select.Option>
                     ))
                   }
@@ -381,19 +382,19 @@ function Meter() {
               <Form.Item
                 name={"levelRef"}
                 label="Select Level"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                // rules={[{ required: "" }]}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+              // rules={[{ required: "" }]}
               >
-                 <Select
+                <Select
                   placeholder="Select Level"
                   value={selectedItems}
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                 
-               >
-                  {[...new Set(meters.map(item=>item.levelRef))].map((item,index)=>(
+
+                >
+                  {[...new Set(meters.map(item => item.levelRef))].map((item, index) => (
                     <Select.Option key={index} value={item}>{item}</Select.Option>
                   ))}
                 </Select>
@@ -406,9 +407,9 @@ function Meter() {
               <Form.Item
                 name={"gegNabersInclusionPercent"}
                 label="Geg Nabers Inclusion Percent"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                // rules={[{ required: "" }]}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+              // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -432,9 +433,9 @@ function Meter() {
               <Form.Item
                 name={"cumulative"}
                 label="Geg Nabers Exclusion Percent"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                // rules={[{ required: "" }]}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+              // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -446,20 +447,20 @@ function Meter() {
               <Form.Item
                 name={"meter"}
                 label="Select Sub-meter of "
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                // rules={[{ required: "" }]}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+              // rules={[{ required: "" }]}
               >
-                 <Select
+                <Select
                   placeholder="Select Sub-meter of"
                   value={selectedItems}
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
                 >
-                  {[...new Set(meters.map(item => item.meter))].map((item, index)=>(
+                  {[...new Set(meters.map(item => item.meter))].map((item, index) => (
                     <Select.Option key={index} value={item}>{item}</Select.Option>
-                    
+
                   ))}
                 </Select>
                 {/* <Input className="form_input" /> */}
@@ -473,10 +474,10 @@ function Meter() {
                 name={"gateMeter"}
                 label="Select Is Gate Meter"
                 // rules={[{ required: "" }]}
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
               >
-                 <Select
+                <Select
                   placeholder="Select Is Gate Meter"
                   value={selectedItems}
                   onChange={setSelectedItems}
@@ -484,8 +485,8 @@ function Meter() {
                   style={{ width: "100%" }}
                 >
                   {
-                    [...new Set(meters.map(item =>item.gateMeter))].map((Item,index)=>(
-                      <Select.Option key ={index} value={Item}>{Item}</Select.Option>
+                    [...new Set(meters.map(item => item.gateMeter))].map((Item, index) => (
+                      <Select.Option key={index} value={Item}>{Item}</Select.Option>
                     ))
                   }
                 </Select>
@@ -499,9 +500,9 @@ function Meter() {
               <Form.Item
                 name={"db"}
                 label="Help"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                // rules={[{ required: "" }]}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+              // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -510,27 +511,27 @@ function Meter() {
           <Form.Item
             wrapperCol={{
               offset: 11,
-              span: 18,
+              span: 16,
             }}
           >
-            <Row>
-              <Col span={24}>
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-              <Button
-                type=""
-                style={{ marginLeft: 10 }}
-                htmlType=""
-                onClick={() => onCancelModal()}
-              >
-                Cancel
-              </Button>
+            <Row >
+              <Col span={20} style={{ display: "flex", justifyContent: "end" }}>
+                <Button
+                  type=""
+
+                  htmlType=""
+                  onClick={() => onCancelModal()}
+                >
+                  Cancel
+                </Button>
+                <Button type="primary" htmlType="submit" style={{ marginLeft: 10 }}>
+                  Save
+                </Button>
               </Col>
             </Row>
           </Form.Item>
         </Form>
-      </Modal>
+      </Modal >
       <Spin spinning={isLoading}>
         <Table
           columns={columns}

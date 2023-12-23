@@ -356,7 +356,7 @@ function Sites() {
         centered
         open={open}
         onCancel={() => onCancelModal()}
-        width={1000}
+        width={700}
         footer={null}
         maskClosable={false}
       >
@@ -364,18 +364,19 @@ function Sites() {
           {...layout}
           name="nest-messages"
           onFinish={setData}
+          layout="vertical"
           style={{ maxWidth: 1000 }}
           form={form}
           validateMessages={validateMessages}
-          
+
         >
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
                 name={"name"}
                 label="Site Name"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
               // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
@@ -388,8 +389,8 @@ function Sites() {
               <Form.Item
                 name={"site"}
                 label="Site ID"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
               // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
@@ -402,8 +403,8 @@ function Sites() {
               <Form.Item
                 name={"area"}
                 label="Area"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
               >
                 <Input className="form_input" />
 
@@ -416,8 +417,8 @@ function Sites() {
               <Form.Item
                 name={"armsProj"}
                 label="Arms Prj"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
               // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
@@ -430,8 +431,8 @@ function Sites() {
               <Form.Item
                 name={"armsProjectId"}
                 label="Arms Proj ID"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
               // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
@@ -443,8 +444,8 @@ function Sites() {
               <Form.Item
                 name={"projId"}
                 label="Select Proj ID"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
               // rules={[{ required: "" }]}
               >
                 <Select
@@ -454,7 +455,7 @@ function Sites() {
                   size="large"
                   style={{ width: "100%" }}
                 >
-                  { [...new Set(site.map(item => item.projId))].map((item, index) => (
+                  {[...new Set(site.map(item => item.projId))].map((item, index) => (
                     <Select.Option key={index} value={item}>
                       {item}
                     </Select.Option>
@@ -470,22 +471,23 @@ function Sites() {
               <Form.Item
                 name={"tz"}
                 label="Select TZ"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
               // rules={[{ required: "" }]}
               >
-                <Select 
-                placeholder="Select TZ"
-                style={{width:"100%"}}
-                value={selectedItems}
-                onChange={setSelectedItems}
+                <Select
+                  placeholder="Select TZ"
+                  style={{ width: "100%" }}
+                  value={selectedItems}
+                  onChange={setSelectedItems}
                 >
-                  {site.map((item,index) => 
-                  (
-                    <Select.Option key={index} item={item.tz}>{item.tz}</Select.Option>
-                  ))}
+                 {
+                  [...new Set(site.map(item => item.tz))].map((item,index)=>(
+                    <Select.Option key={index} value={item}>{item}</Select.Option>
+                  ))
+                 }
                 </Select>
-              
+
                 {/* <Input className="form_input" /> */}
               </Form.Item>
             </Col>
@@ -495,21 +497,22 @@ function Sites() {
               <Form.Item
                 name={"observesHolidays"}
                 label="Select Observe Holidays"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
               // rules={[{required:""}]}
               >
-                <Select 
-                placeholder ="Select Observe Holidays"
-                size="large"
-                style={{width:"100%"}}
-                value={selectedItems}
-                onChange={setSelectedItems}
+                <Select
+                  placeholder="Select Observe Holidays"
+                  size="large"
+                  style={{ width: "100%" }}
+                  value={selectedItems}
+                  onChange={setSelectedItems}
                 >
-                  {site.map((item,index) => 
-                  (
-                    <Select.Option key={index} item={item.observesHolidays}>{item.observesHolidays}</Select.Option>
-                  ))}
+                {
+                  [...new Set(site.map(item=>item.observesHolidays))].map((item , index)=>(
+                    <Select.Option key={index} value={item}>{item}</Select.Option>
+                  ))
+                }
                 </Select>
                 {/* <Input className="form_input" /> */}
               </Form.Item>
@@ -520,20 +523,21 @@ function Sites() {
               <Form.Item
                 name={"regionRef"}
                 label="Select Region ID"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
               // rules={[{required:""}]}
               >
-                <Select 
-                placeholder="Select Region ID"
-                value={selectedItems}
-                onChange={setSearchText}
-                style={{width:"100%"}}
+                <Select
+                  placeholder="Select Region ID"
+                  value={selectedItems}
+                  onChange={setSearchText}
+                  style={{ width: "100%" }}
                 >
-                  {site.map((item,index) => 
-                  (
-                    <Select.Option key={index} item={item.regionRef}>{item.regionRef}</Select.Option>
-                  ))}
+                 {
+                  [...new Set(site.map(item=>item.regionRef))].map((item , index)=> (
+                    <Select.Option key={index} value={item}>{item}</Select.Option>
+                  ))
+                 }
                 </Select>
                 {/* <Input className="form_input" /> */}
               </Form.Item>
@@ -544,20 +548,21 @@ function Sites() {
               <Form.Item
                 name={"geoCountry"}
                 label="Select Geo Country"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
               // rules={[{required:""}]}
               >
-                <Select 
-                placeholder="Select Geo Country"
-                value={selectedItems}
-                onChange={setSearchText}
-                style={{width:"100%"}}
+                <Select
+                  placeholder="Select Geo Country"
+                  value={selectedItems}
+                  onChange={setSearchText}
+                  style={{ width: "100%" }}
                 >
-                  {site.map((item,index) => 
-                  (
-                    <Select.Option key={index} item={item.geoCountry}>{item.geoCountry}</Select.Option>
-                  ))}
+                  {
+                    [...new Set(site.map(item => item.geoCountry))].map((item, index)=>(
+                      <Select.Option key={index} value={item}>{item}</Select.Option>
+                    ))
+                  }
                 </Select>
                 {/* <Input className="form_input" /> */}
               </Form.Item>
@@ -568,8 +573,8 @@ function Sites() {
               <Form.Item
                 name={"geoAddress"}
                 label="Geo Address"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
               // rules={[{required:""}]}
               >
                 <Input className="form_input" />
@@ -581,8 +586,8 @@ function Sites() {
               <Form.Item
                 name={""}
                 label="Help"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
               // rules={[{required:""}]}
               >
                 <Input className="form_input" />
@@ -590,29 +595,28 @@ function Sites() {
             </Col>
           </Row>
           <Form.Item
-            wrapperCol={{
-              offset: 11,
-              span: 16,
-            }}
-          >
-            <Row>
-              <Col span={20} style={{ display: "flex", justifyContent: "end" }} >
-
+                wrapperCol={{
+                  offset:11,
+                  span: 16,
+                }}
+              >
+          <Row>
+            <Col span={20} style={{justifyContent:"end",display:"flex"}} >
+              
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
                 <Button
                   type=""
+                  style={{ marginLeft: 10 }}
                   htmlType=""
                   onClick={() => onCancelModal()}
                 >
                   Cancel
                 </Button>
-                <Button type="primary"
-                  style={{ marginLeft: 10 }}
-                  htmlType="submit">
-                  Save
-                </Button>
-              </Col>
-            </Row>
-          </Form.Item>
+            </Col>
+          </Row>
+              </Form.Item>
         </Form>
       </Modal>
       <Spin spinning={isLoading}>

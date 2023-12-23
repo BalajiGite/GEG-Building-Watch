@@ -27,7 +27,7 @@ export default function Point() {
   const [isLoading, setIsLoading] = useState(false);
   const [pointData, setPointData] = useState({});
   const [loading, setloading] = useState(true);
-  const [SitesId, setSitesId] = useState();
+  const [PointsId, SetPointsId] = useState();
   const [point, setPoint] = useState([]);
   const [open, setOpen] = useState(false);
 
@@ -47,7 +47,7 @@ export default function Point() {
 
   const onCancelModal = () => {
     setOpen(false);
-    setSitesId();
+    SetPointsId();
     form.resetFields();
   };
 
@@ -127,7 +127,7 @@ export default function Point() {
     },
     {
       title: "Actions",
-      dataIndex: "actions",
+      dataIndex: "delete",
       key: "13",
       render: (text, record, index) => (
         <>
@@ -157,8 +157,8 @@ export default function Point() {
   };
   const setData = async (formData) => {
     try {
-      if (SitesId) {
-        const resp = await editSites(SitesId, formData);
+      if (PointsId) {
+        const resp = await editSites(PointsId, formData);
       } else {
         const resp = await addSites(formData);
       }
@@ -180,7 +180,7 @@ export default function Point() {
 
   const onEdit = async (record) => {
     form.setFieldValue(record);
-    setSitesId(record.id);
+    SetPointsId(record.id);
     setOpen(true);
   };
 
@@ -231,19 +231,20 @@ export default function Point() {
       </Row>
       <Modal
         style={{ textAlign: "left", backgroundColor: "#001629" }}
-        title="Add New Sites"
+        title="Add New Point"
         centered
         open={open}
         onCancel={() => onCancelModal()}
-        width={1000}
+        width={700}
         footer={null}
         maskClosable={false}
       >
         <Form
           {...layout}
           name="nest-messages"
+          layout="vertical"
           onFinish={setData}
-          style={{ maxWidth: 1000 }}
+          style={{ maxWidth: 700 }}
           form={form}
           validateMessages={validateMessages}
         >
@@ -251,9 +252,9 @@ export default function Point() {
             <Col span={24}>
               <Form.Item
                 name={"name"}
-                label="Site Name"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                label="Nem 12 Point Additional Name"
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
                 // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
@@ -264,10 +265,10 @@ export default function Point() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"site"}
-                label="Site ID"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                name={"nem12Id"}
+                label="Nem 12 Point Idenfier Level"
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
                 // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
@@ -278,10 +279,10 @@ export default function Point() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"area"}
-                label="Area"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                name={"gegPointType"}
+                label="Select Geo Point Typ"
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -292,9 +293,9 @@ export default function Point() {
             <Col span={24}>
               <Form.Item
                 name={"armsProj"}
-                label="Arms Prj"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                label="Select Site Name"
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
                 // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
@@ -306,152 +307,10 @@ export default function Point() {
             <Col span={24}>
               <Form.Item
                 name={"armsProjectId"}
-                label="Arms Proj ID"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                label="Select Meter Dis"
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
                 // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"projId"}
-                label="Select Proj ID"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                // rules={[{ required: "" }]}
-              >
-                <Select
-                  placeholder="Select Project"
-                  value={selectedItems}
-                  onChange={setSelectedItems}
-                  size="large"
-                  style={{ width: "100%" }}
-                >
-                  {point.map((item, index) => (
-                    <Select.Option key={index} value={item.projId}>
-                      {item.projId}
-                    </Select.Option>
-                  ))}
-                </Select>
-                {/* <Input className="form_input" /> */}
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"tz"}
-                label="Select TZ"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                // rules={[{ required: "" }]}
-              >
-                <Select
-                  placeholder="Select TZ"
-                  style={{ width: "100%" }}
-                  value={selectedItems}
-                  onChange={setSelectedItems}
-                >
-                  {point.map((item, index) => (
-                    <Select.Option key={index} item={item.tz}>
-                      {item.tz}
-                    </Select.Option>
-                  ))}
-                </Select>
-
-                {/* <Input className="form_input" /> */}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"observesHolidays"}
-                label="Select Observe Holidays"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                // rules={[{required:""}]}
-              >
-                <Select
-                  placeholder="Select Observe Holidays"
-                  size="large"
-                  style={{ width: "100%" }}
-                  value={selectedItems}
-                  onChange={setSelectedItems}
-                >
-                  {point.map((item, index) => (
-                    <Select.Option key={index} item={item.observesHolidays}>
-                      {item.observesHolidays}
-                    </Select.Option>
-                  ))}
-                </Select>
-                {/* <Input className="form_input" /> */}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"regionRef"}
-                label="Select Region ID"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                // rules={[{required:""}]}
-              >
-                <Select
-                  placeholder="Select Region ID"
-                  value={selectedItems}
-                  onChange={setSearchText}
-                  style={{ width: "100%" }}
-                >
-                  {point.map((item, index) => (
-                    <Select.Option key={index} item={item.regionRef}>
-                      {item.regionRef}
-                    </Select.Option>
-                  ))}
-                </Select>
-                {/* <Input className="form_input" /> */}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"geoCountry"}
-                label="Select Geo Country"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                // rules={[{required:""}]}
-              >
-                <Select
-                  placeholder="Select Geo Country"
-                  value={selectedItems}
-                  onChange={setSearchText}
-                  style={{ width: "100%" }}
-                >
-                  {point.map((item, index) => (
-                    <Select.Option key={index} item={item.geoCountry}>
-                      {item.geoCountry}
-                    </Select.Option>
-                  ))}
-                </Select>
-                {/* <Input className="form_input" /> */}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"geoAddress"}
-                label="Geo Address"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                // rules={[{required:""}]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -462,35 +321,37 @@ export default function Point() {
               <Form.Item
                 name={""}
                 label="Help"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                // rules={[{required:""}]}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+                // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
             </Col>
-          </Row>
+          </Row>     
           <Form.Item
             wrapperCol={{
               offset: 11,
               span: 16,
             }}
           >
-            <Row>
+            <Row >
               <Col span={20} style={{ display: "flex", justifyContent: "end" }}>
-                <Button type="" htmlType="" onClick={() => onCancelModal()}>
+                <Button
+                  type=""
+
+                  htmlType=""
+                  onClick={() => onCancelModal()}
+                >
                   Cancel
                 </Button>
-                <Button
-                  type="primary"
-                  style={{ marginLeft: 10 }}
-                  htmlType="submit"
-                >
+                <Button type="primary" htmlType="submit" style={{ marginLeft: 10 }}>
                   Save
                 </Button>
               </Col>
             </Row>
           </Form.Item>
+   
         </Form>
       </Modal>
       <Spin spinning={isLoading}>
