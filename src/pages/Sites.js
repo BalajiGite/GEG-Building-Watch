@@ -453,9 +453,9 @@ function Sites() {
                   size="large"
                   style={{ width: "100%" }}
                 >
-                  {site.map((item, index) => (
-                    <Select.Option key={index} value={item.projId}>
-                      {item.projId}
+                  { [...new Set(site.map(item => item.projId))].map((item, index) => (
+                    <Select.Option key={index} value={item}>
+                      {item}
                     </Select.Option>
                   ))}
                 </Select>
