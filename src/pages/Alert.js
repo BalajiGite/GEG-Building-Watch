@@ -5,7 +5,7 @@ import { Button, Row, Col, Modal } from "antd";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { getAlertConfList } from "../services/alertConfService";
-import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
+import { getApiDataFromAws, postAlertsApiDataToAws } from "../services/apis";
 import {
   addAlerts,
   deleteAlerts,
@@ -81,278 +81,88 @@ function Alerts() {
     setAlertsId();
     form.resetFields();
   };
+  
   const columns = [
     {
-      title: "Project No",
-      dataIndex: "projectno",
+      title: "ID",
+      dataIndex: "id",
+      key: "0",
+      sorter: (a, b) => a.id - b.id,
+    },
+    {
+      title: "Site Name",
+      dataIndex: "sitename",
       key: "1",
-      sorter: (a, b) => a.projectno - b.projectno,
+      sorter: (a, b) => a.sitename.localeCompare(b.sitename),
     },
     {
-      title: "Project Name",
-      dataIndex: "projectname",
+      title: "Utility Type",
+      dataIndex: "utilitytype",
       key: "2",
-      sorter: (a, b) => a.projectname - b.projectname,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.projectname.startsWith(value),
+      sorter: (a, b) => a.utilitytype.localeCompare(b.utilitytype),
     },
     {
-      title: "Project Type",
-      dataIndex: "projecttype",
+      title: "Project",
+      dataIndex: "project",
       key: "3",
-      sorter: (a, b) => a.projecttype - b.projecttype,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.projecttype.startsWith(value),
+      sorter: (a, b) => a.project.localeCompare(b.project),
     },
     {
-      title: "Building",
-      dataIndex: "building",
+      title: "Report Type",
+      dataIndex: "reporttype",
       key: "4",
-      sorter: (a, b) => a.building - b.building,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.building.startsWith(value),
+      sorter: (a, b) => a.reporttype.localeCompare(b.reporttype),
     },
     {
-      title: "Asset",
-      dataIndex: "asset",
+      title: "Frequency",
+      dataIndex: "freq",
       key: "5",
-      sorter: (a, b) => a.asset - b.asset,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.asset.startsWith(value),
+      sorter: (a, b) => a.freq.localeCompare(b.freq),
     },
     {
-      title: "Monitor Point",
-      dataIndex: "monitorpoint",
+      title: "Timezone",
+      dataIndex: "tz",
       key: "6",
-      sorter: (a, b) => a.monitorpoint - b.monitorpoint,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.monitorpoint.startsWith(value),
+      sorter: (a, b) => a.tz.localeCompare(b.tz),
     },
     {
-      title: "Measure",
-      dataIndex: "measure",
+      title: "Recipient Emails",
+      dataIndex: "recipientemails",
       key: "7",
-      sorter: (a, b) => a.measure - b.measure,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.measure.startsWith(value),
+      sorter: (a, b) => a.recipientemails.localeCompare(b.recipientemails),
     },
     {
-      title: "Alert Name",
-      dataIndex: "alertname",
+      title: "Error Emails",
+      dataIndex: "erroremails",
       key: "8",
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.alertname.startsWith(value),
-      render: (text, record, index) => (
-        <>
-          <a
-            onClick={() => {
-              onAlertClick(record);
-            }}
-          >
-            {record.alertname}
-          </a>
-        </>
-      ),
+      sorter: (a, b) => a.erroremails.localeCompare(b.erroremails),
     },
     {
-      title: "Lower Threshhold %",
-      dataIndex: "lowerthreshold",
+      title: "Is Active",
+      dataIndex: "isactive",
       key: "9",
-      sorter: (a, b) => a.lowerthreshold - b.lowerthreshold,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.lowerthreshold.startsWith(value),
+      sorter: (a, b) => a.isactive - b.isactive,
     },
-    {
-      title: "Upper Threshhold %",
-      dataIndex: "upperthreshold",
-      key: "10",
-      sorter: (a, b) => a.upperthreshold - b.upperthreshold,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.upperthreshold.startsWith(value),
-    },
-    {
-      title: "Frequency Type",
-      dataIndex: "frequencytype",
-      key: "11",
-      sorter: (a, b) => a.frequencytype - b.frequencytype,
-      filters: [
-        {
-          text: "Type 1",
-          value: "Amour",
-        },
-        {
-          text: "Type 2",
-          value: "type 1",
-        },
-        {
-          text: "Type 3",
-          value: "type",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.frequencytype.startsWith(value),
-    },
-    {
-      title: "Active",
-      dataIndex: "active",
-      key: "12",
-      sorter: (a, b) => a.active - b.active,
-    },
-    {
-      title: "On Demand",
-      dataIndex: "demand",
-      key: "13",
-      sorter: (a, b) => a.demand - b.demand,
-    },
-
     {
       title: "Actions",
-      dataIndex: "delete",
+      dataIndex: "actions",
       key: "14",
       render: (text, record, index) => (
         <>
           <a
             onClick={() => {
+              onEdit(record.id);
+            }}
+            style={{ marginRight: 8 }}
+          >
+            Edit
+          </a>
+          <a
+            onClick={() => {
               onDelete(record.id);
             }}
           >
-            <RiDeleteBin6Line size={22} />
+            Delete
           </a>
         </>
       ),
@@ -367,10 +177,15 @@ function Alerts() {
   const getData = async () => {
     setIsLoading(true);
     try {
+
+      const body = {
+        funcName: "getAlertConfigurationsData"
+      };
+      const alertsData = await postAlertsApiDataToAws(body);
       const resp = await getAlertsList();
       // console.log(resp);
-      setPost(resp);
-      setTempData(resp);
+      setPost(alertsData);
+      setTempData(alertsData);
       setloading(false);
       setIsLoading(false);
     } catch (error) {}
