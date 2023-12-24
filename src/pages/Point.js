@@ -175,6 +175,8 @@ export default function Point() {
 
   const onSiteNameChange = (value) => {
     // Fetch the corresponding armsProjectIds based on the selected siteName
+    let siteBase64 = btoa(value).replace(/=+$/, '');
+
     const selectedSite = siteListData.find((item) => item.id === value);
     const meterDisOptions = selectedSite ? selectedSite.meterDis : [];
     setMeterOptions([selectedSite]);
