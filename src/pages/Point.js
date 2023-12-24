@@ -176,7 +176,13 @@ export default function Point() {
   const onSiteNameChange = (value) => {
     // Fetch the corresponding armsProjectIds based on the selected siteName
     const selectedSite = siteListData.find((item) => item.id === value);
-    //setMeterOptions(selectedSite);
+    const meterDisOptions = selectedSite ? selectedSite.meterDis : [];
+    setMeterOptions([selectedSite]);
+
+    // Clear the value of meterDis in the form
+    form.setFieldsValue({
+      meterDis: undefined,
+    });
 
   };
 
@@ -341,7 +347,7 @@ export default function Point() {
                   value={selectedItems}
                   style={{ width: "100%" }}
                 >
-                 { meterOptions.length > 0 &&
+                 { meterOptions && meterOptions.length > 0 &&
                   meterOptions.map((item , index)=> (
                     <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
                   ))
