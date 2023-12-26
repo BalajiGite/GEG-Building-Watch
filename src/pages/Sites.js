@@ -320,9 +320,7 @@ function Sites() {
         record.area.toLowerCase().includes(text.toLowerCase()) ||
         record.projId.toString().includes(text.toLowerCase()) ||
         record.stateRef.toLowerCase().includes(searchText.toLowerCase()) ||
-        record.regionRef
-          .toLowerCase()
-          .includes(searchText.toLowerCase()) ||
+        record.regionRef.toLowerCase().includes(searchText.toLowerCase()) ||
         record.weatherStationRef.toLowerCase().includes(searchText.toLowerCase()) ||
         record.armsProj.toLowerCase().includes(searchText.toLowerCase())
     );
@@ -530,7 +528,7 @@ function Sites() {
                 <Select
                   placeholder="Select Region ID"
                   value={selectedItems}
-                  onChange={setSearchText}
+                  onChange={setSelectedItems}
                   style={{ width: "100%" }}
                 >
                  {
@@ -555,7 +553,7 @@ function Sites() {
                 <Select
                   placeholder="Select Geo Country"
                   value={selectedItems}
-                  onChange={setSearchText}
+                  onChange={setSelectedItems}
                   style={{ width: "100%" }}
                 >
                   {

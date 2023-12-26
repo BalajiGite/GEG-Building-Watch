@@ -53,7 +53,7 @@ export default function Point() {
     form.resetFields();
   };
 
-  
+
   const columns = [
     {
       title: "Id",
@@ -66,66 +66,144 @@ export default function Point() {
       dataIndex: "name",
       key: "2",
       sorter: (a, b) => a.name.localeCompare(b.name),
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      filters: Array.from(new Set(point.map(item => item.name))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.name.startsWith(value),
     },
     {
       title: "Geg Point Type",
       dataIndex: "gegPointType",
       key: "3",
       sorter: (a, b) => a.gegPointType.localeCompare(b.gegPointType),
+      filters: Array.from(new Set(point.map(item => item.gegPointType))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.gegPointType.startsWith(value),
     },
     {
       title: "Unit",
       dataIndex: "unit",
       key: "4",
       sorter: (a, b) => a.unit.localeCompare(b.unit),
+      filters: Array.from(new Set(point.map(item => item.unit))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.unit.startsWith(value),
     },
     {
       title: "Import",
       dataIndex: "import",
       key: "5",
       sorter: (a, b) => a.import.localeCompare(b.import),
+      filters: Array.from(new Set(point.map(item => item.import))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.import.startsWith(value),
     },
     {
       title: "Active",
       dataIndex: "active",
       key: "6",
       sorter: (a, b) => a.active.localeCompare(b.active),
+      filters: Array.from(new Set(point.map(item => item.active))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.active.startsWith(value),
     },
     {
       title: "Elec",
       dataIndex: "elec",
       key: "7",
       sorter: (a, b) => a.elec.localeCompare(b.elec),
+      filters: Array.from(new Set(point.map(item => item.elec))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.elec.startsWith(value),
     },
     {
       title: "Sensor",
       dataIndex: "sensor",
       key: "8",
       sorter: (a, b) => a.sensor.localeCompare(b.sensor),
+      filters: Array.from(new Set(point.map(item => item.sensor))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.sensor.startsWith(value),
     },
     {
       title: "Point",
       dataIndex: "point",
       key: "9",
       sorter: (a, b) => a.point.localeCompare(b.point),
+      filters: Array.from(new Set(point.map(item => item.point))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.point.startsWith(value),
     },
     {
       title: "Energy",
       dataIndex: "energy",
       key: "10",
       sorter: (a, b) => a.energy.localeCompare(b.energy),
+      filters: Array.from(new Set(point.map(item => item.energy))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.energy.startsWith(value),
     },
     {
       title: "Nem12Id",
       dataIndex: "nem12Id",
       key: "11",
       sorter: (a, b) => a.nem12Id.localeCompare(b.nem12Id),
+      filters: Array.from(new Set(point.map(item => item.nem12Id))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.nem12Id.startsWith(value),
     },
     {
       title: "EquipRef",
       dataIndex: "equipRef",
       key: "12",
       sorter: (a, b) => a.equipRef.localeCompare(b.equipRef),
+      filters: Array.from(new Set(point.map(item => item.equipRef))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.equipRef.startsWith(value),
     },
     {
       title: "Actions",
@@ -141,15 +219,15 @@ export default function Point() {
     },
     // Add more columns as needed
   ];
-  
+
   // Use the 'columns' array in your component
-  console.log(columns);
-  
+ 
+
 
   const getData = async () => {
     setIsLoading(true);
     try {
-      
+
       const points = await getApiDataFromAws("queryType=elecPoints");
       const sitesList = await getApiDataFromAws("queryType=dropdownSite");
       setSiteListData(sitesList);
@@ -157,7 +235,7 @@ export default function Point() {
       setPoint(points);
       setloading(false);
       setIsLoading(false);
-    } catch (error) {}
+    } catch (error) { }
   };
   const setData = async (formData) => {
     try {
@@ -207,23 +285,22 @@ export default function Point() {
     setSearchText(text);
     filter(text);
     if (text === "" || !text) {
-      setPointData(pointData);
+      setPoint(pointData
+        );
     }
   };
+
+  // console.log(pointData)
+  // console.log(siteListData)
 
   const filter = (text) => {
     const filteredData = point.filter(
       (record) =>
         record.name.toLowerCase().includes(text.toLowerCase()) ||
-        record.area.toLowerCase().includes(text.toLowerCase()) ||
-        record.projId.toString().includes(text.toLowerCase()) ||
-        record.stateRef.toLowerCase().includes(searchText.toLowerCase()) ||
-        record.regionRef.toLowerCase().includes(searchText.toLowerCase()) ||
-        record.weatherStationRef
-          .toLowerCase()
-          .includes(searchText.toLowerCase()) ||
-        record.armsProj.toLowerCase().includes(searchText.toLowerCase())
-    );
+        record.gegPointType.toLowerCase().includes(text.toLowerCase()) ||
+        record.equipRef.toString().includes(text.toLowerCase()) ||
+        record.nem12Id.toLowerCase().includes(searchText.toLowerCase())
+           );
     setPoint(filteredData);
   };
   useEffect(() => {
@@ -274,7 +351,7 @@ export default function Point() {
                 label="Nem 12 Point Additional Name"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-                // rules={[{ required: "" }]}
+              // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -288,7 +365,7 @@ export default function Point() {
                 label="Nem 12 Point Idenfier Level"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-                // rules={[{ required: "" }]}
+              // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -315,7 +392,7 @@ export default function Point() {
                 label="Select Site Name"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-                // rules={[{ required: "" }]}
+              // rules={[{ required: "" }]}
               >
                 <Select
                   placeholder="Select Site Name"
@@ -325,11 +402,11 @@ export default function Point() {
                   }}
                   style={{ width: "100%" }}
                 >
-                 { siteListData.length > 0 &&
-                  siteListData.map((item , index)=> (
-                    <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
-                  ))
-                 }
+                  {siteListData.length > 0 &&
+                    siteListData.map((item, index) => (
+                      <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
+                    ))
+                  }
                 </Select>
               </Form.Item>
             </Col>
@@ -342,18 +419,18 @@ export default function Point() {
                 label="Select Meter Dis"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-                // rules={[{ required: "" }]}
+              // rules={[{ required: "" }]}
               >
                 <Select
                   placeholder="Select Meter Dis"
                   value={selectedItems}
                   style={{ width: "100%" }}
                 >
-                 { meterOptions && meterOptions.length > 0 &&
-                  meterOptions.map((item , index)=> (
-                    <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
-                  ))
-                 }
+                  {meterOptions && meterOptions.length > 0 &&
+                    meterOptions.map((item, index) => (
+                      <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
+                    ))
+                  }
                 </Select>
               </Form.Item>
             </Col>
@@ -365,12 +442,12 @@ export default function Point() {
                 label="Help"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-                // rules={[{ required: "" }]}
+              // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
             </Col>
-          </Row>     
+          </Row>
           <Form.Item
             wrapperCol={{
               offset: 11,
@@ -393,7 +470,7 @@ export default function Point() {
               </Col>
             </Row>
           </Form.Item>
-   
+
         </Form>
       </Modal>
       <Spin spinning={isLoading}>
