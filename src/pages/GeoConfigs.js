@@ -225,153 +225,159 @@ function Config() {
   }, []);
 
   return (
-    <>
-      <Row className="" >
-        <Col xl={24} xs={24} sm={24} md={24}>
-          <Card direction="vertical" style={{ width: 1280, marginTop: 20 }}>
-            <>
+        <>
+          <Row>
+            <Col span={17} style={{ marginBottom: 20 }}>
               <Button type={activeButton === 0 ? 'primary' : 'button'} onClick={()=> changeWidgets(0)}>State</Button>
               <Button type={activeButton === 1 ? 'primary' : 'button'} onClick={()=> changeWidgets(1)}>Region</Button>
               <Button type={activeButton === 2 ? 'primary' : 'button'} onClick={()=> changeWidgets(2)}>Level</Button>
               <Button className="mb-4 ml-4" type="primary" onClick={() => setOpen(true)}>
                 Create New
               </Button>
-              <Modal
-                style={{ textAlign: "left" }}
-                title="Create New"
-                centered
-                open={open}
-                // onOk={() => setOpen(false)}
-                onCancel={() => setOpen(false)}
-                width={800}
-                footer={null}
-              >
-                <Form
-                  className="modelForm"
-                  {...layout}
-                  name="nest-messages"
-                  onFinish={onFinish}
-                  validateMessages={validateMessages}
-                  // style={{textAlign:'left'}}
-                  labelAlign=""
-                >
-                  <Form.Item
-                    name={"energyMasterType"}
-                    label="Energy Master Type"
-                  >
-                    <Select
-                      showSearch
-                      style={{
-                        width: 421,
-                      }}
-                      placeholder="Search to Select"
-                      optionFilterProp="children"
-                      filterOption={(input, option) =>
-                        (option?.label ?? "").includes(input)
-                      }
-                      filterSort={(optionA, optionB) =>
-                        (optionA?.label ?? "")
-                          .toLowerCase()
-                          .localeCompare(
-                            (optionB?.label ?? "").toLowerCase()
-                          )
-                      }
-                      options={[
-                        {
-                          value: "1",
-                          label: "Not Identified",
-                        },
-                        {
-                          value: "2",
-                          label: "Closed",
-                        },
-                        {
-                          value: "3",
-                          label: "Communicated",
-                        },
-                        {
-                          value: "4",
-                          label: "Identified",
-                        },
-                        {
-                          value: "5",
-                          label: "Resolved",
-                        },
-                        {
-                          value: "6",
-                          label: "Cancelled",
-                        },
-                      ]}
-                    />
-                    {/* <Input/> */}
-                  </Form.Item>
-
-                  <Form.Item label="Energy Type">
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    label="Mesure"
-                    style={
-                      {
-                        // width: 688,
-                        // display: "inline-block",
-                      }
-                    }
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    label="Unit"
-                  // style={{
-                  //   width: 158,
-                  //   marginLeft:150,
-                  // }}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item>
-                    <Button
-                      style={{ float: "right", marginTop: 30 }}
-                      onClick={() => setOpen(false)}
-                      type=""
-                      htmlType="cancel"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      className=""
-                      style={{
-                        float: "right",
-                        marginRight: 18,
-                        marginTop: 30,
-                      }}
-                      onClick={() => setOpen(false)}
-                      type="primary"
-                      htmlType="submit"
-                    >
-                      Save
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </Modal>
-              <Spin spinning={isLoading}>
-                <Table
-                  bordered
-                  columns={columns}
-                  dataSource={locationData}
-                  scroll={{
-                    x: 1000,
-                  }}
+            </Col>
+            <Col span={7} style={{ marginBottom: 20 }}>
+              <Form>
+                <Input
+                  size="small"
+                  placeholder="search here ..."
+                  value={""}
+                // onChange={(e) => onChangeText(e.target.value)}
                 />
-              </Spin>
-            </>
-            {/* </Panel> */}
+              </Form>
+            </Col>
+          </Row>
+          <Modal
+            style={{ textAlign: "left" }}
+            title="Create New"
+            centered
+            open={open}
+            // onOk={() => setOpen(false)}
+            onCancel={() => setOpen(false)}
+            width={800}
+            footer={null}
+          >
+            <Form
+              className="modelForm"
+              {...layout}
+              name="nest-messages"
+              onFinish={onFinish}
+              validateMessages={validateMessages}
+              // style={{textAlign:'left'}}
+              labelAlign=""
+            >
+              <Form.Item
+                name={"energyMasterType"}
+                label="Energy Master Type"
+              >
+                <Select
+                  showSearch
+                  style={{
+                    width: 421,
+                  }}
+                  placeholder="Search to Select"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "").includes(input)
+                  }
+                  filterSort={(optionA, optionB) =>
+                    (optionA?.label ?? "")
+                      .toLowerCase()
+                      .localeCompare(
+                        (optionB?.label ?? "").toLowerCase()
+                      )
+                  }
+                  options={[
+                    {
+                      value: "1",
+                      label: "Not Identified",
+                    },
+                    {
+                      value: "2",
+                      label: "Closed",
+                    },
+                    {
+                      value: "3",
+                      label: "Communicated",
+                    },
+                    {
+                      value: "4",
+                      label: "Identified",
+                    },
+                    {
+                      value: "5",
+                      label: "Resolved",
+                    },
+                    {
+                      value: "6",
+                      label: "Cancelled",
+                    },
+                  ]}
+                />
+                {/* <Input/> */}
+              </Form.Item>
 
-          </Card>
-        </Col>
-      </Row>
-    </>
+              <Form.Item label="Energy Type">
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Mesure"
+                style={
+                  {
+                    // width: 688,
+                    // display: "inline-block",
+                  }
+                }
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Unit"
+              // style={{
+              //   width: 158,
+              //   marginLeft:150,
+              // }}
+              >
+                <Input />
+              </Form.Item>
+
+              <Form.Item>
+                <Button
+                  style={{ float: "right", marginTop: 30 }}
+                  onClick={() => setOpen(false)}
+                  type=""
+                  htmlType="cancel"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className=""
+                  style={{
+                    float: "right",
+                    marginRight: 18,
+                    marginTop: 30,
+                  }}
+                  onClick={() => setOpen(false)}
+                  type="primary"
+                  htmlType="submit"
+                >
+                  Save
+                </Button>
+              </Form.Item>
+            </Form>
+          </Modal>
+          <Spin spinning={isLoading}>
+            <Table
+              bordered
+              columns={columns}
+              dataSource={locationData}
+              scroll={{
+                x: 1000,
+              }}
+            />
+          </Spin>
+        </>
+
+
   );
 }
 
