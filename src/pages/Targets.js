@@ -6,15 +6,21 @@ import Water from '../components/widgets/targetswidgest/Water';
 import Gas from '../components/widgets/targetswidgest/Gas';
 import { useState } from 'react';
 function Targets() {
-// const [defaultWidgest,setDefaultWidget] = useState(1);
-const [targetWidget, setTargetWidget] = useState(1);
-const targetWidgets = (widget) => {
-    setTargetWidget(widget);
-}
+  const [targetWidget, setTargetWidget] = useState(1);
+  const [activeButton, setActiveButton] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setloading] = useState(true);
+  const [open, setOpen] = useState(false);
+
+  const targetWidgets = (widget) => {
+      setActiveButton(widget);
+      setTargetWidget(widget);
+  }
   return (
     <div className="App">
       <Row>
-        <Col span={20} style={{ marginBottom: 20 }}>
+        <Col span={17} style={{ marginBottom: 20 }}></Col>
+        <Col span={7} style={{ marginBottom: 20 }}>
           <Form>
             <Input
               size="small"
@@ -25,15 +31,15 @@ const targetWidgets = (widget) => {
           </Form>
         </Col>
       </Row>
-      <Button type="button" onClick = {()=>targetWidgets(1)}>Electric</Button>
-      <Button type="button" onClick = {()=> targetWidgets(2)}>Water</Button>
-      <Button type="button" onClick = {()=> targetWidgets(3)}>Gas</Button>
+      <Button type={activeButton === 1 ? 'primary' : 'button'} onClick = {()=>targetWidgets(1)}>Electric</Button>
+      <Button type={activeButton === 2 ? 'primary' : 'button'} onClick = {()=> targetWidgets(2)}>Water</Button>
+      <Button type={activeButton === 3 ? 'primary' : 'button'} onClick = {()=> targetWidgets(3)}>Gas</Button>
       <Button
         className="mb-4 ml-4"
         type="primary"
       // onClick={() => setOpen(true)}
       >
-        Add New Electric Target Profile
+        Add Targets
       </Button>
       {targetWidget===1?<Electric/>:(
         <>
