@@ -11,7 +11,7 @@ import "antd/dist/antd.css";
 import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
 import "devextreme/dist/css/dx.light.css";
-import Config from "./pages/Config";
+import Config from "./pages/GeoConfigs";
 import Alert from "./pages/Alert";
 import Targets from "./pages/Targets";
 import BuildingPerformance from "./pages/BuildingPerformance";
@@ -58,7 +58,7 @@ function App() {
               <Route exact path="/meter" component={Meter} />
               <Route exact path="/point" component={Point} />
               <Route exact path="/alert" component={Alert} />
-              <Route exact path="/config" component={Config} />
+              <Route exact path="/GeoConfigs" component={Config} />
               <Route exact path="/targets" component={Targets}/>
               <Route exact path="/report" component={Report} />
               <Redirect from="*" to="/sites" />

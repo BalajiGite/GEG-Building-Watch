@@ -248,10 +248,10 @@ function Sidenav({ color }) {
         </Menu.Item>
 
         <Menu.Item key="5">
-          <NavLink to="/config">
+          <NavLink to="/GeoConfigs">
             <span className="icon" 
             style={{
-              backgroundColor:page === "config"? color: "",
+              backgroundColor:page === "GeoConfigs"? color: "",
             }}>
               <img src={configIcon} alt="configIcon" />
             </span>
@@ -259,13 +259,13 @@ function Sidenav({ color }) {
               style={{
                 color: (context.backgroundColor === dark ? "white" : "black")
                   ? "black"
-                  : (context.backgroundColor === dark) & (page !== "config")
+                  : (context.backgroundColor === dark) & (page !== "GeoConfigs")
                   ? "white"
                   : "black",
               }}
               className="label"
             >
-              Config
+              Location
             </span>
           </NavLink>
         </Menu.Item>
