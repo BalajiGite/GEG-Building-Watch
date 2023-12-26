@@ -24,17 +24,16 @@ const layout = {
 const OPTIONS = ["Apples", "Nails", "Bananas", "Helicopters"];
 
 function Meter() {
+  const [searchText, setSearchText] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [form] = Form.useForm();
-  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
   const [meters, setMeters] = useState([]);
   const [loading, setloading] = useState(true);
   const [MeterId, setMeterId] = useState();
-  const [searchText, setSearchText] = useState()
-  const [tempData, setTempData] = useState()
-
-
+  const [tempData, setTempData] = useState({})
+  const [form] = Form.useForm();
+  
+  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
   const validateMessages = {
     required: "${label} is required!",
     types: {
@@ -248,36 +247,27 @@ function Meter() {
 
   data = loading ? [] : meters;
 
+  const onChangeText = (text) => {
+    setSearchText(text);
+    filterData(text)
+    if (text == "" || !text) {
+      setMeters(tempData);
+    }
+  }
 
-
-  const filter = (text) => {
-    // debugger
-    const filterData = data.filter(
+  const filterData = (text) => {
+    const filtersData = meters.filter(
       (record) =>
-        record.projectno.toLowerCase().includes(text.toLowerCase()) ||
-        record.projectname.toLowerCase().includes(text.toLowerCase()) ||
-        record.projecttype.toLowerCase().includes(text.toLowerCase()) ||
-        record.building.toLowerCase().includes(text.toLowerCase()) ||
-        record.asset.toLowerCase().includes(text.toLowerCase()) ||
+    // debugger
         record.name.toLowerCase().includes(text.toLowerCase()) ||
-        record.mpid.toString().includes(text.toLowerCase()) ||
-        // record.zone.cumulative().includes(text.toLowerCase()) 
-        record.energyType.toLowerCase().includes(text.toLowerCase()) ||
-        record.energyProfile.toLowerCase().includes(text.toLowerCase()) ||
-        record.monitorIntervalName.toLowerCase().includes(text.toLowerCase()) ||
-        record.assetServed.toLowerCase().includes(text.toLowerCase()) ||
-        record.components.toLowerCase().includes(text.toLowerCase())
+        record.levelRef.toString().includes(text.toLowerCase()) ||
+        record.levelRef.toLowerCase().includes(text.toLowerCase()) ||
+        record.siteRef.toLowerCase().includes(text.toLowerCase())
 
     );
-    setTempData(filterData);
+    setMeters(filtersData);
   };
-  const onChangeText = (text) => {
-    filter(text)
-    if (!searchText | searchText == "") {
-      setMeters(meters)
-    }
 
-  }
   useEffect(() => {
     getData();
   }, []);
@@ -376,7 +366,6 @@ function Meter() {
               </Form.Item>
             </Col>
           </Row>
-
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
@@ -535,7 +524,7 @@ function Meter() {
       <Spin spinning={isLoading}>
         <Table
           columns={columns}
-          dataSource={tempData}
+          dataSource={meters}
           rowKey={"id"}
           scroll={{
             x: 1000,

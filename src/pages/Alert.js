@@ -28,12 +28,17 @@ const FREQUENCY = ["Daily", "Weekly", "Monthly"];
 const OPTIONS = ["Apples", "Nails", "Bananas", "Helicopters"];
 function Alerts() {
   const [selectedItems, setSelectedItems] = useState([]);
-  const [tempData, setTempData] = useState();
+  const [tempData, setTempData] = useState([]);
   const [confModal, setConfModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [confList, setConfList] = useState([]);
   const [selectedRecord, setSelectedRecord] = useState();
   const [searchText, setSearchText] = useState();
+  const [alertListData, setAlertListData] = useState([]);
+  const [post, setPost] = useState([]);
+  const [loading, setloading] = useState(true);
+  const [AlertsId, setAlertsId] = useState();
+
   const [form] = Form.useForm();
   // const [confForm] = Form.useForm();
   const filteredOptions = OPTIONS.filter((O) => !selectedItems.includes(O));
@@ -55,7 +60,7 @@ function Alerts() {
     debugger;
     try {
       resp = await getAlertConfList();
-    } catch (error) {}
+    } catch (error) { }
 
     populateConfList(record, resp);
     setSelectedRecord(record);
@@ -81,7 +86,7 @@ function Alerts() {
     setAlertsId();
     form.resetFields();
   };
-  
+
   const columns = [
     {
       title: "ID",
@@ -94,54 +99,117 @@ function Alerts() {
       dataIndex: "sitename",
       key: "1",
       sorter: (a, b) => a.sitename.localeCompare(b.sitename),
+      filters: Array.from(new Set(post.map(item => item.sitename))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.sitename.startsWith(value),
     },
     {
       title: "Utility Type",
       dataIndex: "utilitytype",
       key: "2",
       sorter: (a, b) => a.utilitytype.localeCompare(b.utilitytype),
+      filters: Array.from(new Set(post.map(item => item.utilitytype))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.utilitytype.startsWith(value),
     },
     {
       title: "Project",
       dataIndex: "project",
       key: "3",
       sorter: (a, b) => a.project.localeCompare(b.project),
+      filters: Array.from(new Set(post.map(item => item.project))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.project.startsWith(value),
     },
     {
       title: "Report Type",
       dataIndex: "reporttype",
       key: "4",
       sorter: (a, b) => a.reporttype.localeCompare(b.reporttype),
+      filters: Array.from(new Set(post.map(item => item.reporttype))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.reporttype.startsWith(value),
     },
     {
       title: "Frequency",
       dataIndex: "freq",
       key: "5",
       sorter: (a, b) => a.freq.localeCompare(b.freq),
+      filters: Array.from(new Set(post.map(item => item.freq))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.freq.startsWith(value),
     },
     {
       title: "Timezone",
       dataIndex: "tz",
       key: "6",
       sorter: (a, b) => a.tz.localeCompare(b.tz),
+      filters: Array.from(new Set(post.map(item => item.tz))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.tz.startsWith(value),
     },
     {
       title: "Recipient Emails",
       dataIndex: "recipientemails",
       key: "7",
       sorter: (a, b) => a.recipientemails.localeCompare(b.recipientemails),
+      filters: Array.from(new Set(post.map(item => item.recipientemails))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.recipientemails.startsWith(value),
     },
     {
       title: "Error Emails",
       dataIndex: "erroremails",
       key: "8",
       sorter: (a, b) => a.erroremails.localeCompare(b.erroremails),
+      filters: Array.from(new Set(post.map(item => item.erroremails))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.erroremails.startsWith(value),
     },
     {
       title: "Is Active",
       dataIndex: "isactive",
       key: "9",
       sorter: (a, b) => a.isactive - b.isactive,
+      filters: Array.from(new Set(post.map(item => item.isactive))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.isactive.startsWith(value),
     },
     {
       title: "Actions",
@@ -151,7 +219,7 @@ function Alerts() {
         <>
           <a
             onClick={() => {
-              onEdit(record.id);
+              onEdit(record);
             }}
             style={{ marginRight: 8 }}
           >
@@ -169,10 +237,6 @@ function Alerts() {
     },
   ];
 
-  const [post, setPost] = useState({});
-  const [loading, setloading] = useState(true);
-  const [AlertsId, setAlertsId] = useState();
-
   let data = [];
   const getData = async () => {
     setIsLoading(true);
@@ -182,13 +246,15 @@ function Alerts() {
         funcName: "getAlertConfigurationsData"
       };
       const alertsData = await postAlertsApiDataToAws(body);
+      const alertList = await getApiDataFromAws("queryType=dropdownSite");
+      setAlertListData(alertList);
       const resp = await getAlertsList();
-      // console.log(resp);
       setPost(alertsData);
+
       setTempData(alertsData);
       setloading(false);
       setIsLoading(false);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const setData = async (formData) => {
@@ -209,7 +275,7 @@ function Alerts() {
     try {
       const resp = await deleteAlerts(id);
       getData();
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const onEdit = async (record) => {
@@ -230,26 +296,24 @@ function Alerts() {
   const filter = (text) => {
     const filterData = data.filter(
       (record) =>
-        record.projectname.toLowerCase().includes(text.toLowerCase()) ||
-        record.projectno.toString().includes(text.toLowerCase()) ||
-        record.projecttype.toLowerCase().includes(text.toLowerCase()) ||
-        record.building.toLowerCase().includes(text.toLowerCase()) ||
-        record.asset.toLowerCase().includes(text.toLowerCase()) ||
-        record.monitorpoint.toLowerCase().includes(text.toLowerCase()) ||
-        record.measure.toString().includes(text.toLowerCase()) ||
-        record.alertname.toLowerCase().includes(text.toLowerCase()) ||
-        record.lowerthreshold.toLowerCase().includes(text.toLowerCase()) ||
-        record.upperthreshold.toLowerCase().includes(text.toLowerCase()) ||
-        record.frequencytype.toLowerCase().includes(text.toLowerCase())
+        record.sitename.toLowerCase().includes(text.toLowerCase()) ||
+        record.utilitytype.toString().includes(text.toLowerCase()) ||
+        record.project.toLowerCase().includes(text.toLowerCase()) ||
+        record.reporttype.toLowerCase().includes(text.toLowerCase()) ||
+        record.freq.toLowerCase().includes(text.toLowerCase()) ||
+        record.tz.toLowerCase().includes(text.toLowerCase()) ||
+        record.recipientemails.toString().includes(text.toLowerCase()) ||
+        record.erroremails.toLowerCase().includes(text.toLowerCase())
+       
     );
-    setTempData(filterData);
+    setPost(filterData);
   };
   const onChangeText = (text) => {
     // console.log(text);
     setSearchText(text);
     filter(text);
     if (text === "" || !text) {
-      setPost(post);
+      setPost(tempData);
     }
   };
   useEffect(() => {
@@ -276,17 +340,18 @@ function Alerts() {
       </Row>
       <Modal
         style={{ textAlign: "left" }}
-        title="Create New Alerts"
+        title="Add New Alerts"
         centered
         open={open}
         onCancel={() => onCancelModal()}
-        width={1000}
+        width={700}
         footer={null}
         maskClosable={false}
       >
         <Form
           {...layout}
           name="nest-messages"
+          layout="vertical"
           onFinish={setData}
           style={{ maxWidth: 1000 }}
           form={form}
@@ -295,132 +360,160 @@ function Alerts() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"projectno"}
-                label="Project No"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"projectname"}
-                label="Project Name"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"projecttype"}
-                label="Project Types"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                name={"sitename"}
+                label="Select Site Name"
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+              // rules={[{ required: "" }]}
               >
                 <Select
-                  placeholder="Select Project"
+                  placeholder="Select Site Name"
                   value={selectedItems}
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                  options={filteredOptions.map((item, index) => ({
-                    value: item,
-                    label: item,
-                    key: index,
-                  }))}
-                />
+                  >
+                  {
+                    post.map((item, index)=>(
+                      <Select.Option key={index} item={item.id}>{item.name}</Select.Option>
+                    ))
+                  }
+                  </Select>
+
               </Form.Item>
             </Col>
           </Row>
 
           <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={11}>
+            <Col span={24}>
               <Form.Item
-                name={"building"}
-                label="Building"
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 16 }}
+                name={"utilitytype"}
+                label="Select Utility Type"
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
                 // rules={[{ required: "" }]}
               >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name={"asset"}
-                label="Asset"
-                labelCol={{ span: 5 }}
-                wrapperCol={{ span: 16 }}
-
-                // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={11}>
-              <Form.Item
-                name={"monitorpoint"}
-                label="Monitor Point"
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 16 }}
-                // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name={"measure"}
-                label="Measure"
-                labelCol={{ span: 5 }}
-                wrapperCol={{ span: 16 }}
-
-                // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
+                 <Select
+                  placeholder="Select Utility Type"
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                  size="large"
+                  style={{ width: "100%" }}
+                  >
+                    {
+                      [...new Set(post.map(item =>item.utilitytype))].map((item , index)=>(
+                        <Select.Option key={index} value={item}>{item}</Select.Option>
+                      ))
+                    }
+                  </Select>
               </Form.Item>
             </Col>
           </Row>
 
           <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={11}>
+            <Col span={24}>
               <Form.Item
-                name={"lowerthreshold"}
-                label="Lower Threshold (%)"
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 8 }}
-                // rules={[{ required: "" }]}
+                name={"reporttype"}
+                label="Select Report Type"
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
               >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name={"alertname"}
-                label="Alert Name"
-                labelCol={{ span: 5 }}
-                wrapperCol={{ span: 16 }}
-                // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
+                <Select
+                  placeholder="Select Report Type"
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                  size="large"
+                  style={{ width: "100%" }}
+                 
+                >
+                  {
+                    [...new Set(post.map(item=>item.reporttype))].map((item , index)=>(
+                      <Select.Option key={index} value={item}>{item}</Select.Option>
+                    ))
+                  }
+                </Select>
               </Form.Item>
             </Col>
           </Row>
 
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name={"tz"}
+                label="Select tz"
+                // labelCol={{ span: 8 }}
+                wrapperCol={{ span: 24 }}
+              // rules={[{ required: "" }]}
+              >
+                 <Select
+                  placeholder="Select Report Type"
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                  size="large"
+                  style={{ width: "100%" }}
+                 
+                >
+                 {[...new Set(post.map(item=>item.tz))].map((item,index)=>(
+                  <Select.Option key={index} value={item}>{item}</Select.Option>
+                 ))}
+                </Select>
+
+              </Form.Item>
+            </Col>
+
+          </Row>
+
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name={"recipientemails"}
+                label="Recipients Emails"
+                // labelCol={{ span: 8 }}
+                wrapperCol={{ span: 24 }}
+              // rules={[{ required: "" }]}
+              >
+                <Input className="form_input" />
+              </Form.Item>
+            </Col>
+              </Row>
+              <Row>
+            <Col span={24}>
+              <Form.Item
+                name={"erroremails"}
+                label="Error Emails"
+                // labelCol={{ span: 5 }}
+                wrapperCol={{ span: 24 }}
+
+              // rules={[{ required: "" }]}
+              >
+                <Input className="form_input" />
+              </Form.Item>
+            </Col>
+            </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name={"isactive"}
+                label="Is Active"
+                // labelCol={{ span: 8 }}
+                wrapperCol={{ span: 24 }}
+              // rules={[{ required: "" }]}
+              >
+                <Select
+                placeholder="Is Active"
+                value={selectedItems}
+                onChange={setSelectedItems}
+                size="large"
+                style={{ width: "100%" }}
+               >
+               {[...new Set(post.map(item=>item.isactive))].map((item , index)=>(
+                <Select.Option key={index} value={item}>{item?"true":"false"}</Select.Option>
+               ))}
+               </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+{/* 
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={11}>
               <Form.Item
@@ -428,7 +521,7 @@ function Alerts() {
                 label="Upper Threshold (%)"
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 8 }}
-                // rules={[{ required: "" }]}
+              // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -439,7 +532,7 @@ function Alerts() {
                 label="Frequency"
                 labelCol={{ span: 5 }}
                 wrapperCol={{ span: 16 }}
-                // rules={[{ required: "" }]}
+              // rules={[{ required: "" }]}
               >
                 <Select
                   placeholder="Frequency"
@@ -464,7 +557,7 @@ function Alerts() {
                 label="Active"
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
-                // rules={[{ required: "" }]}
+              // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -476,20 +569,21 @@ function Alerts() {
                 labelCol={{ span: 5 }}
                 wrapperCol={{ span: 16 }}
 
-                // rules={[{ required: "" }]}
+              // rules={[{ required: "" }]}
               >
                 <Input className="form_input" />
               </Form.Item>
             </Col>
-          </Row>
+          </Row> */}
 
           <Form.Item
             wrapperCol={{
-              offset: 11,
-              span: 16,
+              // offset: 11,
+              span: 24,
             }}
           >
-            <Row>
+            <Row style={{justifyContent:"end",display:"flex"}}>
+              <Col >
               <Button type="primary" htmlType="submit">
                 Submit
               </Button>
@@ -501,6 +595,7 @@ function Alerts() {
               >
                 Cancel
               </Button>
+              </Col>
             </Row>
           </Form.Item>
         </Form>
@@ -508,7 +603,7 @@ function Alerts() {
       <Spin spinning={isLoading}>
         <Table
           columns={columns}
-          dataSource={tempData}
+          dataSource={post}
           rowKey={"id"}
           scroll={{
             x: 1000,
