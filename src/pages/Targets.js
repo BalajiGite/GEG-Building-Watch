@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Row, Col, Modal } from "antd";
-import { Form, Input, Table, Divider } from "antd";
+import { Form, Input, Table, Divider, Spin } from "antd";
 import { useState, useEffect } from 'react';
 import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
 
@@ -195,7 +195,7 @@ function Targets() {
   
   const targetWidgets = (widget) => {
       setActiveButton(widget);
-      setTargetWidget(widget);
+      getData(widget);
   }
 
   const onDelete = async (id) => {
@@ -258,14 +258,16 @@ function Targets() {
       >
         Add Targets
       </Button>
-      <Table
-        bordered
-        columns={columns}
-        dataSource={targets}
-        scroll={{
-          x: 1000,
-        }}
-      />
+      <Spin spinning={isLoading}>
+        <Table
+          bordered
+          columns={columns}
+          dataSource={targets}
+          scroll={{
+            x: 1000,
+          }}
+        />
+      </Spin>
     </div>
   );
 }
