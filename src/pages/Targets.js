@@ -5,6 +5,8 @@ import Electric from '../components/widgets/targetswidgest/Electric';
 import Water from '../components/widgets/targetswidgest/Water';
 import Gas from '../components/widgets/targetswidgest/Gas';
 import { useState } from 'react';
+
+
 function Targets() {
   const [targetWidget, setTargetWidget] = useState(1);
   const [activeButton, setActiveButton] = useState(0);
@@ -12,10 +14,81 @@ function Targets() {
   const [loading, setloading] = useState(true);
   const [open, setOpen] = useState(false);
 
+
+  const columns = [
+    {
+      title: "Electric",
+      dataIndex: "masterType",
+      key: "masterType",
+    },
+    {
+      title: "Name Id",
+      dataIndex: "eneryType",
+      key: "eneryType",
+    },
+    {
+      title: "Current RatingIng",
+      dataIndex: "measurments",
+      key: "measurments",
+    },
+    {
+      title: "Projet ID",
+      dataIndex: "edit",
+      key: "edit",
+    },
+    {
+      title: "Unit",
+      dataIndex: "delete",
+      key: "delete",
+    },
+    {
+        title:"Elect Target Profile",
+        dataIndex: "electTarget",
+        key:"electtarget"
+    },
+  ];
+
+  const data = [
+    {
+      key: "1",
+      masterType: "Water",
+      eneryType: "CT Water",
+      measurments: "1.Kilo Liters-kL",
+      edit: "",
+      delete: "",
+    },
+    {
+      key: "2",
+      masterType: "Water",
+      eneryType: "Electricity kVAh",
+      measurments: "1.kWh-kWh",
+      edit: "",
+      delete: "",
+    },
+    {
+      key: "3",
+      masterType: "Electricity",
+      eneryType: "Electricity-Kitchen",
+      measurments: "1.Kilo Liters-kL",
+      edit: "",
+      delete: "",
+    },
+    {
+      key: "4",
+      masterType: "Electricity",
+      eneryType: "CT Water",
+      measurments: "1.Electricity-MCC1",
+      edit: "",
+      delete: "",
+    },
+  ];
+  
   const targetWidgets = (widget) => {
       setActiveButton(widget);
       setTargetWidget(widget);
   }
+
+
   return (
     <div className="App">
       <Row>
@@ -41,12 +114,14 @@ function Targets() {
       >
         Add Targets
       </Button>
-      {targetWidget===1?<Electric/>:(
-        <>
-        {targetWidget===2 && <Water/>},
-        {targetWidget===3 && <Gas/>}
-        </>
-      )}
+      <Table
+        bordered
+        columns={columns}
+        dataSource={data}
+        scroll={{
+          x: 1000,
+        }}
+      />
     </div>
   );
 }
