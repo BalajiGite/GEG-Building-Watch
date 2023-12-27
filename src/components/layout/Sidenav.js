@@ -289,9 +289,8 @@ function Sidenav({ color }) {
                     ? "white"
                     : "black",
               }}
-              className="label"
-            >
-              Email Alerts
+              className="label">
+              Alerts
             </span>
           </NavLink>
         </Menu.Item>
