@@ -1,4 +1,4 @@
-import { Menu } from "antd";
+import { Menu,Divider } from "antd";
 import { useContext } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import sitesIcons from "../../assets/images/sidebar.svg/Sites.svg";
@@ -119,323 +119,326 @@ function Sidenav({ color }) {
         {/*<img src={context.logoUrl} alt=""  width={150} />*/}
         Sustainable Building Manager
       </div>
-      <hr />
-      <Menu theme="light" mode="inline">
-        <Menu.Item className="menu-item-header" key="0">
-          Configuration
-        </Menu.Item>
-        {/*
-        <Menu.Item key="1">
-          <NavLink to="/dashboard">
-            <span
-              className="icon"
-              style={{
-                background: page === "dashboard" ? color : "",
-              }}
-            >
-              {dashboard}
-            </span>
+      <Divider/>
+      <div className="menu-wrapper">
+        <Menu theme="light" mode="inline">
+          <Menu.Item className="menu-item-header" key="0">
+            Configuration
+          </Menu.Item>
+          {/*
+          <Menu.Item key="1">
+            <NavLink to="/dashboard">
+              <span
+                className="icon"
+                style={{
+                  background: page === "dashboard" ? color : "",
+                }}
+              >
+                {dashboard}
+              </span>
 
-            <span
-              style={{
-                color:
-                  (context.backgroundColor === dark) & (page === "dashboard")
-                    ? "black"
-                    : (context.backgroundColor === dark) &
-                      (page !== "dashboard")
-                    ? "white"
-                    : "black",
-              }}
-              className="label"
-            >
-              Dashboard
-            </span>
-          </NavLink>
-        </Menu.Item>
-        */}
-        <Menu.Item key="2">
-          <NavLink to="/sites">
-            <span
-              className="icon"
-              style={{
-                background: page === "sites" ? color : "",
-              }}
-            >
-              <img src={sitesIcons} alt="sites_svg icons" />
-            </span>
-            <span
-              style={{
-                color:
-                  (context.backgroundColor === dark) & (page === "sites")
-                    ? "black"
-                    : (context.backgroundColor === dark) & (page !== "sites")
-                    ? "white"
-                    : "black",
-              }}
-              className="label"
-            >
-              Sites
-            </span>
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="3">
-          <NavLink to="/meter">
-            <span
-              className="icon"
-              style={{
-                background: page === "meter" ? color : "",
-              }}
-            >
-              <img src={meterIcon} alt="meterIcon" />
-            </span>
-            <span
-              style={{
-                color:
-                  (context.backgroundColor === dark) & (page === "meter")
-                    ? "black"
-                    : (context.backgroundColor === dark) & (page !== "meter")
-                    ? "white"
-                    : "black",
-              }}
-              className="label"
-            >
-              Meters
-            </span>
-          </NavLink>
-        </Menu.Item>
+              <span
+                style={{
+                  color:
+                    (context.backgroundColor === dark) & (page === "dashboard")
+                      ? "black"
+                      : (context.backgroundColor === dark) &
+                        (page !== "dashboard")
+                      ? "white"
+                      : "black",
+                }}
+                className="label"
+              >
+                Dashboard
+              </span>
+            </NavLink>
+          </Menu.Item>
+          */}
+          <Menu.Item key="2">
+            <NavLink to="/sites">
+              <span
+                className="icon"
+                style={{
+                  background: page === "sites" ? color : "",
+                }}
+              >
+                <img src={sitesIcons} alt="sites_svg icons" />
+              </span>
+              <span
+                style={{
+                  color:
+                    (context.backgroundColor === dark) & (page === "sites")
+                      ? "black"
+                      : (context.backgroundColor === dark) & (page !== "sites")
+                      ? "white"
+                      : "black",
+                }}
+                className="label"
+              >
+                Sites
+              </span>
+            </NavLink>
+          </Menu.Item>
+          <Menu.Item key="3">
+            <NavLink to="/meter">
+              <span
+                className="icon"
+                style={{
+                  background: page === "meter" ? color : "",
+                }}
+              >
+                <img src={meterIcon} alt="meterIcon" />
+              </span>
+              <span
+                style={{
+                  color:
+                    (context.backgroundColor === dark) & (page === "meter")
+                      ? "black"
+                      : (context.backgroundColor === dark) & (page !== "meter")
+                      ? "white"
+                      : "black",
+                }}
+                className="label"
+              >
+                Meters
+              </span>
+            </NavLink>
+          </Menu.Item>
 
-        <Menu.Item key="4">
-          <NavLink to="/point">
-            <span
-              className="icon"
-              style={{
-                backgroundColor: page === "point" ? color : "",
-              }}
-            >
-              <img src={pointIcon} alt="pointIcon" />
-            </span>
-            <span
-              style={{
-                color:
-                  (context.backgroundColor === dark) & (page === "point")
-                    ? "black"
-                    : (context.backgroundColor === dark) & (page !== "point")
-                    ? "white"
-                    : "black",
-              }}
-              className="label"
-            >
-              Points
-            </span>
-          </NavLink>
-        </Menu.Item>
+          <Menu.Item key="4">
+            <NavLink to="/point">
+              <span
+                className="icon"
+                style={{
+                  backgroundColor: page === "point" ? color : "",
+                }}
+              >
+                <img src={pointIcon} alt="pointIcon" />
+              </span>
+              <span
+                style={{
+                  color:
+                    (context.backgroundColor === dark) & (page === "point")
+                      ? "black"
+                      : (context.backgroundColor === dark) & (page !== "point")
+                      ? "white"
+                      : "black",
+                }}
+                className="label"
+              >
+                Points
+              </span>
+            </NavLink>
+          </Menu.Item>
 
-        <Menu.Item key="5">
-          <NavLink to="/GeoConfigs">
-            <span className="icon" 
-            style={{
-              backgroundColor:page === "GeoConfigs"? color: "",
-            }}>
-              <img src={configIcon} alt="configIcon" />
-            </span>
-            <span
+          <Menu.Item key="5">
+            <NavLink to="/GeoConfigs">
+              <span className="icon" 
               style={{
-                color: (context.backgroundColor === dark ? "white" : "black")
-                  ? "black"
-                  : (context.backgroundColor === dark) & (page !== "GeoConfigs")
-                  ? "white"
-                  : "black",
-              }}
-              className="label"
-            >
-              Location
-            </span>
-          </NavLink>
-        </Menu.Item>
+                backgroundColor:page === "GeoConfigs"? color: "",
+              }}>
+                <img src={configIcon} alt="configIcon" />
+              </span>
+              <span
+                style={{
+                  color: (context.backgroundColor === dark ? "white" : "black")
+                    ? "black"
+                    : (context.backgroundColor === dark) & (page !== "GeoConfigs")
+                    ? "white"
+                    : "black",
+                }}
+                className="label"
+              >
+                Location
+              </span>
+            </NavLink>
+          </Menu.Item>
 
-        <Menu.Item key="6">
-          <NavLink to="/alert">
-            <span
-              className="icon"
-              style={{
-                background: page === "alert" ? color : "",
-              }}
-            >
-              <img src={alertsIcon} alt="alertIcon" />
-            </span>
-            <span
-              style={{
-                color:
-                  (context.backgroundColor === dark) & (page === "alert")
-                    ? "black"
-                    : (context.backgroundColor === dark) & (page !== "alert")
-                    ? "white"
-                    : "black",
-              }}
-              className="label">
-              Alerts
-            </span>
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="7">
-          <NavLink to="/targets">
-            <span
-              className="icon"
-              style={{
-                backgroundColor: page === "targets" ? color : "",
-              }}
-            >
-              <img src={profileIcon} alt="profieIcon" />
-            </span>
-            <span
-              style={{
-                color:
-                  (context.backgroundColor === dark) & (page === "profile")
-                    ? "black"
-                    : (context.backgroundColor === dark) & (page !== "profile")
-                    ? "white"
-                    : "black",
-              }}
-              className="label"
-            >
-              Targets
-            </span>
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item className="menu-item-header" key="8">
-          Monitoring
-        </Menu.Item>
-        <Menu.Item key="9">
-          <NavLink to="/targets">
-            <span
-              className="icon"
-              style={{
-                backgroundColor: page === "targets" ? color : "",
-              }}
-            >
-              <img src={pointIcon} alt="profieIcon" />
-            </span>
-            <span
-              style={{
-                color:
-                  (context.backgroundColor === dark) & (page === "profile")
-                    ? "black"
-                    : (context.backgroundColor === dark) & (page !== "profile")
-                    ? "white"
-                    : "black",
-              }}
-              className="label"
-            >
-              MP Readings
-            </span>
-          </NavLink>
-        </Menu.Item>
-        {/* <Menu.Item key="5">
-          <NavLink to="/projects">
-            <span
-              className="icon"
-              style={{
-                background: page === "projects" ? color : "",
-              }}
-            >
-              {projects}
-            </span>
-            <span
-              style={{
-                color:
-                  (context.backgroundColor === dark) & (page === "projects")
-                    ? "black"
-                    : (context.backgroundColor === dark) & (page !== "projects")
-                    ? "white"
-                    : "black",
-              }}
-              className="label"
-            >
-              Projects
-            </span>
-          </NavLink>
-          </Menu.Item> */}
-        {/**
-        <Menu.Item key="5">
-          <NavLink to="/buildingPerformance">
-            <span
-              className="icon"
-              style={{
-                background: page === "buildingPerformance" ? color : "",
-              }}
-            >
-              {buildings}
-            </span>
-            <span
-              style={{
-                color:
-                  (context.backgroundColor === dark) &
-                  (page === "buildingPerformance")
-                    ? "black"
-                    : (context.backgroundColor === dark) &
-                      (page !== "buildingPerformance")
-                    ? "white"
-                    : "black",
-              }}
-              className="label"
-            >
-              Building Performance
-            </span>
-          </NavLink>
-        </Menu.Item>
-         */}
-
-        {/** 
-        <Menu.Item key="7">
-          <NavLink to="/report">
-            <span
-              className="icon"
-              style={{
-                background: page === "report" ? color : "",
-              }}
-            >
-              {report}
-            </span>
-            <span
-              style={{
-                color:
-                  (context.backgroundColor === dark) & (page === "report")
-                    ? "black"
-                    : (context.backgroundColor === dark) & (page !== "report")
-                    ? "white"
-                    : "black",
-              }}
-            >
-              Report
-            </span>
-          </NavLink>
-        </Menu.Item>
-        */}
-        {/*
-        <Menu.Item className="menu-item-header" key="8">
-          Account Pages
-        </Menu.Item>
-
-        <Menu.Item key="10">
-          <NavLink to="/sign-in">
-            <span className="icon">{signin}</span>
-            <span
-              style={{
-                color: context.backgroundColor === dark ? "white" : "black",
-              }}
-              className="label"
-            >
-              Sign In
-            </span>
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="11">
-          {/* <NavLink to="/sign-up">
-            <span className="icon">{signup}</span>
-            <span className="label">Sign Up</span>
-          </NavLink> //}
+          <Menu.Item key="6">
+            <NavLink to="/alert">
+              <span
+                className="icon"
+                style={{
+                  background: page === "alert" ? color : "",
+                }}
+              >
+                <img src={alertsIcon} alt="alertIcon" />
+              </span>
+              <span
+                style={{
+                  color:
+                    (context.backgroundColor === dark) & (page === "alert")
+                      ? "black"
+                      : (context.backgroundColor === dark) & (page !== "alert")
+                      ? "white"
+                      : "black",
+                }}
+                className="label">
+                Alerts
+              </span>
+            </NavLink>
+          </Menu.Item>
+          <Menu.Item key="7">
+            <NavLink to="/targets">
+              <span
+                className="icon"
+                style={{
+                  backgroundColor: page === "targets" ? color : "",
+                }}
+              >
+                <img src={profileIcon} alt="profieIcon" />
+              </span>
+              <span
+                style={{
+                  color:
+                    (context.backgroundColor === dark) & (page === "profile")
+                      ? "black"
+                      : (context.backgroundColor === dark) & (page !== "profile")
+                      ? "white"
+                      : "black",
+                }}
+                className="label"
+              >
+                Targets
+              </span>
+            </NavLink>
+          </Menu.Item>
+          <Divider />
+          <Menu.Item className="menu-item-header" key="8">
+            Monitoring
+          </Menu.Item>
+          <Menu.Item key="9">
+            <NavLink to="/pointsReadings">
+              <span
+                className="icon"
+                style={{
+                  backgroundColor: page === "targets" ? color : "",
+                }}
+              >
+                <img src={pointIcon} alt="profieIcon" />
+              </span>
+              <span
+                style={{
+                  color:
+                    (context.backgroundColor === dark) & (page === "profile")
+                      ? "black"
+                      : (context.backgroundColor === dark) & (page !== "profile")
+                      ? "white"
+                      : "black",
+                }}
+                className="label"
+              >
+                MP Readings
+              </span>
+            </NavLink>
+          </Menu.Item>
+          {/* <Menu.Item key="5">
+            <NavLink to="/projects">
+              <span
+                className="icon"
+                style={{
+                  background: page === "projects" ? color : "",
+                }}
+              >
+                {projects}
+              </span>
+              <span
+                style={{
+                  color:
+                    (context.backgroundColor === dark) & (page === "projects")
+                      ? "black"
+                      : (context.backgroundColor === dark) & (page !== "projects")
+                      ? "white"
+                      : "black",
+                }}
+                className="label"
+              >
+                Projects
+              </span>
+            </NavLink>
             </Menu.Item> */}
-      </Menu>
+          {/**
+          <Menu.Item key="5">
+            <NavLink to="/buildingPerformance">
+              <span
+                className="icon"
+                style={{
+                  background: page === "buildingPerformance" ? color : "",
+                }}
+              >
+                {buildings}
+              </span>
+              <span
+                style={{
+                  color:
+                    (context.backgroundColor === dark) &
+                    (page === "buildingPerformance")
+                      ? "black"
+                      : (context.backgroundColor === dark) &
+                        (page !== "buildingPerformance")
+                      ? "white"
+                      : "black",
+                }}
+                className="label"
+              >
+                Building Performance
+              </span>
+            </NavLink>
+          </Menu.Item>
+          */}
+
+          {/** 
+          <Menu.Item key="7">
+            <NavLink to="/report">
+              <span
+                className="icon"
+                style={{
+                  background: page === "report" ? color : "",
+                }}
+              >
+                {report}
+              </span>
+              <span
+                style={{
+                  color:
+                    (context.backgroundColor === dark) & (page === "report")
+                      ? "black"
+                      : (context.backgroundColor === dark) & (page !== "report")
+                      ? "white"
+                      : "black",
+                }}
+              >
+                Report
+              </span>
+            </NavLink>
+          </Menu.Item>
+          */}
+          {/*
+          <Menu.Item className="menu-item-header" key="8">
+            Account Pages
+          </Menu.Item>
+
+          <Menu.Item key="10">
+            <NavLink to="/sign-in">
+              <span className="icon">{signin}</span>
+              <span
+                style={{
+                  color: context.backgroundColor === dark ? "white" : "black",
+                }}
+                className="label"
+              >
+                Sign In
+              </span>
+            </NavLink>
+          </Menu.Item>
+          <Menu.Item key="11">
+            {/* <NavLink to="/sign-up">
+              <span className="icon">{signup}</span>
+              <span className="label">Sign Up</span>
+            </NavLink> //}
+              </Menu.Item> */}
+        </Menu>
+      </div>
     </>
   );
 }
