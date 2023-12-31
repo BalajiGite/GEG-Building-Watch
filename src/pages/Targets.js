@@ -1,9 +1,9 @@
 import React from 'react';
-import { Button, Row, Col, Modal } from "antd";
+import { Button, Row, Col, Modal, Select } from "antd";
 import { Form, Input, Table, Divider, Spin } from "antd";
 import { useState, useEffect } from 'react';
 import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
-
+import { targetEdit,addTarget } from '../services/targetService';
 
 function Targets() {
   const [targetWidget, setTargetWidget] = useState(1);
@@ -12,8 +12,25 @@ function Targets() {
   const [isLoading, setIsLoading] = useState(false);
   const [loading, setloading] = useState(true);
   const [open, setOpen] = useState(false);
+  const [targetId, setTargetId] = useState();
+  const [selectedItem, setSelectedItem] = useState();
   const [form] = Form.useForm();
 
+  const onCancelModal = () => {
+    setOpen(false);
+    form.resetFields();
+  }
+
+  const validateMessages = {
+    require: "${label} is required!",
+    type:{
+      email:"${lebel} is not a valid email !",
+      number:"${lebel} is not a valid number",
+    },
+    number:{
+      range:"${lebel} must be between ${min} and ${max}",
+    },
+  };
 
   const dynamicColumns = (data) => {
     const dynamicColumns = [];
@@ -199,7 +216,7 @@ function Targets() {
       sorter: (a, b) => a.id.localeCompare(b.id),
     },
     {
-      title: "Name",
+      title: "Name",  
       dataIndex: "name",
       key: "name",
       sorter: (a, b) => a.name.localeCompare(b.name),
@@ -330,7 +347,7 @@ function Targets() {
   };
   const onEdit = async (record) => {
     form.setFieldsValue(record);
-    //setSitesId(record.id);
+    setTargetId(record.id);
     setOpen(true);
   };
 
@@ -352,6 +369,19 @@ function Targets() {
     } catch (error) { }
   };
 
+  const setData =  async(storeFormData) =>{
+
+    if(targetId){
+      const res = await targetEdit(targetId ,storeFormData )
+    }
+    else{
+      const res = await addTarget(storeFormData);
+    }
+    onCancelModal();
+  
+  }
+
+
   useEffect(() => {
     getData(1);
     setActiveButton(1);
@@ -367,6 +397,7 @@ function Targets() {
               size="small"
               placeholder="search here ..."
               value={""}
+              
             // onChange={(e) => onChangeText(e.target.value)}
             />
           </Form>
@@ -378,10 +409,154 @@ function Targets() {
       <Button
         className="mb-4 ml-4"
         type="primary"
-      // onClick={() => setOpen(true)}
+      onClick={() => setOpen(true)}
       >
-        Add Targets
+       {activeButton===2?"Add New Water Target Profile"
+       :activeButton===3?"Add New Gas Target Profile":
+       "Add New Electric Target Profile"} 
       </Button>
+      <Modal
+        style={{ textAlign: "left" }}
+        title={activeButton === 2 ? "Add New Water Target Profile" :
+        activeButton === 3 ? "Add New Gas Target Profile":"Add New Electric Target Profile"}
+        centered
+        open={open}
+        onCancel={() => onCancelModal()}
+        width={700}
+        footer={null}
+        maskClosable={false}
+      >
+         <Form
+          // {...layout}
+          name="nest-messages"
+          layout="vertical"
+          onFinish={setData}
+          style={{ maxWidth: 1000 }}
+          form={form}
+          validateMessages={validateMessages}
+
+        >
+          <Row justify={"center"} gutter={[30,30]}>
+            <Col span={24}>
+            <Form.Item 
+            label = "Select Site"
+            wrapperCol={24}
+            name={"name"}
+            >
+              <Select
+              placeholder ="Select Site"
+              value={selectedItem}
+              onClick={setSelectedItem}
+              size='large'
+              style={{width:"100%"}}
+              >
+                {[...new Set(targets.map(item => item.name))].map((item , index)=> (
+                  <Select.Option key={index} value={item}>{item}</Select.Option>
+                ))}
+
+              </Select>
+            </Form.Item>
+            </Col>
+          </Row>
+          
+          <Row justify={"center"} gutter={[30,30]}>
+            <Col span={24}>
+              <Form.Item 
+              name={""}
+              label="Current Rating"
+              wrapperCol={24}>
+                <Input className='form_input'/>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30,30]}>
+            <Col span={24}>
+              <Form.Item 
+              name={"targetRating"}
+              label="Target Rating"
+              wrapperCol={24}>
+                <Input className='form_input'/>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30,30]}>
+            <Col span={24}>
+              <Form.Item 
+              name={"ratingPeriodStart"}
+              label="Rating Period Start"
+              wrapperCol={24}>
+                <Input className='form_input'/>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30,30]}>
+            <Col span={24}>
+              <Form.Item 
+              name={"ratingPeriodEnd"}
+              label="Rating Period End"
+              wrapperCol={24}>
+                <Input className='form_input'/>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30,30]}>
+            <Col span={24}>
+              <Form.Item 
+              name={activeButton===2?"targetKl0":activeButton===3?"targetCum0":"targetKwh0"}
+              label={activeButton===2?"target K10": activeButton===3?"target Cum0":"Target kwh 0"}
+              wrapperCol={24}>
+                <Input className='form_input'/>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30,30]}>
+            <Col span={24}>
+              <Form.Item 
+              name={activeButton===2?"targetKl1":activeButton===3?"targetCum1":"targetKwh1"}
+              label={activeButton===2?"target kl1":activeButton===3?"target Cum1":"Target kwh 1"}
+              wrapperCol={24}>
+                <Input className='form_input'/>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30,30]}>
+            <Col span={24}>
+              <Form.Item 
+              name={activeButton===2?"targetKl2":"targetKwh2"}
+              label="Target kwh 2"
+              wrapperCol={24}>
+                <Input className='form_input'/>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30,30]}>
+            <Col span={24}>
+              <Form.Item 
+              name={"unit"}
+              label="Unit"
+              wrapperCol={24}>
+                <Input className='form_input'/>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30,30]}>
+            <Col span={24}>
+              <Form.Item 
+              name={"point"}
+              label="Point ID"
+              wrapperCol={24}>
+                <Input className='form_input'/>
+              </Form.Item>
+            </Col>
+          </Row>
+                <Row justify={"end"} gutter={[30,30]}>
+                  <Col span={7}>
+                    <Button type='' htmlType='' onClick={()=>onCancelModal()}>Cancel</Button>
+                    <Button type='primary' htmlType="submit" style={{marginLeft:"10px"}}>Save</Button>
+                  </Col>
+                </Row>
+        </Form>
+        </Modal>
       <Spin spinning={isLoading}>
         <Table
           bordered
