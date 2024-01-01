@@ -9,6 +9,11 @@ body {
   font-family: Helvetica, Arial, sans-serif;
 }
 
+.ant-popover-inner{
+  border-radius: 10px;
+ 
+}
+
 .changeFamily {
   font-family: Open Sans, Helvetica, Arial, sans-serif;
 }
@@ -394,7 +399,7 @@ me-color mb-2 .layout-dashboard .ant-layout-sider.sider-primary .footer-box p {
 .layout-dashboard .ant-layout {
   background: transparent;
   position: relative;
-  min-height: 100vh;
+  /*min-height: 100vh;*/
   width: 100%;
   flex-shrink: 0;
 }
@@ -2456,6 +2461,7 @@ small.redtext {
 
 section.ant-layout.layout-content .ant-layout-content.content-ant {
   padding: 0px !important;
+  
 }
 
 .layout-dashboard .ant-card {

@@ -305,6 +305,7 @@ function Sites() {
   };
 
   const onChangeText = (text) => {
+    console.log(text)
     setSearchText(text);
     filter(text);
     if (text === "" || !text) {
@@ -329,6 +330,8 @@ function Sites() {
   useEffect(() => {
     getData();
   }, []);
+
+  const tableHeight = window.innerHeight - 250; // Adjust this value as needed
 
   return (
     <>
@@ -618,12 +621,12 @@ function Sites() {
         </Form>
       </Modal>
       <Spin spinning={isLoading}>
-        <Table
+      <Table
           columns={columns}
           dataSource={site}
           rowKey={"id"}
           scroll={{
-            x: 1000,
+            x: 1000
           }}
         />
       </Spin>

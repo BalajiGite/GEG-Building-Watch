@@ -13,7 +13,7 @@ import {
   Image,
 } from "antd";
 import signinbg from "../assets/images/illustration.jpg";
-import signinLogo from "../assets/images/logo.jpg";
+import signinLogo from "../assets/images/verdeos_logo.png";
 import {
   DribbbleOutlined,
   TwitterOutlined,
@@ -139,7 +139,7 @@ export default class SignIn extends Component {
               <Col xs={24} sm={24} md={12} lg={7} xl={7} xxl={7} className="">
                 <Col style={{ marginTop: 60, marginLeft: 10 }}>
                   <Title className="">
-                    <Image src={signinLogo} alt="Grosvenor Engineering Group" />
+                    <Image src={signinLogo} alt="verdeos_logo.png" />
                   </Title>
                   <Title
                     className="font-regular text-muted"

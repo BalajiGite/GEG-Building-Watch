@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { Form, Upload } from "antd";
+import { Divider, Form, Upload } from "antd";
 import { IoIosSettings } from "react-icons/io";
 // import ImageUploading from 'react-images-uploading';
 import React from "react";
@@ -17,14 +17,25 @@ import {
   Input,
   Drawer,
   Typography,
+  Image,
+  Popover,
+  ConfigProvider,
 } from "antd";
 
-import {} from "@ant-design/icons";
+
+import { } from "@ant-design/icons";
 
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import avtar from "../../assets/images/team-2.jpg";
-
+import menubar from "../../assets/images/menu_bar_svg.svg";
+import alert from "../../assets/images/alert_svg.svg";
+import Ellips from "../../assets/images/Ellipse 45.svg";
+import BPM from "../../assets/images/Header-section/BPM.svg";
+import managment from "../../assets/images/Header-section/Management.svg";
+import BMM from "../../assets/images/Header-section/BMM.svg"
+import SBM from "../../assets/images/Header-section/SBM.svg";
+import DP from "../../assets/images/Header-section/DP.svg";
 const ButtonContainer = styled.div`
   .ant-btn-primary {
     background-color: #1890ff;
@@ -46,6 +57,68 @@ const ButtonContainer = styled.div`
   }
 `;
 
+const content = (
+  <div style={{ width: "204px", height: "154px" }}>
+    <Row style={{ justifyContent: "space-between" }}>
+      <Col>
+        <div style={{ justifyContent: "center", display: "flex" }}>
+          <img src={BPM} alt="BPM_svg" />
+        </div>
+        <p >BPM</p>
+      </Col>
+      <Col>
+        <div style={{ justifyContent: "center", display: "flex" }}>
+          <img src={managment} alt="managment_svg" />
+        </div>
+        <p>BSM</p>
+      </Col>
+      <Col>
+        <div style={{ justifyContent: "center", display: "flex" }}>
+          <img src={BMM} alt="BMM_svg" />
+        </div>
+        <p>BMM</p>
+      </Col>
+    </Row>
+    <hr />
+    <Row style={{ justifyContent: "space-between" }}>
+      <Col>
+        <div style={{ justifyContent: "center", display: "flex" }}>
+          <img src={SBM} alt="SBM-svg" />
+        </div>
+        <p>SBM</p>
+      </Col>
+      <Col>
+        <div style={{ justifyContent: "center", display: "flex" }}>
+          <img src={DP} alt="DP-svg" />
+        </div>
+        <p>DP</p>
+      </Col>
+      <Col span={8}></Col>
+    </Row>
+  </div>
+);
+const profile = (
+  <div style={{ height: "249px", width: "221px" }}>
+    <Row style={{ justifyContent: "center", display: "flex" }}>
+      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="20" fill="#1B2228" />
+        <text x="50%" y="50%" text-anchor="middle" alignment-baseline="middle" font-size="14" fill="#fff">NL</text>
+      </svg>
+
+    </Row>
+    <div style={{ textAlign: "center" }}>
+      <p style={{ marginBottom: "0px" }}><b>Nicolas Lianos</b></p>
+      <p>nicolas.lianos@sample.email</p>
+    </div>
+    <div>
+      <h6>Account Setting</h6>
+      <hr />
+      <h6>Teams</h6>
+      <hr></hr>
+      <NavLink to ={"/sign-in"}><h6>Logout</h6></NavLink>
+    </div>
+  </div>
+);
 const bell = [
   <svg
     width="20"
@@ -234,10 +307,10 @@ function Header({
       </div>
       <Row gutter={[24, 0]}>
         <Col span={24} md={6}>
-          <img src={context.logoUrl} alt=""  width={150} />
+          <img src={context.logoUrl} alt="" width={150} />
         </Col>
         <Col span={24} md={6}>
-          <Breadcrumb>
+          <Breadcrumb style={{ display: "none" }}>
             <Breadcrumb.Item>
               <NavLink to="/">
                 {" "}
@@ -281,6 +354,26 @@ function Header({
           <Button type="link" onClick={showDrawer}>
             <IoSettingsOutline />
           </Button>
+          <Col >
+            <ConfigProvider>
+              <Popover placement="bottomLeft" content={profile}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 40 40" fill="none" style={{ cursor: 'pointer' }}>
+                  <circle cx="20" cy="20" r="20" fill="#1B2228" />
+                  <text x="50%" y="50%" text-anchor="middle" alignment-baseline="middle" font-size="14" fill="#fff">NL</text>
+                </svg>
+              </Popover>
+            </ConfigProvider>
+          </Col>
+          <Col>
+            <img src={alert} alt="alert_svg" style={{ cursor: 'pointer' }} />
+          </Col>
+          <Col>
+            <ConfigProvider >
+              <Popover placement="bottomLeft" trigger="click" content={content}>
+                <img src={menubar} alt="menuBar_svg" style={{ cursor: 'pointer' }} />
+              </Popover>
+            </ConfigProvider>
+          </Col>
           <Button
             type="link"
             className="sidebar-toggler"

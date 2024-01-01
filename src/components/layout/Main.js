@@ -100,7 +100,7 @@ function Main({ children }) {
           <Sidenav color={context.sidenavColor} />
         </Sider>
         <Layout>
-          <Content className="content-ant">{children}</Content>
+          <Content className="content-ant" >{children}</Content>
           <Footer />
         </Layout>
       </Layout>
