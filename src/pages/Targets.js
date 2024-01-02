@@ -9,12 +9,17 @@ function Targets() {
   const [targetWidget, setTargetWidget] = useState(1);
   const [activeButton, setActiveButton] = useState(1);
   const [targets, setTargets] = useState([])
+  const [targetTempData, setTargetTempData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loading, setloading] = useState(true);
   const [open, setOpen] = useState(false);
   const [targetId, setTargetId] = useState();
+  const [searchText, setSearchText] = useState("");
   const [selectedItem, setSelectedItem] = useState();
   const [form] = Form.useForm();
+
+  const screenHeight = window.innerHeight-340;
+
 
   const onCancelModal = () => {
     setOpen(false);
@@ -42,6 +47,8 @@ function Targets() {
         title: "Electricity Target Profile",
         dataIndex: "elecTargetProfile",
         key: "elecTargetProfile",
+        width:300,
+        Ellipsis:true,
         sorter: (a, b) => a.elecTargetProfile.localeCompare(b.elecTargetProfile),
         filters: Array.from(new Set(targets.map(item => item.elecTargetProfile))).map((profile, index) => ({
           text: profile,
@@ -57,6 +64,8 @@ function Targets() {
         title: "Target kWh 0",
         dataIndex: "targetKwh0",
         key: "targetKwh0",
+        width:200,
+        Ellipsis:true,
         sorter: (a, b) => parseFloat(a.targetKwh0) - parseFloat(b.targetKwh0),
         filters: Array.from(new Set(targets.map(item => item.targetKwh0))).map((kwh, index) => ({
           text: kwh,
@@ -73,6 +82,8 @@ function Targets() {
         title: "Target kWh 1",
         dataIndex: "targetKwh1",
         key: "targetKwh1",
+        width:200,
+        Ellipsis:true,
         sorter: (a, b) => parseFloat(a.targetKwh1) - parseFloat(b.targetKwh1),
         filters: Array.from(new Set(targets.map(item => item.targetKwh1))).map((kwh, index) => ({
           text: kwh,
@@ -89,6 +100,8 @@ function Targets() {
         title: "Target kWh 2",
         dataIndex: "targetKwh2",
         key: "targetKwh2",
+        width:200,
+        Ellipsis:true,
         sorter: (a, b) => parseFloat(a.targetKwh2) - parseFloat(b.targetKwh2),
         filters: Array.from(new Set(targets.map(item => item.targetKwh2))).map((kwh, index) => ({
           text: kwh,
@@ -104,6 +117,8 @@ function Targets() {
         title: "Water Target Profile",
         dataIndex: "waterTargetProfile",
         key: "waterTargetProfile",
+        width:350,
+        Ellipsis:true,
         sorter: (a, b) => a.waterTargetProfile.localeCompare(b.waterTargetProfile),
         filters: Array.from(new Set(targets.map(item => item.waterTargetProfile))).map((name, index) => ({
           text: name,
@@ -119,6 +134,8 @@ function Targets() {
         title: "Target Kl0",
         dataIndex: "targetKl0",
         key: "targetKl0",
+        width:200,
+        Ellipsis:true,
         sorter: (a, b) => a.targetKl0.localeCompare(b.targetKl0),
         filters: Array.from(new Set(targets.map(item => item.targetKl0))).map((name, index) => ({
           text: name,
@@ -135,6 +152,8 @@ function Targets() {
         title: "Target Kl1",
         dataIndex: "targetKl1",
         key: "targetKl1",
+        width:200,
+        Ellipsis:true,
         sorter: (a, b) => a.targetKl1.localeCompare(b.targetKl1),
         filters: Array.from(new Set(targets.map(item => item.targetKl1))).map((name, index) => ({
           text: name,
@@ -150,6 +169,8 @@ function Targets() {
         title: "Target Kl2",
         dataIndex: "targetKl2",
         key: "targetKl2",
+        width:200,
+        Ellipsis:true,
         sorter: (a, b) => a.targetKl2.localeCompare(b.targetKl2),
         filters: Array.from(new Set(targets.map(item => item.targetKl2))).map((name, index) => ({
           text: name,
@@ -165,6 +186,8 @@ function Targets() {
         title: "Gas Target Profile",
         dataIndex: "gasTargetProfile",
         key: "gasTargetProfile",
+        width:300,
+        Ellipsis:true,
         sorter: (a, b) => a.gasTargetProfile.localeCompare(b.gasTargetProfile),
         filters: Array.from(new Set(targets.map(item => item.gasTargetProfile))).map((name, index) => ({
           text: name,
@@ -180,6 +203,8 @@ function Targets() {
         title: "Target Cum0",
         dataIndex: "targetCum0",
         key: "targetCum0",
+        width:200,
+        Ellipsis:true,
         sorter: (a, b) => a.targetCum0.localeCompare(b.targetCum0),
         filters: Array.from(new Set(targets.map(item => item.targetCum0))).map((name, index) => ({
           text: name,
@@ -195,6 +220,8 @@ function Targets() {
         title: "Target Cum1",
         dataIndex: "targetCum1",
         key: "targetCum1",
+        width:200,
+        Ellipsis:true,
         sorter: (a, b) => a.targetCum1.localeCompare(b.targetCum1),
         filters: Array.from(new Set(targets.map(item => item.targetCum1))).map((name, index) => ({
           text: name,
@@ -213,12 +240,16 @@ function Targets() {
       title: "ID",
       dataIndex: "id",
       key: "id",
+      width:300,
+      Ellipsis:true,
       sorter: (a, b) => a.id.localeCompare(b.id),
     },
     {
       title: "Name",  
       dataIndex: "name",
       key: "name",
+      width:400,
+      Ellipsis:true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       filters: Array.from(new Set(targets.map(item => item.name))).map((name, index) => ({
         text: name,
@@ -232,6 +263,8 @@ function Targets() {
       title: "Unit",
       dataIndex: "unit",
       key: "unit",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.unit.localeCompare(b.unit),
       filters: Array.from(new Set(targets.map(item => item.unit))).map((unit, index) => ({
         text: unit,
@@ -245,6 +278,8 @@ function Targets() {
       title: "Target Rating",
       dataIndex: "targetRating",
       key: "targetRating",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => parseFloat(a.targetRating) - parseFloat(b.targetRating),
       filters: Array.from(new Set(targets.map(item => item.targetRating))).map((rating, index) => ({
         text: rating,
@@ -258,6 +293,8 @@ function Targets() {
       title: "Point",
       dataIndex: "point",
       key: "point",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.point.localeCompare(b.point),
       filters: Array.from(new Set(targets.map(item => item.point))).map((point, index) => ({
         text: point,
@@ -271,6 +308,8 @@ function Targets() {
       title: "Rating Period Start",
       dataIndex: "ratingPeriodStart",
       key: "ratingPeriodStart",
+      width:300,
+      Ellipsis:true,
       sorter: (a, b) => a.ratingPeriodStart.localeCompare(b.ratingPeriodStart),
       filters: Array.from(new Set(targets.map(item => item.ratingPeriodStart))).map((start, index) => ({
         text: start,
@@ -284,6 +323,8 @@ function Targets() {
       title: "Rating Period End",
       dataIndex: "ratingPeriodEnd",
       key: "ratingPeriodEnd",
+      width:300,
+      Ellipsis:true,
       sorter: (a, b) => a.ratingPeriodEnd.localeCompare(b.ratingPeriodEnd),
       filters: Array.from(new Set(targets.map(item => item.ratingPeriodEnd))).map((end, index) => ({
         text: end,
@@ -297,6 +338,8 @@ function Targets() {
       title: "Site Reference",
       dataIndex: "siteRef",
       key: "siteRef",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.siteRef.localeCompare(b.siteRef),
       filters: Array.from(new Set(targets.map(item => item.siteRef))).map((siteRef, index) => ({
         text: siteRef,
@@ -311,6 +354,8 @@ function Targets() {
       title: "Actions",
       dataIndex: "delete",
       key: "delete",
+      width:200,
+      Ellipsis:true,
       render: (text, record, index) => (
         <>
           <a
@@ -364,11 +409,11 @@ function Targets() {
         targetsData = await getApiDataFromAws("queryType=gasTargetProfile")
       }
       setTargets(targetsData);
+      setTargetTempData(targetsData);
       setloading(false);
       setIsLoading(false);
     } catch (error) { }
   };
-
   const setData =  async(storeFormData) =>{
 
     if(targetId){
@@ -380,7 +425,19 @@ function Targets() {
     onCancelModal();
   
   }
-
+    const onChangeText = (text) =>{
+      setSearchText(text);
+        searchFilter(text);
+        if(text==""||!text){
+          setTargets(targetTempData)
+        }
+    }
+    const searchFilter = (text) =>{
+          const filterData = targets.filter((record) => (
+            record.name.toLowerCase().includes(text.toLowerCase())
+          ))
+          setTargets(filterData)
+    }
 
   useEffect(() => {
     getData(1);
@@ -390,20 +447,8 @@ function Targets() {
   return (
     <div className="App">
       <Row>
-        <Col span={17} style={{ marginBottom: 20 }}></Col>
-        <Col span={7} style={{ marginBottom: 20 }}>
-          <Form>
-            <Input
-              size="small"
-              placeholder="search here ..."
-              value={""}
-              
-            // onChange={(e) => onChangeText(e.target.value)}
-            />
-          </Form>
-        </Col>
-      </Row>
-      <Button type={activeButton === 1 ? 'primary' : 'button'} onClick = {()=>targetWidgets(1)}>Electric</Button>
+        <Col span={17} style={{ marginBottom: 20 }}>
+        <Button type={activeButton === 1 ? 'primary' : 'button'} onClick = {()=>targetWidgets(1)}>Electric</Button>
       <Button type={activeButton === 2 ? 'primary' : 'button'} onClick = {()=> targetWidgets(2)}>Water</Button>
       <Button type={activeButton === 3 ? 'primary' : 'button'} onClick = {()=> targetWidgets(3)}>Gas</Button>
       <Button
@@ -415,6 +460,18 @@ function Targets() {
        :activeButton===3?"Add New Gas Target Profile":
        "Add New Electric Target Profile"} 
       </Button>
+        </Col>
+        <Col span={7} style={{ marginBottom: 20 }}>
+          <Form>
+            <Input
+              size="small"
+              placeholder="search here ..."
+              value={searchText}
+            onChange={(e) => onChangeText(e.target.value)}
+            />
+          </Form>
+        </Col>
+      </Row>
       <Modal
         style={{ textAlign: "left" }}
         title={activeButton === 2 ? "Add New Water Target Profile" :
@@ -503,7 +560,7 @@ function Targets() {
             <Col span={24}>
               <Form.Item 
               name={activeButton===2?"targetKl0":activeButton===3?"targetCum0":"targetKwh0"}
-              label={activeButton===2?"target K10": activeButton===3?"target Cum0":"Target kwh 0"}
+              label={activeButton===2?"Target K10": activeButton===3?"Target Cum0":"Target kwh0"}
               wrapperCol={24}>
                 <Input className='form_input'/>
               </Form.Item>
@@ -513,7 +570,7 @@ function Targets() {
             <Col span={24}>
               <Form.Item 
               name={activeButton===2?"targetKl1":activeButton===3?"targetCum1":"targetKwh1"}
-              label={activeButton===2?"target kl1":activeButton===3?"target Cum1":"Target kwh 1"}
+              label={activeButton===2?"Target kl1":activeButton===3?"Target Cum1":"Target kwh1"}
               wrapperCol={24}>
                 <Input className='form_input'/>
               </Form.Item>
@@ -523,7 +580,7 @@ function Targets() {
             <Col span={24}>
               <Form.Item 
               name={activeButton===2?"targetKl2":"targetKwh2"}
-              label="Target kwh 2"
+              label={activeButton===2?"Target kl2":"Target Kwh2"}
               wrapperCol={24}>
                 <Input className='form_input'/>
               </Form.Item>
@@ -564,6 +621,7 @@ function Targets() {
           dataSource={targets}
           scroll={{
             x: 1000,
+            y:screenHeight
           }}
         />
       </Spin>

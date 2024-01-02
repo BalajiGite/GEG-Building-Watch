@@ -298,13 +298,13 @@ function Header({
 
   return (
     <>
-      <div
+      {/* <div
         style={{ color: context.sidenavColor }}
         className="setting-drwer"
         onClick={showDrawer}
       >
         <IoIosSettings />
-      </div>
+      </div> */}
       <Row gutter={[24, 0]}>
         <Col span={24} md={6}>
           <img src={context.logoUrl} alt="" width={150} />

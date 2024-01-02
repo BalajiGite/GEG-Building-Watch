@@ -58,12 +58,16 @@ function Meter() {
       title: "ID",
       dataIndex: "id",
       key: "1",
+      width:300,
+      Ellipsis:true,
       sorter: (a, b) => a.id.localeCompare(b.id),
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "2",
+      width:250,
+      Ellipsis:true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       filters: Array.from(new Set(meters.map(item => item.name))).map((name, index) => ({
         text: name,
@@ -77,6 +81,8 @@ function Meter() {
       title: "Equip",
       dataIndex: "equip",
       key: "3",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.equip.localeCompare(b.equip),
       filters: Array.from(new Set(meters.map(item => item.equip))).map((name, index) => ({
         text: name,
@@ -90,6 +96,8 @@ function Meter() {
       title: "Electricity",
       dataIndex: "elec",
       key: "4",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.elec.localeCompare(b.elec),
       filters: Array.from(new Set(meters.map(item => item.elec))).map((name, index) => ({
         text: name,
@@ -103,6 +111,8 @@ function Meter() {
       title: "Gate Meter",
       dataIndex: "gateMeter",
       key: "5",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.gateMeter.localeCompare(b.gateMeter),
       filters: Array.from(new Set(meters.map(item => item.gateMeter))).map((name, index) => ({
         text: name,
@@ -116,6 +126,8 @@ function Meter() {
       title: "GEG Equipment Type",
       dataIndex: "gegEquipType",
       key: "6",
+      width:250,
+      Ellipsis:true,
       sorter: (a, b) => a.gegEquipType.localeCompare(b.gegEquipType),
       filters: Array.from(new Set(meters.map(item => item.gegEquipType))).map((name, index) => ({
         text: name,
@@ -129,6 +141,8 @@ function Meter() {
       title: "GEG Nabers Inclusion Percent",
       dataIndex: "gegNabersInclusionPercent",
       key: "7",
+      width:300,
+      Ellipsis:true,
       sorter: (a, b) => a.gegNabersInclusionPercent - b.gegNabersInclusionPercent,
       filters: Array.from(new Set(meters.map(item => item.gegNabersInclusionPercent))).map((name, index) => ({
         text: name,
@@ -142,6 +156,8 @@ function Meter() {
       title: "Level Reference",
       dataIndex: "levelRef",
       key: "8",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.levelRef.localeCompare(b.levelRef),
       filters: Array.from(new Set(meters.map(item => item.levelRef))).map((name, index) => ({
         text: name,
@@ -155,6 +171,8 @@ function Meter() {
       title: "Meter",
       dataIndex: "meter",
       key: "9",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.meter.localeCompare(b.meter),
       filters: Array.from(new Set(meters.map(item => item.meter))).map((name, index) => ({
         text: name,
@@ -168,6 +186,8 @@ function Meter() {
       title: "Site Reference",
       dataIndex: "siteRef",
       key: "10",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.siteRef.localeCompare(b.siteRef),
       filters: Array.from(new Set(meters.map(item => item.siteRef))).map((name, index) => ({
         text: name,
@@ -181,6 +201,8 @@ function Meter() {
       title: "Actions",
       dataIndex: "delete",
       key: "18",
+      width:200,
+      Ellipsis:true,
       render: (text, record, index) => (
         <>
           <a
@@ -275,15 +297,13 @@ function Meter() {
   return (
     <>
       {" "}
+      <Row>
+        <Col span={12}>
       <Button className="mb-5" type="primary" onClick={() => setOpen(true)}>
         Create New
       </Button>
-      <Row>
-        <Col span={17}>
         </Col>
-
-        <Col span={7} style={{ marginBottom: 10 }}>
-
+        <Col span={12} style={{ marginBottom: 10 }}>
           <Input
             size="small"
             placeholder="search here ..."
@@ -522,11 +542,13 @@ function Meter() {
       </Modal >
       <Spin spinning={isLoading}>
         <Table
+        bordered
           columns={columns}
           dataSource={meters}
           rowKey={"id"}
           scroll={{
             x: 1000,
+            y:300
           }}
         />
       </Spin>
