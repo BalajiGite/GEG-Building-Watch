@@ -33,7 +33,8 @@ function Meter() {
   const [tempData, setTempData] = useState({})
   const [form] = Form.useForm();
   
-  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
+  const screenHeight = window.innerHeight-340;
+
   const validateMessages = {
     required: "${label} is required!",
     types: {
@@ -548,7 +549,7 @@ function Meter() {
           rowKey={"id"}
           scroll={{
             x: 1000,
-            y:300
+            y:screenHeight
           }}
         />
       </Spin>

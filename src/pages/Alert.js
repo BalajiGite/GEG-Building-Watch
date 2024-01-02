@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Spin, Divider, Select } from "antd";
+import { Spin, Divider, Select, Tooltip } from "antd";
 import { Form, Input, Table } from "antd";
 import { Button, Row, Col, Modal } from "antd";
 import "reactjs-popup/dist/index.css";
@@ -202,7 +202,11 @@ function Alerts() {
       filterMode: "tree",
       filterSearch: true,
       onFilter: (value, record) => record.recipientemails.startsWith(value),
-      
+      render: (text) => (
+        <Tooltip title={text}>
+          <span>{text.length > 18 ? `${text.slice(0, 18)}...` : text}</span>
+        </Tooltip>
+      ),
     },
     {
       title: "Error Emails",
@@ -219,6 +223,11 @@ function Alerts() {
       filterMode: "tree",
       filterSearch: true,
       onFilter: (value, record) => record.erroremails.startsWith(value),
+      render: (text) => (
+        <Tooltip title={text}>
+          <span>{text.length > 18 ? `${text.slice(0, 18)}...` : text}</span>
+        </Tooltip>
+      ),
     },
     {
       title: "Is Active",
