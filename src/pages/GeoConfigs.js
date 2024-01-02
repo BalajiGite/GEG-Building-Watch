@@ -7,6 +7,7 @@ import {
   Select, Divider, Modal, Table, Form, Input, Button, Card, Col, Row, Spin
 } from "antd";
 import { useState } from "react";
+import spinnerjiff from "../assets/images/loader.gif";
 
 const layout = {
   labelCol: {
@@ -391,7 +392,7 @@ function Config() {
           </Row>
         </Form>
       </Modal>
-      <Spin spinning={isLoading}>
+      <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
         <Table
           columns={columns}
           dataSource={locationData}

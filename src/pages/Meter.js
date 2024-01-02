@@ -12,6 +12,7 @@ import {
   getMeterList,
 } from "../services/meterService";
 import { Item } from "devextreme-react/accordion";
+import spinnerjiff from "../assets/images/loader.gif";
 
 const layout = {
   labelCol: {
@@ -541,7 +542,7 @@ function Meter() {
           </Form.Item>
         </Form>
       </Modal >
-      <Spin spinning={isLoading}>
+      <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
         <Table
           columns={columns}
           dataSource={meters}

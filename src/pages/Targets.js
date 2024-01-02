@@ -4,6 +4,7 @@ import { Form, Input, Table, Divider, Spin } from "antd";
 import { useState, useEffect } from 'react';
 import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
 import { targetEdit,addTarget } from '../services/targetService';
+import spinnerjiff from "../assets/images/loader.gif";
 
 function Targets() {
   const [targetWidget, setTargetWidget] = useState(1);
@@ -614,7 +615,7 @@ function Targets() {
                 </Row>
         </Form>
         </Modal>
-      <Spin spinning={isLoading}>
+      <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
         <Table
           columns={columns}
           dataSource={targets}

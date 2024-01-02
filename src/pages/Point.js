@@ -11,6 +11,7 @@ import {
   editSites,
   getSitesList,
 } from "../services/sitesService";
+import spinnerjiff from "../assets/images/loader.gif";
 
 const layout = {
   labelCol: {
@@ -500,7 +501,7 @@ export default function Point() {
 
         </Form>
       </Modal>
-      <Spin spinning={isLoading}>
+      <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
         <Table
           columns={columns}
           dataSource={point}
