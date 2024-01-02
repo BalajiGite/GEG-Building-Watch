@@ -35,6 +35,7 @@ export default function Point() {
 
   const [form] = Form.useForm();
   // const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
+  const screenHeight = window.innerHeight-340;
 
   const validateMessages = {
     required: "${label} is required",
@@ -59,12 +60,16 @@ export default function Point() {
       title: "Id",
       dataIndex: "id",
       key: "1",
+      Ellipsis:true,
+      width:300,
       sorter: (a, b) => a.id.localeCompare(b.id),
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "2",
+      Ellipsis:true,
+      width:500,
       sorter: (a, b) => a.name.localeCompare(b.name),
       sorter: (a, b) => a.name.localeCompare(b.name),
       filters: Array.from(new Set(point.map(item => item.name))).map((name, index) => ({
@@ -79,6 +84,8 @@ export default function Point() {
       title: "Geg Point Type",
       dataIndex: "gegPointType",
       key: "3",
+      Ellipsis:true,
+      width:200,
       sorter: (a, b) => a.gegPointType.localeCompare(b.gegPointType),
       filters: Array.from(new Set(point.map(item => item.gegPointType))).map((name, index) => ({
         text: name,
@@ -92,6 +99,8 @@ export default function Point() {
       title: "Unit",
       dataIndex: "unit",
       key: "4",
+      Ellipsis:true,
+      width:200,
       sorter: (a, b) => a.unit.localeCompare(b.unit),
       filters: Array.from(new Set(point.map(item => item.unit))).map((name, index) => ({
         text: name,
@@ -105,6 +114,8 @@ export default function Point() {
       title: "Import",
       dataIndex: "import",
       key: "5",
+      Ellipsis:true,
+      width:200,
       sorter: (a, b) => a.import.localeCompare(b.import),
       filters: Array.from(new Set(point.map(item => item.import))).map((name, index) => ({
         text: name,
@@ -118,6 +129,8 @@ export default function Point() {
       title: "Active",
       dataIndex: "active",
       key: "6",
+      Ellipsis:true,
+      width:200,
       sorter: (a, b) => a.active.localeCompare(b.active),
       filters: Array.from(new Set(point.map(item => item.active))).map((name, index) => ({
         text: name,
@@ -131,6 +144,8 @@ export default function Point() {
       title: "Elec",
       dataIndex: "elec",
       key: "7",
+      Ellipsis:true,
+      width:200,
       sorter: (a, b) => a.elec.localeCompare(b.elec),
       filters: Array.from(new Set(point.map(item => item.elec))).map((name, index) => ({
         text: name,
@@ -144,6 +159,8 @@ export default function Point() {
       title: "Sensor",
       dataIndex: "sensor",
       key: "8",
+      Ellipsis:true,
+      width:200,
       sorter: (a, b) => a.sensor.localeCompare(b.sensor),
       filters: Array.from(new Set(point.map(item => item.sensor))).map((name, index) => ({
         text: name,
@@ -157,6 +174,8 @@ export default function Point() {
       title: "Point",
       dataIndex: "point",
       key: "9",
+      Ellipsis:true,
+      width:200,
       sorter: (a, b) => a.point.localeCompare(b.point),
       filters: Array.from(new Set(point.map(item => item.point))).map((name, index) => ({
         text: name,
@@ -170,6 +189,8 @@ export default function Point() {
       title: "Energy",
       dataIndex: "energy",
       key: "10",
+      Ellipsis:true,
+      width:200,
       sorter: (a, b) => a.energy.localeCompare(b.energy),
       filters: Array.from(new Set(point.map(item => item.energy))).map((name, index) => ({
         text: name,
@@ -183,6 +204,8 @@ export default function Point() {
       title: "Nem12Id",
       dataIndex: "nem12Id",
       key: "11",
+      Ellipsis:true,
+      width:200,
       sorter: (a, b) => a.nem12Id.localeCompare(b.nem12Id),
       filters: Array.from(new Set(point.map(item => item.nem12Id))).map((name, index) => ({
         text: name,
@@ -196,6 +219,8 @@ export default function Point() {
       title: "EquipRef",
       dataIndex: "equipRef",
       key: "12",
+      Ellipsis:true,
+      width:400,
       sorter: (a, b) => a.equipRef.localeCompare(b.equipRef),
       filters: Array.from(new Set(point.map(item => item.equipRef))).map((name, index) => ({
         text: name,
@@ -209,6 +234,8 @@ export default function Point() {
       title: "Actions",
       dataIndex: "delete",
       key: "13",
+      Ellipsis:true,
+      width:200,
       render: (text, record, index) => (
         <>
           <a onClick={() => onEdit(record)}>EDIT</a>
@@ -310,13 +337,13 @@ export default function Point() {
   return (
     <>
       {" "}
+      <Row>
+        <Col span={12}>
       <Button className="mb-5" type="primary" onClick={() => setOpen(true)}>
         Create New
       </Button>
-      <Row>
-        <Col span={17}></Col>
-
-        <Col span={7} style={{ marginBottom: 10 }}>
+        </Col>
+        <Col span={12} style={{ marginBottom: 10 }}>
           <Input
             size="small"
             placeholder="search here ..."
@@ -475,11 +502,13 @@ export default function Point() {
       </Modal>
       <Spin spinning={isLoading}>
         <Table
+        bordered
           columns={columns}
           dataSource={point}
           rowKey={"id"}
           scroll={{
             x: 1000,
+            y:screenHeight
           }}
         />
       </Spin>

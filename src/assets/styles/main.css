@@ -1737,6 +1737,11 @@ ul.ant-menu.ant-menu-root.ant-menu-inline.ant-menu-light.left-nav
   font-weight: 600;
   color: #141414;
   margin-bottom: 0px;
+  
+}
+
+.ant-table-layout-fixed table {
+  table-layout: auto;
 }
 
 .ant-table-tbody > tr > td p {

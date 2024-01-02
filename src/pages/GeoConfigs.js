@@ -30,7 +30,11 @@ function Config() {
   const [loading, setloading] = useState(true);
   const [locationData, setLocationData] = useState([]);
   const [activeButton, setActiveButton] = useState(0);
+  const [searchText, setSearchText] = useState("");
+  const [templocationData , setTempLocationData] = useState([])
   const [form] = Form.useForm();
+
+  const screenHeight = window.innerHeight-340;
 
 
   const dynamicColumns = (data) => {
@@ -42,7 +46,7 @@ function Config() {
       dynamicColumns.push({
         title: "State Ref",
         dataIndex: "stateRef",
-        key: "stateRef",
+         key: "stateRef",
         sorter: (a, b) => a.stateRef.localeCompare(b.stateRef),
         filters: Array.from(new Set(data.map(item => item.stateRef))).map((name, index) => ({
           text: name,
@@ -137,12 +141,16 @@ function Config() {
       title: "ID",
       dataIndex: "id",
       key: "id",
+      Ellipsis:true,
+      width:300,
       sorter: (a, b) => a.id.localeCompare(b.id),
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      width:300,
+      Ellipsis:true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       filters: Array.from(new Set(locationData.map(item => item.name))).map((name, index) => ({
         text: name,
@@ -157,6 +165,8 @@ function Config() {
       title: "Actions",
       dataIndex: "delete",
       key: "delete",
+      Ellipsis:true,
+      
       render: (text, record, index) => (
         <>
           <a
@@ -207,10 +217,27 @@ function Config() {
         locationData = await getApiDataFromAws("queryType=level")
       }
       setLocationData(locationData);
+      setTempLocationData(locationData);
       setloading(false);
       setIsLoading(false);
     } catch (error) { }
   };
+
+  const onChangeSelectedValue = (value) =>{
+    setSearchText(value);
+    filterData(value);
+    if(value==""||!value){
+      setLocationData(templocationData);
+    }
+  }
+  const filterData = (value) =>{
+    const filtersData =  locationData.filter((record)=>(
+      record.name.toLowerCase().includes(value.toLowerCase())||
+      record?.stateRef?.toLowerCase().includes(value.toLowerCase())||
+      record?.siteRef?.toLowerCase().includes(value.toLowerCase())
+    ));
+    setLocationData(filtersData)
+  }
   useEffect(() => {
     getData(0);
     setActiveButton(0);
@@ -308,8 +335,8 @@ function Config() {
             <Input
               size="small"
               placeholder="search here ..."
-              value={""}
-            // onChange={(e) => onChangeText(e.target.value)}
+              value={searchText}
+            onChange={(e)=>onChangeSelectedValue(e.target.value)}
             />
           </Form>
         </Col>
@@ -371,6 +398,7 @@ function Config() {
           dataSource={locationData}
           scroll={{
             x: 1000,
+            y:screenHeight
           }}
         />
       </Spin>

@@ -41,6 +41,8 @@ function Alerts() {
 
   const [form] = Form.useForm();
   // const [confForm] = Form.useForm();
+  const screenHeight = window.innerHeight-340;
+
   const filteredOptions = OPTIONS.filter((O) => !selectedItems.includes(O));
   const filteredFrequency = FREQUENCY.filter((O) => !selectedItems.includes(O));
   const validateMessages = {
@@ -92,12 +94,16 @@ function Alerts() {
       title: "ID",
       dataIndex: "id",
       key: "0",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.id - b.id,
     },
     {
       title: "Site Name",
       dataIndex: "sitename",
       key: "1",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.sitename.localeCompare(b.sitename),
       filters: Array.from(new Set(post.map(item => item.sitename))).map((name, index) => ({
         text: name,
@@ -111,6 +117,8 @@ function Alerts() {
       title: "Utility Type",
       dataIndex: "utilitytype",
       key: "2",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.utilitytype.localeCompare(b.utilitytype),
       filters: Array.from(new Set(post.map(item => item.utilitytype))).map((name, index) => ({
         text: name,
@@ -124,6 +132,8 @@ function Alerts() {
       title: "Project",
       dataIndex: "project",
       key: "3",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.project.localeCompare(b.project),
       filters: Array.from(new Set(post.map(item => item.project))).map((name, index) => ({
         text: name,
@@ -137,6 +147,8 @@ function Alerts() {
       title: "Report Type",
       dataIndex: "reporttype",
       key: "4",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.reporttype.localeCompare(b.reporttype),
       filters: Array.from(new Set(post.map(item => item.reporttype))).map((name, index) => ({
         text: name,
@@ -150,6 +162,8 @@ function Alerts() {
       title: "Frequency",
       dataIndex: "freq",
       key: "5",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.freq.localeCompare(b.freq),
       filters: Array.from(new Set(post.map(item => item.freq))).map((name, index) => ({
         text: name,
@@ -163,6 +177,8 @@ function Alerts() {
       title: "Timezone",
       dataIndex: "tz",
       key: "6",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.tz.localeCompare(b.tz),
       filters: Array.from(new Set(post.map(item => item.tz))).map((name, index) => ({
         text: name,
@@ -176,6 +192,8 @@ function Alerts() {
       title: "Recipient Emails",
       dataIndex: "recipientemails",
       key: "7",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.recipientemails.localeCompare(b.recipientemails),
       filters: Array.from(new Set(post.map(item => item.recipientemails))).map((name, index) => ({
         text: name,
@@ -184,11 +202,15 @@ function Alerts() {
       filterMode: "tree",
       filterSearch: true,
       onFilter: (value, record) => record.recipientemails.startsWith(value),
+      
     },
     {
       title: "Error Emails",
       dataIndex: "erroremails",
       key: "8",
+      width: 200,
+      
+      Ellipsis:true,
       sorter: (a, b) => a.erroremails.localeCompare(b.erroremails),
       filters: Array.from(new Set(post.map(item => item.erroremails))).map((name, index) => ({
         text: name,
@@ -202,6 +224,8 @@ function Alerts() {
       title: "Is Active",
       dataIndex: "isactive",
       key: "9",
+      width:200,
+      Ellipsis:true,
       sorter: (a, b) => a.isactive - b.isactive,
       filters: Array.from(new Set(post.map(item => item.isactive))).map((name, index) => ({
         text: name,
@@ -215,7 +239,9 @@ function Alerts() {
       title: "Actions",
       dataIndex: "actions",
       key: "14",
-      render: (text, record, index) => (
+      width:200,
+      Ellipsis:true,
+            render: (text, record, index) => (
         <>
           <a
             onClick={() => {
@@ -323,13 +349,13 @@ function Alerts() {
   return (
     <>
       {" "}
+      <Row>
+        <Col span={12}>
       <Button className="mb-5" type="primary" onClick={() => setOpen(true)}>
         Create New
       </Button>
-      <Row>
-        <Col span={17}></Col>
-
-        <Col span={7} style={{ marginBottom: 10 }}>
+        </Col>
+        <Col span={12} style={{ marginBottom: 10 }}>
           <Input
             size="small"
             placeholder="search here ..."
@@ -602,12 +628,15 @@ function Alerts() {
       </Modal>{" "}
       <Spin spinning={isLoading}>
         <Table
+       
           columns={columns}
           dataSource={post}
           rowKey={"id"}
           scroll={{
-            x: 1000,
+            y:screenHeight,
+            x:1000
           }}
+         
         />
       </Spin>
       <AlertModel
