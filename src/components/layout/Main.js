@@ -11,7 +11,7 @@ const { Header: AntHeader, Content, Sider } = Layout;
 function Main({ children }) {
   const [visible, setVisible] = useState(false);
   const [placement, setPlacement] = useState("right");
-  const [sidenavType, setSidenavType] = useState("transparent");
+  const [sidenavType, setSidenavType] = useState("#001629");
   const [fixed, setFixed] = useState(false);
 
   const context = useContext(AppContext);
@@ -97,7 +97,7 @@ function Main({ children }) {
           }`}
           style={{ background: sidenavType }}
         >
-          <Sidenav color={context.sidenavColor} />
+        <Sidenav color={context.sidenavColor} />
         </Sider>
         <Layout>
           <Content className="content-ant" >{children}</Content>

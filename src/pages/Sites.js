@@ -659,7 +659,6 @@ function Sites() {
       </Modal>
       <Spin spinning={isLoading}>
         <Table
-        bordered
           columns={columns}
           dataSource={site}
           rowKey={"id"}

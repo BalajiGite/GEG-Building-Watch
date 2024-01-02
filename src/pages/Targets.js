@@ -616,7 +616,6 @@ function Targets() {
         </Modal>
       <Spin spinning={isLoading}>
         <Table
-          bordered
           columns={columns}
           dataSource={targets}
           scroll={{

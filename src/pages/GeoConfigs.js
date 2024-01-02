@@ -393,7 +393,6 @@ function Config() {
       </Modal>
       <Spin spinning={isLoading}>
         <Table
-          bordered
           columns={columns}
           dataSource={locationData}
           scroll={{

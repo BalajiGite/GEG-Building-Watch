@@ -637,7 +637,6 @@ function Alerts() {
       </Modal>{" "}
       <Spin spinning={isLoading}>
         <Table
-       
           columns={columns}
           dataSource={post}
           rowKey={"id"}

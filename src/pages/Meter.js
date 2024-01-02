@@ -543,7 +543,6 @@ function Meter() {
       </Modal >
       <Spin spinning={isLoading}>
         <Table
-        bordered
           columns={columns}
           dataSource={meters}
           rowKey={"id"}

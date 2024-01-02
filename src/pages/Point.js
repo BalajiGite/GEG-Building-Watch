@@ -502,7 +502,6 @@ export default function Point() {
       </Modal>
       <Spin spinning={isLoading}>
         <Table
-        bordered
           columns={columns}
           dataSource={point}
           rowKey={"id"}
