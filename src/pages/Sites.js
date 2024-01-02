@@ -59,6 +59,7 @@ function Sites() {
       dataIndex: "id",
       key: "1",
       sorter: (a, b) => a.id.localeCompare(b.id),
+      hidden: true
     },
     {
       title: "Name",
@@ -255,7 +256,7 @@ function Sites() {
         </>
       ),
     },
-  ];
+  ].filter(item => !item.hidden);
 
 
   let data = [];
