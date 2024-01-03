@@ -139,7 +139,10 @@ export default class SignIn extends Component {
               <Col xs={24} sm={24} md={12} lg={7} xl={7} xxl={7} className="">
                 <Col style={{ marginTop: 60, marginLeft: 10 }}>
                   <Title className="">
-                    <Image src={signinLogo} alt="verdeos_logo.png" />
+                    <Image src={signinLogo} alt="verdeos_logo.png" 
+                    preview = {false}
+                    style={{width:"20rem"}}
+                    />
                   </Title>
                   <Title
                     className="font-regular text-muted"

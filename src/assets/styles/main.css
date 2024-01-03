@@ -920,6 +920,38 @@ ul.ant-menu.ant-menu-root.ant-menu-inline.ant-menu-light.left-nav
   border: 0px;
 }
 
+/* Adding Modal css */
+.ant-modal-header {             
+  background-color: #0A1016;
+}
+.ant-modal-title{
+  color: #C5C5C5;
+}
+.ant-modal-close{
+  color: #C5C5C5;
+}
+.ant-modal-body{
+  background-color:#0A1016;
+}
+.ant-col label{
+  color:#C5C5C5;
+}
+.ant-form-item-control-input-content input{
+  background-color: transparent;
+  border-radius: 5px;
+border: 1px solid rgba(142, 142, 142, 0.30);
+}
+.ant-select-selector{
+  background-color: transparent !important;
+  color:#C5C5C5;
+  border: 1px solid rgba(142, 142, 142, 0.30) !important;
+}
+
+  
+
+
+/* Add this to your global CSS or style file */
+
 .header-top h4 {
   margin: 0px;
   font-size: 20px;

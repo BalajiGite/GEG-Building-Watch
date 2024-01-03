@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Spin, Divider, Select } from "antd";
 import { Form, Input, Table } from "antd";
 import { Button, Row, Col, Modal } from "antd";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
+import { AppContext } from "../App";
+// import styled from "styled-components";
 import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
 import {
   addSites,
@@ -23,6 +25,8 @@ const layout = {
 };
 const OPTIONS = ["Apples", "Nails", "Bananas", "Helicopters"];
 
+
+
 function Sites() {
   const [searchText, setSearchText] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
@@ -33,11 +37,11 @@ function Sites() {
   const [site, setSite] = useState([]);
   const [open, setOpen] = useState(false);
   // console.log(open);
+  const context = useContext(AppContext);
   const [form] = Form.useForm();
   const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
 
-  const screenHeight = window.innerHeight-340;
-
+  const screenHeight = window.innerHeight - 340;
   const validateMessages = {
     required: "${label} is required!",
     types: {
@@ -61,17 +65,17 @@ function Sites() {
       title: "Id",
       dataIndex: "id",
       key: "1",
-      width:300,
-      ellipsis:true,
+      width: 300,
+      ellipsis: true,
       sorter: (a, b) => a.id.localeCompare(b.id),
       hidden: true
     },
-    { 
+    {
       title: "Name",
       dataIndex: "name",
       key: "2",
-      width:200,
-      ellipsis:true,
+      width: 200,
+      ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       filters: Array.from(new Set(site.map(item => item.name))).map((name, index) => ({
         text: name,
@@ -85,8 +89,8 @@ function Sites() {
       title: "Area",
       dataIndex: "area",
       key: "3",
-      width:200,
-      ellipsis:true,
+      width: 200,
+      ellipsis: true,
       sorter: (a, b) => a.area - b.area,
       filters: Array.from(new Set(site.map(item => item.area))).map((name, index) => ({
         text: name,
@@ -100,8 +104,8 @@ function Sites() {
       title: "Project ID",
       dataIndex: "projId",
       key: "4",
-      width:200,
-      ellipsis:true,
+      width: 200,
+      ellipsis: true,
       sorter: (a, b) => a.projId.localeCompare(b.projId),
       filters: Array.from(new Set(site.map(item => item.projId))).map((name, index) => ({
         text: name,
@@ -115,8 +119,8 @@ function Sites() {
       title: "Site",
       dataIndex: "site",
       key: "5",
-      width:200,
-      ellipsis:true,
+      width: 200,
+      ellipsis: true,
       sorter: (a, b) => (a.site === b.site ? 0 : a.site ? -1 : 1),
       render: (text) => (text ? "True" : "False"),
       filters: Array.from(new Set(site.map(item => item.site))).map((name, index) => ({
@@ -131,8 +135,8 @@ function Sites() {
       title: "ARMS Project ID",
       dataIndex: "armsProjectId",
       key: "6",
-      width:200,
-      ellipsis:true,
+      width: 200,
+      ellipsis: true,
       sorter: (a, b) => a.armsProjectId.localeCompare(b.armsProjectId),
       filters: Array.from(new Set(site.map(item => item.armsProjectId))).map((name, index) => ({
         text: name,
@@ -146,8 +150,8 @@ function Sites() {
       title: "Tz",
       dataIndex: "tz",
       key: "7",
-      width:200,
-      ellipsis:true,
+      width: 200,
+      ellipsis: true,
       sorter: (a, b) => a.tz.localeCompare(b.tz),
       filters: Array.from(new Set(site.map(item => item.tz))).map((name, index) => ({
         text: name,
@@ -161,8 +165,8 @@ function Sites() {
       title: "ARMS Project",
       dataIndex: "armsProj",
       key: "8",
-      width:200,
-      ellipsis:true,
+      width: 200,
+      ellipsis: true,
       sorter: (a, b) => a.armsProj.localeCompare(b.armsProj),
       filters: Array.from(new Set(site.map(item => item.armsProj))).map((name, index) => ({
         text: name,
@@ -176,8 +180,8 @@ function Sites() {
       title: "Observes Holidays",
       dataIndex: "observesHolidays",
       key: "9",
-      width:200,
-      ellipsis:true,
+      width: 200,
+      ellipsis: true,
       sorter: (a, b) => a.observesHolidays.localeCompare(b.observesHolidays),
       render: (text) => (text ? "True" : "False"),
       filters: Array.from(new Set(site.map(item => item.observesHolidays))).map((name, index) => ({
@@ -192,8 +196,8 @@ function Sites() {
       title: "Geographical Country",
       dataIndex: "geoCountry",
       key: "10",
-      width:200,
-      ellipsis:true,
+      width: 200,
+      ellipsis: true,
       sorter: (a, b) => a.geoCountry.localeCompare(b.geoCountry),
       filters: Array.from(new Set(site.map(item => item.geoCountry))).map((name, index) => ({
         text: name,
@@ -207,8 +211,8 @@ function Sites() {
       title: "Geographical Address",
       dataIndex: "geoAddress",
       key: "11",
-      width:200,
-      ellipsis:true,
+      width: 200,
+      ellipsis: true,
       sorter: (a, b) => a.geoAddress.localeCompare(b.geoAddress),
       filters: Array.from(new Set(site.map(item => item.geoAddress))).map((name, index) => ({
         text: name,
@@ -222,24 +226,24 @@ function Sites() {
       title: "Longitude",
       dataIndex: "long",
       key: "12",
-      width:200,
-      ellipsis:true,
+      width: 200,
+      ellipsis: true,
       sorter: (a, b) => a.long.localeCompare(b.long),
     },
     {
       title: "Latitude",
       dataIndex: "lat",
       key: "13",
-      width:200,
-      ellipsis:true,
+      width: 200,
+      ellipsis: true,
       sorter: (a, b) => a.lat.localeCompare(b.lat),
     },
     {
       title: "State",
       dataIndex: "stateRef",
       key: "14",
-      width:200,
-      ellipsis:true,
+      width: 200,
+      ellipsis: true,
       sorter: (a, b) => a.stateRef.localeCompare(b.stateRef),
       filters: Array.from(new Set(site.map(item => item.stateRef))).map((name, index) => ({
         text: name,
@@ -253,8 +257,8 @@ function Sites() {
       title: "Region",
       dataIndex: "regionRef",
       key: "15",
-      width:200,
-      ellipsis:true,
+      width: 200,
+      ellipsis: true,
       sorter: (a, b) => a.regionRef.localeCompare(b.regionRef),
       filters: Array.from(new Set(site.map(item => item.regionRef))).map((name, index) => ({
         text: name,
@@ -268,8 +272,8 @@ function Sites() {
       title: "Weather Station",
       dataIndex: "weatherStationRef",
       key: "16",
-      width:200,
-      ellipsis:true,
+      width: 200,
+      ellipsis: true,
       sorter: (a, b) => a.weatherStationRef.localeCompare(b.weatherStationRef),
       filters: Array.from(new Set(site.map(item => item.weatherStationRef))).map((name, index) => ({
         text: name,
@@ -283,8 +287,8 @@ function Sites() {
       title: "Actions",
       dataIndex: "delete",
       key: "17",
-      width:200,
-      ellipsis:true,
+      width: 200,
+      ellipsis: true,
       render: (text, record, index) => (
         <>
           <a onClick={() => onEdit(record)}>EDIT</a>
@@ -343,7 +347,7 @@ function Sites() {
   };
 
   const onChangeText = (text) => {
-    
+
     setSearchText(text);
     filter(text);
     if (text === "" || !text) {
@@ -375,13 +379,13 @@ function Sites() {
     <>
       {" "}
       <Row>
-        <Col span={12}>
-      <Button className="mb-5" type="primary" onClick={() => setOpen(true)}>
-        Create New
-      </Button>
+        <Col span={18}>
+          <Button className="mb-5" type="primary" onClick={() => setOpen(true)}>
+            Create New
+          </Button>
         </Col>
 
-        <Col span={12} style={{ marginBottom: 10 }}>
+        <Col span={6} style={{ marginBottom: 10 }}>
           <Input
             size="small"
             placeholder="search here ..."
@@ -391,7 +395,7 @@ function Sites() {
         </Col>
       </Row>
       <Modal
-        style={{ textAlign: "left", backgroundColor: "#001629" }}
+        // className="custom-modale"
         title="Add New Sites"
         centered
         open={open}
@@ -489,6 +493,7 @@ function Sites() {
               // rules={[{ required: "" }]}
               >
                 <Select
+                className="custom-selcet"
                   placeholder="Select Project"
                   value={selectedItems}
                   onChange={setSelectedItems}
@@ -664,9 +669,9 @@ function Sites() {
           dataSource={site}
           rowKey={"id"}
           scroll={{
-            y:screenHeight,
-            x:1000
-           
+            y: screenHeight,
+            x: 1000
+
           }}
         />
       </Spin>

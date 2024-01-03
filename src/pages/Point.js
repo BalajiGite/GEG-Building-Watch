@@ -257,6 +257,8 @@ export default function Point() {
     try {
 
       const points = await getApiDataFromAws("queryType=elecPoints");
+      //queryType=waterPoints replace
+      //queryType=gasPoints
       const sitesList = await getApiDataFromAws("queryType=dropdownSite");
       setSiteListData(sitesList);
       setPointData(points);
@@ -339,12 +341,12 @@ export default function Point() {
     <>
       {" "}
       <Row>
-        <Col span={12}>
+        <Col span={18}>
       <Button className="mb-5" type="primary" onClick={() => setOpen(true)}>
         Create New
       </Button>
         </Col>
-        <Col span={12} style={{ marginBottom: 10 }}>
+        <Col span={6} style={{ marginBottom: 10 }}>
           <Input
             size="small"
             placeholder="search here ..."
@@ -354,7 +356,7 @@ export default function Point() {
         </Col>
       </Row>
       <Modal
-        style={{ textAlign: "left", backgroundColor: "#001629" }}
+        style={{ textAlign: "left"}}
         title="Add New Point"
         centered
         open={open}

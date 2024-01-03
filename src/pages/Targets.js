@@ -429,7 +429,7 @@ function Targets() {
     const onChangeText = (text) =>{
       setSearchText(text);
         searchFilter(text);
-        if(text==""||!text){
+        if(text===""||!text){
           setTargets(targetTempData)
         }
     }
@@ -448,7 +448,7 @@ function Targets() {
   return (
     <div className="App">
       <Row>
-        <Col span={17} style={{ marginBottom: 20 }}>
+        <Col span={18} style={{ marginBottom: 20 }}>
         <Button type={activeButton === 1 ? 'primary' : 'button'} onClick = {()=>targetWidgets(1)}>Electric</Button>
       <Button type={activeButton === 2 ? 'primary' : 'button'} onClick = {()=> targetWidgets(2)}>Water</Button>
       <Button type={activeButton === 3 ? 'primary' : 'button'} onClick = {()=> targetWidgets(3)}>Gas</Button>
@@ -462,7 +462,7 @@ function Targets() {
        "Add New Electric Target Profile"} 
       </Button>
         </Col>
-        <Col span={7} style={{ marginBottom: 20 }}>
+        <Col span={6} style={{ marginBottom: 20 }}>
           <Form>
             <Input
               size="small"
