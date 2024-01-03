@@ -323,7 +323,7 @@ function Config() {
   return (
     <>
       <Row>
-        <Col span={17} style={{ marginBottom: 20 }}>
+        <Col span={18} style={{ marginBottom: 20 }}>
           <Button type={activeButton === 0 ? 'primary' : 'button'} onClick={() => changeWidgets(0)}>State</Button>
           <Button type={activeButton === 1 ? 'primary' : 'button'} onClick={() => changeWidgets(1)}>Region</Button>
           <Button type={activeButton === 2 ? 'primary' : 'button'} onClick={() => changeWidgets(2)}>Level</Button>
@@ -331,7 +331,7 @@ function Config() {
             Create New
           </Button>
         </Col>
-        <Col span={7} style={{ marginBottom: 20 }}>
+        <Col span={6} style={{ marginBottom: 20 }}>
           <Form>
             <Input
               size="small"

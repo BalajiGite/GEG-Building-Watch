@@ -233,8 +233,9 @@ function Meter() {
     setIsLoading(true);
     try {
       const resp = await getMeterList();
-      const meterData = await getApiDataFromAws("queryType=elecMeters")
-      // console.log(resp)
+      const meterData = await getApiDataFromAws("queryType=elecMeters");
+      //queryType=waterMeters
+  // queryType=gasMeters
       setMeters(meterData);
       setTempData(meterData)
       setloading(false);
@@ -300,12 +301,12 @@ function Meter() {
     <>
       {" "}
       <Row>
-        <Col span={12}>
+        <Col span={18}>
       <Button className="mb-5" type="primary" onClick={() => setOpen(true)}>
         Create New
       </Button>
         </Col>
-        <Col span={12} style={{ marginBottom: 10 }}>
+        <Col span={6} style={{ marginBottom: 10 }}>
           <Input
             size="small"
             placeholder="search here ..."
