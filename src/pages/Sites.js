@@ -663,8 +663,9 @@ function Sites() {
           </Form.Item>
         </Form>
       </Modal>
-      <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
+      <Spin spinning={isLoading} indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} />}>
         <Table
+          
           columns={columns}
           dataSource={site}
           rowKey={"id"}
@@ -673,6 +674,7 @@ function Sites() {
             x: 1000
 
           }}
+          
         />
       </Spin>
     </>

@@ -59,7 +59,11 @@ body {
 }
 
 .menu-wrapper::-webkit-scrollbar-track {
-  background-color: #f5f5f5; /* Adjust the color as needed */
+  background-color: #909090; /* Adjust the color as needed */
+}
+
+.ant-empty-image {
+  display: none;
 }
 
 .ant-table-body::-webkit-scrollbar {
@@ -69,7 +73,7 @@ body {
 
 
 .ant-table-body::-webkit-scrollbar-track {
-  background-color: #f5f5f5; /* Adjust the color as needed */
+  background-color: #909090; /* Adjust the color as needed */
 }
 
 .ant-table-body::-webkit-scrollbar-thumb {
