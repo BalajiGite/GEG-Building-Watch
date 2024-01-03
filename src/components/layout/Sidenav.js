@@ -1,12 +1,13 @@
 import { Menu,Divider } from "antd";
 import { useContext } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import sitesIcons from "../../assets/images/sidebar.svg/Sites.svg";
-import meterIcon from "../../assets/images/sidebar.svg/Meter.svg";
-import pointIcon from "../../assets/images/sidebar.svg/Point.svg";
-import configIcon from "../../assets/images/sidebar.svg/Config.svg";
-import alertsIcon from "../../assets/images/sidebar.svg/Alerts.svg";
-import profileIcon from "../../assets/images/sidebar.svg/Kwh.svg";
+import sitesIcons from "../../assets/images/sidebarSVG/Sites.svg";
+import meterIcon from "../../assets/images/sidebarSVG/Meter.svg";
+import pointIcon from "../../assets/images/sidebarSVG/Point.svg";
+import targetIcon from "../../assets/images/sidebarSVG/targets.svg";
+import configIcon from "../../assets/images/sidebarSVG/Config.svg";
+import alertsIcon from "../../assets/images/sidebarSVG/Alerts.svg";
+import mpReadings from "../../assets/images/sidebarSVG/mpReadings.svg";
 // import logo from "../../assets/images/buildlogo.jpg";
 import { AppContext } from "../../App";
 function Sidenav({ color }) {
@@ -48,7 +49,9 @@ function Sidenav({ color }) {
       <div className="menu-wrapper">
         <Menu theme="light" mode="inline">
           <Menu.Item className="menu-item-header" key="0">
-            Configuration
+            <span className ="ant-menu-item-text">
+              Configuration
+            </span>
           </Menu.Item>
           {/*
           <Menu.Item key="1">
@@ -81,50 +84,20 @@ function Sidenav({ color }) {
           */}
           <Menu.Item key="2">
             <NavLink to="/sites">
-              <span
-                className="icon"
-                style={{
-                  background: page === "sites" ? color : "",
-                }}
-              >
+              <span className="icon">
                 <img src={sitesIcons} alt="sites_svg icons" />
               </span>
-              <span
-                style={{
-                  color:
-                    (context.backgroundColor === dark) & (page === "sites")
-                      ? "black"
-                      : (context.backgroundColor === dark) & (page !== "sites")
-                      ? "white"
-                      : "black",
-                }}
-                className="label"
-              >
+              <span className ="ant-menu-item-text">
                 Sites
               </span>
             </NavLink>
           </Menu.Item>
           <Menu.Item key="3">
             <NavLink to="/meter">
-              <span
-                className="icon"
-                style={{
-                  background: page === "meter" ? color : "",
-                }}
-              >
+            <span className="icon">
                 <img src={meterIcon} alt="meterIcon" />
               </span>
-              <span
-                style={{
-                  color:
-                    (context.backgroundColor === dark) & (page === "meter")
-                      ? "black"
-                      : (context.backgroundColor === dark) & (page !== "meter")
-                      ? "white"
-                      : "black",
-                }}
-                className="label"
-              >
+              <span className ="ant-menu-item-text">
                 Meters
               </span>
             </NavLink>
@@ -132,25 +105,10 @@ function Sidenav({ color }) {
 
           <Menu.Item key="4">
             <NavLink to="/point">
-              <span
-                className="icon"
-                style={{
-                  backgroundColor: page === "point" ? color : "",
-                }}
-              >
+            <span className="icon">
                 <img src={pointIcon} alt="pointIcon" />
               </span>
-              <span
-                style={{
-                  color:
-                    (context.backgroundColor === dark) & (page === "point")
-                      ? "black"
-                      : (context.backgroundColor === dark) & (page !== "point")
-                      ? "white"
-                      : "black",
-                }}
-                className="label"
-              >
+              <span className ="ant-menu-item-text">
                 Points
               </span>
             </NavLink>
@@ -158,22 +116,10 @@ function Sidenav({ color }) {
 
           <Menu.Item key="5">
             <NavLink to="/GeoConfigs">
-              <span className="icon" 
-              style={{
-                backgroundColor:page === "GeoConfigs"? color: "",
-              }}>
+            <span className="icon">
                 <img src={configIcon} alt="configIcon" />
               </span>
-              <span
-                style={{
-                  color: (context.backgroundColor === dark ? "white" : "black")
-                    ? "black"
-                    : (context.backgroundColor === dark) & (page !== "GeoConfigs")
-                    ? "white"
-                    : "black",
-                }}
-                className="label"
-              >
+              <span className ="ant-menu-item-text">
                 Location
               </span>
             </NavLink>
@@ -181,78 +127,36 @@ function Sidenav({ color }) {
 
           <Menu.Item key="6">
             <NavLink to="/alert">
-              <span
-                className="icon"
-                style={{
-                  background: page === "alert" ? color : "",
-                }}
-              >
+            <span className="icon">
                 <img src={alertsIcon} alt="alertIcon" />
               </span>
-              <span
-                style={{
-                  color:
-                    (context.backgroundColor === dark) & (page === "alert")
-                      ? "black"
-                      : (context.backgroundColor === dark) & (page !== "alert")
-                      ? "white"
-                      : "black",
-                }}
-                className="label">
+              <span className ="ant-menu-item-text">
                 Alerts
               </span>
             </NavLink>
           </Menu.Item>
           <Menu.Item key="7">
             <NavLink to="/targets">
-              <span
-                className="icon"
-                style={{
-                  backgroundColor: page === "targets" ? color : "",
-                }}
-              >
-                <img src={profileIcon} alt="profieIcon" />
+            <span className="icon">
+                <img src={targetIcon} alt="profieIcon" />
               </span>
-              <span
-                style={{
-                  color:
-                    (context.backgroundColor === dark) & (page === "profile")
-                      ? "black"
-                      : (context.backgroundColor === dark) & (page !== "profile")
-                      ? "white"
-                      : "black",
-                }}
-                className="label"
-              >
+              <span className ="ant-menu-item-text">
                 Targets
               </span>
             </NavLink>
           </Menu.Item>
           <Divider />
           <Menu.Item className="menu-item-header" key="8">
-            Monitoring
+            <span className ="ant-menu-item-text">
+              Monitoring
+            </span>
           </Menu.Item>
           <Menu.Item key="9">
             <NavLink to="/pointsReadings">
-              <span
-                className="icon"
-                style={{
-                  backgroundColor: page === "targets" ? color : "",
-                }}
-              >
-                <img src={pointIcon} alt="profieIcon" />
+            <span className="icon">
+                <img src={mpReadings} alt="profieIcon" />
               </span>
-              <span
-                style={{
-                  color:
-                    (context.backgroundColor === dark) & (page === "profile")
-                      ? "black"
-                      : (context.backgroundColor === dark) & (page !== "profile")
-                      ? "white"
-                      : "black",
-                }}
-                className="label"
-              >
+              <span className ="ant-menu-item-text">
                 MP Readings
               </span>
             </NavLink>
