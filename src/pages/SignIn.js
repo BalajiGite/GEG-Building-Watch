@@ -114,9 +114,11 @@ export default class SignIn extends Component {
     const onFinishFailed = (errorInfo) => {
       console.log("Failed:", errorInfo);
     };
+
+    
     return (
       <>
-        <Layout className="">
+        <Layout className="" style={{ backgroundColor: "#0A1016"}}>
           <Content className="">
             <Row gutter={[16, 0]}>
               <Col
@@ -139,17 +141,15 @@ export default class SignIn extends Component {
               <Col xs={24} sm={24} md={12} lg={7} xl={7} xxl={7} className="">
                 <Col style={{ marginTop: 60, marginLeft: 10 }}>
                   <Title className="">
-                    <Image src={signinLogo} alt="verdeos_logo.png" 
-                    preview = {false}
-                    style={{width:"20rem"}}
+                  <Row justify="center" align="middle">
+                    <Col span={24} style={{ textAlign: 'center' }}>
+                      <Image src={signinLogo} alt="verdeos_logo.png" preview = {false} style={{width:"15rem"}}
                     />
+                    </Col>
+                  </Row>
                   </Title>
-                  <Title
-                    className="font-regular text-muted"
-                    level={5}
-                    style={{ marginTop: 50 }}
-                  >
-                    <h5>Enter your email and password to signin</h5>
+                  <Title className="ant-menu-item-text" level={5} style={{ marginTop: 50 }} >
+                    <h4 style={{color: "#C5C5C5"}}>Sign in with credentials</h4>
                   </Title>
                   <Form
                     onFinish={onFinish}
