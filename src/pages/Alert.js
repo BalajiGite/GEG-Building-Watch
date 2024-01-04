@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Spin, Divider, Select, Tooltip } from "antd";
 import { Form, Input, Table } from "antd";
-import { Button, Row, Col, Modal } from "antd";
+import { Button, Row, Col, Modal, Popover, ConfigProvider } from "antd";
+import { EllipsisOutlined } from "@ant-design/icons";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { getAlertConfList } from "../services/alertConfService";
@@ -42,7 +43,7 @@ function Alerts() {
 
   const [form] = Form.useForm();
   // const [confForm] = Form.useForm();
-  const screenHeight = window.innerHeight-340;
+  const screenHeight = window.innerHeight - 340;
 
   const filteredOptions = OPTIONS.filter((O) => !selectedItems.includes(O));
   const filteredFrequency = FREQUENCY.filter((O) => !selectedItems.includes(O));
@@ -95,16 +96,16 @@ function Alerts() {
       title: "ID",
       dataIndex: "id",
       key: "0",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => a.id - b.id,
     },
     {
       title: "Site Name",
       dataIndex: "sitename",
       key: "1",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => a.sitename.localeCompare(b.sitename),
       filters: Array.from(new Set(post.map(item => item.sitename))).map((name, index) => ({
         text: name,
@@ -118,8 +119,8 @@ function Alerts() {
       title: "Utility Type",
       dataIndex: "utilitytype",
       key: "2",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => a.utilitytype.localeCompare(b.utilitytype),
       filters: Array.from(new Set(post.map(item => item.utilitytype))).map((name, index) => ({
         text: name,
@@ -133,8 +134,8 @@ function Alerts() {
       title: "Project",
       dataIndex: "project",
       key: "3",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => a.project.localeCompare(b.project),
       filters: Array.from(new Set(post.map(item => item.project))).map((name, index) => ({
         text: name,
@@ -148,8 +149,8 @@ function Alerts() {
       title: "Report Type",
       dataIndex: "reporttype",
       key: "4",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => a.reporttype.localeCompare(b.reporttype),
       filters: Array.from(new Set(post.map(item => item.reporttype))).map((name, index) => ({
         text: name,
@@ -163,8 +164,8 @@ function Alerts() {
       title: "Frequency",
       dataIndex: "freq",
       key: "5",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => a.freq.localeCompare(b.freq),
       filters: Array.from(new Set(post.map(item => item.freq))).map((name, index) => ({
         text: name,
@@ -178,8 +179,8 @@ function Alerts() {
       title: "Timezone",
       dataIndex: "tz",
       key: "6",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => a.tz.localeCompare(b.tz),
       filters: Array.from(new Set(post.map(item => item.tz))).map((name, index) => ({
         text: name,
@@ -193,8 +194,8 @@ function Alerts() {
       title: "Recipient Emails",
       dataIndex: "recipientemails",
       key: "7",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => a.recipientemails.localeCompare(b.recipientemails),
       filters: Array.from(new Set(post.map(item => item.recipientemails))).map((name, index) => ({
         text: name,
@@ -214,8 +215,8 @@ function Alerts() {
       dataIndex: "erroremails",
       key: "8",
       width: 200,
-      
-      Ellipsis:true,
+
+      Ellipsis: true,
       sorter: (a, b) => a.erroremails.localeCompare(b.erroremails),
       filters: Array.from(new Set(post.map(item => item.erroremails))).map((name, index) => ({
         text: name,
@@ -234,8 +235,8 @@ function Alerts() {
       title: "Is Active",
       dataIndex: "isactive",
       key: "9",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => a.isactive - b.isactive,
       filters: Array.from(new Set(post.map(item => item.isactive))).map((name, index) => ({
         text: name,
@@ -249,25 +250,15 @@ function Alerts() {
       title: "Actions",
       dataIndex: "actions",
       key: "14",
-      width:200,
-      Ellipsis:true,
-            render: (text, record, index) => (
+      width: 200,
+      Ellipsis: true,
+      render: (text, record, index) => (
         <>
-          <a
-            onClick={() => {
-              onEdit(record);
-            }}
-            style={{ marginRight: 8 }}
-          >
-            Edit
-          </a>
-          <a
-            onClick={() => {
-              onDelete(record.id);
-            }}
-          >
-            Delete
-          </a>
+          <ConfigProvider>
+            <Popover placement="bottomLeft" content={() => content(record)}>
+              <EllipsisOutlined style={{ fontSize: "30px" }} />
+            </Popover>
+          </ConfigProvider>
         </>
       ),
     },
@@ -322,6 +313,13 @@ function Alerts() {
 
   data = loading ? [] : post;
 
+  const content = (record) => (
+    <>
+      <a onClick={() => onEdit(record)}>EDIT</a>
+      <Divider type="horizontal" style={{ margin: "5px" }} />
+      <a onClick={() => onDelete(record.id)}>DELETE</a>
+    </>
+  )
   // const filter = (text) => {
   //   const filterData = data.filter((record) => {
   //     record.projectno.toString().includes(text.toString());
@@ -340,7 +338,7 @@ function Alerts() {
         record.tz.toLowerCase().includes(text.toLowerCase()) ||
         record.recipientemails.toString().includes(text.toLowerCase()) ||
         record.erroremails.toLowerCase().includes(text.toLowerCase())
-       
+
     );
     setPost(filterData);
   };
@@ -361,9 +359,9 @@ function Alerts() {
       {" "}
       <Row>
         <Col span={18}>
-      <Button className="mb-5" type="primary" onClick={() => setOpen(true)}>
-        Create New
-      </Button>
+          <Button className="mb-5" type="primary" onClick={() => setOpen(true)}>
+            Create New
+          </Button>
         </Col>
         <Col span={6} style={{ marginBottom: 10 }}>
           <Input
@@ -408,13 +406,13 @@ function Alerts() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                  >
+                >
                   {
-                    post.map((item, index)=>(
+                    post.map((item, index) => (
                       <Select.Option key={index} item={item.id}>{item.name}</Select.Option>
                     ))
                   }
-                  </Select>
+                </Select>
 
               </Form.Item>
             </Col>
@@ -427,21 +425,21 @@ function Alerts() {
                 label="Select Utility Type"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-                // rules={[{ required: "" }]}
+              // rules={[{ required: "" }]}
               >
-                 <Select
+                <Select
                   placeholder="Select Utility Type"
                   value={selectedItems}
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                  >
-                    {
-                      [...new Set(post.map(item =>item.utilitytype))].map((item , index)=>(
-                        <Select.Option key={index} value={item}>{item}</Select.Option>
-                      ))
-                    }
-                  </Select>
+                >
+                  {
+                    [...new Set(post.map(item => item.utilitytype))].map((item, index) => (
+                      <Select.Option key={index} value={item}>{item}</Select.Option>
+                    ))
+                  }
+                </Select>
               </Form.Item>
             </Col>
           </Row>
@@ -460,10 +458,10 @@ function Alerts() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                 
+
                 >
                   {
-                    [...new Set(post.map(item=>item.reporttype))].map((item , index)=>(
+                    [...new Set(post.map(item => item.reporttype))].map((item, index) => (
                       <Select.Option key={index} value={item}>{item}</Select.Option>
                     ))
                   }
@@ -471,7 +469,6 @@ function Alerts() {
               </Form.Item>
             </Col>
           </Row>
-
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
@@ -481,17 +478,17 @@ function Alerts() {
                 wrapperCol={{ span: 24 }}
               // rules={[{ required: "" }]}
               >
-                 <Select
+                <Select
                   placeholder="Select Report Type"
                   value={selectedItems}
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                 
+
                 >
-                 {[...new Set(post.map(item=>item.tz))].map((item,index)=>(
-                  <Select.Option key={index} value={item}>{item}</Select.Option>
-                 ))}
+                  {[...new Set(post.map(item => item.tz))].map((item, index) => (
+                    <Select.Option key={index} value={item}>{item}</Select.Option>
+                  ))}
                 </Select>
 
               </Form.Item>
@@ -511,8 +508,8 @@ function Alerts() {
                 <Input className="form_input" />
               </Form.Item>
             </Col>
-              </Row>
-              <Row>
+          </Row>
+          <Row>
             <Col span={24}>
               <Form.Item
                 name={"erroremails"}
@@ -525,7 +522,7 @@ function Alerts() {
                 <Input className="form_input" />
               </Form.Item>
             </Col>
-            </Row>
+          </Row>
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
@@ -536,20 +533,20 @@ function Alerts() {
               // rules={[{ required: "" }]}
               >
                 <Select
-                placeholder="Is Active"
-                value={selectedItems}
-                onChange={setSelectedItems}
-                size="large"
-                style={{ width: "100%" }}
-               >
-               {[...new Set(post.map(item=>item.isactive))].map((item , index)=>(
-                <Select.Option key={index} value={item}>{item?"true":"false"}</Select.Option>
-               ))}
-               </Select>
+                  placeholder="Is Active"
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                  size="large"
+                  style={{ width: "100%" }}
+                >
+                  {[...new Set(post.map(item => item.isactive))].map((item, index) => (
+                    <Select.Option key={index} value={item}>{item ? "true" : "false"}</Select.Option>
+                  ))}
+                </Select>
               </Form.Item>
             </Col>
           </Row>
-{/* 
+          {/* 
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={11}>
               <Form.Item
@@ -618,19 +615,19 @@ function Alerts() {
               span: 24,
             }}
           >
-            <Row style={{justifyContent:"end",display:"flex"}}>
+            <Row style={{ justifyContent: "end", display: "flex" }}>
               <Col >
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-              <Button
-                type=""
-                style={{ marginLeft: 10 }}
-                htmlType="button"
-                onClick={() => onCancelModal()}
-              >
-                Cancel
-              </Button>
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+                <Button
+                  type=""
+                  style={{ marginLeft: 10 }}
+                  htmlType="button"
+                  onClick={() => onCancelModal()}
+                >
+                  Cancel
+                </Button>
               </Col>
             </Row>
           </Form.Item>
@@ -642,10 +639,10 @@ function Alerts() {
           dataSource={post}
           rowKey={"id"}
           scroll={{
-            y:screenHeight,
-            x:1000
+            y: screenHeight,
+            x: 1000
           }}
-         
+
         />
       </Spin>
       <AlertModel

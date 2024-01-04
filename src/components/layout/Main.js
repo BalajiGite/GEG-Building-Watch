@@ -6,7 +6,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { AppContext } from "../../App";
 
-const { Header: AntHeader, Content, Sider } = Layout;
+const { Header: AntHeader, Content, Sider } = Layout; 
 
 function Main({ children }) {
   const [visible, setVisible] = useState(false);
