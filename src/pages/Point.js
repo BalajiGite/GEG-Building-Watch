@@ -2,7 +2,8 @@ import "reactjs-popup/dist/index.css";
 import React, { useState } from "react";
 import { Spin, Divider, Select } from "antd";
 import { Form, Input, Table } from "antd";
-import { Button, Row, Col, Modal } from "antd";
+import { Button, Row, Col, Modal, Popover , ConfigProvider } from "antd";
+import { EllipsisOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
 import { getApiDataFromAws } from "../services/apis";
 import {
@@ -33,7 +34,7 @@ export default function Point() {
   const [point, setPoint] = useState([]);
   const [meterOptions, setMeterOptions] = useState([]);
   const [open, setOpen] = useState(false);
-
+  const [activeButton, setActiveButton] = useState(1);
   const [form] = Form.useForm();
   // const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
   const screenHeight = window.innerHeight-340;
@@ -48,6 +49,10 @@ export default function Point() {
       range: "${label} must be between ${min} and ${max}",
     },
   };
+    const pointChangeData = (changeTableData) =>{
+      getData(changeTableData);
+      setActiveButton(changeTableData);
+    }
 
   const onCancelModal = () => {
     setOpen(false);
@@ -55,6 +60,85 @@ export default function Point() {
     form.resetFields();
   };
 
+  let dynamicColumns  = [];
+  let DynamicColumns = (data) =>{
+    if(data.some(item=>item.import)){
+      dynamicColumns.push(
+        {
+          title: "Import",
+          dataIndex: "import",
+          key: "5",
+          Ellipsis:true,
+          width:200,
+          sorter: (a, b) => a.import.localeCompare(b.import),
+          filters: Array.from(new Set(point.map(item => item.import))).map((name, index) => ({
+            text: name,
+            value: name,
+          })),
+          filterMode: "tree",
+          filterSearch: true,
+          onFilter: (value, record) => record.import.startsWith(value),
+        },
+      )
+    }
+    if(data.some(item=>item.active)){
+        dynamicColumns.push(
+          {
+            title: "Active",
+            dataIndex: "active",
+            key: "6",
+            Ellipsis:true,
+            width:200,
+            sorter: (a, b) => a.active.localeCompare(b.active),
+            filters: Array.from(new Set(point.map(item => item.active))).map((name, index) => ({
+              text: name,
+              value: name,
+            })),
+            filterMode: "tree",
+            filterSearch: true,
+            onFilter: (value, record) => record.active.startsWith(value),
+          },
+        )
+    }
+    if(data.some(item=>item.elec)){
+      dynamicColumns.push(
+      {
+        title: "Elec",
+        dataIndex: "elec",
+        key: "7",
+        Ellipsis:true,
+        width:200,
+        sorter: (a, b) => a.elec.localeCompare(b.elec),
+        filters: Array.from(new Set(point.map(item => item.elec))).map((name, index) => ({
+          text: name,
+          value: name,
+        })),
+        filterMode: "tree",
+        filterSearch: true,
+        onFilter: (value, record) => record.elec.startsWith(value),
+      },
+    )}
+  if(data.some(item=>item.energy)){
+    dynamicColumns.push(
+      {
+        title: "Energy",
+        dataIndex: "energy",
+        key: "10",
+        Ellipsis:true,
+        width:200,
+        sorter: (a, b) => a.energy.localeCompare(b.energy),
+        filters: Array.from(new Set(point.map(item => item.energy))).map((name, index) => ({
+          text: name,
+          value: name,
+        })),
+        filterMode: "tree",
+        filterSearch: true,
+        onFilter: (value, record) => record.energy.startsWith(value),
+      },
+    )
+  }
+  return dynamicColumns;
+  }
 
   const columns = [
     {
@@ -111,51 +195,7 @@ export default function Point() {
       filterSearch: true,
       onFilter: (value, record) => record.unit.startsWith(value),
     },
-    {
-      title: "Import",
-      dataIndex: "import",
-      key: "5",
-      Ellipsis:true,
-      width:200,
-      sorter: (a, b) => a.import.localeCompare(b.import),
-      filters: Array.from(new Set(point.map(item => item.import))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.import.startsWith(value),
-    },
-    {
-      title: "Active",
-      dataIndex: "active",
-      key: "6",
-      Ellipsis:true,
-      width:200,
-      sorter: (a, b) => a.active.localeCompare(b.active),
-      filters: Array.from(new Set(point.map(item => item.active))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.active.startsWith(value),
-    },
-    {
-      title: "Elec",
-      dataIndex: "elec",
-      key: "7",
-      Ellipsis:true,
-      width:200,
-      sorter: (a, b) => a.elec.localeCompare(b.elec),
-      filters: Array.from(new Set(point.map(item => item.elec))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.elec.startsWith(value),
-    },
+    ...DynamicColumns(point),
     {
       title: "Sensor",
       dataIndex: "sensor",
@@ -186,27 +226,13 @@ export default function Point() {
       filterSearch: true,
       onFilter: (value, record) => record.point.startsWith(value),
     },
-    {
-      title: "Energy",
-      dataIndex: "energy",
-      key: "10",
-      Ellipsis:true,
-      width:200,
-      sorter: (a, b) => a.energy.localeCompare(b.energy),
-      filters: Array.from(new Set(point.map(item => item.energy))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.energy.startsWith(value),
-    },
+    
     {
       title: "Nem12Id",
       dataIndex: "nem12Id",
       key: "11",
       Ellipsis:true,
-      width:200,
+      width:300,
       sorter: (a, b) => a.nem12Id.localeCompare(b.nem12Id),
       filters: Array.from(new Set(point.map(item => item.nem12Id))).map((name, index) => ({
         text: name,
@@ -239,9 +265,11 @@ export default function Point() {
       width:200,
       render: (text, record, index) => (
         <>
-          <a onClick={() => onEdit(record)}>EDIT</a>
-          <Divider type="vertical" />
-          <a onClick={() => onDelete(record.id)}>DELETE</a>
+          <ConfigProvider>
+            <Popover placement="bottomLeft" content={()=>content(record)}>
+              <EllipsisOutlined style={{ fontSize: "30px" }} />
+            </Popover>
+          </ConfigProvider>
         </>
       ),
     },
@@ -252,13 +280,20 @@ export default function Point() {
  
 
 
-  const getData = async () => {
+  const getData = async (changeTableData) => {
     setIsLoading(true);
+    let points = [];
     try {
+      if(changeTableData===1){
+         points = await getApiDataFromAws("queryType=elecPoints");
+      }else if(changeTableData===2){
+        points = await getApiDataFromAws("queryType=waterPoints")
+        console.log("water data",points);
+      }else if(changeTableData===3){
+        points = await getApiDataFromAws("queryType=gasPoints")
+        console.log("gas data",points);
+      }
 
-      const points = await getApiDataFromAws("queryType=elecPoints");
-      //queryType=waterPoints replace
-      //queryType=gasPoints
       const sitesList = await getApiDataFromAws("queryType=dropdownSite");
       setSiteListData(sitesList);
       setPointData(points);
@@ -319,7 +354,13 @@ export default function Point() {
         );
     }
   };
-
+  const content = (record) => (
+    <>
+      <a onClick={() => onEdit(record)}>EDIT</a>
+      <Divider type="horizontal" style={{margin:"5px"}}/>
+      <a onClick={() => onDelete(record.id)}>DELETE</a>
+    </>
+  )
   // console.log(pointData)
   // console.log(siteListData)
 
@@ -334,7 +375,7 @@ export default function Point() {
     setPoint(filteredData);
   };
   useEffect(() => {
-    getData();
+    getData(1);
   }, []);
 
   return (
@@ -342,8 +383,11 @@ export default function Point() {
       {" "}
       <Row>
         <Col span={18}>
-      <Button className="mb-5" type="primary" onClick={() => setOpen(true)}>
-        Create New
+          <Button type={activeButton===1?"primary":""} onClick={() =>pointChangeData(1)}>Electric</Button>
+          <Button type={activeButton===2?"primary":""} onClick={() =>pointChangeData(2)}>Water</Button>
+          <Button type={activeButton===3?"primary":""} onClick={() =>pointChangeData(3)}>Gas</Button>
+      <Button className="mb-5" type="primary" onClick={() => setOpen(true)} style={{marginLeft:"20px"}}>
+       {activeButton===1?"Electric New":activeButton===2?"Water New":"Gas New"}
       </Button>
         </Col>
         <Col span={6} style={{ marginBottom: 10 }}>
@@ -441,7 +485,6 @@ export default function Point() {
               </Form.Item>
             </Col>
           </Row>
-
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item

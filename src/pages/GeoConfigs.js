@@ -4,8 +4,11 @@ import Region from "../components/widgets/Region";
 import Level from "../components/widgets/Level";
 import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
 import {
-  Select, Divider, Modal, Table, Form, Input, Button, Card, Col, Row, Spin
+  Select, Divider, Modal, Table, Form,
+  Input, Button, Card, Col, Row, Spin,
+  Popover, ConfigProvider
 } from "antd";
+import { EllipsisOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import spinnerjiff from "../assets/images/loader.gif";
 
@@ -32,10 +35,10 @@ function Config() {
   const [locationData, setLocationData] = useState([]);
   const [activeButton, setActiveButton] = useState(0);
   const [searchText, setSearchText] = useState("");
-  const [templocationData , setTempLocationData] = useState([])
+  const [templocationData, setTempLocationData] = useState([])
   const [form] = Form.useForm();
 
-  const screenHeight = window.innerHeight-340;
+  const screenHeight = window.innerHeight - 340;
 
 
   const dynamicColumns = (data) => {
@@ -47,7 +50,7 @@ function Config() {
       dynamicColumns.push({
         title: "State Ref",
         dataIndex: "stateRef",
-         key: "stateRef",
+        key: "stateRef",
         sorter: (a, b) => a.stateRef.localeCompare(b.stateRef),
         filters: Array.from(new Set(data.map(item => item.stateRef))).map((name, index) => ({
           text: name,
@@ -142,16 +145,16 @@ function Config() {
       title: "ID",
       dataIndex: "id",
       key: "id",
-      Ellipsis:true,
-      width:300,
+      Ellipsis: true,
+      width: 300,
       sorter: (a, b) => a.id.localeCompare(b.id),
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      width:300,
-      Ellipsis:true,
+      width: 300,
+      Ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       filters: Array.from(new Set(locationData.map(item => item.name))).map((name, index) => ({
         text: name,
@@ -166,26 +169,15 @@ function Config() {
       title: "Actions",
       dataIndex: "delete",
       key: "delete",
-      Ellipsis:true,
-      
+      Ellipsis: true,
+
       render: (text, record, index) => (
         <>
-          <a
-            onClick={() => {
-              onEdit(record);
-              console.log(record)
-            }}
-          >
-            EDIT
-          </a>
-          <Divider type="vertical" />
-          <a
-            onClick={() => {
-              onDelete(record.id);
-            }}
-          >
-            DELETE
-          </a>
+          <ConfigProvider>
+            <Popover placement="bottomLeft" content={() => content(record)}>
+              <EllipsisOutlined style={{ fontSize: "30px" }} />
+            </Popover>
+          </ConfigProvider>
         </>
       ),
     },
@@ -224,17 +216,17 @@ function Config() {
     } catch (error) { }
   };
 
-  const onChangeSelectedValue = (value) =>{
+  const onChangeSelectedValue = (value) => {
     setSearchText(value);
     filterData(value);
-    if(value==""||!value){
+    if (value == "" || !value) {
       setLocationData(templocationData);
     }
   }
-  const filterData = (value) =>{
-    const filtersData =  locationData.filter((record)=>(
-      record.name.toLowerCase().includes(value.toLowerCase())||
-      record?.stateRef?.toLowerCase().includes(value.toLowerCase())||
+  const filterData = (value) => {
+    const filtersData = locationData.filter((record) => (
+      record.name.toLowerCase().includes(value.toLowerCase()) ||
+      record?.stateRef?.toLowerCase().includes(value.toLowerCase()) ||
       record?.siteRef?.toLowerCase().includes(value.toLowerCase())
     ));
     setLocationData(filtersData)
@@ -243,7 +235,14 @@ function Config() {
     getData(0);
     setActiveButton(0);
   }, []);
-  console.log(locationData)
+
+  const content = (record) => (
+    <>
+      <a onClick={() => onEdit(record)}>EDIT</a>
+      <Divider type="horizontal" style={{ margin: "5px" }} />
+      <a onClick={() => onDelete(record.id)}>DELETE</a>
+    </>
+  )
 
   const activeWidgestInputFields = () => {
     switch (activeButton) {
@@ -337,14 +336,14 @@ function Config() {
               size="small"
               placeholder="search here ..."
               value={searchText}
-            onChange={(e)=>onChangeSelectedValue(e.target.value)}
+              onChange={(e) => onChangeSelectedValue(e.target.value)}
             />
           </Form>
         </Col>
       </Row>
       <Modal
         style={{ textAlign: "left" }}
-        title={activeButton==0?"Add New State":activeButton==1?"Add New Region":"Add New Level"}
+        title={activeButton == 0 ? "Add New State" : activeButton == 1 ? "Add New Region" : "Add New Level"}
         centered
         open={open}
         // onOk={() => setOpen(false)}
@@ -364,31 +363,31 @@ function Config() {
           labelAlign=""
         >
           {activeWidgestInputFields()}
-          <Row style={{alignItems:"end",display:"flex"}}>
+          <Row style={{ alignItems: "end", display: "flex" }}>
             <Col span={24}>
-          <Form.Item>
-            <Button
-              style={{ float: "right" }}
-              onClick={() => setOpen(false)}
-              type=""
-              htmlType="cancel"
-            >
-              Cancel
-            </Button>
-            <Button
-              className=""
-              style={{
-                float: "right",
-                marginRight: 18,
-              }}
-              onClick={() => setOpen(false)}
-              type="primary"
-              htmlType="submit"
-            >
-              Save
-            </Button>
-          </Form.Item>
-          </Col>
+              <Form.Item>
+                <Button
+                  style={{ float: "right" }}
+                  onClick={() => setOpen(false)}
+                  type=""
+                  htmlType="cancel"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className=""
+                  style={{
+                    float: "right",
+                    marginRight: 18,
+                  }}
+                  onClick={() => setOpen(false)}
+                  type="primary"
+                  htmlType="submit"
+                >
+                  Save
+                </Button>
+              </Form.Item>
+            </Col>
           </Row>
         </Form>
       </Modal>
@@ -398,7 +397,7 @@ function Config() {
           dataSource={locationData}
           scroll={{
             x: 1000,
-            y:screenHeight
+            y: screenHeight
           }}
         />
       </Spin>

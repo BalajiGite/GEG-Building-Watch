@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Spin, Divider, Select } from "antd";
 import { Form, Input, Table } from "antd";
-import { Button, Row, Col, Modal } from "antd";
+import { Button, Row, Col, Modal, Popover, ConfigProvider } from "antd";
 import "reactjs-popup/dist/index.css";
+import {EllipsisOutlined} from "@ant-design/icons";
 import { useEffect } from "react";
 import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
 import {
@@ -33,8 +34,8 @@ function Meter() {
   const [MeterId, setMeterId] = useState();
   const [tempData, setTempData] = useState({})
   const [form] = Form.useForm();
-  
-  const screenHeight = window.innerHeight-340;
+  const [activeButton, setActiveButton] = useState(1)
+  const screenHeight = window.innerHeight - 340;
 
   const validateMessages = {
     required: "${label} is required!",
@@ -55,21 +56,48 @@ function Meter() {
     form.resetFields();
   };
 
+  const MeterChangeData = (changeTableData) => {
+    setActiveButton(changeTableData)
+    getData(changeTableData);
+  }
+const DynamicColumns = (data) =>{
+  let dynamicColumns = [];
+   if(data.some(item => item.elec)){
+    dynamicColumns.push(
+      {
+      title: "Electricity",
+      dataIndex: "elec",
+      key:"electricity",
+      width:200,
+      Ellipsis:true,
+      sorter: (a, b)=> a.elec.localeCompare(b.elec),
+      filter:Array.from(new Set(meters.map(item=>item.elec))).map((electricity , index)=>({
+        text:electricity,
+        value:electricity
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.elec.startsWith(value),
+
+      })}
+
+      return dynamicColumns;
+}
   const columns = [
     {
       title: "ID",
       dataIndex: "id",
       key: "1",
-      width:300,
-      Ellipsis:true,
+      width: 300,
+      Ellipsis: true,
       sorter: (a, b) => a.id.localeCompare(b.id),
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "2",
-      width:250,
-      Ellipsis:true,
+      width: 250,
+      Ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       filters: Array.from(new Set(meters.map(item => item.name))).map((name, index) => ({
         text: name,
@@ -83,8 +111,8 @@ function Meter() {
       title: "Equip",
       dataIndex: "equip",
       key: "3",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => a.equip.localeCompare(b.equip),
       filters: Array.from(new Set(meters.map(item => item.equip))).map((name, index) => ({
         text: name,
@@ -94,27 +122,13 @@ function Meter() {
       filterSearch: true,
       onFilter: (value, record) => record.equip.startsWith(value),
     },
-    {
-      title: "Electricity",
-      dataIndex: "elec",
-      key: "4",
-      width:200,
-      Ellipsis:true,
-      sorter: (a, b) => a.elec.localeCompare(b.elec),
-      filters: Array.from(new Set(meters.map(item => item.elec))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.elec.startsWith(value),
-    },
-    {
+    ...DynamicColumns(meters),
+       {
       title: "Gate Meter",
       dataIndex: "gateMeter",
       key: "5",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => a.gateMeter.localeCompare(b.gateMeter),
       filters: Array.from(new Set(meters.map(item => item.gateMeter))).map((name, index) => ({
         text: name,
@@ -128,8 +142,8 @@ function Meter() {
       title: "GEG Equipment Type",
       dataIndex: "gegEquipType",
       key: "6",
-      width:250,
-      Ellipsis:true,
+      width: 250,
+      Ellipsis: true,
       sorter: (a, b) => a.gegEquipType.localeCompare(b.gegEquipType),
       filters: Array.from(new Set(meters.map(item => item.gegEquipType))).map((name, index) => ({
         text: name,
@@ -143,8 +157,8 @@ function Meter() {
       title: "GEG Nabers Inclusion Percent",
       dataIndex: "gegNabersInclusionPercent",
       key: "7",
-      width:300,
-      Ellipsis:true,
+      width: 300,
+      Ellipsis: true,
       sorter: (a, b) => a.gegNabersInclusionPercent - b.gegNabersInclusionPercent,
       filters: Array.from(new Set(meters.map(item => item.gegNabersInclusionPercent))).map((name, index) => ({
         text: name,
@@ -158,8 +172,8 @@ function Meter() {
       title: "Level Reference",
       dataIndex: "levelRef",
       key: "8",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => a.levelRef.localeCompare(b.levelRef),
       filters: Array.from(new Set(meters.map(item => item.levelRef))).map((name, index) => ({
         text: name,
@@ -173,8 +187,8 @@ function Meter() {
       title: "Meter",
       dataIndex: "meter",
       key: "9",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => a.meter.localeCompare(b.meter),
       filters: Array.from(new Set(meters.map(item => item.meter))).map((name, index) => ({
         text: name,
@@ -188,8 +202,8 @@ function Meter() {
       title: "Site Reference",
       dataIndex: "siteRef",
       key: "10",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => a.siteRef.localeCompare(b.siteRef),
       filters: Array.from(new Set(meters.map(item => item.siteRef))).map((name, index) => ({
         text: name,
@@ -203,39 +217,36 @@ function Meter() {
       title: "Actions",
       dataIndex: "delete",
       key: "18",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       render: (text, record, index) => (
         <>
-          <a
-            onClick={() => {
-              onEdit(record);
-            }}
-          >
-            EDIT
-          </a>
-          <Divider type="vertical" />
-          <a
-            onClick={() => {
-              onDelete(record.id);
-            }}
-          >
-            DELETE
-          </a>
+          <ConfigProvider>
+            <Popover placement="bottomLeft" content={()=>content(record)}>
+              <EllipsisOutlined style={{ fontSize: "30px" }} />
+            </Popover>
+          </ConfigProvider>
         </>
       ),
     },
   ];
 
-
   let data = [];
-  const getData = async () => {
+  const getData = async (changeTableData) => {
     setIsLoading(true);
+    // debugger
     try {
       const resp = await getMeterList();
-      const meterData = await getApiDataFromAws("queryType=elecMeters");
-      //queryType=waterMeters
-  // queryType=gasMeters
+      let meterData = [];
+      if (changeTableData === 1) {
+        meterData = await getApiDataFromAws("queryType=elecMeters");
+      }
+      else if (changeTableData === 2) {
+        meterData = await getApiDataFromAws("queryType=waterMeters");
+      }
+      else if (changeTableData === 3) {
+        meterData = await getApiDataFromAws("queryType=gasMeters");
+      }
       setMeters(meterData);
       setTempData(meterData)
       setloading(false);
@@ -270,6 +281,14 @@ function Meter() {
     setOpen(true);
   };
 
+  const content = (record) => (
+    <>
+      <a onClick={() => onEdit(record)}>EDIT</a>
+      <Divider type="horizontal" style={{margin:"5px"}}/>
+      <a onClick={() => onDelete(record.id)}>DELETE</a>
+    </>
+  )
+
   data = loading ? [] : meters;
 
   const onChangeText = (text) => {
@@ -283,10 +302,9 @@ function Meter() {
   const filterData = (text) => {
     const filtersData = meters.filter(
       (record) =>
-    // debugger
+        // debugger
         record.name.toLowerCase().includes(text.toLowerCase()) ||
         record.levelRef.toString().includes(text.toLowerCase()) ||
-        record.levelRef.toLowerCase().includes(text.toLowerCase()) ||
         record.siteRef.toLowerCase().includes(text.toLowerCase())
 
     );
@@ -294,7 +312,8 @@ function Meter() {
   };
 
   useEffect(() => {
-    getData();
+    getData(1);
+    setActiveButton(1);
   }, []);
 
   return (
@@ -302,9 +321,12 @@ function Meter() {
       {" "}
       <Row>
         <Col span={18}>
-      <Button className="mb-5" type="primary" onClick={() => setOpen(true)}>
-        Create New
-      </Button>
+          <Button type={activeButton===1?"primary":""} onClick={()=> MeterChangeData(1)}>Electric</Button>
+          <Button type={activeButton===2?"primary":""} onClick={()=> MeterChangeData(2)}>Water</Button>
+          <Button type={activeButton===3?"primary":""}  onClick={()=> MeterChangeData(3)}>Gas</Button>
+          <Button className="mb-5" type="primary" onClick={() => setOpen(true)} style={{marginLeft:"20px"}}>
+            Create New
+          </Button>
         </Col>
         <Col span={6} style={{ marginBottom: 10 }}>
           <Input
@@ -315,7 +337,6 @@ function Meter() {
           />
         </Col>
       </Row>
-
       <Modal
         style={{ textAlign: "left" }}
         title="Create New Meter"
@@ -550,7 +571,7 @@ function Meter() {
           rowKey={"id"}
           scroll={{
             x: 1000,
-            y:screenHeight
+            y: screenHeight
           }}
         />
       </Spin>

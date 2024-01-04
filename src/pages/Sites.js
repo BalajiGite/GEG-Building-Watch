@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
 import { Spin, Divider, Select } from "antd";
 import { Form, Input, Table } from "antd";
-import { Button, Row, Col, Modal } from "antd";
+import { Button, Row, Col, Modal, Popover, ConfigProvider } from "antd";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { AppContext } from "../App";
-// import styled from "styled-components";
+import { EllipsisOutlined } from "@ant-design/icons";
 import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
 import {
   addSites,
@@ -58,7 +58,6 @@ function Sites() {
     setSitesId();
     form.resetFields();
   };
-
 
   const columns = [
     {
@@ -291,9 +290,11 @@ function Sites() {
       ellipsis: true,
       render: (text, record, index) => (
         <>
-          <a onClick={() => onEdit(record)}>EDIT</a>
-          <Divider type="vertical" />
-          <a onClick={() => onDelete(record.id)}>DELETE</a>
+          <ConfigProvider>
+            <Popover placement="bottomLeft" content={() => content(record)}>
+              <EllipsisOutlined style={{ fontSize: "30px" }} />
+            </Popover>
+          </ConfigProvider>
         </>
       ),
     },
@@ -373,13 +374,21 @@ function Sites() {
     getData();
   }, []);
 
+  const content = (record) => (
+    <>
+      <a onClick={() => onEdit(record)}>EDIT</a>
+      <Divider type="horizontal" style={{ margin: "5px" }} />
+      <a onClick={() => onDelete(record.id)}>DELETE</a>
+    </>
+  )
+
   const tableHeight = window.innerHeight - 250; // Adjust this value as needed
 
   return (
     <>
       {" "}
       <Row>
-        <Col span={18}>
+        <Col span={12}>
           <Button className="mb-5" type="primary" onClick={() => setOpen(true)}>
             Create New
           </Button>
@@ -392,7 +401,19 @@ function Sites() {
             value={searchText}
             onChange={(e) => onChangeText(e.target.value)}
           />
-        </Col>
+            </Col>
+          <Col span={6}>
+          <Select 
+          placeholder="Select Site Name"
+          defaultValue={"Select Site Name"}
+          
+          style={{width:"100%",padding:"5px"}}
+          >
+            {site.map((item, index) => (
+              <Select.Option key={index} item = {item.site}>{item.name}</Select.Option>
+            ))}
+          </Select>
+          </Col>
       </Row>
       <Modal
         // className="custom-modale"
@@ -493,7 +514,7 @@ function Sites() {
               // rules={[{ required: "" }]}
               >
                 <Select
-                className="custom-selcet"
+                  className="custom-selcet"
                   placeholder="Select Project"
                   value={selectedItems}
                   onChange={setSelectedItems}

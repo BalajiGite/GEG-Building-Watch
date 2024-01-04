@@ -1,9 +1,10 @@
 import React from 'react';
-import { Button, Row, Col, Modal, Select } from "antd";
+import { Button, Row, Col, Modal, Select, Popover, ConfigProvider } from "antd";
 import { Form, Input, Table, Divider, Spin } from "antd";
+import { EllipsisOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
-import { targetEdit,addTarget } from '../services/targetService';
+import { targetEdit, addTarget } from '../services/targetService';
 import spinnerjiff from "../assets/images/loader.gif";
 
 function Targets() {
@@ -19,7 +20,7 @@ function Targets() {
   const [selectedItem, setSelectedItem] = useState();
   const [form] = Form.useForm();
 
-  const screenHeight = window.innerHeight-340;
+  const screenHeight = window.innerHeight - 340;
 
 
   const onCancelModal = () => {
@@ -29,12 +30,12 @@ function Targets() {
 
   const validateMessages = {
     require: "${label} is required!",
-    type:{
-      email:"${lebel} is not a valid email !",
-      number:"${lebel} is not a valid number",
+    type: {
+      email: "${lebel} is not a valid email !",
+      number: "${lebel} is not a valid number",
     },
-    number:{
-      range:"${lebel} must be between ${min} and ${max}",
+    number: {
+      range: "${lebel} must be between ${min} and ${max}",
     },
   };
 
@@ -48,8 +49,8 @@ function Targets() {
         title: "Electricity Target Profile",
         dataIndex: "elecTargetProfile",
         key: "elecTargetProfile",
-        width:300,
-        Ellipsis:true,
+        width: 300,
+        Ellipsis: true,
         sorter: (a, b) => a.elecTargetProfile.localeCompare(b.elecTargetProfile),
         filters: Array.from(new Set(targets.map(item => item.elecTargetProfile))).map((profile, index) => ({
           text: profile,
@@ -65,8 +66,8 @@ function Targets() {
         title: "Target kWh 0",
         dataIndex: "targetKwh0",
         key: "targetKwh0",
-        width:200,
-        Ellipsis:true,
+        width: 200,
+        Ellipsis: true,
         sorter: (a, b) => parseFloat(a.targetKwh0) - parseFloat(b.targetKwh0),
         filters: Array.from(new Set(targets.map(item => item.targetKwh0))).map((kwh, index) => ({
           text: kwh,
@@ -83,8 +84,8 @@ function Targets() {
         title: "Target kWh 1",
         dataIndex: "targetKwh1",
         key: "targetKwh1",
-        width:200,
-        Ellipsis:true,
+        width: 200,
+        Ellipsis: true,
         sorter: (a, b) => parseFloat(a.targetKwh1) - parseFloat(b.targetKwh1),
         filters: Array.from(new Set(targets.map(item => item.targetKwh1))).map((kwh, index) => ({
           text: kwh,
@@ -101,8 +102,8 @@ function Targets() {
         title: "Target kWh 2",
         dataIndex: "targetKwh2",
         key: "targetKwh2",
-        width:200,
-        Ellipsis:true,
+        width: 200,
+        Ellipsis: true,
         sorter: (a, b) => parseFloat(a.targetKwh2) - parseFloat(b.targetKwh2),
         filters: Array.from(new Set(targets.map(item => item.targetKwh2))).map((kwh, index) => ({
           text: kwh,
@@ -118,8 +119,8 @@ function Targets() {
         title: "Water Target Profile",
         dataIndex: "waterTargetProfile",
         key: "waterTargetProfile",
-        width:350,
-        Ellipsis:true,
+        width: 350,
+        Ellipsis: true,
         sorter: (a, b) => a.waterTargetProfile.localeCompare(b.waterTargetProfile),
         filters: Array.from(new Set(targets.map(item => item.waterTargetProfile))).map((name, index) => ({
           text: name,
@@ -135,8 +136,8 @@ function Targets() {
         title: "Target Kl0",
         dataIndex: "targetKl0",
         key: "targetKl0",
-        width:200,
-        Ellipsis:true,
+        width: 200,
+        Ellipsis: true,
         sorter: (a, b) => a.targetKl0.localeCompare(b.targetKl0),
         filters: Array.from(new Set(targets.map(item => item.targetKl0))).map((name, index) => ({
           text: name,
@@ -153,8 +154,8 @@ function Targets() {
         title: "Target Kl1",
         dataIndex: "targetKl1",
         key: "targetKl1",
-        width:200,
-        Ellipsis:true,
+        width: 200,
+        Ellipsis: true,
         sorter: (a, b) => a.targetKl1.localeCompare(b.targetKl1),
         filters: Array.from(new Set(targets.map(item => item.targetKl1))).map((name, index) => ({
           text: name,
@@ -170,8 +171,8 @@ function Targets() {
         title: "Target Kl2",
         dataIndex: "targetKl2",
         key: "targetKl2",
-        width:200,
-        Ellipsis:true,
+        width: 200,
+        Ellipsis: true,
         sorter: (a, b) => a.targetKl2.localeCompare(b.targetKl2),
         filters: Array.from(new Set(targets.map(item => item.targetKl2))).map((name, index) => ({
           text: name,
@@ -187,8 +188,8 @@ function Targets() {
         title: "Gas Target Profile",
         dataIndex: "gasTargetProfile",
         key: "gasTargetProfile",
-        width:300,
-        Ellipsis:true,
+        width: 300,
+        Ellipsis: true,
         sorter: (a, b) => a.gasTargetProfile.localeCompare(b.gasTargetProfile),
         filters: Array.from(new Set(targets.map(item => item.gasTargetProfile))).map((name, index) => ({
           text: name,
@@ -204,8 +205,8 @@ function Targets() {
         title: "Target Cum0",
         dataIndex: "targetCum0",
         key: "targetCum0",
-        width:200,
-        Ellipsis:true,
+        width: 200,
+        Ellipsis: true,
         sorter: (a, b) => a.targetCum0.localeCompare(b.targetCum0),
         filters: Array.from(new Set(targets.map(item => item.targetCum0))).map((name, index) => ({
           text: name,
@@ -221,8 +222,8 @@ function Targets() {
         title: "Target Cum1",
         dataIndex: "targetCum1",
         key: "targetCum1",
-        width:200,
-        Ellipsis:true,
+        width: 200,
+        Ellipsis: true,
         sorter: (a, b) => a.targetCum1.localeCompare(b.targetCum1),
         filters: Array.from(new Set(targets.map(item => item.targetCum1))).map((name, index) => ({
           text: name,
@@ -241,16 +242,16 @@ function Targets() {
       title: "ID",
       dataIndex: "id",
       key: "id",
-      width:300,
-      Ellipsis:true,
+      width: 300,
+      Ellipsis: true,
       sorter: (a, b) => a.id.localeCompare(b.id),
     },
     {
-      title: "Name",  
+      title: "Name",
       dataIndex: "name",
       key: "name",
-      width:400,
-      Ellipsis:true,
+      width: 400,
+      Ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       filters: Array.from(new Set(targets.map(item => item.name))).map((name, index) => ({
         text: name,
@@ -264,8 +265,8 @@ function Targets() {
       title: "Unit",
       dataIndex: "unit",
       key: "unit",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => a.unit.localeCompare(b.unit),
       filters: Array.from(new Set(targets.map(item => item.unit))).map((unit, index) => ({
         text: unit,
@@ -279,8 +280,8 @@ function Targets() {
       title: "Target Rating",
       dataIndex: "targetRating",
       key: "targetRating",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => parseFloat(a.targetRating) - parseFloat(b.targetRating),
       filters: Array.from(new Set(targets.map(item => item.targetRating))).map((rating, index) => ({
         text: rating,
@@ -294,8 +295,8 @@ function Targets() {
       title: "Point",
       dataIndex: "point",
       key: "point",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => a.point.localeCompare(b.point),
       filters: Array.from(new Set(targets.map(item => item.point))).map((point, index) => ({
         text: point,
@@ -309,8 +310,8 @@ function Targets() {
       title: "Rating Period Start",
       dataIndex: "ratingPeriodStart",
       key: "ratingPeriodStart",
-      width:300,
-      Ellipsis:true,
+      width: 300,
+      Ellipsis: true,
       sorter: (a, b) => a.ratingPeriodStart.localeCompare(b.ratingPeriodStart),
       filters: Array.from(new Set(targets.map(item => item.ratingPeriodStart))).map((start, index) => ({
         text: start,
@@ -324,8 +325,8 @@ function Targets() {
       title: "Rating Period End",
       dataIndex: "ratingPeriodEnd",
       key: "ratingPeriodEnd",
-      width:300,
-      Ellipsis:true,
+      width: 300,
+      Ellipsis: true,
       sorter: (a, b) => a.ratingPeriodEnd.localeCompare(b.ratingPeriodEnd),
       filters: Array.from(new Set(targets.map(item => item.ratingPeriodEnd))).map((end, index) => ({
         text: end,
@@ -339,8 +340,8 @@ function Targets() {
       title: "Site Reference",
       dataIndex: "siteRef",
       key: "siteRef",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       sorter: (a, b) => a.siteRef.localeCompare(b.siteRef),
       filters: Array.from(new Set(targets.map(item => item.siteRef))).map((siteRef, index) => ({
         text: siteRef,
@@ -355,34 +356,23 @@ function Targets() {
       title: "Actions",
       dataIndex: "delete",
       key: "delete",
-      width:200,
-      Ellipsis:true,
+      width: 200,
+      Ellipsis: true,
       render: (text, record, index) => (
         <>
-          <a
-            onClick={() => {
-              onEdit(record);
-              console.log(record);
-            }}
-          >
-            EDIT
-          </a>
-          <Divider type="vertical" />
-          <a
-            onClick={() => {
-              onDelete(record.id);
-            }}
-          >
-            DELETE
-          </a>
+          <ConfigProvider>
+            <Popover placement="bottomLeft" content={() => content(record)}>
+              <EllipsisOutlined style={{ fontSize: "30px" }} />
+            </Popover>
+          </ConfigProvider>
         </>
       ),
     },
   ];
-  
+
   const targetWidgets = (widget) => {
-      setActiveButton(widget);
-      getData(widget);
+    setActiveButton(widget);
+    getData(widget);
   }
 
   const onDelete = async (id) => {
@@ -396,6 +386,14 @@ function Targets() {
     setTargetId(record.id);
     setOpen(true);
   };
+
+  const content = (record) => (
+    <>
+      <a onClick={() => onEdit(record)}>EDIT</a>
+      <Divider type="horizontal" style={{ margin: "5px" }} />
+      <a onClick={() => onDelete(record.id)}>DELETE</a>
+    </>
+  )
 
   const getData = async (dataValues) => {
     setIsLoading(true);
@@ -415,30 +413,30 @@ function Targets() {
       setIsLoading(false);
     } catch (error) { }
   };
-  const setData =  async(storeFormData) =>{
+  const setData = async (storeFormData) => {
 
-    if(targetId){
-      const res = await targetEdit(targetId ,storeFormData )
+    if (targetId) {
+      const res = await targetEdit(targetId, storeFormData)
     }
-    else{
+    else {
       const res = await addTarget(storeFormData);
     }
     onCancelModal();
-  
+
   }
-    const onChangeText = (text) =>{
-      setSearchText(text);
-        searchFilter(text);
-        if(text===""||!text){
-          setTargets(targetTempData)
-        }
+  const onChangeText = (text) => {
+    setSearchText(text);
+    searchFilter(text);
+    if (text === "" || !text) {
+      setTargets(targetTempData)
     }
-    const searchFilter = (text) =>{
-          const filterData = targets.filter((record) => (
-            record.name.toLowerCase().includes(text.toLowerCase())
-          ))
-          setTargets(filterData)
-    }
+  }
+  const searchFilter = (text) => {
+    const filterData = targets.filter((record) => (
+      record.name.toLowerCase().includes(text.toLowerCase())
+    ))
+    setTargets(filterData)
+  }
 
   useEffect(() => {
     getData(1);
@@ -449,18 +447,18 @@ function Targets() {
     <div className="App">
       <Row>
         <Col span={18} style={{ marginBottom: 20 }}>
-        <Button type={activeButton === 1 ? 'primary' : 'button'} onClick = {()=>targetWidgets(1)}>Electric</Button>
-      <Button type={activeButton === 2 ? 'primary' : 'button'} onClick = {()=> targetWidgets(2)}>Water</Button>
-      <Button type={activeButton === 3 ? 'primary' : 'button'} onClick = {()=> targetWidgets(3)}>Gas</Button>
-      <Button
-        className="mb-4 ml-4"
-        type="primary"
-      onClick={() => setOpen(true)}
-      >
-       {activeButton===2?"Add New Water Target Profile"
-       :activeButton===3?"Add New Gas Target Profile":
-       "Add New Electric Target Profile"} 
-      </Button>
+          <Button type={activeButton === 1 ? 'primary' : 'button'} onClick={() => targetWidgets(1)}>Electric</Button>
+          <Button type={activeButton === 2 ? 'primary' : 'button'} onClick={() => targetWidgets(2)}>Water</Button>
+          <Button type={activeButton === 3 ? 'primary' : 'button'} onClick={() => targetWidgets(3)}>Gas</Button>
+          <Button
+            className="mb-4 ml-4"
+            type="primary"
+            onClick={() => setOpen(true)}
+          >
+            {activeButton === 2 ? "Add New Water Target Profile"
+              : activeButton === 3 ? "Add New Gas Target Profile" :
+                "Add New Electric Target Profile"}
+          </Button>
         </Col>
         <Col span={6} style={{ marginBottom: 20 }}>
           <Form>
@@ -468,7 +466,7 @@ function Targets() {
               size="small"
               placeholder="search here ..."
               value={searchText}
-            onChange={(e) => onChangeText(e.target.value)}
+              onChange={(e) => onChangeText(e.target.value)}
             />
           </Form>
         </Col>
@@ -476,7 +474,7 @@ function Targets() {
       <Modal
         style={{ textAlign: "left" }}
         title={activeButton === 2 ? "Add New Water Target Profile" :
-        activeButton === 3 ? "Add New Gas Target Profile":"Add New Electric Target Profile"}
+          activeButton === 3 ? "Add New Gas Target Profile" : "Add New Electric Target Profile"}
         centered
         open={open}
         onCancel={() => onCancelModal()}
@@ -484,7 +482,7 @@ function Targets() {
         footer={null}
         maskClosable={false}
       >
-         <Form
+        <Form
           // {...layout}
           name="nest-messages"
           layout="vertical"
@@ -494,134 +492,134 @@ function Targets() {
           validateMessages={validateMessages}
 
         >
-          <Row justify={"center"} gutter={[30,30]}>
+          <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
-            <Form.Item 
-            label = "Select Site"
-            wrapperCol={24}
-            name={"name"}
-            >
-              <Select
-              placeholder ="Select Site"
-              value={selectedItem}
-              onClick={setSelectedItem}
-              size='large'
-              style={{width:"100%"}}
+              <Form.Item
+                label="Select Site"
+                wrapperCol={24}
+                name={"name"}
               >
-                {[...new Set(targets.map(item => item.name))].map((item , index)=> (
-                  <Select.Option key={index} value={item}>{item}</Select.Option>
-                ))}
+                <Select
+                  placeholder="Select Site"
+                  value={selectedItem}
+                  onClick={setSelectedItem}
+                  size='large'
+                  style={{ width: "100%" }}
+                >
+                  {[...new Set(targets.map(item => item.name))].map((item, index) => (
+                    <Select.Option key={index} value={item}>{item}</Select.Option>
+                  ))}
 
-              </Select>
-            </Form.Item>
-            </Col>
-          </Row>
-          
-          <Row justify={"center"} gutter={[30,30]}>
-            <Col span={24}>
-              <Form.Item 
-              name={""}
-              label="Current Rating"
-              wrapperCol={24}>
-                <Input className='form_input'/>
+                </Select>
               </Form.Item>
             </Col>
           </Row>
-          <Row justify={"center"} gutter={[30,30]}>
+
+          <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
-              <Form.Item 
-              name={"targetRating"}
-              label="Target Rating"
-              wrapperCol={24}>
-                <Input className='form_input'/>
+              <Form.Item
+                name={""}
+                label="Current Rating"
+                wrapperCol={24}>
+                <Input className='form_input' />
               </Form.Item>
             </Col>
           </Row>
-          <Row justify={"center"} gutter={[30,30]}>
+          <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
-              <Form.Item 
-              name={"ratingPeriodStart"}
-              label="Rating Period Start"
-              wrapperCol={24}>
-                <Input className='form_input'/>
+              <Form.Item
+                name={"targetRating"}
+                label="Target Rating"
+                wrapperCol={24}>
+                <Input className='form_input' />
               </Form.Item>
             </Col>
           </Row>
-          <Row justify={"center"} gutter={[30,30]}>
+          <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
-              <Form.Item 
-              name={"ratingPeriodEnd"}
-              label="Rating Period End"
-              wrapperCol={24}>
-                <Input className='form_input'/>
+              <Form.Item
+                name={"ratingPeriodStart"}
+                label="Rating Period Start"
+                wrapperCol={24}>
+                <Input className='form_input' />
               </Form.Item>
             </Col>
           </Row>
-          <Row justify={"center"} gutter={[30,30]}>
+          <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
-              <Form.Item 
-              name={activeButton===2?"targetKl0":activeButton===3?"targetCum0":"targetKwh0"}
-              label={activeButton===2?"Target K10": activeButton===3?"Target Cum0":"Target kwh0"}
-              wrapperCol={24}>
-                <Input className='form_input'/>
+              <Form.Item
+                name={"ratingPeriodEnd"}
+                label="Rating Period End"
+                wrapperCol={24}>
+                <Input className='form_input' />
               </Form.Item>
             </Col>
           </Row>
-          <Row justify={"center"} gutter={[30,30]}>
+          <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
-              <Form.Item 
-              name={activeButton===2?"targetKl1":activeButton===3?"targetCum1":"targetKwh1"}
-              label={activeButton===2?"Target kl1":activeButton===3?"Target Cum1":"Target kwh1"}
-              wrapperCol={24}>
-                <Input className='form_input'/>
+              <Form.Item
+                name={activeButton === 2 ? "targetKl0" : activeButton === 3 ? "targetCum0" : "targetKwh0"}
+                label={activeButton === 2 ? "Target K10" : activeButton === 3 ? "Target Cum0" : "Target kwh0"}
+                wrapperCol={24}>
+                <Input className='form_input' />
               </Form.Item>
             </Col>
           </Row>
-          <Row justify={"center"} gutter={[30,30]}>
+          <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
-              <Form.Item 
-              name={activeButton===2?"targetKl2":"targetKwh2"}
-              label={activeButton===2?"Target kl2":"Target Kwh2"}
-              wrapperCol={24}>
-                <Input className='form_input'/>
+              <Form.Item
+                name={activeButton === 2 ? "targetKl1" : activeButton === 3 ? "targetCum1" : "targetKwh1"}
+                label={activeButton === 2 ? "Target kl1" : activeButton === 3 ? "Target Cum1" : "Target kwh1"}
+                wrapperCol={24}>
+                <Input className='form_input' />
               </Form.Item>
             </Col>
           </Row>
-          <Row justify={"center"} gutter={[30,30]}>
+          <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
-              <Form.Item 
-              name={"unit"}
-              label="Unit"
-              wrapperCol={24}>
-                <Input className='form_input'/>
+              <Form.Item
+                name={activeButton === 2 ? "targetKl2" : "targetKwh2"}
+                label={activeButton === 2 ? "Target kl2" : "Target Kwh2"}
+                wrapperCol={24}>
+                <Input className='form_input' />
               </Form.Item>
             </Col>
           </Row>
-          <Row justify={"center"} gutter={[30,30]}>
+          <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
-              <Form.Item 
-              name={"point"}
-              label="Point ID"
-              wrapperCol={24}>
-                <Input className='form_input'/>
+              <Form.Item
+                name={"unit"}
+                label="Unit"
+                wrapperCol={24}>
+                <Input className='form_input' />
               </Form.Item>
             </Col>
           </Row>
-                <Row justify={"end"} gutter={[30,30]}>
-                  <Col span={7}>
-                    <Button type='' htmlType='' onClick={()=>onCancelModal()}>Cancel</Button>
-                    <Button type='primary' htmlType="submit" style={{marginLeft:"10px"}}>Save</Button>
-                  </Col>
-                </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name={"point"}
+                label="Point ID"
+                wrapperCol={24}>
+                <Input className='form_input' />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"end"} gutter={[30, 30]}>
+            <Col span={7}>
+              <Button type='' htmlType='' onClick={() => onCancelModal()}>Cancel</Button>
+              <Button type='primary' htmlType="submit" style={{ marginLeft: "10px" }}>Save</Button>
+            </Col>
+          </Row>
         </Form>
-        </Modal>
+      </Modal>
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
         <Table
           columns={columns}
           dataSource={targets}
           scroll={{
             x: 1000,
-            y:screenHeight
+            y: screenHeight
           }}
         />
       </Spin>
