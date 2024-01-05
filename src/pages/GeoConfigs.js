@@ -325,23 +325,20 @@ function Config() {
         <Col span={18} style={{ marginBottom: 20 }}>
 
           <Radio.Group>
-            <Radio.Button style={{
+            <Radio.Button className="ant-radio-button-css" style={{
               fontWeight: activeButton === 1 ? 'bold' : 'normal',
               color: activeButton === 1 ? '#FFFFFF' : '#8E8E8E',
-              backgroundColor: activeButton === 1 ? '#051320' : 'transparent',
             }} onClick={() => changeWidgets(1)} >State</Radio.Button>
-            <Radio.Button
+            <Radio.Button className="ant-radio-button-css"
               style={{
                 fontWeight: activeButton === 2 ? 'bold' : 'normal',
                 color: activeButton === 2 ? '#FFFFFF' : '#8E8E8E',
-                backgroundColor: activeButton === 2 ? '#051320' : 'transparent',
               }}
               onClick={() => changeWidgets(2)} >Ragion</Radio.Button>
-            <Radio.Button
+            <Radio.Button className="ant-radio-button-css"
               style={{
                 fontWeight: activeButton === 3 ? 'bold' : 'normal',
                 color: activeButton === 3 ? '#FFFFFF' : '#8E8E8E',
-                backgroundColor: activeButton === 3 ? '#051320' : 'transparent',
               }}
               onClick={() => changeWidgets(3)} >Level</Radio.Button>
           </Radio.Group>

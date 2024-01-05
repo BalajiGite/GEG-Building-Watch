@@ -385,23 +385,20 @@ export default function Point() {
       <Row>
         <Col span={18}>
           <Radio.Group>
-            <Radio.Button style={{
+            <Radio.Button className="ant-radio-button-css" style={{
               fontWeight: activeButton === 1 ? 'bold' : 'normal',
               color: activeButton === 1 ? '#FFFFFF' : '#8E8E8E',
-              backgroundColor: activeButton === 1 ? '#051320' : 'transparent',
             }} onClick={() => pointChangeData(1)} >Electric</Radio.Button>
-            <Radio.Button
+            <Radio.Button className="ant-radio-button-css"
               style={{
                 fontWeight: activeButton === 2 ? 'bold' : 'normal',
                 color: activeButton === 2 ? '#FFFFFF' : '#8E8E8E',
-                backgroundColor: activeButton === 2 ? '#051320' : 'transparent',
               }}
               onClick={() => pointChangeData(2)} >Water</Radio.Button>
-            <Radio.Button
+            <Radio.Button className="ant-radio-button-css"
               style={{
                 fontWeight: activeButton === 3 ? 'bold' : 'normal',
                 color: activeButton === 3 ? '#FFFFFF' : '#8E8E8E',
-                backgroundColor: activeButton === 3 ? '#051320' : 'transparent',
               }}
               onClick={() => pointChangeData(3)} >Gas</Radio.Button>
           </Radio.Group>
