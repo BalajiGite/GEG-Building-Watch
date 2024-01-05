@@ -264,6 +264,7 @@ function Alerts() {
     },
   ];
 
+
   let data = [];
   const getData = async () => {
     setIsLoading(true);
@@ -359,9 +360,9 @@ function Alerts() {
       {" "}
       <Row>
         <Col span={18}>
-          <Button className="mb-5" type="primary" onClick={() => setOpen(true)}>
-            Create New
-          </Button>
+          <button className="mb-5 custom-button" type="primary" onClick={() => setOpen(true)}>
+            Add New Alert
+          </button>
         </Col>
         <Col span={6} style={{ marginBottom: 10 }}>
           <Input
@@ -369,6 +370,7 @@ function Alerts() {
             placeholder="search here ..."
             value={searchText}
             onChange={(e) => onChangeText(e.target.value)}
+            className="custom-input"
           />
         </Col>
       </Row>
@@ -611,23 +613,21 @@ function Alerts() {
 
           <Form.Item
             wrapperCol={{
-              // offset: 11,
               span: 24,
             }}
           >
-            <Row style={{ justifyContent: "end", display: "flex" }}>
-              <Col >
-                <Button type="primary" htmlType="submit">
-                  Submit
-                </Button>
-                <Button
+            <Row>
+              <Col className="custom-modal-column" span={24}>
+                <button type="primary" htmlType="cancel" className="custom-modal-button">
+                  Cancel
+                </button>
+                <button
                   type=""
-                  style={{ marginLeft: 10 }}
-                  htmlType="button"
+                  htmlType="submit"
                   onClick={() => onCancelModal()}
                 >
-                  Cancel
-                </Button>
+                  Save
+                </button>
               </Col>
             </Row>
           </Form.Item>

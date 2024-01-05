@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Row, Col, Modal, Select, Popover, ConfigProvider } from "antd";
-import { Form, Input, Table, Divider, Spin } from "antd";
+import { Form, Input, Table, Divider, Spin, Radio } from "antd";
 import { EllipsisOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
@@ -447,18 +447,36 @@ function Targets() {
     <div className="App">
       <Row>
         <Col span={18} style={{ marginBottom: 20 }}>
-          <Button type={activeButton === 1 ? 'primary' : 'button'} onClick={() => targetWidgets(1)}>Electric</Button>
-          <Button type={activeButton === 2 ? 'primary' : 'button'} onClick={() => targetWidgets(2)}>Water</Button>
-          <Button type={activeButton === 3 ? 'primary' : 'button'} onClick={() => targetWidgets(3)}>Gas</Button>
-          <Button
-            className="mb-4 ml-4"
+          <Radio.Group>
+            <Radio.Button style={{
+              fontWeight: activeButton === 1 ? 'bold' : 'normal',
+              color: activeButton === 1 ? '#FFFFFF' : '#8E8E8E',
+              backgroundColor: activeButton === 1 ? '#051320' : 'transparent',
+            }} onClick={() => targetWidgets(1)} >Electric</Radio.Button>
+            <Radio.Button
+              style={{
+                fontWeight: activeButton === 2 ? 'bold' : 'normal',
+                color: activeButton === 2 ? '#FFFFFF' : '#8E8E8E',
+                backgroundColor: activeButton === 2 ? '#051320' : 'transparent',
+              }}
+              onClick={() => targetWidgets(2)} >Water</Radio.Button>
+            <Radio.Button
+              style={{
+                fontWeight: activeButton === 3 ? 'bold' : 'normal',
+                color: activeButton === 3 ? '#FFFFFF' : '#8E8E8E',
+                backgroundColor: activeButton === 3 ? '#051320' : 'transparent',
+              }}
+              onClick={() => targetWidgets(3)} >Gas</Radio.Button>
+          </Radio.Group>
+          <button
+            className="mb-4 ml-4 custom-button"
             type="primary"
             onClick={() => setOpen(true)}
           >
-            {activeButton === 2 ? "Add New Water Target Profile"
-              : activeButton === 3 ? "Add New Gas Target Profile" :
-                "Add New Electric Target Profile"}
-          </Button>
+            {activeButton === 2 ? "Add New Water"
+              : activeButton === 3 ? "Add New Gas" :
+                "Add New Electric"}
+          </button>
         </Col>
         <Col span={6} style={{ marginBottom: 20 }}>
           <Form>
@@ -467,6 +485,7 @@ function Targets() {
               placeholder="search here ..."
               value={searchText}
               onChange={(e) => onChangeText(e.target.value)}
+              className='custom-input'
             />
           </Form>
         </Col>
@@ -605,10 +624,10 @@ function Targets() {
               </Form.Item>
             </Col>
           </Row>
-          <Row justify={"end"} gutter={[30, 30]}>
-            <Col span={7}>
-              <Button type='' htmlType='' onClick={() => onCancelModal()}>Cancel</Button>
-              <Button type='primary' htmlType="submit" style={{ marginLeft: "10px" }}>Save</Button>
+          <Row  gutter={[30, 30]}>
+            <Col span={24} className='custom-modal-column'>
+              <button className='custom-modal-button' type='' htmlType='' onClick={() => onCancelModal()}>Cancel</button>
+              <button type='primary' htmlType="submit" >Save</button>
             </Col>
           </Row>
         </Form>

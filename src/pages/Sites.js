@@ -6,6 +6,7 @@ import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { AppContext } from "../App";
 import { EllipsisOutlined } from "@ant-design/icons";
+import { Radio } from 'antd';
 import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
 import {
   addSites,
@@ -291,8 +292,8 @@ function Sites() {
       render: (text, record, index) => (
         <>
           <ConfigProvider>
-            <Popover placement="bottomLeft" content={() => content(record)}>
-              <EllipsisOutlined style={{ fontSize: "30px" }} />
+            <Popover placement="bottomLeft" content={() => content(record)} >
+              <EllipsisOutlined style={{ fontSize: "30px" ,}} />
             </Popover>
           </ConfigProvider>
         </>
@@ -307,7 +308,7 @@ function Sites() {
     try {
 
       const sites = await getApiDataFromAws("queryType=site")
-      // console.log(sites)
+      console.log(sites)
       const body = {
         funcName: 'createStateRecordsFromJson',
         recList: [{ stateName: 'TestState123FromGEMS' }]
@@ -374,6 +375,9 @@ function Sites() {
     getData();
   }, []);
 
+  let ObjectKeys = [...new Set(site.map(Obj => Object.keys(Obj)))];
+  console.log(ObjectKeys);
+
   const content = (record) => (
     <>
       <a onClick={() => onEdit(record)}>EDIT</a>
@@ -389,9 +393,7 @@ function Sites() {
       {" "}
       <Row>
         <Col span={12}>
-          <Button className="mb-5" type="primary" onClick={() => setOpen(true)}>
-            Create New
-          </Button>
+        <button onClick={() => setOpen(true)} className="mb-5 custom-button">ADD New Site</button>
         </Col>
 
         <Col span={6} style={{ marginBottom: 10 }}>
@@ -400,6 +402,7 @@ function Sites() {
             placeholder="search here ..."
             value={searchText}
             onChange={(e) => onChangeText(e.target.value)}
+            className="custom-input"
           />
             </Col>
           <Col span={6}>
@@ -667,18 +670,17 @@ function Sites() {
             }}
           >
             <Row>
-              <Col span={20} style={{ justifyContent: "end", display: "flex" }} >
-                <Button type="primary" htmlType="submit">
-                  Submit
-                </Button>
-                <Button
+              <Col span={20} className="custom-modal-column"  >
+                <button type="" htmlType=" " className="custom-modal-button">
+                  Cancel
+                </button>
+                <button
                   type=""
-                  style={{ marginLeft: 10 }}
-                  htmlType=""
+                  htmlType="submit"
                   onClick={() => onCancelModal()}
                 >
-                  Cancel
-                </Button>
+                  Save
+                </button>
               </Col>
             </Row>
           </Form.Item>
@@ -692,9 +694,12 @@ function Sites() {
           rowKey={"id"}
           scroll={{
             y: screenHeight,
-            x: 1000
-
+            x: 1000,
           }}
+          // pagination={{
+          //   className: "custom-pagination",
+        
+          // }}
           
         />
       </Spin>

@@ -6,7 +6,7 @@ import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
 import {
   Select, Divider, Modal, Table, Form,
   Input, Button, Card, Col, Row, Spin,
-  Popover, ConfigProvider
+  Popover, ConfigProvider, Radio
 } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { useState } from "react";
@@ -33,7 +33,7 @@ function Config() {
   const [isLoading, setIsLoading] = useState(false);
   const [loading, setloading] = useState(true);
   const [locationData, setLocationData] = useState([]);
-  const [activeButton, setActiveButton] = useState(0);
+  const [activeButton, setActiveButton] = useState(1);
   const [searchText, setSearchText] = useState("");
   const [templocationData, setTempLocationData] = useState([])
   const [form] = Form.useForm();
@@ -202,11 +202,11 @@ function Config() {
     try {
 
       var locationData = [];
-      if (dataValues === 0) {
+      if (dataValues === 1) {
         locationData = await getApiDataFromAws("queryType=state")
-      } else if (dataValues === 1) {
-        locationData = await getApiDataFromAws("queryType=region")
       } else if (dataValues === 2) {
+        locationData = await getApiDataFromAws("queryType=region")
+      } else if (dataValues === 3) {
         locationData = await getApiDataFromAws("queryType=level")
       }
       setLocationData(locationData);
@@ -232,8 +232,8 @@ function Config() {
     setLocationData(filtersData)
   }
   useEffect(() => {
-    getData(0);
-    setActiveButton(0);
+    getData(1);
+    setActiveButton(1);
   }, []);
 
   const content = (record) => (
@@ -323,12 +323,31 @@ function Config() {
     <>
       <Row>
         <Col span={18} style={{ marginBottom: 20 }}>
-          <Button type={activeButton === 0 ? 'primary' : 'button'} onClick={() => changeWidgets(0)}>State</Button>
-          <Button type={activeButton === 1 ? 'primary' : 'button'} onClick={() => changeWidgets(1)}>Region</Button>
-          <Button type={activeButton === 2 ? 'primary' : 'button'} onClick={() => changeWidgets(2)}>Level</Button>
-          <Button className="mb-4 ml-4" type="primary" onClick={() => setOpen(true)}>
-            Create New
-          </Button>
+
+          <Radio.Group>
+            <Radio.Button style={{
+              fontWeight: activeButton === 1 ? 'bold' : 'normal',
+              color: activeButton === 1 ? '#FFFFFF' : '#8E8E8E',
+              backgroundColor: activeButton === 1 ? '#051320' : 'transparent',
+            }} onClick={() => changeWidgets(1)} >State</Radio.Button>
+            <Radio.Button
+              style={{
+                fontWeight: activeButton === 2 ? 'bold' : 'normal',
+                color: activeButton === 2 ? '#FFFFFF' : '#8E8E8E',
+                backgroundColor: activeButton === 2 ? '#051320' : 'transparent',
+              }}
+              onClick={() => changeWidgets(2)} >Ragion</Radio.Button>
+            <Radio.Button
+              style={{
+                fontWeight: activeButton === 3 ? 'bold' : 'normal',
+                color: activeButton === 3 ? '#FFFFFF' : '#8E8E8E',
+                backgroundColor: activeButton === 3 ? '#051320' : 'transparent',
+              }}
+              onClick={() => changeWidgets(3)} >Level</Radio.Button>
+          </Radio.Group>
+          <button className="mb-4 ml-4 custom-button" type="primary" onClick={() => setOpen(true)}>
+            {activeButton === 1 ? "Add New State" : activeButton === 2 ? "Add New Ragion" : "Add New Level"}
+          </button>
         </Col>
         <Col span={6} style={{ marginBottom: 20 }}>
           <Form>
@@ -337,6 +356,7 @@ function Config() {
               placeholder="search here ..."
               value={searchText}
               onChange={(e) => onChangeSelectedValue(e.target.value)}
+              className="custom-input"
             />
           </Form>
         </Col>
@@ -363,32 +383,30 @@ function Config() {
           labelAlign=""
         >
           {activeWidgestInputFields()}
-          <Row style={{ alignItems: "end", display: "flex" }}>
-            <Col span={24}>
-              <Form.Item>
-                <Button
-                  style={{ float: "right" }}
+          <Form.Item  wrapperCol={{
+              offset: 11,
+              span: 16,
+            }}>
+            <Row>
+              <Col span={20}  className="custom-modal-column">
+                <button
                   onClick={() => setOpen(false)}
                   type=""
                   htmlType="cancel"
+                  className="custom-modal-button"
                 >
                   Cancel
-                </Button>
-                <Button
-                  className=""
-                  style={{
-                    float: "right",
-                    marginRight: 18,
-                  }}
+                </button>
+                <button
                   onClick={() => setOpen(false)}
                   type="primary"
                   htmlType="submit"
                 >
                   Save
-                </Button>
-              </Form.Item>
-            </Col>
-          </Row>
+                </button>
+              </Col>
+            </Row>
+          </Form.Item>
         </Form>
       </Modal>
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
