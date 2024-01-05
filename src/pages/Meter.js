@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Spin, Divider, Select } from "antd";
+import { Spin, Divider, Select, Radio } from "antd";
 import { Form, Input, Table } from "antd";
 import { Button, Row, Col, Modal, Popover, ConfigProvider } from "antd";
 import "reactjs-popup/dist/index.css";
-import {EllipsisOutlined} from "@ant-design/icons";
+import { EllipsisOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
+
 import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
 import {
   addMeter,
@@ -60,29 +61,30 @@ function Meter() {
     setActiveButton(changeTableData)
     getData(changeTableData);
   }
-const DynamicColumns = (data) =>{
-  let dynamicColumns = [];
-   if(data.some(item => item.elec)){
-    dynamicColumns.push(
-      {
-      title: "Electricity",
-      dataIndex: "elec",
-      key:"electricity",
-      width:200,
-      Ellipsis:true,
-      sorter: (a, b)=> a.elec.localeCompare(b.elec),
-      filter:Array.from(new Set(meters.map(item=>item.elec))).map((electricity , index)=>({
-        text:electricity,
-        value:electricity
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.elec.startsWith(value),
+  const DynamicColumns = (data) => {
+    let dynamicColumns = [];
+    if (data.some(item => item.elec)) {
+      dynamicColumns.push(
+        {
+          title: "Electricity",
+          dataIndex: "elec",
+          key: "electricity",
+          width: 200,
+          Ellipsis: true,
+          sorter: (a, b) => a.elec.localeCompare(b.elec),
+          filter: Array.from(new Set(meters.map(item => item.elec))).map((electricity, index) => ({
+            text: electricity,
+            value: electricity
+          })),
+          filterMode: "tree",
+          filterSearch: true,
+          onFilter: (value, record) => record.elec.startsWith(value),
 
-      })}
+        })
+    }
 
-      return dynamicColumns;
-}
+    return dynamicColumns;
+  }
   const columns = [
     {
       title: "ID",
@@ -123,7 +125,7 @@ const DynamicColumns = (data) =>{
       onFilter: (value, record) => record.equip.startsWith(value),
     },
     ...DynamicColumns(meters),
-       {
+    {
       title: "Gate Meter",
       dataIndex: "gateMeter",
       key: "5",
@@ -222,7 +224,7 @@ const DynamicColumns = (data) =>{
       render: (text, record, index) => (
         <>
           <ConfigProvider>
-            <Popover placement="bottomLeft" content={()=>content(record)}>
+            <Popover placement="bottomLeft" content={() => content(record)}>
               <EllipsisOutlined style={{ fontSize: "30px" }} />
             </Popover>
           </ConfigProvider>
@@ -284,7 +286,7 @@ const DynamicColumns = (data) =>{
   const content = (record) => (
     <>
       <a onClick={() => onEdit(record)}>EDIT</a>
-      <Divider type="horizontal" style={{margin:"5px"}}/>
+      <Divider type="horizontal" style={{ margin: "5px" }} />
       <a onClick={() => onDelete(record.id)}>DELETE</a>
     </>
   )
@@ -321,12 +323,33 @@ const DynamicColumns = (data) =>{
       {" "}
       <Row>
         <Col span={18}>
-          <Button type={activeButton===1?"primary":""} onClick={()=> MeterChangeData(1)}>Electric</Button>
-          <Button type={activeButton===2?"primary":""} onClick={()=> MeterChangeData(2)}>Water</Button>
-          <Button type={activeButton===3?"primary":""}  onClick={()=> MeterChangeData(3)}>Gas</Button>
-          <Button className="mb-5" type="primary" onClick={() => setOpen(true)} style={{marginLeft:"20px"}}>
-            Create New
-          </Button>
+          <Radio.Group>
+            <Radio.Button style={{
+              fontWeight: activeButton === 1 ? 'bold' : 'normal',
+              color: activeButton === 1 ? '#FFFFFF' : '#8E8E8E',
+              backgroundColor: activeButton === 1 ? '#051320' : 'transparent',
+            }} onClick={() => MeterChangeData(1)} >Electric</Radio.Button>
+            <Radio.Button
+              style={{
+                fontWeight: activeButton === 2 ? 'bold' : 'normal',
+                color: activeButton === 2 ? '#FFFFFF' : '#8E8E8E',
+                backgroundColor: activeButton === 2 ? '#051320' : 'transparent',
+              }}
+              onClick={() => MeterChangeData(2)} >Water</Radio.Button>
+            <Radio.Button
+              style={{
+                fontWeight: activeButton === 3 ? 'bold' : 'normal',
+                color: activeButton === 3 ? '#FFFFFF' : '#8E8E8E',
+                backgroundColor: activeButton === 3 ? '#051320' : 'transparent',
+              }}
+              onClick={() => MeterChangeData(3)} >Gas</Radio.Button>
+
+          </Radio.Group>
+
+
+          <button className="mb-5 custom-button" onClick={() => setOpen(true)} style={{ marginLeft: "20px" }}>
+          {activeButton===1?"Add New Electric":activeButton===2?"Add New Water":"Add New Gas"}
+          </button>
         </Col>
         <Col span={6} style={{ marginBottom: 10 }}>
           <Input
@@ -334,6 +357,7 @@ const DynamicColumns = (data) =>{
             placeholder="search here ..."
             value={searchText}
             onChange={(e) => onChangeText(e.target.value)}
+            className="custom-input"
           />
         </Col>
       </Row>
@@ -547,18 +571,18 @@ const DynamicColumns = (data) =>{
             }}
           >
             <Row >
-              <Col span={20} style={{ display: "flex", justifyContent: "end" }}>
-                <Button
+              <Col span={20} className="custom-modal-column">
+                <button
                   type=""
-
+                  className="custom-modal-button"
                   htmlType=""
                   onClick={() => onCancelModal()}
                 >
                   Cancel
-                </Button>
-                <Button type="primary" htmlType="submit" style={{ marginLeft: 10 }}>
+                </button>
+                <button type="" htmlType="submit" >
                   Save
-                </Button>
+                </button>
               </Col>
             </Row>
           </Form.Item>

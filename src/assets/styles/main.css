@@ -14,6 +14,11 @@ body {
  
 }
 
+.custom-input{
+  background-color: transparent !important;
+  border: 1px solid #8E8E8E !important;
+}
+
 .changeFamily {
   font-family: Open Sans, Helvetica, Arial, sans-serif;
 }
@@ -506,6 +511,33 @@ me-color mb-2 .layout-dashboard .ant-layout-sider.sider-primary .footer-box p {
   padding: 16px 8px;
 }
 
+/* table filter */
+.ant-table-filter-dropdown{
+  background-color: #051320;
+}
+.ant-tree{
+  background-color: transparent;
+  color: #8E8E8E;
+}
+.ant-table-filter-dropdown-checkall{
+  color: #8E8E8E;
+}
+.ant-table-filter-dropdown-search-input{
+  background-color: transparent;
+}
+.ant-table-filter-dropdown-search-input input{
+  background-color: transparent;
+  border: 1px solid #8E8E8E
+}
+.ant-table-filter-dropdown-btns button span{
+  color: #8E8E8E;
+  
+}
+.ant-table-filter-dropdown-btns button{
+  background-color: white;
+  color: black;
+}
+
 .ant-dropdown-menu.ant-dropdown-menu-split.header-notifications-dropdown
   ul.ant-dropdown-menu-items {
   margin: 0px;
@@ -951,7 +983,7 @@ border: 1px solid rgba(142, 142, 142, 0.30);
   border: 1px solid rgba(142, 142, 142, 0.30) !important;
 }
 
-  
+ 
 
 
 /* Add this to your global CSS or style file */
@@ -1945,6 +1977,29 @@ ul.ant-menu.ant-menu-root.ant-menu-inline.ant-menu-light.left-nav
   color: #8c8c8c;
   font-weight: 600;
 }
+/* Paggination buttons custom css */
+
+.ant-pagination li button{
+  background-color:  transparent !important;
+  border: 1px solid #8E8E8E4D !important;
+  color: #8E8E8E !important;
+
+}
+
+.ant-pagination li{
+  background-color:  transparent !important;
+  border: 1px solid #8E8E8E4D !important;
+  color: #8E8E8E !important;
+}
+
+.ant-pagination li a{
+  color: #8E8E8E !important;
+
+}
+.ant-pagination-item-active{
+  color: white !important;
+}
+
 
 .ant-progress-project .ant-progress-bg {
   height: 3px !important;
@@ -3247,6 +3302,20 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
   margin-left: 10px !important;
 }
 
+.custom-button{
+  background-color:  #051320;
+  color:#8E8E8E;
+  border: 1px solid #8E8E8E;
+  border-radius: 5px !important;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 8px;
+} 
+.custom-button:hover{
+  color: white;
+}
+
+
 .layout-dashboard-rtl .ant-progress-show-info .ant-progress-outer {
   margin-right: 0px;
   padding-right: 0px;
@@ -3711,4 +3780,28 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
 
 .rate-stars:hover {
   color: rgb(171, 162, 162) !important;
+}
+.custom-modal-column{
+  justify-content: end;
+  display: flex;
+}
+.custom-modal-column .custom-modal-button{
+  padding-left: 15px;
+  padding-right: 15px;
+    background-color: transparent;
+  color: #8E8E8E;
+  border: 1px solid #8E8E8E;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.custom-modal-column button{
+  padding-left: 15px;
+  padding-right: 15px;
+  background-color: #C5C5C5;
+  color: black;
+  border: 1px solid #8E8E8E;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+
 }
