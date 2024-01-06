@@ -16,6 +16,8 @@ import {
 import { RiDeleteBin6Line } from "react-icons/ri";
 import AlertModel from "./AlertConfiguration";
 import spinnerjiff from "../assets/images/loader.gif";
+import {dummycolumns} from "../components/widgets/siteDummyData/AlertTable"
+import { dummydataSource } from "../components/widgets/siteDummyData/AlertTable";
 
 const layout = {
   labelCol: {
@@ -40,8 +42,12 @@ function Alerts() {
   const [post, setPost] = useState([]);
   const [loading, setloading] = useState(true);
   const [AlertsId, setAlertsId] = useState();
+  const [active, setActive] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+  const [alert, setAlert] = useState();
 
   const [form] = Form.useForm();
+  
   // const [confForm] = Form.useForm();
   const screenHeight = window.innerHeight - 340;
 
@@ -316,9 +322,9 @@ function Alerts() {
 
   const content = (record) => (
     <>
-      <a onClick={() => onEdit(record)}>EDIT</a>
+      <a onClick={() => onEdit(record)} style={{color:"white"}}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{color:"white"}}>DELETE</a>
     </>
   )
   // const filter = (text) => {
@@ -355,15 +361,62 @@ function Alerts() {
     getData();
   }, []);
 
+  const showModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleOk = () => {
+    setOpenModal(false);
+  };
+
+  const handleCancel = () => {
+    setOpenModal(false);
+  };
+
+
+  let elementbutton = (
+    <>
+      <button className="custom-button" type="button" onClick={showModal}>
+        Show Sent Alert
+      </button>
+      <button className="custom-button" type="button" onClick={showModal}
+        style={{ marginLeft: "4px", marginRight: "4px" }}
+      >Show Queued Alerts</button>
+      <button className="custom-button" type="button" onClick={showModal}>
+        Show Failed Alerts
+      </button>
+    </>);
+
+  const clickEventAlert = (RowId) => {
+    console.log(RowId);
+    setActive(RowId)
+    setAlert(elementbutton);
+  }
+
+
   return (
     <>
+     <Modal title="Basic Modal" 
+      width="70%"
+      open={openModal} onOk={handleOk}
+       onCancel={handleCancel}>
+       <Table dataSource={dummydataSource}
+        columns={dummycolumns}
+        scroll={{
+          x:1000,
+          y:300
+        }} 
+       />;
+      </Modal>
+
       {" "}
       <Row>
-        <Col span={18}>
+        <Col span={6}>
           <button className="mb-5 custom-button" type="primary" onClick={() => setOpen(true)}>
             Add New Alert
           </button>
         </Col>
+        <Col span={12}>{alert}</Col>
         <Col span={6} style={{ marginBottom: 10 }}>
           <Input
             size="small"
@@ -635,6 +688,11 @@ function Alerts() {
       </Modal>{" "}
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
         <Table
+         onRow={(record) => ({
+          onClick: () => clickEventAlert(record.id),
+          style: { backgroundColor: record.id === active ? "#001629" : '' }
+
+        })}
           columns={columns}
           dataSource={post}
           rowKey={"id"}

@@ -251,7 +251,7 @@ function Sites() {
       title: "Weather Station",
       dataIndex: "weatherStationRef",
       key: "16",
-      width:200,
+      width:300,
       sorter: (a, b) => a.weatherStationRef.localeCompare(b.weatherStationRef),
       filters: Array.from(new Set(site.map(item => item.weatherStationRef))).map((name, index) => ({
         text: name,
@@ -352,16 +352,18 @@ function Sites() {
   return (
     <>
       {" "}
-      <Button className="mb-5" type="primary" onClick={() => setOpen(true)}>
-        Create New
-      </Button>
       <Row>
-        <Col span={17}></Col>
+        <Col span={17}>
+      <button className="mb-5 custom-button" type="primary" onClick={() => setOpen(true)}>
+        Create New
+      </button>
+        </Col>
 
         <Col span={7} style={{ marginBottom: 10 }}>
           <Input
             size="small"
             placeholder="search here ..."
+            className="custom-input"
             value={searchText}
             onChange={(e) => onChangeText(e.target.value)}
           />
@@ -369,7 +371,7 @@ function Sites() {
       </Row>
       <Modal
         style={{ textAlign: "left", backgroundColor: "#001629" }}
-        title="Add New Sites"
+        title="Add New Reading"
         centered
         open={open}
         onCancel={() => onCancelModal()}
@@ -618,19 +620,19 @@ function Sites() {
                 }}
               >
           <Row>
-            <Col span={20} style={{justifyContent:"end",display:"flex"}} >
+            <Col span={20} className="custom-modal-column">
               
-                <Button type="primary" htmlType="submit">
-                  Submit
-                </Button>
-                <Button
+                <button type="" htmlType="" className="custom-modal-button">
+                  Cancel
+                </button>
+                <button
                   type=""
                   style={{ marginLeft: 10 }}
-                  htmlType=""
+                  htmlType="submit"
                   onClick={() => onCancelModal()}
                 >
-                  Cancel
-                </Button>
+                  Submit
+                </button>
             </Col>
           </Row>
               </Form.Item>

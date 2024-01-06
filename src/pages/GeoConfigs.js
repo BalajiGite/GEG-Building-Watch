@@ -238,9 +238,9 @@ function Config() {
 
   const content = (record) => (
     <>
-      <a onClick={() => onEdit(record)}>EDIT</a>
+      <a onClick={() => onEdit(record)} style={{color:"white"}}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{color:"white"}}>DELETE</a>
     </>
   )
 
