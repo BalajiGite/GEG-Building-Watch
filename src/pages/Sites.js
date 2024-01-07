@@ -15,7 +15,6 @@ import {
   getSitesList,
 } from "../services/sitesService";
 import spinnerjiff from "../assets/images/loader.gif";
-
 const layout = {
   labelCol: {
     span: 8,
@@ -26,8 +25,6 @@ const layout = {
 };
 const OPTIONS = ["Apples", "Nails", "Bananas", "Helicopters"];
 
-
-
 function Sites() {
   const [searchText, setSearchText] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
@@ -37,6 +34,7 @@ function Sites() {
   const [SitesId, setSitesId] = useState();
   const [site, setSite] = useState([]);
   const [open, setOpen] = useState(false);
+
   // console.log(open);
   const context = useContext(AppContext);
   const [form] = Form.useForm();
@@ -273,6 +271,7 @@ function Sites() {
       dataIndex: "weatherStationRef",
       key: "16",
       width: 200,
+      hidden:true,
       ellipsis: true,
       sorter: (a, b) => a.weatherStationRef.localeCompare(b.weatherStationRef),
       filters: Array.from(new Set(site.map(item => item.weatherStationRef))).map((name, index) => ({
@@ -293,7 +292,7 @@ function Sites() {
         <>
           <ConfigProvider>
             <Popover placement="bottomLeft" content={() => content(record)} >
-              <EllipsisOutlined style={{ fontSize: "30px" ,}} />
+              <EllipsisOutlined style={{ fontSize: "30px", }} />
             </Popover>
           </ConfigProvider>
         </>
@@ -375,27 +374,25 @@ function Sites() {
     getData();
   }, []);
 
-  let ObjectKeys = [...new Set(site.map(Obj => Object.keys(Obj)))];
-  console.log(ObjectKeys);
+  // let ObjectKeys = [...new Set(site.map(Obj => Object.keys(Obj)))];
+  // console.log(ObjectKeys);
 
   const content = (record) => (
     <>
-      <a onClick={() => onEdit(record)}>EDIT</a>
+      <a onClick={() => onEdit(record)} style={{color:"white"}}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{color:"white"}}>DELETE</a>
     </>
   )
 
   const tableHeight = window.innerHeight - 250; // Adjust this value as needed
-
+  
   return (
     <>
-      {" "}
       <Row>
         <Col span={12}>
-        <button onClick={() => setOpen(true)} className="mb-5 custom-button">ADD New Site</button>
+          <button onClick={() => setOpen(true)} className="mb-5 custom-button">ADD New Site</button>
         </Col>
-
         <Col span={6} style={{ marginBottom: 10 }}>
           <Input
             size="small"
@@ -404,19 +401,19 @@ function Sites() {
             onChange={(e) => onChangeText(e.target.value)}
             className="custom-input"
           />
-            </Col>
-          <Col span={6}>
-          <Select 
-          placeholder="Select Site Name"
-          defaultValue={"Select Site Name"}
-          
-          style={{width:"100%",padding:"5px"}}
+        </Col>
+        <Col span={6}>
+          <Select
+            placeholder="Select Columna Name"
+            defaultValue={"Select Columns Name"}
+            mode="multiple"
+            style={{ width: "100%", padding: "5px" }}
           >
-            {site.map((item, index) => (
-              <Select.Option key={index} item = {item.site}>{item.name}</Select.Option>
+            {columns.map((item, index) => (
+              <Select.Option key={index} item={item.title}>{item.title}</Select.Option>
             ))}
           </Select>
-          </Col>
+        </Col>
       </Row>
       <Modal
         // className="custom-modale"
@@ -688,7 +685,6 @@ function Sites() {
       </Modal>
       <Spin spinning={isLoading} indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} />}>
         <Table
-          
           columns={columns}
           dataSource={site}
           rowKey={"id"}
@@ -697,11 +693,11 @@ function Sites() {
             x: 1000,
           }}
           
-          // pagination={{
-          //   className: "custom-pagination",
-        
-          // }}
-          
+        // pagination={{
+        //   className: "custom-pagination",
+
+        // }}
+
         />
       </Spin>
     </>
