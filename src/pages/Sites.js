@@ -34,6 +34,7 @@ function Sites() {
   const [SitesId, setSitesId] = useState();
   const [site, setSite] = useState([]);
   const [open, setOpen] = useState(false);
+   const [selectedColumns, setSelectedColumns] = useState([]);
 
   // console.log(open);
   const context = useContext(AppContext);
@@ -66,7 +67,6 @@ function Sites() {
       width: 300,
       ellipsis: true,
       sorter: (a, b) => a.id.localeCompare(b.id),
-      hidden: true
     },
     {
       title: "Name",
@@ -75,6 +75,7 @@ function Sites() {
       width: 200,
       ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
+      hidden: false,
       filters: Array.from(new Set(site.map(item => item.name))).map((name, index) => ({
         text: name,
         value: name,
@@ -298,9 +299,8 @@ function Sites() {
         </>
       ),
     },
-  ].filter(item => !item.hidden);
-
-
+  ]
+ 
   let data = [];
   const getData = async () => {
     setIsLoading(true);
@@ -385,7 +385,6 @@ function Sites() {
     </>
   )
 
-  const tableHeight = window.innerHeight - 250; // Adjust this value as needed
   
   return (
     <>
@@ -403,16 +402,19 @@ function Sites() {
           />
         </Col>
         <Col span={6}>
-          <Select
-            placeholder="Select Columna Name"
-            defaultValue={"Select Columns Name"}
-            mode="multiple"
-            style={{ width: "100%", padding: "5px" }}
-          >
-            {columns.map((item, index) => (
-              <Select.Option key={index} item={item.title}>{item.title}</Select.Option>
-            ))}
-          </Select>
+        <Select
+          placeholder="Select Column Name"
+          mode="multiple"
+          style={{ width: "100%", padding: "5px", maxHeight: "45px", overflow: "auto" }}
+          onChange={(selectedItems) => setSelectedColumns(selectedItems)}
+        >
+          {columns.map((item, index) => (
+            <Select.Option key={index} value={item.key}>
+              {item.title}
+            </Select.Option>
+          ))}
+        </Select>
+
         </Col>
       </Row>
       <Modal
@@ -685,7 +687,7 @@ function Sites() {
       </Modal>
       <Spin spinning={isLoading} indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} />}>
         <Table
-          columns={columns}
+          columns={selectedColumns.length > 0 ? columns.filter((item) => selectedColumns.includes(item.key)) : columns}
           dataSource={site}
           rowKey={"id"}
           scroll={{
