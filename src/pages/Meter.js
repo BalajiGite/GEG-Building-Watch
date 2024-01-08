@@ -6,7 +6,7 @@ import "reactjs-popup/dist/index.css";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
 
-import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
+import { getApiDataFromAws, postApiDataToAws, getConfigDataFromAws } from "../services/apis";
 import {
   addMeter,
   deleteMeter,
@@ -24,7 +24,6 @@ const layout = {
     span: 16,
   },
 };
-const OPTIONS = ["Apples", "Nails", "Bananas", "Helicopters"];
 
 function Meter() {
   const [searchText, setSearchText] = useState("");
@@ -240,15 +239,21 @@ function Meter() {
     try {
       const resp = await getMeterList();
       let meterData = [];
+      let configData = {};
       if (changeTableData === 1) {
         meterData = await getApiDataFromAws("queryType=elecMeters");
+        configData = await getConfigDataFromAws("elecMeters");
       }
       else if (changeTableData === 2) {
         meterData = await getApiDataFromAws("queryType=waterMeters");
+        configData = await getConfigDataFromAws("waterMeters");
       }
       else if (changeTableData === 3) {
         meterData = await getApiDataFromAws("queryType=gasMeters");
+        configData = await getConfigDataFromAws("gasMeters");
       }
+
+      
       setMeters(meterData);
       setTempData(meterData)
       setloading(false);

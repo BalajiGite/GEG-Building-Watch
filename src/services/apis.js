@@ -2,7 +2,7 @@ import axios from 'axios';
 const API_URL = `https://ooq5mqxlu8.execute-api.ap-southeast-2.amazonaws.com/default/neptuneViewerApis?`;
 const POST_API_URL = `https://7chg1o6vnc.execute-api.ap-southeast-2.amazonaws.com/default/gemsPushServices`;
 const POST_Alerts_API_URL = `https://kiln7uoo76.execute-api.ap-southeast-2.amazonaws.com/default/postgresCrudFuncsForUI`;
-
+const CONFIG_URL = `https://ooq5mqxlu8.execute-api.ap-southeast-2.amazonaws.com/default/neptuneViewerApis?queryType=viewerConfig`
 
 
 
@@ -44,6 +44,16 @@ export const postAlertsApiDataToAws = async (body) => {
 
         const response = await axios.post(POST_Alerts_API_URL, body, {headers});
         const data = response.data;
+        return data;
+    } catch (error) {
+        return console.error('Error fetching data:', error);
+    }
+}
+
+export const getConfigDataFromAws = async (item) => {
+    try {
+        const response = await axios.get(CONFIG_URL);
+        const data = response.data[item];
         return data;
     } catch (error) {
         return console.error('Error fetching data:', error);
