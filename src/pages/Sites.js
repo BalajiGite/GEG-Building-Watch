@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { AppContext } from "../App";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { Radio } from 'antd';
-import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
+import { getApiDataFromAws, postApiDataToAws, getConfigDataFromAws } from "../services/apis";
 import {
   addSites,
   deleteSites,
@@ -307,7 +307,8 @@ function Sites() {
     try {
 
       const sites = await getApiDataFromAws("queryType=site")
-      console.log(sites)
+      const sitesConfigData = await getConfigDataFromAws("site");
+      console.log(sitesConfigData)
       const body = {
         funcName: 'createStateRecordsFromJson',
         recList: [{ stateName: 'TestState123FromGEMS' }]
