@@ -5,14 +5,13 @@ import { Button, Row, Col, Modal, Popover, ConfigProvider } from "antd";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { AppContext } from "../App";
+import { message } from 'antd';
 import { EllipsisOutlined } from "@ant-design/icons";
 import { Radio } from 'antd';
 import { getApiDataFromAws, postApiDataToAws, getConfigDataFromAws } from "../services/apis";
 import {
-  addSites,
   deleteSites,
   editSites,
-  getSitesList,
 } from "../services/sitesService";
 import spinnerjiff from "../assets/images/loader.gif";
 const layout = {
@@ -23,9 +22,10 @@ const layout = {
     span: 16,
   },
 };
-const OPTIONS = ["Apples", "Nails", "Bananas", "Helicopters"];
+
 
 function Sites() {
+  const [form] = Form.useForm();
   const [searchText, setSearchText] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,11 +34,11 @@ function Sites() {
   const [SitesId, setSitesId] = useState();
   const [site, setSite] = useState([]);
   const [open, setOpen] = useState(false);
+  const [regionListData, setRegionListData] = useState([]);
   const [selectedColumns, setSelectedColumns] = useState([]);
   const context = useContext(AppContext);
-  const [form] = Form.useForm();
-  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
-
+  
+ 
   const screenHeight = window.innerHeight - 340;
   const validateMessages = {
     required: "${label} is required!",
@@ -281,6 +281,21 @@ function Sites() {
       onFilter: (value, record) => record.weatherStationRef.startsWith(value),
     },
     {
+      title: "Help",
+      dataIndex: "help",
+      key: "17",
+      width: 200,
+      ellipsis: true,
+      sorter: (a, b) => a.help.localeCompare(b.help),
+      filters: Array.from(new Set(site.map(item => item.help))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.help.startsWith(value),
+    },
+    {
       title: "Actions",
       dataIndex: "delete",
       key: "17",
@@ -298,7 +313,6 @@ function Sites() {
     },
   ]
  
-  let data = [];
   const getData = async () => {
     setIsLoading(true);
     try {
@@ -306,11 +320,9 @@ function Sites() {
       const sites = await getApiDataFromAws("queryType=site")
       const sitesConfigData = await getConfigDataFromAws("site");
       console.log(sitesConfigData)
-      const body = {
-        funcName: 'createStateRecordsFromJson',
-        recList: [{ stateName: 'TestState123FromGEMS' }]
-      };
-      //const addSites = await postApiDataToAws(body)
+     
+      const regionList = await getApiDataFromAws("queryType=dropdownRegion");
+      setRegionListData(regionList);
       setSiteData(sites);
       setSite(sites);
       setloading(false);
@@ -318,12 +330,41 @@ function Sites() {
     } catch (error) { }
   };
 
-  const setData = async (formData) => {
+  const setData = async () => {
     try {
+
+      var formData = form.getFieldsValue();
+
+      const modifiedFormData = {
+        ...formData, 
+        siteName: formData.name, 
+        siteId: "", 
+        area: Number(formData.area), 
+        armsProjectId: Number(formData.armsProjectId), 
+        regionRecId: formData.regionRef,
+      };
+
+      const { name, regionRef,site, ...objectWithoutName } = modifiedFormData
+      console.log(objectWithoutName); // Log the form data to check its structure
       if (SitesId) {
         const resp = await editSites(SitesId, formData);
       } else {
-        const resp = await addSites(formData);
+        //const resp = await addSites(formData);
+        const body = {
+          funcName: 'createSiteRecordsFromJson',
+          recList: [objectWithoutName]
+        };
+        const addSites = await postApiDataToAws(body)
+        // Check if the addSites operation was successful
+        if (addSites && addSites.message ==="Success") {
+          console.log('Site added successfully:', addSites);
+          // Display a success message using Ant Design message component
+          message.success('Site added successfully');
+        } else {
+          console.log('Failed to add site:', addSites);
+          // Display an error message using Ant Design message component
+          message.error('Failed to add site');
+        }
       }
       onCancelModal();
       getData();
@@ -436,41 +477,42 @@ function Sites() {
         >
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
-              <Form.Item
-                name={"name"}
+              <Form.Item name="name"
                 label="Site Name"
-                // labelCol={{ span: 4 }}
+                labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter the Site Name.',
+                  },
+                ]}
               >
                 <Input className="form_input" />
               </Form.Item>
             </Col>
           </Row>
 
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"site"}
-                label="Site ID"
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-          </Row>
+          
 
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"area"}
+                name="area"
                 label="Area"
-                // labelCol={{ span: 4 }}
+                rules={[
+                  {
+                    pattern: /^[0-9]*$/,
+                    message: 'Please enter a valid number for the area.',
+                  },
+                  {
+                    required: true,
+                    message: 'Please enter the area.',
+                  },
+                ]}
                 wrapperCol={{ span: 24 }}
               >
-                <Input className="form_input" />
+                <Input className="form_input" type="number" />
               </Form.Item>
             </Col>
           </Row>
@@ -478,11 +520,16 @@ function Sites() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"armsProj"}
+                name="armsProj"
                 label="Arms Prj"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter the Arms Project.',
+                  },
+                ]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -492,24 +539,38 @@ function Sites() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"armsProjectId"}
+                name="armsProjectId"
                 label="Arms Proj ID"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
+                rules={[
+                  {
+                    pattern: /^[0-9]*$/,
+                    message: 'Please enter a valid number for the Arms Proj ID.',
+                  },
+                  {
+                    required: true,
+                    message: 'Please enter the Arms Proj ID.',
+                  },
+                ]}
               >
-                <Input className="form_input" />
+                <Input className="form_input" type="number"/>
               </Form.Item>
             </Col>
           </Row>
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"projId"}
+                name="projId"
                 label="Select Proj ID"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Proj ID.',
+                  },
+                ]}
               >
                 <Select
                   placeholder="Select Project"
@@ -532,11 +593,16 @@ function Sites() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"tz"}
+                name="tz"
                 label="Select TZ"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Select TZ.',
+                  },
+                ]}
               >
                 <Select
                   placeholder="Select TZ"
@@ -558,11 +624,16 @@ function Sites() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"observesHolidays"}
+                name="observesHolidays"
                 label="Select Observe Holidays"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-              // rules={[{required:""}]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Observe Holidays.',
+                  },
+                ]}
               >
                 <Select
                   placeholder="Select Observe Holidays"
@@ -584,11 +655,16 @@ function Sites() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"regionRef"}
+                name="regionRef"
                 label="Select Region ID"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-              // rules={[{required:""}]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Region.',
+                  },
+                ]}
               >
                 <Select
                   placeholder="Select Region ID"
@@ -596,9 +672,9 @@ function Sites() {
                   onChange={setSelectedItems}
                   style={{ width: "100%" }}
                 >
-                  {
-                    [...new Set(site.map(item => item.regionRef))].map((item, index) => (
-                      <Select.Option key={index} value={item}>{item}</Select.Option>
+                  {regionListData.length > 0 &&
+                    regionListData.map((item, index) => (
+                      <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
                     ))
                   }
                 </Select>
@@ -609,11 +685,16 @@ function Sites() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"geoCountry"}
+                name="geoCountry"
                 label="Select Geo Country"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-              // rules={[{required:""}]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Geo Country.',
+                  },
+                ]}
               >
                 <Select
                   placeholder="Select Geo Country"
@@ -634,11 +715,16 @@ function Sites() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"geoAddress"}
+                name="geoAddress"
                 label="Geo Address"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-              // rules={[{required:""}]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter the Geo Address.',
+                  },
+                ]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -647,13 +733,25 @@ function Sites() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={""}
+                name="help"
                 label="Help"
-                // labelCol={{ span: 4 }}
+                initialValue=""
                 wrapperCol={{ span: 24 }}
-              // rules={[{required:""}]}
               >
                 <Input className="form_input" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name="site"
+                label="Site ID"
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+              // rules={[{ required: "" }]}
+              >
+                <Input className="form_input" readOnly/>
               </Form.Item>
             </Col>
           </Row>
@@ -665,14 +763,10 @@ function Sites() {
           >
             <Row>
               <Col span={20} className="custom-modal-column"  >
-                <button type="" htmlType=" " className="custom-modal-button">
+                <button  onClick={() => onCancelModal()} type="" htmlType=" " className="custom-modal-button">
                   Cancel
                 </button>
-                <button
-                  type=""
-                  htmlType="submit"
-                  onClick={() => onCancelModal()}
-                >
+                <button htmlType="submit">
                   Save
                 </button>
               </Col>

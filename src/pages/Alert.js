@@ -817,7 +817,7 @@ function Alerts() {
         <Table
           onRow={(record) => ({
             onClick: () => clickEventAlert(record.id),
-            style: { backgroundColor: record.id === active ? "#001629" : '' }
+            style: { backgroundColor: record.id === active ? "#0A1016" : '' }
 
           })}
           columns={columns}
