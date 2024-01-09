@@ -34,11 +34,11 @@ function Sites() {
   const [SitesId, setSitesId] = useState();
   const [site, setSite] = useState([]);
   const [open, setOpen] = useState(false);
-
-  // console.log(open);
+  const [columnsData, setColumnsData]= useState([]);
   const context = useContext(AppContext);
   const [form] = Form.useForm();
   const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
+  console.log(columnsData);
 
   const screenHeight = window.innerHeight - 340;
   const validateMessages = {
@@ -66,7 +66,6 @@ function Sites() {
       width: 300,
       ellipsis: true,
       sorter: (a, b) => a.id.localeCompare(b.id),
-      hidden: true
     },
     {
       title: "Name",
@@ -271,7 +270,6 @@ function Sites() {
       dataIndex: "weatherStationRef",
       key: "16",
       width: 200,
-      hidden:true,
       ellipsis: true,
       sorter: (a, b) => a.weatherStationRef.localeCompare(b.weatherStationRef),
       filters: Array.from(new Set(site.map(item => item.weatherStationRef))).map((name, index) => ({
@@ -299,14 +297,19 @@ function Sites() {
       ),
     },
   ].filter(item => !item.hidden);
-
+  const selectedOptions = (selectedItems) => {
+    const selectedOptions = columns.filter((item) => selectedItems.includes(item.key));
+      setColumnsData(selectedOptions);
+  };
+  console.log(columnsData)
 
   let data = [];
   const getData = async () => {
     setIsLoading(true);
     try {
 
-      const sites = await getApiDataFromAws("queryType=site")
+      const sites = await getApiDataFromAws("queryType=site");
+      
       console.log(sites)
       const body = {
         funcName: 'createStateRecordsFromJson',
@@ -398,19 +401,19 @@ function Sites() {
             size="small"
             placeholder="search here ..."
             value={searchText}
-            onChange={(e) => onChangeText(e.target.value)}
+            onChange={(e) => setColumnsData(e.target.value)}
             className="custom-input"
           />
         </Col>
         <Col span={6}>
           <Select
             placeholder="Select Columna Name"
-            defaultValue={"Select Columns Name"}
             mode="multiple"
             style={{ width: "100%", padding: "5px" }}
+            onChange={selectedOptions}
           >
             {columns.map((item, index) => (
-              <Select.Option key={index} item={item.title}>{item.title}</Select.Option>
+              <Select.Option key={index} item={item}>{item.title}</Select.Option>
             ))}
           </Select>
         </Col>
@@ -472,7 +475,6 @@ function Sites() {
                 wrapperCol={{ span: 24 }}
               >
                 <Input className="form_input" />
-
               </Form.Item>
             </Col>
           </Row>
@@ -514,7 +516,6 @@ function Sites() {
               // rules={[{ required: "" }]}
               >
                 <Select
-                  className="custom-selcet"
                   placeholder="Select Project"
                   value={selectedItems}
                   onChange={setSelectedItems}
@@ -522,7 +523,7 @@ function Sites() {
                   style={{ width: "100%" }}
                 >
                   {[...new Set(site.map(item => item.projId))].map((item, index) => (
-                    <Select.Option key={index} value={item}>
+                    <Select.Option key={index} value={item} >
                       {item}
                     </Select.Option>
                   ))}
@@ -685,7 +686,7 @@ function Sites() {
       </Modal>
       <Spin spinning={isLoading} indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} />}>
         <Table
-          columns={columns}
+          columns={columnsData.length > 0?columnsData:columns}
           dataSource={site}
           rowKey={"id"}
           scroll={{
