@@ -34,12 +34,11 @@ function Sites() {
   const [SitesId, setSitesId] = useState();
   const [site, setSite] = useState([]);
   const [open, setOpen] = useState(false);
-   const [selectedColumns, setSelectedColumns] = useState([]);
-
-  // console.log(open);
+  const [selectedColumns, setSelectedColumns] = useState([]);
   const context = useContext(AppContext);
   const [form] = Form.useForm();
   const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
+  console.log(columnsData);
 
   const screenHeight = window.innerHeight - 340;
   const validateMessages = {
@@ -272,7 +271,6 @@ function Sites() {
       dataIndex: "weatherStationRef",
       key: "16",
       width: 200,
-      hidden:true,
       ellipsis: true,
       sorter: (a, b) => a.weatherStationRef.localeCompare(b.weatherStationRef),
       filters: Array.from(new Set(site.map(item => item.weatherStationRef))).map((name, index) => ({
@@ -398,7 +396,7 @@ function Sites() {
             size="small"
             placeholder="search here ..."
             value={searchText}
-            onChange={(e) => onChangeText(e.target.value)}
+            onChange={(e) => setColumnsData(e.target.value)}
             className="custom-input"
           />
         </Col>
@@ -415,7 +413,6 @@ function Sites() {
             </Select.Option>
           ))}
         </Select>
-
         </Col>
       </Row>
       <Modal
@@ -475,7 +472,6 @@ function Sites() {
                 wrapperCol={{ span: 24 }}
               >
                 <Input className="form_input" />
-
               </Form.Item>
             </Col>
           </Row>
@@ -517,7 +513,6 @@ function Sites() {
               // rules={[{ required: "" }]}
               >
                 <Select
-                  className="custom-selcet"
                   placeholder="Select Project"
                   value={selectedItems}
                   onChange={setSelectedItems}
@@ -525,7 +520,7 @@ function Sites() {
                   style={{ width: "100%" }}
                 >
                   {[...new Set(site.map(item => item.projId))].map((item, index) => (
-                    <Select.Option key={index} value={item}>
+                    <Select.Option key={index} value={item} >
                       {item}
                     </Select.Option>
                   ))}

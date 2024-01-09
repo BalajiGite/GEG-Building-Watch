@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Spin, Divider, Select, Tooltip } from "antd";
 import { Form, Input, Table } from "antd";
 import { Button, Row, Col, Modal, Popover, ConfigProvider } from "antd";
@@ -7,6 +7,7 @@ import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { getAlertConfList } from "../services/alertConfService";
 import { getApiDataFromAws, postAlertsApiDataToAws } from "../services/apis";
+// import { AlertTabeWidget } from "../components/widgets/AlertTableswidgest/AlertTable"
 import {
   addAlerts,
   deleteAlerts,
@@ -16,8 +17,8 @@ import {
 import { RiDeleteBin6Line } from "react-icons/ri";
 import AlertModel from "./AlertConfiguration";
 import spinnerjiff from "../assets/images/loader.gif";
-import {dummycolumns} from "../components/widgets/siteDummyData/AlertTable"
-import { dummydataSource } from "../components/widgets/siteDummyData/AlertTable";
+// import { showalertscolumns } from "../components/widgets/AlertTableswidgest/AlertTable"
+import { buildQueries } from "@testing-library/react";
 
 const layout = {
   labelCol: {
@@ -45,9 +46,9 @@ function Alerts() {
   const [active, setActive] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [alert, setAlert] = useState();
-
+  const [showalertsData, setShowAlertsData] = useState([]);
   const [form] = Form.useForm();
-  
+  const Id = useRef(1);
   // const [confForm] = Form.useForm();
   const screenHeight = window.innerHeight - 340;
 
@@ -96,6 +97,111 @@ function Alerts() {
     setAlertsId();
     form.resetFields();
   };
+
+  const DynamicColumns = (data) => {
+    let dynamicColumns = [];
+    if (data.some(item => item.alertconfigurationid)) {
+      dynamicColumns.push(
+        {
+          title: "Alert Configuration Id",
+          dataIndex: "alertconfigurationid",
+          key: "1",
+          width: 300,
+          ellipsis: true,
+          sorter: (a, b) => a.id.localeCompare(b.id),
+
+        })
+    }
+
+    if (data.some(item => item.startdate)) {
+      dynamicColumns.push(
+        {
+          title: "Start Date",
+          dataIndex: "startdate",
+          key: "6",
+          width: 200,
+          ellipsis: true,
+          sorter: (a, b) => a.armsProjectId.localeCompare(b.armsProjectId),
+        }
+      )
+    }
+
+    if (data.some(item => item.enddata)) {
+      dynamicColumns.push(
+        {
+          title: "End Date",
+          dataIndex: "enddate",
+          key: "7",
+          width: 200,
+          ellipsis: true,
+          sorter: (a, b) => a.tz.localeCompare(b.tz),
+        }
+      )
+    }
+
+    if (data.some(item => item.emailsendtime)) {
+      dynamicColumns.push(
+        {
+          title: "Email Send Time",
+          dataIndex: "emailsendtime",
+          key: "9",
+          width: 200,
+          ellipsis: true,
+          sorter: (a, b) => a.observesHolidays.localeCompare(b.observesHolidays),
+        }
+      )
+    }
+    if (data.some(item => item.rangeconsumption)) {
+      dynamicColumns.push(
+        {
+          title: "Range Consumption",
+          dataIndex: "rangeconsumption",
+          key: "10",
+          width: 200,
+          ellipsis: true,
+          sorter: (a, b) => a.geoCountry.localeCompare(b.geoCountry),
+
+        }
+      )
+    }
+    if (data.some(item => item.rangetarget)) {
+      dynamicColumns.push(
+        {
+          title: "Range Target",
+          dataIndex: "rangetarget",
+          key: "11",
+          width: 200,
+          ellipsis: true,
+          sorter: (a, b) => a.geoAddress.localeCompare(b.geoAddress),
+        }
+      )
+    }
+    if (data.some(item => item.ytdconsumption)) {
+      dynamicColumns.push(
+        {
+          title: "Ytd Consumption",
+          dataIndex: "ytdconsumption",
+          key: "12",
+          width: 200,
+          ellipsis: true,
+          sorter: (a, b) => a.long.localeCompare(b.long),
+        },
+      )
+    }
+    if (data.some(item => item.ytdtarget)) {
+      dynamicColumns.push(
+        {
+          title: "Ytd Target",
+          dataIndex: "ytdtarget",
+          key: "13",
+          width: 200,
+          ellipsis: true,
+          sorter: (a, b) => a.lat.localeCompare(b.lat),
+        },
+      )
+    }
+    return dynamicColumns;
+  }
 
   const columns = [
     {
@@ -252,6 +358,9 @@ function Alerts() {
       filterSearch: true,
       onFilter: (value, record) => record.isactive.startsWith(value),
     },
+
+    ...DynamicColumns(showalertsData),
+
     {
       title: "Actions",
       dataIndex: "actions",
@@ -277,7 +386,7 @@ function Alerts() {
     try {
 
       const body = {
-        funcName: "getAlertConfigurationsData"
+        funcName: "getAlertConfigurationsData",
       };
       const alertsData = await postAlertsApiDataToAws(body);
       const alertList = await getApiDataFromAws("queryType=dropdownSite");
@@ -290,6 +399,20 @@ function Alerts() {
       setIsLoading(false);
     } catch (error) { }
   };
+
+  const showAlert = async (id, buttonValue) => {
+    try {
+      const body = {
+        funcName: buttonValue === 1 ? "getSuccessExecutionsForId" : buttonValue === 2 ? "getQueuedExecutionsForId" : buttonValue === 3 ? "getFailedExecutionsForId" : "",
+        acId: id,
+      }
+      const alertsData = await postAlertsApiDataToAws(body);
+      setShowAlertsData(alertsData);
+      console.log("showing data", alertsData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const setData = async (formData) => {
     try {
@@ -322,9 +445,9 @@ function Alerts() {
 
   const content = (record) => (
     <>
-      <a onClick={() => onEdit(record)} style={{color:"white"}}>EDIT</a>
+      <a onClick={() => onEdit(record)} style={{ color: "white" }}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)} style={{color:"white"}}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{ color: "white" }}>DELETE</a>
     </>
   )
   // const filter = (text) => {
@@ -361,9 +484,11 @@ function Alerts() {
     getData();
   }, []);
 
-  const showModal = () => {
+  const showModal = async (btnValue) => {
+    showAlert(Id.current, btnValue);
     setOpenModal(true);
-  };
+  }
+
 
   const handleOk = () => {
     setOpenModal(false);
@@ -376,47 +501,49 @@ function Alerts() {
 
   let elementbutton = (
     <>
-      <button className="custom-button" type="button" onClick={showModal}>
+      <button className="custom-button" type="button" onClick={() => showModal(1)}>
         Show Sent Alert
       </button>
-      <button className="custom-button" type="button" onClick={showModal}
+      <button className="custom-button" type="button" onClick={() => showModal(2)}
         style={{ marginLeft: "4px", marginRight: "4px" }}
       >Show Queued Alerts</button>
-      <button className="custom-button" type="button" onClick={showModal}>
+      <button className="custom-button" type="button" onClick={() => showModal(3)}>
         Show Failed Alerts
       </button>
     </>);
 
+
   const clickEventAlert = (RowId) => {
-    console.log(RowId);
-    setActive(RowId)
+    Id.current = RowId;
     setAlert(elementbutton);
+    setActive(RowId)
   }
-
-
   return (
     <>
-     <Modal title="Basic Modal" 
-      width="70%"
-      open={openModal} onOk={handleOk}
-       onCancel={handleCancel}>
-       <Table dataSource={dummydataSource}
-        columns={dummycolumns}
-        scroll={{
-          x:1000,
-          y:300
-        }} 
-       />;
+      <Modal title="Basic Modal"
+        width="70%"
+        open={openModal} onOk={handleOk}
+        onCancel={handleCancel}>
+        <Table
+          dataSource={showalertsData}
+          columns={columns}
+          size="large"
+          rowKey={"id"}
+          scroll={{
+            x: 1000,
+            y: 300
+          }}
+        />;
       </Modal>
 
       {" "}
       <Row>
-        <Col span={6}>
+        <Col span={3}>
           <button className="mb-5 custom-button" type="primary" onClick={() => setOpen(true)}>
             Add New Alert
           </button>
         </Col>
-        <Col span={12}>{alert}</Col>
+        <Col span={15}>{alert}</Col>
         <Col span={6} style={{ marginBottom: 10 }}>
           <Input
             size="small"
@@ -688,11 +815,11 @@ function Alerts() {
       </Modal>{" "}
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
         <Table
-         onRow={(record) => ({
-          onClick: () => clickEventAlert(record.id),
-          style: { backgroundColor: record.id === active ? "#001629" : '' }
+          onRow={(record) => ({
+            onClick: () => clickEventAlert(record.id),
+            style: { backgroundColor: record.id === active ? "#001629" : '' }
 
-        })}
+          })}
           columns={columns}
           dataSource={post}
           rowKey={"id"}

@@ -120,7 +120,7 @@ export default class SignIn extends Component {
       <>
         <Layout className="" style={{ backgroundColor: "#0A1016"}}>
           <Content className="">
-            <Row gutter={[16, 0]}>
+            <Row gutter={[0, 0]}>
               <Col
                 xs={24}
                 sm={24}
@@ -133,7 +133,7 @@ export default class SignIn extends Component {
                 <Image
                   src={signinbg}
                   alt=""
-                  Height="100%"
+                  height="100vh"
                   width="100%"
                   preview={false}
                 />

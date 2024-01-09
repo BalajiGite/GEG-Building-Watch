@@ -112,8 +112,6 @@ const profile = (
     </div>
     <div>
       <h6>Account Setting</h6>
-      <hr style={{boxSizing:"border-box"}} />
-      <h6>Teams</h6>
       <hr style={{boxSizing:"border-box"}}/>
       <NavLink to ={"/sign-in"}><h6>Logout</h6></NavLink>
     </div>
@@ -357,7 +355,7 @@ function Header({
           <Col >
             <ConfigProvider>
               <Popover placement="bottomLeft" content={profile}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 40 40" fill="none" style={{ cursor: 'pointer' }}>
+                <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 40 40" fill="none" style={{ cursor: 'pointer',width:"auto",height:"30px" }}>
                   <circle cx="20" cy="20" r="20" fill="#1B2228" />
                   <text x="50%" y="50%" text-anchor="middle" alignment-baseline="middle" font-size="14" fill="#fff">NL</text>
                 </svg>

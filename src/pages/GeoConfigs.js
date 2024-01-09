@@ -360,7 +360,7 @@ function Config() {
       </Row>
       <Modal
         style={{ textAlign: "left" }}
-        title={activeButton == 0 ? "Add New State" : activeButton == 1 ? "Add New Region" : "Add New Level"}
+        title={activeButton == 1 ? "Add New State" : activeButton == 2 ? "Add New Region" : "Add New Level"}
         centered
         open={open}
         // onOk={() => setOpen(false)}
