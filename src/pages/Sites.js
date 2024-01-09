@@ -38,7 +38,6 @@ function Sites() {
   const context = useContext(AppContext);
   const [form] = Form.useForm();
   const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
-  console.log(columnsData);
 
   const screenHeight = window.innerHeight - 340;
   const validateMessages = {
@@ -396,7 +395,7 @@ function Sites() {
             size="small"
             placeholder="search here ..."
             value={searchText}
-            onChange={(e) => setColumnsData(e.target.value)}
+            onChange={(e) => onChangeText(e.target.value)}
             className="custom-input"
           />
         </Col>
