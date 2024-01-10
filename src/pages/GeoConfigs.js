@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import Region from "../components/widgets/Region";
 import Level from "../components/widgets/Level";
-import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
+import { getApiDataFromAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
 import {
   Select, Divider, Modal, Table, Form,
   Input, Button, Card, Col, Row, Spin,
@@ -36,6 +36,7 @@ function Config() {
   const [activeButton, setActiveButton] = useState(1);
   const [searchText, setSearchText] = useState("");
   const [templocationData, setTempLocationData] = useState([])
+  const [isEditable , setIsEditable] = useState()
   const [form] = Form.useForm();
 
   const screenHeight = window.innerHeight - 340;
@@ -172,6 +173,7 @@ function Config() {
       Ellipsis: true,
 
       render: (text, record, index) => (
+        isEditable?
         <>
           <ConfigProvider>
             <Popover placement="bottomLeft" content={() => content(record)}>
@@ -179,6 +181,7 @@ function Config() {
             </Popover>
           </ConfigProvider>
         </>
+        :null
       ),
     },
   ];
@@ -200,14 +203,23 @@ function Config() {
   const getData = async (dataValues) => {
     setIsLoading(true);
     try {
-
+      let locationConfigData;
       var locationData = [];
       if (dataValues === 1) {
         locationData = await getApiDataFromAws("queryType=state")
+        locationConfigData = await getConfigDataFromAws("state")
+        setIsEditable(locationConfigData.isEditable)
       } else if (dataValues === 2) {
         locationData = await getApiDataFromAws("queryType=region")
+        locationConfigData = await getConfigDataFromAws("region")
+        setIsEditable(locationConfigData.isEditable)  
+        console.log(locationConfigData)
+
       } else if (dataValues === 3) {
         locationData = await getApiDataFromAws("queryType=level")
+        locationConfigData = await getConfigDataFromAws("level")
+        setIsEditable(locationConfigData.isEditable)  
+        console.log(locationConfigData) 
       }
       setLocationData(locationData);
       setTempLocationData(locationData);

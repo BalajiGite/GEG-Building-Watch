@@ -3,12 +3,11 @@ import { Button, Row, Col, Modal, Select, Popover, ConfigProvider } from "antd";
 import { Form, Input, Table, Divider, Spin, Radio } from "antd";
 import { EllipsisOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
-import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
+import { getApiDataFromAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
 import { targetEdit, addTarget } from '../services/targetService';
 import spinnerjiff from "../assets/images/loader.gif";
 
 function Targets() {
-  const [targetWidget, setTargetWidget] = useState(1);
   const [activeButton, setActiveButton] = useState(1);
   const [targets, setTargets] = useState([])
   const [targetTempData, setTargetTempData] = useState([]);
@@ -18,11 +17,12 @@ function Targets() {
   const [targetId, setTargetId] = useState();
   const [searchText, setSearchText] = useState("");
   const [selectedItem, setSelectedItem] = useState();
+  const [isEditable, setIsEditable] = useState();
+
   const [form] = Form.useForm();
 
   const screenHeight = window.innerHeight - 340;
-
-
+ 
   const onCancelModal = () => {
     setOpen(false);
     form.resetFields();
@@ -359,6 +359,7 @@ function Targets() {
       width: 200,
       Ellipsis: true,
       render: (text, record, index) => (
+        isEditable.isEditable?
         <>
           <ConfigProvider>
             <Popover placement="bottomLeft" content={() => content(record)}>
@@ -366,6 +367,7 @@ function Targets() {
             </Popover>
           </ConfigProvider>
         </>
+        :null 
       ),
     },
   ];
@@ -396,16 +398,25 @@ function Targets() {
   )
 
   const getData = async (dataValues) => {
+    let targetConfigData;
     setIsLoading(true);
     try {
 
       var targetsData = [];
       if (dataValues === 1) {
         targetsData = await getApiDataFromAws("queryType=elecTargetProfile")
+        targetConfigData = await getConfigDataFromAws("elecTargetProfile")
+        setIsEditable(targetConfigData);
+        
+        console.log(targetConfigData); 
       } else if (dataValues === 2) {
         targetsData = await getApiDataFromAws("queryType=waterTargetProfile")
+        targetConfigData = await getConfigDataFromAws("waterTargetProfile")
+        setIsEditable(targetConfigData);
       } else if (dataValues === 3) {
         targetsData = await getApiDataFromAws("queryType=gasTargetProfile")
+        targetConfigData = await getConfigDataFromAws("gasTargetProfile")
+        setIsEditable(targetConfigData);
       }
       setTargets(targetsData);
       setTargetTempData(targetsData);
@@ -521,9 +532,10 @@ function Targets() {
                   onClick={setSelectedItem}
                   size='large'
                   style={{ width: "100%" }}
+                  disabled
                 >
                   {[...new Set(targets.map(item => item.name))].map((item, index) => (
-                    <Select.Option key={index} value={item}>{item}</Select.Option>
+                    <Select.Option key={index} value={item} readOnly>{item}</Select.Option>
                   ))}
 
                 </Select>
@@ -607,7 +619,7 @@ function Targets() {
                 name={"unit"}
                 label="Unit"
                 wrapperCol={24}>
-                <Input className='form_input' />
+                <Input className='form_input' readOnly/>
               </Form.Item>
             </Col>
           </Row>

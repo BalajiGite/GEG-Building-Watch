@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Spin, Divider, Select } from "antd";
 import { Form, Input, Table } from "antd";
 import { Button, Row, Col, Modal, Popover, ConfigProvider } from "antd";
@@ -14,6 +14,7 @@ import {
   editSites,
 } from "../services/sitesService";
 import spinnerjiff from "../assets/images/loader.gif";
+import { useReducer } from "react";
 const layout = {
   labelCol: {
     span: 8,
@@ -36,9 +37,9 @@ function Sites() {
   const [open, setOpen] = useState(false);
   const [regionListData, setRegionListData] = useState([]);
   const [selectedColumns, setSelectedColumns] = useState([]);
+  const siteConfigData = useRef();
   const context = useContext(AppContext);
   
- 
   const screenHeight = window.innerHeight - 340;
   const validateMessages = {
     required: "${label} is required!",
@@ -302,6 +303,7 @@ function Sites() {
       width: 200,
       ellipsis: true,
       render: (text, record, index) => (
+        siteConfigData.current?
         <>
           <ConfigProvider>
             <Popover placement="bottomLeft" content={() => content(record)} >
@@ -309,6 +311,7 @@ function Sites() {
             </Popover>
           </ConfigProvider>
         </>
+        :null
       ),
     },
   ]
@@ -319,8 +322,7 @@ function Sites() {
 
       const sites = await getApiDataFromAws("queryType=site")
       const sitesConfigData = await getConfigDataFromAws("site");
-      console.log(sitesConfigData)
-     
+      siteConfigData.current = sitesConfigData.isEditable;
       const regionList = await getApiDataFromAws("queryType=dropdownRegion");
       setRegionListData(regionList);
       setSiteData(sites);
@@ -329,7 +331,7 @@ function Sites() {
       setIsLoading(false);
     } catch (error) { }
   };
-
+  console.log(site);
   const setData = async () => {
     try {
 
