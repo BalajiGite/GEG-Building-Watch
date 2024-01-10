@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Spin, Divider, Select, Radio } from "antd";
 import { Form, Input, Table } from "antd";
 import { Button, Row, Col, Modal, Popover, ConfigProvider } from "antd";
+import { message } from 'antd';
 import "reactjs-popup/dist/index.css";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
@@ -28,6 +29,9 @@ const layout = {
 function Meter() {
   const [searchText, setSearchText] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
+  const [siteListData, setSiteListData] = useState({});
+  const [levelListData, setLevelListData] = useState({});
+  const [gateListData, setGateListData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [meters, setMeters] = useState([]);
   const [loading, setloading] = useState(true);
@@ -53,7 +57,17 @@ function Meter() {
   const onCancelModal = () => {
     setOpen(false);
     setMeterId();
+    setLevelListData({});
+    setGateListData({})
     form.resetFields();
+  };
+
+  const onOpenModal = () => {
+    setOpen(true);
+  };
+
+  const onOpenModalCheck = () => {
+    return open
   };
 
   const MeterChangeData = (changeTableData) => {
@@ -161,13 +175,14 @@ function Meter() {
       width: 300,
       Ellipsis: true,
       sorter: (a, b) => a.gegNabersInclusionPercent - b.gegNabersInclusionPercent,
-      filters: Array.from(new Set(meters.map(item => item.gegNabersInclusionPercent))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.gegNabersInclusionPercent.startsWith(value),
+    },
+    {
+      title: "GEG Nabers Exclusion Percent",
+      dataIndex: "gegNabersExclusionPercent",
+      key: "7",
+      width: 300,
+      Ellipsis: true,
+      sorter: (a, b) => a.gegNabersExclusionPercent - b.gegNabersExclusionPercent,
     },
     {
       title: "Level Reference",
@@ -240,6 +255,7 @@ function Meter() {
       const resp = await getMeterList();
       let meterData = [];
       let configData = {};
+      const sitesList = await getApiDataFromAws("queryType=dropdownSite")
       if (changeTableData === 1) {
         meterData = await getApiDataFromAws("queryType=elecMeters");
         configData = await getConfigDataFromAws("elecMeters");
@@ -253,7 +269,7 @@ function Meter() {
         configData = await getConfigDataFromAws("gasMeters");
       }
 
-      
+      setSiteListData(sitesList);
       setMeters(meterData);
       setTempData(meterData)
       setloading(false);
@@ -261,15 +277,44 @@ function Meter() {
     } catch (error) { }
   };
 
-  const setData = async (formData) => {
+  const setData = async () => {
     try {
+      var formData = form.getFieldsValue();
+
+      const modifiedFormData = {
+        ...formData, 
+        meterAdditionalName: formData.name, 
+        siteName: formData.siteRef, 
+        levelName: formData.levelRef.replace(formData.siteRef, "").trim(), 
+        gegNabersExclusionPercent: formData.gegNabersExclusionPercent !=""?Number(formData.gegNabersExclusionPercent):"", 
+        gegNabersInclusionPercent: formData.gegNabersInclusionPercent !=""?Number(formData.gegNabersInclusionPercent):"",  
+        isGateMeter: formData.gateMeter,
+        submeterOf: formData.meter,
+      };
+
+
+
+      const { name,levelRef,gateMeter, meter,siteRef, ...objectWithoutName } = modifiedFormData
+
       if (MeterId) {
         const resp = await editMeter(MeterId, formData);
       } else {
-        const resp = await addMeter(formData);
+        const body = {
+          funcName: 'createMeterRecordsFromJson',
+          recList: [objectWithoutName]
+        };
+        console.log(objectWithoutName);
+        const addNewMeter = await postApiDataToAws(body)
+        if (addNewMeter && addNewMeter.message ==="Success") {
+          console.log('Site added successfully:', addNewMeter);
+          message.success('Site added successfully');
+        } else {
+          console.log('Failed to add site:', addNewMeter);
+          message.error('Failed to add site');
+        }
       }
       onCancelModal();
-      getData();
+      getData(activeButton);
     } catch (error) {
       console.log(error);
     }
@@ -318,6 +363,35 @@ function Meter() {
     setMeters(filtersData);
   };
 
+  const handleSiteChange = async (siteId) => {
+    
+    // Fetch level data based on the selected site
+    //const levelData = await getLevelDataForSite(siteId);
+    const base64SiteId = btoa(siteId).replace(/=+$/, '');
+    console.log(base64SiteId)
+    const levelData = await getApiDataFromAws("queryType=dropdownLevel&dropdownSiteFilter=" + base64SiteId)
+    const gateMeterData = await getApiDataFromAws("queryType=dropdownElecGateMeters&dropdownSiteFilter=" + base64SiteId)
+    setLevelListData(levelData);
+    setGateListData(gateMeterData);
+  };
+
+  const getDefaultGegEquipType = (activeButton) => {
+    switch (activeButton) {
+      case 1:
+        return "pm";
+      case 2:
+        return "wm";
+      case 3:
+        return "gm";
+      default:
+        return "";
+    }
+  };
+  
+  useEffect(() => {
+    form.setFieldsValue({ gegEquipType: getDefaultGegEquipType(activeButton) });
+  }, [activeButton, onCancelModal]);
+
   useEffect(() => {
     getData(1);
     setActiveButton(1);
@@ -349,8 +423,8 @@ function Meter() {
           </Radio.Group>
 
 
-          <button className="mb-5 custom-button" onClick={() => setOpen(true)} style={{ marginLeft: "20px" }}>
-          {activeButton===1?"Add New Electric":activeButton===2?"Add New Water":"Add New Gas"}
+          <button className="mb-5 custom-button" onClick={() => onOpenModal()} style={{ marginLeft: "20px" }}>
+            {activeButton===1?"Add New Electric":activeButton===2?"Add New Water":"Add New Gas"}
           </button>
         </Col>
         <Col span={6} style={{ marginBottom: 10 }}>
@@ -367,7 +441,7 @@ function Meter() {
         style={{ textAlign: "left" }}
         title="Create New Meter"
         centered
-        open={open}
+        open={onOpenModalCheck()}
         onCancel={() => onCancelModal()}
         width={700}
         footer={null}
@@ -390,7 +464,12 @@ function Meter() {
                 label="Meter Additional Name"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter the Meter Additional Name.',
+                  },
+                ]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -402,11 +481,10 @@ function Meter() {
               <Form.Item
                 name={"gegEquipType"}
                 label="Geg Equip Type"
-                // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
               // rules={[{ required: "" }]}
               >
-                <Input className="form_input" />
+                <Input className="form_input" readOnly/>
               </Form.Item>
             </Col>
           </Row>
@@ -418,17 +496,23 @@ function Meter() {
                 label="Select Site"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Site.',
+                  },
+                ]}
               >
                 <Select
                   placeholder="Select Site"
                   value={selectedItems}
-                  onChange={setSelectedItems}
+                  onChange={handleSiteChange}
                   size="large"
                   style={{ width: "100%" }}
                 >
-                  {
-                    [...new Set(meters.map(item => item.siteRef))].map((item, index) => (
-                      <Select.Option key={index} value={item}>{item}</Select.Option>
+                  {siteListData.length > 0 &&
+                    siteListData.map((item, index) => (
+                      <Select.Option key={index} value={item.name}>{item.name}</Select.Option>
                     ))
                   }
                 </Select>
@@ -442,7 +526,12 @@ function Meter() {
                 label="Select Level"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Level.',
+                  },
+                ]}
               >
                 <Select
                   placeholder="Select Level"
@@ -452,9 +541,11 @@ function Meter() {
                   style={{ width: "100%" }}
 
                 >
-                  {[...new Set(meters.map(item => item.levelRef))].map((item, index) => (
-                    <Select.Option key={index} value={item}>{item}</Select.Option>
-                  ))}
+                  {levelListData.length > 0 &&
+                    levelListData.map((item, index) => (
+                      <Select.Option key={index} value={item.name}>{item.name}</Select.Option>
+                    ))
+                  }
                 </Select>
               </Form.Item>
             </Col>
@@ -465,11 +556,16 @@ function Meter() {
               <Form.Item
                 name={"gegNabersInclusionPercent"}
                 label="Geg Nabers Inclusion Percent"
-                // labelCol={{ span: 4 }}
+                initialValue=""
                 wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
+                rules={[
+                  {
+                    pattern: /^[0-9]*$/,
+                    message: 'Please enter a valid number for the Percent less than 100.',
+                  }                 
+                ]}
               >
-                <Input className="form_input" />
+                <Input className="form_input" type="number"/>
               </Form.Item>
             </Col>
             {/* <Col span={12}>
@@ -489,13 +585,18 @@ function Meter() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"cumulative"}
+                name={"gegNabersExclusionPercent"}
                 label="Geg Nabers Exclusion Percent"
-                // labelCol={{ span: 4 }}
+                initialValue=""
                 wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
+                rules={[
+                  {
+                    pattern: /^[0-9]*$/,
+                    message: 'Please enter a valid number for the Percent less than 100.',
+                  }                 
+                ]}
               >
-                <Input className="form_input" />
+                <Input className="form_input" type="number"/>
               </Form.Item>
             </Col>
           </Row>
@@ -516,10 +617,11 @@ function Meter() {
                   size="large"
                   style={{ width: "100%" }}
                 >
-                  {[...new Set(meters.map(item => item.meter))].map((item, index) => (
-                    <Select.Option key={index} value={item}>{item}</Select.Option>
-
-                  ))}
+                  {gateListData.length > 0 &&
+                    gateListData.map((item, index) => (
+                      <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
+                    ))
+                  }
                 </Select>
                 {/* <Input className="form_input" /> */}
               </Form.Item>
@@ -542,11 +644,8 @@ function Meter() {
                   size="large"
                   style={{ width: "100%" }}
                 >
-                  {
-                    [...new Set(meters.map(item => item.gateMeter))].map((Item, index) => (
-                      <Select.Option key={index} value={Item}>{Item}</Select.Option>
-                    ))
-                  }
+                   <Select.Option value={true}>True</Select.Option>
+                   <Select.Option value={false}>False</Select.Option>
                 </Select>
                 {/* <Input className="form_input" /> */}
               </Form.Item>
@@ -556,7 +655,7 @@ function Meter() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"db"}
+                name={"help"}
                 label="Help"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
