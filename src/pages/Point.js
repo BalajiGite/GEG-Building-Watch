@@ -2,10 +2,10 @@ import "reactjs-popup/dist/index.css";
 import React, { useState } from "react";
 import { Spin, Divider, Select } from "antd";
 import { Form, Input, Table,Radio } from "antd";
-import { Button, Row, Col, Modal, Popover, ConfigProvider } from "antd";
+import { Button, Row, Col, Modal, Popover, ConfigProvider , message} from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
-import { getApiDataFromAws ,getConfigDataFromAws} from "../services/apis";
+import { getApiDataFromAws ,getConfigDataFromAws, postApiDataToAws} from "../services/apis";
 import {
   addSites,
   deleteSites,
@@ -58,6 +58,11 @@ export default function Point() {
   const onCancelModal = () => {
     setOpen(false);
     SetPointsId();
+    form.resetFields();
+  };
+
+  const onOpenModal = () => {
+    setOpen(true);
     form.resetFields();
   };
 
@@ -315,27 +320,57 @@ export default function Point() {
     } catch (error) { }
   };
   console.log(isEditable)
-  const setData = async (formData) => {
+
+  const setData = async () => {
     try {
+
+      var formData = form.getFieldsValue();
+
+      const modifiedFormData = {
+        ...formData, 
+        nem12PointAdditionalName: formData.name,
+        nem12PointIdentifier:formData.nem12Id,
+        pointId:""
+      };
+      const { name,nem12Id, ...objectWithoutName } = modifiedFormData
+
       if (PointsId) {
         const resp = await editSites(PointsId, formData);
       } else {
-        const resp = await addSites(formData);
+        const body = {
+          funcName: 'createNem12PointRecordsFromJson',
+          recList: [objectWithoutName]
+        };
+        console.log(objectWithoutName);
+        const addNewPoint = await postApiDataToAws(body)
+        if (addNewPoint && addNewPoint.message ==="Success") {
+          console.log('Point added successfully:', addNewPoint);
+          message.success('Point added successfully');
+        } else {
+          console.log('Failed to add Point:', addNewPoint);
+          message.error('Failed to add Point');
+        }
       }
       onCancelModal();
-      getData();
+      getData(activeButton);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const onSiteNameChange = (value) => {
+  const onSiteNameChange = async (value) =>  {
     // Fetch the corresponding armsProjectIds based on the selected siteName
     let siteBase64 = btoa(value).replace(/=+$/, '');
-
-    const selectedSite = siteListData.find((item) => item.id === value);
-    const meterDisOptions = selectedSite ? selectedSite.meterDis : [];
-    setMeterOptions([selectedSite]);
+    var meterDt =null;
+    if(activeButton ==1){
+      meterDt = await getApiDataFromAws("queryType=dropdownElecMeters&dropdownSiteFilter=" + siteBase64)
+    }else if(activeButton ==2){
+      meterDt = await getApiDataFromAws("queryType=dropdownWaterMeters&dropdownSiteFilter=" + siteBase64)
+    }else if(activeButton ==3){
+      meterDt = await getApiDataFromAws("queryType=dropdownGasMeters&dropdownSiteFilter=" + siteBase64)
+    }
+   
+    setMeterOptions(meterDt);
 
     // Clear the value of meterDis in the form
     form.setFieldsValue({
@@ -414,12 +449,12 @@ export default function Point() {
               }}
               onClick={() => pointChangeData(3)} >Gas</Radio.Button>
           </Radio.Group>
-          <button className="mb-5 custom-button" type="primary" onClick={() => setOpen(true)} style={{ marginLeft: "20px" }}>
+          <button className="mb-5 custom-button" type="primary" onClick={() => onOpenModal()} style={{ marginLeft: "20px" }}>
             {activeButton === 1 ? "Add New Electric" : activeButton === 2 ? "Add New Water" : "Add New Gas"}
           </button>
         </Col>
         <Col span={6} style={{ marginBottom: 10 }}> 
-          <Input
+          <Input 
             size="small"
             placeholder="search here ..."
             value={searchText}
@@ -445,14 +480,14 @@ export default function Point() {
           onFinish={setData}
           style={{ maxWidth: 700 }}
           form={form}
-          validateMessages={validateMessages}
+          //validateMessages={validateMessages}
         >
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
                 name={"name"}
                 label="Nem 12 Point Additional Name"
-                // labelCol={{ span: 4 }}
+                initialValue=""
                 wrapperCol={{ span: 24 }}
               // rules={[{ required: "" }]}
               >
@@ -465,10 +500,15 @@ export default function Point() {
             <Col span={24}>
               <Form.Item
                 name={"nem12Id"}
-                label="Nem 12 Point Idenfier Level"
-                // labelCol={{ span: 4 }}
+                label="Nem 12 Point Idenfier"
                 wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
+                rules={[
+                  {
+                    required: open,
+                    message: 'Please Enter Nem 12 Point Idenfier.',
+                  },
+                ]}
+                
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -479,11 +519,32 @@ export default function Point() {
             <Col span={24}>
               <Form.Item
                 name={"gegPointType"}
-                label="Select Geo Point Typ"
+                label="Select Point Type"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Point Type.',
+                  },
+                ]}
               >
-                <Input className="form_input" />
+                <Select
+                  placeholder="Select Point Type"
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                  size="large"
+                  style={{ width: "100%" }}
+                >
+                  {activeButton === 1 ? (
+                      <>
+                        <Select.Option value={"totalenergyactiveimport"}>totalenergyactiveimport</Select.Option>
+                        <Select.Option value={"totalenergyactiveexport"}>totalenergyactiveexport</Select.Option>
+                      </>
+                    ) : activeButton === 2?(
+                      <Select.Option value={"volumewater"}>volumewater</Select.Option>
+                    ):<Select.Option value={"volumegas"}>volumegas</Select.Option>}
+                </Select>
               </Form.Item>
             </Col>
           </Row>
@@ -507,7 +568,7 @@ export default function Point() {
                 >
                   {siteListData.length > 0 &&
                     siteListData.map((item, index) => (
-                      <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
+                      <Select.Option key={index} value={item.name}>{item.name}</Select.Option>
                     ))
                   }
                 </Select>
@@ -521,7 +582,12 @@ export default function Point() {
                 label="Select Meter Dis"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Meter Dis.',
+                  },
+                ]}
               >
                 <Select
                   placeholder="Select Meter Dis"
@@ -530,7 +596,7 @@ export default function Point() {
                 >
                   {meterOptions && meterOptions.length > 0 &&
                     meterOptions.map((item, index) => (
-                      <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
+                      <Select.Option key={index} value={item.name}>{item.name}</Select.Option>
                     ))
                   }
                 </Select>
@@ -540,9 +606,9 @@ export default function Point() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={""}
+                name={"help"}
                 label="Help"
-                // labelCol={{ span: 4 }}
+                initialValue=""
                 wrapperCol={{ span: 24 }}
               // rules={[{ required: "" }]}
               >
@@ -560,8 +626,7 @@ export default function Point() {
               <Col span={20} className="custom-modal-column">
                 <button
                   type=""
-
-                  htmlType=""
+                  htmlType="button"
                   onClick={() => onCancelModal()}
                 >
                   Cancel
