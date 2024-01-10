@@ -15,11 +15,6 @@ export const getApiDataFromAws = async (item) => {
         return console.error('Error fetching data:', error);
     }
 }
-
-const body = {
-    funcName: "createStateRecordsFromJson",
-    recList: [{ stateName: "TestState123FromGEMS" }],
-  };
   
 export const postApiDataToAws = async (body) => {
     try {

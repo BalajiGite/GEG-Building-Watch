@@ -306,10 +306,10 @@ function Meter() {
         console.log(objectWithoutName);
         const addNewMeter = await postApiDataToAws(body)
         if (addNewMeter && addNewMeter.message ==="Success") {
-          console.log('Site added successfully:', addNewMeter);
-          message.success('Site added successfully');
+          console.log('Meter added successfully:', addNewMeter);
+          message.success('Meter added successfully');
         } else {
-          console.log('Failed to add site:', addNewMeter);
+          console.log('Failed to add Meter:', addNewMeter);
           message.error('Failed to add site');
         }
       }
