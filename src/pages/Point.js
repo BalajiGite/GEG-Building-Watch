@@ -5,7 +5,7 @@ import { Form, Input, Table,Radio } from "antd";
 import { Button, Row, Col, Modal, Popover, ConfigProvider } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
-import { getApiDataFromAws } from "../services/apis";
+import { getApiDataFromAws ,getConfigDataFromAws} from "../services/apis";
 import {
   addSites,
   deleteSites,
@@ -35,6 +35,7 @@ export default function Point() {
   const [meterOptions, setMeterOptions] = useState([]);
   const [open, setOpen] = useState(false);
   const [activeButton, setActiveButton] = useState(1);
+  const [isEditable, setIsEditable] = useState()
   const [form] = Form.useForm();
   // const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
   const screenHeight = window.innerHeight - 340;
@@ -265,6 +266,7 @@ export default function Point() {
       Ellipsis: true,
       width: 200,
       render: (text, record, index) => (
+        isEditable?
         <>
           <ConfigProvider>
             <Popover placement="bottomLeft" content={() => content(record)}>
@@ -272,6 +274,7 @@ export default function Point() {
             </Popover>
           </ConfigProvider>
         </>
+        :null
       ),
     },
     // Add more columns as needed
@@ -281,17 +284,25 @@ export default function Point() {
 
 
 
+  let pointsConfigData;
   const getData = async (changeTableData) => {
     setIsLoading(true);
     let points = [];
     try {
       if (changeTableData === 1) {
         points = await getApiDataFromAws("queryType=elecPoints");
+        pointsConfigData = await getConfigDataFromAws("elecPoints");
+        setIsEditable(pointsConfigData.isEditable)
+        console.log(points);
       } else if (changeTableData === 2) {
         points = await getApiDataFromAws("queryType=waterPoints")
+        pointsConfigData = await getConfigDataFromAws("waterPoints");
+        setIsEditable(pointsConfigData.isEditable)
         console.log("water data", points);
       } else if (changeTableData === 3) {
         points = await getApiDataFromAws("queryType=gasPoints")
+        pointsConfigData = await getConfigDataFromAws("gasPoints");
+        setIsEditable(pointsConfigData.isEditable)
         console.log("gas data", points);
       }
 
@@ -303,6 +314,7 @@ export default function Point() {
       setIsLoading(false);
     } catch (error) { }
   };
+  console.log(isEditable)
   const setData = async (formData) => {
     try {
       if (PointsId) {

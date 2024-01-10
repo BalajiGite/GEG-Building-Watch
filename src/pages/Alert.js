@@ -6,7 +6,7 @@ import { EllipsisOutlined } from "@ant-design/icons";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { getAlertConfList } from "../services/alertConfService";
-import { getApiDataFromAws, postAlertsApiDataToAws } from "../services/apis";
+import { getApiDataFromAws, postAlertsApiDataToAws, getConfigDataFromAws } from "../services/apis";
 // import { AlertTabeWidget } from "../components/widgets/AlertTableswidgest/AlertTable"
 import {
   addAlerts,
@@ -47,6 +47,7 @@ function Alerts() {
   const [openModal, setOpenModal] = useState(false);
   const [alert, setAlert] = useState();
   const [showalertsData, setShowAlertsData] = useState([]);
+  const [btnValues, setbtnValue] = useState(0);
   const [form] = Form.useForm();
   const Id = useRef(1);
   // const [confForm] = Form.useForm();
@@ -68,7 +69,7 @@ function Alerts() {
   // console.log(open);
   let resp = [];
   const onAlertClick = async (record) => {
-    debugger;
+    // debugger;
     try {
       resp = await getAlertConfList();
     } catch (error) { }
@@ -360,7 +361,7 @@ function Alerts() {
     },
 
     ...DynamicColumns(showalertsData),
-
+    // btnValues !==0?null:
     {
       title: "Actions",
       dataIndex: "actions",
@@ -379,7 +380,6 @@ function Alerts() {
     },
   ];
 
-
   let data = [];
   const getData = async () => {
     setIsLoading(true);
@@ -390,7 +390,10 @@ function Alerts() {
       };
       const alertsData = await postAlertsApiDataToAws(body);
       const alertList = await getApiDataFromAws("queryType=dropdownSite");
+      const AlertConfigurationData = await getConfigDataFromAws("dropdownSite");
+      console.log("hiii", AlertConfigurationData)
       setAlertListData(alertList);
+      console.log(alertList);
       const resp = await getAlertsList();
       setPost(alertsData);
 
@@ -403,7 +406,11 @@ function Alerts() {
   const showAlert = async (id, buttonValue) => {
     try {
       const body = {
-        funcName: buttonValue === 1 ? "getSuccessExecutionsForId" : buttonValue === 2 ? "getQueuedExecutionsForId" : buttonValue === 3 ? "getFailedExecutionsForId" : "",
+        funcName:
+          buttonValue === 1 ? "getSuccessExecutionsForId"
+            : buttonValue === 2 ? "getQueuedExecutionsForId"
+              : buttonValue === 3 ? "getFailedExecutionsForId"
+                : "",
         acId: id,
       }
       const alertsData = await postAlertsApiDataToAws(body);
@@ -486,6 +493,7 @@ function Alerts() {
 
   const showModal = async (btnValue) => {
     showAlert(Id.current, btnValue);
+    setbtnValue(btnValue);
     setOpenModal(true);
   }
 
@@ -520,7 +528,7 @@ function Alerts() {
   }
   return (
     <>
-      <Modal title="Basic Modal"
+      <Modal title={btnValues === 1 ? "Show Sent Alert" : btnValues === 2 ? "Show Queued Alert" : "Show Failed Alert"}
         width="70%"
         open={openModal} onOk={handleOk}
         onCancel={handleCancel}>
