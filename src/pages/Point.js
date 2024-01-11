@@ -504,7 +504,7 @@ export default function Point() {
                 wrapperCol={{ span: 24 }}
                 rules={[
                   {
-                    required: open,
+                    required: true,
                     message: 'Please Enter Nem 12 Point Idenfier.',
                   },
                 ]}

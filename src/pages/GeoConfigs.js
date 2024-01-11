@@ -6,7 +6,7 @@ import { getApiDataFromAws, getConfigDataFromAws, postApiDataToAws } from "../se
 import {
   Select, Divider, Modal, Table, Form,
   Input, Button, Card, Col, Row, Spin,
-  Popover, ConfigProvider, Radio
+  Popover, ConfigProvider, Radio,message
 } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { useState } from "react";
@@ -23,16 +23,16 @@ const layout = {
 
 const validateMessages = {};
 
-const onFinish = (values) => {
-  console.log(values);
-};
-
 
 function Config() {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loading, setloading] = useState(true);
   const [locationData, setLocationData] = useState([]);
+  const [siteListData, setSiteListData] = useState([]);
+  const [stateListData, setStateListData] = useState([]);
+  const [projectListData, setProjectListData] = useState([]);
+  const [recordId, setRecordId] = useState();
   const [activeButton, setActiveButton] = useState(1);
   const [searchText, setSearchText] = useState("");
   const [templocationData, setTempLocationData] = useState([])
@@ -111,7 +111,7 @@ function Config() {
     }
     if (data.some(item => item.siteRef)) {
       dynamicColumns.push({
-        title: "Site ",
+        title: "Site",
         dataIndex: "siteRef",
         key: "siteRef",
         sorter: (a, b) => a.siteRef.localeCompare(b.siteRef),
@@ -185,6 +185,18 @@ function Config() {
       ),
     },
   ];
+
+  const onOpenModal = () => {
+    setOpen(true);
+    form.resetFields();
+  };
+
+  const onCancelModal = () => {
+    setOpen(false);
+    //SetPointsId();
+    form.resetFields();
+  };
+
   const changeWidgets = (widget) => {
     setActiveButton(widget);
     getData(widget);
@@ -221,6 +233,16 @@ function Config() {
         setIsEditable(locationConfigData.isEditable)  
         console.log(locationConfigData) 
       }
+
+      const sitesList = await getApiDataFromAws("queryType=dropdownSite");
+      setSiteListData(sitesList);
+
+      const stateList = await getApiDataFromAws("queryType=dropdownState");
+      setStateListData(stateList);
+
+      const projectList = await getApiDataFromAws("queryType=dropdownProjId");
+      setProjectListData(projectList);
+
       setLocationData(locationData);
       setTempLocationData(locationData);
       setloading(false);
@@ -243,6 +265,72 @@ function Config() {
     ));
     setLocationData(filtersData)
   }
+
+  const setData = async () => {
+    try {
+
+      var formData = form.getFieldsValue();
+
+      var objecttoPass = null;
+
+      var functionName = "";
+      var typeName = ""
+      if(activeButton == 1){
+        functionName = 'createStateRecordsFromJson';
+        const modifiedFormData = {
+          ...formData, 
+          stateName: formData.name,
+        };
+        const { name, ...objectWithoutName } = modifiedFormData;
+        objecttoPass = objectWithoutName;
+        typeName = "State"
+      }else if(activeButton == 2){
+        functionName = 'createRegionRecordsFromJson';
+        const modifiedFormData = {
+          ...formData, 
+          regionName: formData.name,
+          stateName:formData.stateRef
+        };
+        const { name,stateRef, ...objectWithoutName } = modifiedFormData;
+        objecttoPass = objectWithoutName;
+        typeName = "Region"
+      }else if(activeButton == 3){
+        functionName = 'createLevelRecordsFromJson';
+        const modifiedFormData = {
+          ...formData, 
+          levelName: formData.name,
+          siteName:formData.siteRef
+        };
+        const { level,siteRef, ...objectWithoutName } = modifiedFormData
+        objecttoPass = objectWithoutName;
+        typeName = "Level"
+      }
+
+      if (recordId) {
+        //const resp = await editSites(recordId, formData);
+      } else {
+        const body = {
+          funcName: functionName,
+          recList: [objecttoPass]
+        };
+        console.log(objecttoPass);
+        const addNewLoc = await postApiDataToAws(body)
+        if (addNewLoc && addNewLoc.message ==="Success") {
+          console.log(typeName +' added successfully:', addNewLoc);
+          message.success(typeName + ' added successfully');
+        } else {
+          console.log('Failed to add ' + typeName, addNewLoc);
+          message.error('Failed to add ' + typeName);
+        }
+      }
+      onCancelModal();
+      getData(activeButton);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
   useEffect(() => {
     getData(1);
     setActiveButton(1);
@@ -258,7 +346,7 @@ function Config() {
 
   const activeWidgestInputFields = () => {
     switch (activeButton) {
-      case 0:
+      case 1:
         return (
           <>
             <Row justify={"center"}>
@@ -268,6 +356,12 @@ function Config() {
                   label="State Name"
                   // labelCol={{ span: 4 }}
                   wrapperCol={{ span: 24 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please Enter State Name.',
+                    },
+                  ]}
                 >
                   <Input className="form_input" />
                 </Form.Item>
@@ -276,7 +370,7 @@ function Config() {
 
           </>
         )
-      case 1:
+      case 2:
         return (
           <>
             <Row justify={"center"}>
@@ -286,23 +380,89 @@ function Config() {
                   label="Region Name"
                   // labelCol={{ span: 4 }}
                   wrapperCol={{ span: 24 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please Enter Region Name.',
+                    },
+                  ]}
                 >
                   <Input className="form_input" />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row justify={"center"}>
+              <Col span={24}>
+                <Form.Item
+                  name={"stateRef"}
+                  label="Select State"
+                  // labelCol={{ span: 4 }}
+                  wrapperCol={{ span: 24 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please Select State.',
+                    },
+                  ]}
+                >
+                  <Select
+                    placeholder="Selct State"
+                    style={{ width: "100" }}>
+                    {stateListData.length > 0 &&
+                      stateListData.map((item, index) => (
+                        <Select.Option key={index} value={item.name}>{item.name}</Select.Option>
+                      ))
+                    }
+                  </Select>
+                  {/* <Input className="form_input" /> */}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row justify={"center"}>
+              <Col span={24}>
+                <Form.Item
+                  name={"projId"}
+                  label="Select Project"
+                  // labelCol={{ span: 4 }}
+                  wrapperCol={{ span: 24 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please Select Project.',
+                    },
+                  ]}
+                >
+                  <Select
+                    placeholder="Selct Project"
+                    style={{ width: "100" }}>
+                    {projectListData.length > 0 &&
+                      projectListData.map((item, index) => (
+                        <Select.Option key={index} value={item.projId}>{item.projName}</Select.Option>
+                      ))
+                    }
+                  </Select>
+                  {/* <Input className="form_input" /> */}
                 </Form.Item>
               </Col>
             </Row>
           </>
         )
-      case 2:
+      case 3:
         return (
           <>
             <Row justify={"center"}>
               <Col span={24}>
                 <Form.Item
-                  name={"level"}
+                  name={"name"}
                   label="Level Name"
                   // labelCol={{ span: 4 }}
                   wrapperCol={{ span: 24 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please Enter Level Name.',
+                    },
+                  ]}
                 >
                   <Input className="form_input" />
                 </Form.Item>
@@ -311,17 +471,25 @@ function Config() {
             <Row justify={"center"}>
               <Col span={24}>
                 <Form.Item
-                  name={"name"}
+                  name={"siteRef"}
                   label="Select Site Name"
                   // labelCol={{ span: 4 }}
                   wrapperCol={{ span: 24 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please Select Site Name.',
+                    },
+                  ]}
                 >
                   <Select
                     placeholder="Selct Site Name"
                     style={{ width: "100" }}>
-                    {locationData.map((item, index) => (
-                      <Select.Option key={index} item={item.name}>{item.name}</Select.Option>
-                    ))}
+                    {siteListData.length > 0 &&
+                      siteListData.map((item, index) => (
+                        <Select.Option key={index} value={item.name}>{item.name}</Select.Option>
+                      ))
+                    }
                   </Select>
                   {/* <Input className="form_input" /> */}
                 </Form.Item>
@@ -354,7 +522,7 @@ function Config() {
               }}
               onClick={() => changeWidgets(3)} >Level</Radio.Button>
           </Radio.Group>
-          <button className="mb-4 ml-4 custom-button" type="primary" onClick={() => setOpen(true)}>
+          <button className="mb-4 ml-4 custom-button" type="primary" onClick={() => onOpenModal()} >
             {activeButton === 1 ? "Add New State" : activeButton === 2 ? "Add New Ragion" : "Add New Level"}
           </button>
         </Col>
@@ -375,19 +543,17 @@ function Config() {
         title={activeButton == 1 ? "Add New State" : activeButton == 2 ? "Add New Region" : "Add New Level"}
         centered
         open={open}
-        // onOk={() => setOpen(false)}
-        onCancel={() => setOpen(false)}
+        onCancel={() => onCancelModal()}
         width={700}
         footer={null}
+        maskClosable={false}
       >
         <Form
-          className="modelForm"
           {...layout}
           name="nest-messages"
           style={{ minWidth: "100%" }}
           layout="vertical"
-          onFinish={onFinish}
-          validateMessages={validateMessages}
+          onFinish={setData}
           form={form}
           labelAlign=""
         >
@@ -399,17 +565,18 @@ function Config() {
             <Row>
               <Col span={20}  className="custom-modal-column">
                 <button
-                  onClick={() => setOpen(false)}
+                 
                   type=""
-                  htmlType="cancel"
-                  className="custom-modal-button"
+                  htmlType="button"
+                  onClick={() => onCancelModal()}
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={() => setOpen(false)}
                   type="primary"
+                  className="custom-modal-button"
                   htmlType="submit"
+                  //onClick={()=>setData()}
                 >
                   Save
                 </button>
