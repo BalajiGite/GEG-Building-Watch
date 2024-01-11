@@ -17,12 +17,25 @@ function Targets() {
   const [targetId, setTargetId] = useState();
   const [searchText, setSearchText] = useState("");
   const [selectedItem, setSelectedItem] = useState();
-  const [isEditable, setIsEditable] = useState();
-
+  const [isEditables, setIsEditables] = useState({});
+  const [newForm, setNewForm] = useState(false);
+  // const isEditable = useRef({});
+  console.log(isEditables);
   const [form] = Form.useForm();
 
   const screenHeight = window.innerHeight - 340;
- 
+// debugger
+// let edit = [];
+//  edit = Array.isArray(isEditable.current.editKeysUneditable)
+//     console.log(edit)
+
+const isFieldEditable = (fieldName) => {
+  return (
+    typeof isEditables.editKeysUneditable === 'object' &&
+    isEditables.editKeysUneditable.hasOwnProperty(fieldName)
+  );
+};
+
   const onCancelModal = () => {
     setOpen(false);
     form.resetFields();
@@ -359,19 +372,18 @@ function Targets() {
       width: 200,
       Ellipsis: true,
       render: (text, record, index) => (
-        isEditable.isEditable?
-        <>
-          <ConfigProvider>
-            <Popover placement="bottomLeft" content={() => content(record)}>
-              <EllipsisOutlined style={{ fontSize: "30px" }} />
-            </Popover>
-          </ConfigProvider>
-        </>
-        :null 
+        isEditables?.isEditable ?
+          <>
+            <ConfigProvider>
+              <Popover placement="bottomLeft" content={() => content(record)}>
+                <EllipsisOutlined style={{ fontSize: "30px" }} />
+              </Popover>
+            </ConfigProvider>
+          </>
+          : null
       ),
     },
   ];
-
   const targetWidgets = (widget) => {
     setActiveButton(widget);
     getData(widget);
@@ -387,45 +399,47 @@ function Targets() {
     form.setFieldsValue(record);
     setTargetId(record.id);
     setOpen(true);
+    setNewForm(false);
   };
 
   const content = (record) => (
     <>
-      <a onClick={() => onEdit(record)} style={{color:"white"}}>EDIT</a>
+      <a onClick={() => onEdit(record)} style={{ color: "white" }}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)} style={{color:"white"}}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{ color: "white" }}>DELETE</a>
     </>
   )
 
+  let targetConfigData = []
   const getData = async (dataValues) => {
-    let targetConfigData;
     setIsLoading(true);
+
     try {
 
-      var targetsData = [];
+      var targetsData = {};
       if (dataValues === 1) {
         targetsData = await getApiDataFromAws("queryType=elecTargetProfile")
         targetConfigData = await getConfigDataFromAws("elecTargetProfile")
-        setIsEditable(targetConfigData);
-        
-        console.log(targetConfigData); 
       } else if (dataValues === 2) {
         targetsData = await getApiDataFromAws("queryType=waterTargetProfile")
         targetConfigData = await getConfigDataFromAws("waterTargetProfile")
-        setIsEditable(targetConfigData);
+        // setIsEditable(targetConfigData);
       } else if (dataValues === 3) {
         targetsData = await getApiDataFromAws("queryType=gasTargetProfile")
         targetConfigData = await getConfigDataFromAws("gasTargetProfile")
-        setIsEditable(targetConfigData);
+        // setIsEditable(targetConfigData);
       }
       setTargets(targetsData);
       setTargetTempData(targetsData);
+      setIsEditables(targetConfigData)
+      // isEditable.current = targetConfigData;
+      // console.log("hii", isEditable.current)
       setloading(false);
       setIsLoading(false);
     } catch (error) { }
   };
-  const setData = async (storeFormData) => {
 
+  const setData = async (storeFormData) => {
     if (targetId) {
       const res = await targetEdit(targetId, storeFormData)
     }
@@ -454,12 +468,16 @@ function Targets() {
     setActiveButton(1);
   }, []);
 
+  const addNewFormHandler = () =>{
+    setOpen(true)
+    setNewForm(true)
+  }
   return (
     <div className="App">
       <Row>
         <Col span={18} style={{ marginBottom: 20 }}>
           <Radio.Group>
-            <Radio.Button className="ant-radio-button-css"  style={{
+            <Radio.Button className="ant-radio-button-css" style={{
               fontWeight: activeButton === 1 ? 'bold' : 'normal',
               color: activeButton === 1 ? '#FFFFFF' : '#8E8E8E',
             }} onClick={() => targetWidgets(1)} >Electric</Radio.Button>
@@ -479,7 +497,7 @@ function Targets() {
           <button
             className="mb-4 ml-4 custom-button"
             type="primary"
-            onClick={() => setOpen(true)}
+            onClick={addNewFormHandler}
           >
             {activeButton === 2 ? "Add New Water"
               : activeButton === 3 ? "Add New Gas" :
@@ -517,7 +535,7 @@ function Targets() {
           style={{ maxWidth: 1000 }}
           form={form}
           validateMessages={validateMessages}
-
+         
         >
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
@@ -532,10 +550,10 @@ function Targets() {
                   onClick={setSelectedItem}
                   size='large'
                   style={{ width: "100%" }}
-                  disabled
+                  disabled = {newForm?false:isFieldEditable("siteName")}
                 >
                   {[...new Set(targets.map(item => item.name))].map((item, index) => (
-                    <Select.Option key={index} value={item} readOnly>{item}</Select.Option>
+                    <Select.Option key={index} value={item} >{item}</Select.Option>
                   ))}
 
                 </Select>
@@ -569,7 +587,7 @@ function Targets() {
                 name={"ratingPeriodStart"}
                 label="Rating Period Start"
                 wrapperCol={24}>
-                <Input className='form_input' />
+                <Input className='form_input' readOnly={newForm?false:isFieldEditable('ratingPeriodStart')}/>
               </Form.Item>
             </Col>
           </Row>
@@ -579,7 +597,7 @@ function Targets() {
                 name={"ratingPeriodEnd"}
                 label="Rating Period End"
                 wrapperCol={24}>
-                <Input className='form_input' />
+                <Input className='form_input' readOnly={newForm?false:isFieldEditable('ratingPeriodEnd')}/>
               </Form.Item>
             </Col>
           </Row>
@@ -589,7 +607,8 @@ function Targets() {
                 name={activeButton === 2 ? "targetKl0" : activeButton === 3 ? "targetCum0" : "targetKwh0"}
                 label={activeButton === 2 ? "Target K10" : activeButton === 3 ? "Target Cum0" : "Target kwh0"}
                 wrapperCol={24}>
-                <Input className='form_input' />
+                <Input className='form_input' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl0'):activeButton===3?isFieldEditable("targetCum0"):
+              isFieldEditable('targetKwh0')}/>
               </Form.Item>
             </Col>
           </Row>
@@ -599,7 +618,7 @@ function Targets() {
                 name={activeButton === 2 ? "targetKl1" : activeButton === 3 ? "targetCum1" : "targetKwh1"}
                 label={activeButton === 2 ? "Target kl1" : activeButton === 3 ? "Target Cum1" : "Target kwh1"}
                 wrapperCol={24}>
-                <Input className='form_input' />
+                <Input className='form_input' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl1'):activeButton===3?isFieldEditable('targetCum1'):isFieldEditable('targetKwh1')}/>
               </Form.Item>
             </Col>
           </Row>
@@ -609,7 +628,7 @@ function Targets() {
                 name={activeButton === 2 ? "targetKl2" : "targetKwh2"}
                 label={activeButton === 2 ? "Target kl2" : "Target Kwh2"}
                 wrapperCol={24}>
-                <Input className='form_input' />
+                <Input className='form_input' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl2'):isFieldEditable('targetKwh2')}/>
               </Form.Item>
             </Col>
           </Row>
@@ -619,7 +638,10 @@ function Targets() {
                 name={"unit"}
                 label="Unit"
                 wrapperCol={24}>
-                <Input className='form_input' readOnly/>
+                <Input
+                  className='form_input'
+                  readOnly={newForm?false:isFieldEditable("unit")}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -629,11 +651,11 @@ function Targets() {
                 name={"point"}
                 label="Point ID"
                 wrapperCol={24}>
-                <Input className='form_input' />
+                <Input className='form_input'/>
               </Form.Item>
             </Col>
           </Row>
-          <Row  gutter={[30, 30]}>
+          <Row gutter={[30, 30]}>
             <Col span={24} className='custom-modal-column'>
               <button className='custom-modal-button' type='' htmlType='' onClick={() => onCancelModal()}>Cancel</button>
               <button type='primary' htmlType="submit" >Save</button>
