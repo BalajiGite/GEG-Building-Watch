@@ -7,7 +7,7 @@ import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { getAlertConfList } from "../services/alertConfService";
 import { getApiDataFromAws, postAlertsApiDataToAws, getConfigDataFromAws } from "../services/apis";
-// import { AlertTabeWidget } from "../components/widgets/AlertTableswidgest/AlertTable"
+import { showalertscolumns } from "../components/widgets/AlertTableswidgest/AlertTable";
 import {
   addAlerts,
   deleteAlerts,
@@ -97,6 +97,7 @@ function Alerts() {
     setOpen(false);
     setAlertsId();
     form.resetFields();
+    getData()
   };
 
   const DynamicColumns = (data) => {
@@ -110,7 +111,6 @@ function Alerts() {
           width: 300,
           ellipsis: true,
           sorter: (a, b) => a.id.localeCompare(b.id),
-
         })
     }
 
@@ -201,7 +201,7 @@ function Alerts() {
         },
       )
     }
-    return dynamicColumns;
+    return;
   }
 
   const columns = [
@@ -344,6 +344,7 @@ function Alerts() {
         </Tooltip>
       ),
     },
+    // ...DynamicColumns(showalertsData),
     {
       title: "Is Active",
       dataIndex: "isactive",
@@ -360,7 +361,6 @@ function Alerts() {
       onFilter: (value, record) => record.isactive.startsWith(value),
     },
 
-    ...DynamicColumns(showalertsData),
     // btnValues !==0?null:
     {
       title: "Actions",
@@ -390,8 +390,8 @@ function Alerts() {
       };
       const alertsData = await postAlertsApiDataToAws(body);
       const alertList = await getApiDataFromAws("queryType=dropdownSite");
-      const AlertConfigurationData = await getConfigDataFromAws("dropdownSite");
-      console.log("hiii", AlertConfigurationData)
+      // const AlertConfigurationData = await getConfigDataFromAws("dropdownSite");
+      // console.log("hiii", AlertConfigurationData)
       setAlertListData(alertList);
       console.log(alertList);
       const resp = await getAlertsList();
@@ -416,6 +416,7 @@ function Alerts() {
       const alertsData = await postAlertsApiDataToAws(body);
       setShowAlertsData(alertsData);
       console.log("showing data", alertsData);
+
     } catch (error) {
       console.log(error);
     }
@@ -528,13 +529,14 @@ function Alerts() {
   }
   return (
     <>
+
       <Modal title={btnValues === 1 ? "Show Sent Alert" : btnValues === 2 ? "Show Queued Alert" : "Show Failed Alert"}
         width="70%"
         open={openModal} onOk={handleOk}
         onCancel={handleCancel}>
         <Table
           dataSource={showalertsData}
-          columns={columns}
+          columns={showalertscolumns}
           size="large"
           rowKey={"id"}
           scroll={{
@@ -543,9 +545,9 @@ function Alerts() {
           }}
         />;
       </Modal>
-
       {" "}
       <Row>
+
         <Col span={3}>
           <button className="mb-5 custom-button" type="primary" onClick={() => setOpen(true)}>
             Add New Alert
@@ -821,6 +823,7 @@ function Alerts() {
           </Form.Item>
         </Form>
       </Modal>{" "}
+
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
         <Table
           onRow={(record) => ({

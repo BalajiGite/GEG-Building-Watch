@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Spin, Divider, Select, Radio } from "antd";
+import { Spin, Divider, Select, Radio, Tooltip } from "antd";
 import { Form, Input, Table } from "antd";
 import { Button, Row, Col, Modal, Popover, ConfigProvider } from "antd";
 import { message } from 'antd';
@@ -39,6 +39,8 @@ function Meter() {
   const [tempData, setTempData] = useState({})
   const [form] = Form.useForm();
   const [activeButton, setActiveButton] = useState(1)
+  const [isEditables, setIsEditables] = useState({});
+  const [newForm, setNewForm] = useState(false);
   const screenHeight = window.innerHeight - 340;
 
   const validateMessages = {
@@ -64,6 +66,7 @@ function Meter() {
 
   const onOpenModal = () => {
     setOpen(true);
+    setNewForm(true);
   };
 
   const onOpenModalCheck = () => {
@@ -121,6 +124,11 @@ function Meter() {
       filterMode: "tree",
       filterSearch: true,
       onFilter: (value, record) => record.name.startsWith(value),
+      render: (text) => (
+        <Tooltip title={text}>
+          <span>{text.length > 18 ? `${text.slice(0, 18)}...` : text}</span>
+        </Tooltip>
+      ),
     },
     {
       title: "Equip",
@@ -236,6 +244,7 @@ function Meter() {
       width: 200,
       Ellipsis: true,
       render: (text, record, index) => (
+        isEditables?.isEditable?
         <>
           <ConfigProvider>
             <Popover placement="bottomLeft" content={() => content(record)}>
@@ -243,9 +252,16 @@ function Meter() {
             </Popover>
           </ConfigProvider>
         </>
+        :null
       ),
     },
   ];
+      const isFieldEditable = (fieldName) => {
+       return (
+        typeof isEditables.editKeysUneditable === 'object'&&
+        isEditables.editKeysUneditable.hasOwnProperty(fieldName)
+       );
+      };
 
   let data = [];
   const getData = async (changeTableData) => {
@@ -259,14 +275,19 @@ function Meter() {
       if (changeTableData === 1) {
         meterData = await getApiDataFromAws("queryType=elecMeters");
         configData = await getConfigDataFromAws("elecMeters");
+        setIsEditables(configData);
       }
       else if (changeTableData === 2) {
         meterData = await getApiDataFromAws("queryType=waterMeters");
         configData = await getConfigDataFromAws("waterMeters");
+        setIsEditables(configData);
       }
       else if (changeTableData === 3) {
         meterData = await getApiDataFromAws("queryType=gasMeters");
         configData = await getConfigDataFromAws("gasMeters");
+        setIsEditables(configData);
+        console.log(meterData)
+
       }
 
       setSiteListData(sitesList);
@@ -471,7 +492,7 @@ function Meter() {
                   },
                 ]}
               >
-                <Input className="form_input" />
+                <Input className="form_input" readOnly={newForm?false:isFieldEditable('name')}/>
               </Form.Item>
             </Col>
           </Row>
@@ -484,7 +505,7 @@ function Meter() {
                 wrapperCol={{ span: 24 }}
               // rules={[{ required: "" }]}
               >
-                <Input className="form_input" readOnly/>
+                <Input className="form_input" readOnly={newForm?false:isFieldEditable('gegEquipType')}/>
               </Form.Item>
             </Col>
           </Row>
@@ -509,6 +530,7 @@ function Meter() {
                   onChange={handleSiteChange}
                   size="large"
                   style={{ width: "100%" }}
+                  disabled = {newForm?false:isFieldEditable('siteRef')}
                 >
                   {siteListData.length > 0 &&
                     siteListData.map((item, index) => (
@@ -539,6 +561,7 @@ function Meter() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
+                  readOnly={newForm?false:isFieldEditable('levelRef')}
 
                 >
                   {levelListData.length > 0 &&
@@ -565,7 +588,7 @@ function Meter() {
                   }                 
                 ]}
               >
-                <Input className="form_input" type="number"/>
+                <Input className="form_input" type="number" readOnly={newForm?false:isFieldEditable('gegNabersInclusionPercent')}/>
               </Form.Item>
             </Col>
             {/* <Col span={12}>
@@ -596,7 +619,7 @@ function Meter() {
                   }                 
                 ]}
               >
-                <Input className="form_input" type="number"/>
+                <Input className="form_input" type="number" readOnly={newForm?false:isFieldEditable('gegNabersExclusionPercent')}/>
               </Form.Item>
             </Col>
           </Row>
@@ -616,6 +639,7 @@ function Meter() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
+                  disabled={newForm?false:isFieldEditable('meter')}
                 >
                   {gateListData.length > 0 &&
                     gateListData.map((item, index) => (
@@ -643,6 +667,7 @@ function Meter() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
+                  disabled ={newForm?false:isFieldEditable('gateMeter')}
                 >
                    <Select.Option value={true}>True</Select.Option>
                    <Select.Option value={false}>False</Select.Option>
