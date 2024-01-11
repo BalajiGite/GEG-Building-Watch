@@ -30,8 +30,6 @@ function App() {
   const [sidenavColor, setSidenavColor] = useState("#1C88B2");
   const [backgroundColor, setBackgroundColor] = useState("#0A1016");
 
-  // console.log("ppppp", process.env);
-  const history = useHistory();
   return (
     <>
       {" "}
@@ -49,9 +47,9 @@ function App() {
           <Switch>
             <Route path="/sign-up" exact component={SignUp} />
             <Route path="/sign-in" exact component={SignIn} />
-            <Route path='/' exact component={Login} />
+            {/** <Route path='/' exact component={Login} /> **/}
             <Main>
-              <Route path="/callback" exact component={callback} />
+             {/** <Route path="/callback" exact component={callback} /> **/}
               <Route exact path="/dashboard" component={Home} />
               <Route exact path="/sites" component={Sites} />
               <Route exact path="/projects" component={Projects} />
@@ -67,7 +65,8 @@ function App() {
               <Route exact path="/targets" component={Targets}/>
               <Route exact path="/pointsReadings" component={PointsReadings}/>
               <Route exact path="/report" component={Report} />
-              <Redirect from="*" to={Login} />
+              <Redirect from="*" to="/sites" />
+              {/**<Redirect from="*" to={Login} />**/}
             </Main>
           </Switch>
         </div>
