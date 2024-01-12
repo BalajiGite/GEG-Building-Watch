@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Row, Col, Modal, Select, Popover, ConfigProvider } from "antd";
-import { Form, Input, Table, Divider, Spin, Radio } from "antd";
+import { Button, Row, Col, Modal, Select, Popover, ConfigProvider, DatePicker } from "antd";
+import { Form, Input, Table, Divider, Spin, Radio, message } from "antd";
 import { EllipsisOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import { getApiDataFromAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
@@ -10,6 +10,7 @@ import spinnerjiff from "../assets/images/loader.gif";
 function Targets() {
   const [activeButton, setActiveButton] = useState(1);
   const [targets, setTargets] = useState([])
+  const [siteListData, setSiteListData] = useState([]);
   const [targetTempData, setTargetTempData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loading, setloading] = useState(true);
@@ -23,6 +24,8 @@ function Targets() {
   console.log(isEditables);
   const [form] = Form.useForm();
 
+  const DATE_FORMAT = 'YYYY-MM-DD';
+
   const screenHeight = window.innerHeight - 340;
 // debugger
 // let edit = [];
@@ -35,6 +38,12 @@ const isFieldEditable = (fieldName) => {
     isEditables.editKeysUneditable.hasOwnProperty(fieldName)
   );
 };
+
+  const onOpenModal = () => {
+    setOpen(true);
+    setNewForm(true)
+    form.resetFields();
+  };
 
   const onCancelModal = () => {
     setOpen(false);
@@ -429,6 +438,10 @@ const isFieldEditable = (fieldName) => {
         targetConfigData = await getConfigDataFromAws("gasTargetProfile")
         // setIsEditable(targetConfigData);
       }
+
+      const sitesList = await getApiDataFromAws("queryType=dropdownSite");
+      setSiteListData(sitesList);
+
       setTargets(targetsData);
       setTargetTempData(targetsData);
       setIsEditables(targetConfigData)
@@ -439,15 +452,69 @@ const isFieldEditable = (fieldName) => {
     } catch (error) { }
   };
 
-  const setData = async (storeFormData) => {
-    if (targetId) {
-      const res = await targetEdit(targetId, storeFormData)
-    }
-    else {
-      const res = await addTarget(storeFormData);
-    }
-    onCancelModal();
+  const setData = async () => {
+    try {
+      var formData = form.getFieldsValue();
 
+      var objecttoPass = null;
+
+      var functionName = "";
+      var typeName = ""
+      if(activeButton == 1){
+        functionName = 'createElecTargetProfileRecordsFromJson';
+        const modifiedFormData = {
+          ...formData, 
+          stateName: formData.name,
+        };
+        const { name, ...objectWithoutName } = modifiedFormData;
+        objecttoPass = objectWithoutName;
+        typeName = "State"
+      }else if(activeButton == 2){
+        functionName = 'createRegionRecordsFromJson';
+        const modifiedFormData = {
+          ...formData, 
+          regionName: formData.name,
+          stateName:formData.stateRef
+        };
+        const { name,stateRef, ...objectWithoutName } = modifiedFormData;
+        objecttoPass = objectWithoutName;
+        typeName = "Region"
+      }else if(activeButton == 3){
+        functionName = 'createLevelRecordsFromJson';
+        const modifiedFormData = {
+          ...formData, 
+          levelName: formData.name,
+          siteName:formData.siteRef
+        };
+        const { level,siteRef, ...objectWithoutName } = modifiedFormData
+        objecttoPass = objectWithoutName;
+        typeName = "Level"
+      }
+
+      if (targetId) {
+        const res = await targetEdit(targetId, formData)
+      }
+      else {
+        const body = {
+          funcName: functionName,
+          recList: [objecttoPass]
+        };
+        console.log(objecttoPass);
+        const addNewTarget = await postApiDataToAws(body)
+        if (addNewTarget && addNewTarget.message ==="Success") {
+          console.log(typeName +' target added successfully:', addNewTarget);
+          message.success(typeName + ' target added successfully');
+        } else {
+          console.log('Failed to add target for' + typeName, addNewTarget);
+          message.error('Failed to add target for' + typeName);
+        }
+      }
+      getData(activeButton);
+      onCancelModal();
+    }
+    catch(error){
+      console.log(error)
+    }
   }
   const onChangeText = (text) => {
     setSearchText(text);
@@ -463,15 +530,29 @@ const isFieldEditable = (fieldName) => {
     setTargets(filterData)
   }
 
+  const getDefaultUnit = (activeButton) => {
+
+    switch (activeButton) {
+      case 1:
+        return "kwh";
+      case 2:
+        return "kl";
+      case 3:
+        return "cubic_meters_natural_gas";
+      default:
+        return "";
+    }
+  };
+
+  useEffect(() => {
+    form.setFieldsValue({ unit: getDefaultUnit(activeButton) });
+  }, [activeButton, onCancelModal]);
+
   useEffect(() => {
     getData(1);
     setActiveButton(1);
   }, []);
 
-  const addNewFormHandler = () =>{
-    setOpen(true)
-    setNewForm(true)
-  }
   return (
     <div className="App">
       <Row>
@@ -497,7 +578,7 @@ const isFieldEditable = (fieldName) => {
           <button
             className="mb-4 ml-4 custom-button"
             type="primary"
-            onClick={addNewFormHandler}
+            onClick={onOpenModal}
           >
             {activeButton === 2 ? "Add New Water"
               : activeButton === 3 ? "Add New Gas" :
@@ -543,6 +624,12 @@ const isFieldEditable = (fieldName) => {
                 label="Select Site"
                 wrapperCol={24}
                 name={"name"}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Site.',
+                  },
+                ]}
               >
                 <Select
                   placeholder="Select Site"
@@ -551,10 +638,13 @@ const isFieldEditable = (fieldName) => {
                   size='large'
                   style={{ width: "100%" }}
                   disabled = {newForm?false:isFieldEditable("siteName")}
+                  
                 >
-                  {[...new Set(targets.map(item => item.name))].map((item, index) => (
-                    <Select.Option key={index} value={item} >{item}</Select.Option>
-                  ))}
+                  {siteListData.length > 0 &&
+                      siteListData.map((item, index) => (
+                        <Select.Option key={index} value={item.name}>{item.name}</Select.Option>
+                      ))
+                    }
 
                 </Select>
               </Form.Item>
@@ -564,10 +654,25 @@ const isFieldEditable = (fieldName) => {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={""}
+                name={"currentRating"}
                 label="Current Rating"
-                wrapperCol={24}>
-                <Input className='form_input' />
+                wrapperCol={24}
+                rules={[
+                  {
+                    pattern: /^[0-9]*$/,
+                    message: 'Please enter a valid number for the Current Rating.',
+                  },
+                  {
+                    min: 0,
+                    max: 6,
+                    message: 'Please enter a number between 0 and 6 for the Current Rating.',
+                  },
+                  {
+                    required: true,
+                    message: 'Please enter the Current Rating.',
+                  },
+                ]}>
+                <Input className='form_input' type="number" min={0} max={6}/>
               </Form.Item>
             </Col>
           </Row>
@@ -576,8 +681,23 @@ const isFieldEditable = (fieldName) => {
               <Form.Item
                 name={"targetRating"}
                 label="Target Rating"
-                wrapperCol={24}>
-                <Input className='form_input' />
+                wrapperCol={24}
+                rules={[
+                  {
+                    pattern: /^[0-9]*$/,
+                    message: 'Please enter a valid number for the Target Rating.',
+                  },
+                  {
+                    min: 0,
+                    max: 6,
+                    message: 'Please enter a number between 0 and 6 for the Target Rating.',
+                  },
+                  {
+                    required: true,
+                    message: 'Please enter the Target Rating.',
+                  },
+                ]}>
+                <Input className='form_input' type="number" min={0} max={6}/>
               </Form.Item>
             </Col>
           </Row>
@@ -586,8 +706,18 @@ const isFieldEditable = (fieldName) => {
               <Form.Item
                 name={"ratingPeriodStart"}
                 label="Rating Period Start"
-                wrapperCol={24}>
-                <Input className='form_input' readOnly={newForm?false:isFieldEditable('ratingPeriodStart')}/>
+                wrapperCol={24}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Rating Period Start.',
+                  },
+                ]}>
+                  <DatePicker
+                    className='form_input dtPicker'
+                    format={DATE_FORMAT}
+                    readOnly={newForm ? false : !isFieldEditable('ratingPeriodStart')}
+                  />
               </Form.Item>
             </Col>
           </Row>
@@ -596,8 +726,33 @@ const isFieldEditable = (fieldName) => {
               <Form.Item
                 name={"ratingPeriodEnd"}
                 label="Rating Period End"
-                wrapperCol={24}>
-                <Input className='form_input' readOnly={newForm?false:isFieldEditable('ratingPeriodEnd')}/>
+                wrapperCol={24}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Rating Period End.',
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      const startDate = getFieldValue('ratingPeriodStart');
+                      if (!startDate || !value) {
+                        return Promise.resolve();
+                      }
+          
+                      const diffInDays = value.diff(startDate, 'days');
+                      const isValid = diffInDays >= 363 && diffInDays <= 365;
+          
+                      return isValid
+                        ? Promise.resolve()
+                        : Promise.reject('The difference in days should be between 363 and 365.');
+                    },
+                  }),
+                ]}>
+                  <DatePicker
+                    className='form_input dtPicker'
+                    format={DATE_FORMAT}
+                    readOnly={newForm ? false : !isFieldEditable('ratingPeriodEnd')}
+                  />
               </Form.Item>
             </Col>
           </Row>
@@ -606,7 +761,13 @@ const isFieldEditable = (fieldName) => {
               <Form.Item
                 name={activeButton === 2 ? "targetKl0" : activeButton === 3 ? "targetCum0" : "targetKwh0"}
                 label={activeButton === 2 ? "Target K10" : activeButton === 3 ? "Target Cum0" : "Target kwh0"}
-                wrapperCol={24}>
+                wrapperCol={24}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter Target value.',
+                  },
+                ]}>
                 <Input className='form_input' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl0'):activeButton===3?isFieldEditable("targetCum0"):
               isFieldEditable('targetKwh0')}/>
               </Form.Item>
@@ -617,7 +778,8 @@ const isFieldEditable = (fieldName) => {
               <Form.Item
                 name={activeButton === 2 ? "targetKl1" : activeButton === 3 ? "targetCum1" : "targetKwh1"}
                 label={activeButton === 2 ? "Target kl1" : activeButton === 3 ? "Target Cum1" : "Target kwh1"}
-                wrapperCol={24}>
+                wrapperCol={24}
+                initialValue="">
                 <Input className='form_input' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl1'):activeButton===3?isFieldEditable('targetCum1'):isFieldEditable('targetKwh1')}/>
               </Form.Item>
             </Col>
@@ -627,7 +789,8 @@ const isFieldEditable = (fieldName) => {
               <Form.Item
                 name={activeButton === 2 ? "targetKl2" : "targetKwh2"}
                 label={activeButton === 2 ? "Target kl2" : "Target Kwh2"}
-                wrapperCol={24}>
+                wrapperCol={24}
+                initialValue="">
                 <Input className='form_input' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl2'):isFieldEditable('targetKwh2')}/>
               </Form.Item>
             </Col>
@@ -640,7 +803,7 @@ const isFieldEditable = (fieldName) => {
                 wrapperCol={24}>
                 <Input
                   className='form_input'
-                  readOnly={newForm?false:isFieldEditable("unit")}
+                  readOnly={newForm?true:isFieldEditable("unit")}
                 />
               </Form.Item>
             </Col>
@@ -650,8 +813,9 @@ const isFieldEditable = (fieldName) => {
               <Form.Item
                 name={"point"}
                 label="Point ID"
+                initialValue=""
                 wrapperCol={24}>
-                <Input className='form_input'/>
+                <Input className='form_input' readOnly/>
               </Form.Item>
             </Col>
           </Row>

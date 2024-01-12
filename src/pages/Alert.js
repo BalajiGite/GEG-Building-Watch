@@ -1,12 +1,12 @@
 import React, { useState, useRef } from "react";
 import { Spin, Divider, Select, Tooltip } from "antd";
 import { Form, Input, Table } from "antd";
-import { Button, Row, Col, Modal, Popover, ConfigProvider } from "antd";
+import { Button, Row, Col, Modal, Popover, ConfigProvider, message } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { getAlertConfList } from "../services/alertConfService";
-import { getApiDataFromAws, postAlertsApiDataToAws, getConfigDataFromAws } from "../services/apis";
+import { getApiDataFromAws, postAlertsApiDataToAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
 import { showalertscolumns } from "../components/widgets/AlertTableswidgest/AlertTable";
 import {
   addAlerts,
@@ -97,7 +97,6 @@ function Alerts() {
     setOpen(false);
     setAlertsId();
     form.resetFields();
-    getData()
   };
 
   const DynamicColumns = (data) => {
@@ -422,15 +421,30 @@ function Alerts() {
     }
   }
 
-  const setData = async (formData) => {
+  const setData = async () => {
     try {
+
+      var formData = form.getFieldsValue();
       if (AlertsId) {
         const resp = await editAlerts(AlertsId, formData);
+        getData();
       } else {
-        const resp = await addAlerts(formData);
+        const body = {
+          funcName: '',
+          recList: formData
+        };
+        console.log(formData);
+        const addNewAlert = await postApiDataToAws(body)
+        if (addNewAlert && addNewAlert.message ==="Success") {
+          console.log('Alert added successfully:', addNewAlert);
+          message.success(' added successfully');
+        } else {
+          console.log('Failed to add Alert' , addNewAlert);
+          message.error('Failed to add Alert');
+        }
+        getData();
       }
       onCancelModal();
-      getData();
     } catch (error) {
       console.log(error);
     }
@@ -808,14 +822,8 @@ function Alerts() {
           >
             <Row>
               <Col className="custom-modal-column" span={24}>
-                <button type="primary" htmlType="cancel" className="custom-modal-button">
-                  Cancel
-                </button>
-                <button
-                  type=""
-                  htmlType="submit"
-                  onClick={() => onCancelModal()}
-                >
+                <button type='' htmlType='button' onClick={() => onCancelModal()}>Cancel</button>
+                <button type="" htmlType="submit">
                   Save
                 </button>
               </Col>
