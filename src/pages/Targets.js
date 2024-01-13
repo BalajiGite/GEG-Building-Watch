@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { Button, Row, Col, Modal, Select, Popover, ConfigProvider, DatePicker } from "antd";
 import { Form, Input, Table, Divider, Spin, Radio, message } from "antd";
 import { EllipsisOutlined } from '@ant-design/icons';
@@ -464,13 +465,22 @@ const isFieldEditable = (fieldName) => {
         functionName = 'createElecTargetProfileRecordsFromJson';
         const modifiedFormData = {
           ...formData, 
-          stateName: formData.name,
+          siteName: formData.name,
+          ratingPeriodStart: formData.ratingPeriodStart.toDate().toISOString().split("T")[0],
+          ratingPeriodEnd: formData.ratingPeriodEnd.toDate().toISOString().split("T")[0],
+          pointId: formData.point,
+          targetKwh0:Number(formData.targetKwh0),
+          targetKwh1:formData.targetKwh1==""?0:Number(formData.targetKwh1),
+          targetKwh2:formData.targetKwh2==""?0:Number(formData.targetKwh2),
+          currentRating:Number(formData.currentRating),
+          targetRating:Number(formData.targetRating)
+
         };
-        const { name, ...objectWithoutName } = modifiedFormData;
+        const { name, point, ...objectWithoutName } = modifiedFormData;
         objecttoPass = objectWithoutName;
-        typeName = "State"
+        typeName = "Electric"
       }else if(activeButton == 2){
-        functionName = 'createRegionRecordsFromJson';
+        functionName = 'createWaterTargetProfileRecordsFromJson';
         const modifiedFormData = {
           ...formData, 
           regionName: formData.name,
@@ -478,9 +488,9 @@ const isFieldEditable = (fieldName) => {
         };
         const { name,stateRef, ...objectWithoutName } = modifiedFormData;
         objecttoPass = objectWithoutName;
-        typeName = "Region"
+        typeName = "Water"
       }else if(activeButton == 3){
-        functionName = 'createLevelRecordsFromJson';
+        functionName = 'createGasTargetProfileRecordsFromJson';
         const modifiedFormData = {
           ...formData, 
           levelName: formData.name,
@@ -488,7 +498,7 @@ const isFieldEditable = (fieldName) => {
         };
         const { level,siteRef, ...objectWithoutName } = modifiedFormData
         objecttoPass = objectWithoutName;
-        typeName = "Level"
+        typeName = "Gas"
       }
 
       if (targetId) {
@@ -505,8 +515,8 @@ const isFieldEditable = (fieldName) => {
           console.log(typeName +' target added successfully:', addNewTarget);
           message.success(typeName + ' target added successfully');
         } else {
-          console.log('Failed to add target for' + typeName, addNewTarget);
-          message.error('Failed to add target for' + typeName);
+          console.log('Failed to add target for ' + typeName, addNewTarget);
+          message.error('Failed to add target for ' + typeName);
         }
       }
       getData(activeButton);
@@ -693,6 +703,15 @@ const isFieldEditable = (fieldName) => {
                     message: 'Please enter a number between 0 and 6 for the Target Rating.',
                   },
                   {
+                    validator: (_, value) => {
+                      const currentRating = form.getFieldValue('currentRating');
+                      if (value && currentRating && value <= currentRating) {
+                        return Promise.reject('Target Rating should be greater than Current Rating.');
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                  {
                     required: true,
                     message: 'Please enter the Target Rating.',
                   },
@@ -768,7 +787,7 @@ const isFieldEditable = (fieldName) => {
                     message: 'Please enter Target value.',
                   },
                 ]}>
-                <Input className='form_input' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl0'):activeButton===3?isFieldEditable("targetCum0"):
+                <Input className='form_input' type="number" readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl0'):activeButton===3?isFieldEditable("targetCum0"):
               isFieldEditable('targetKwh0')}/>
               </Form.Item>
             </Col>
@@ -780,7 +799,7 @@ const isFieldEditable = (fieldName) => {
                 label={activeButton === 2 ? "Target kl1" : activeButton === 3 ? "Target Cum1" : "Target kwh1"}
                 wrapperCol={24}
                 initialValue="">
-                <Input className='form_input' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl1'):activeButton===3?isFieldEditable('targetCum1'):isFieldEditable('targetKwh1')}/>
+                <Input className='form_input' type="number" readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl1'):activeButton===3?isFieldEditable('targetCum1'):isFieldEditable('targetKwh1')}/>
               </Form.Item>
             </Col>
           </Row>
@@ -791,7 +810,7 @@ const isFieldEditable = (fieldName) => {
                 label={activeButton === 2 ? "Target kl2" : "Target Kwh2"}
                 wrapperCol={24}
                 initialValue="">
-                <Input className='form_input' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl2'):isFieldEditable('targetKwh2')}/>
+                <Input className='form_input' type='number' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl2'):isFieldEditable('targetKwh2')}/>
               </Form.Item>
             </Col>
           </Row>
