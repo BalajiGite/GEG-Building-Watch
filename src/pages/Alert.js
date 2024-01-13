@@ -29,8 +29,6 @@ const layout = {
   },
 };
 
-const FREQUENCY = ["Daily", "Weekly", "Monthly"];
-const OPTIONS = ["Apples", "Nails", "Bananas", "Helicopters"];
 function Alerts() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [tempData, setTempData] = useState([]);
@@ -39,7 +37,7 @@ function Alerts() {
   const [confList, setConfList] = useState([]);
   const [selectedRecord, setSelectedRecord] = useState();
   const [searchText, setSearchText] = useState();
-  const [alertListData, setAlertListData] = useState([]);
+  const [siteListData, setSiteListData] = useState([]);
   const [post, setPost] = useState([]);
   const [loading, setloading] = useState(true);
   const [AlertsId, setAlertsId] = useState();
@@ -53,8 +51,6 @@ function Alerts() {
   // const [confForm] = Form.useForm();
   const screenHeight = window.innerHeight - 340;
 
-  const filteredOptions = OPTIONS.filter((O) => !selectedItems.includes(O));
-  const filteredFrequency = FREQUENCY.filter((O) => !selectedItems.includes(O));
   const validateMessages = {
     required: "${label} is required!",
     types: {
@@ -390,8 +386,7 @@ function Alerts() {
       const alertsData = await postAlertsApiDataToAws(body);
       const alertList = await getApiDataFromAws("queryType=dropdownSite");
       // const AlertConfigurationData = await getConfigDataFromAws("dropdownSite");
-      // console.log("hiii", AlertConfigurationData)
-      setAlertListData(alertList);
+      setSiteListData(alertList);
       console.log(alertList);
       const resp = await getAlertsList();
       setPost(alertsData);
@@ -425,15 +420,23 @@ function Alerts() {
     try {
 
       var formData = form.getFieldsValue();
+
+      const modifiedFormData = {
+        ...formData, 
+        project:"scentre_group",
+        freq:formData.reporttype=="Daily"? "H":"D"
+      };
+
+     
       if (AlertsId) {
         const resp = await editAlerts(AlertsId, formData);
         getData();
       } else {
         const body = {
-          funcName: '',
-          recList: formData
+          funcName: 'insertAlertConfiguration',
+          recList: [modifiedFormData]
         };
-        console.log(formData);
+        console.log(modifiedFormData);
         const addNewAlert = await postApiDataToAws(body)
         if (addNewAlert && addNewAlert.message ==="Success") {
           console.log('Alert added successfully:', addNewAlert);
@@ -613,11 +616,11 @@ function Alerts() {
                   size="large"
                   style={{ width: "100%" }}
                 >
-                  {
-                    post.map((item, index) => (
-                      <Select.Option key={index} item={item.id}>{item.name}</Select.Option>
-                    ))
-                  }
+                  {siteListData.length > 0 &&
+                      siteListData.map((item, index) => (
+                        <Select.Option key={index} value={item.name}>{item.name}</Select.Option>
+                      ))
+                    }
                 </Select>
 
               </Form.Item>
