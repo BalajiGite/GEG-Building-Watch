@@ -483,20 +483,36 @@ const isFieldEditable = (fieldName) => {
         functionName = 'createWaterTargetProfileRecordsFromJson';
         const modifiedFormData = {
           ...formData, 
-          regionName: formData.name,
-          stateName:formData.stateRef
+          siteName: formData.name,
+          ratingPeriodStart: formData.ratingPeriodStart.toDate().toISOString().split("T")[0],
+          ratingPeriodEnd: formData.ratingPeriodEnd.toDate().toISOString().split("T")[0],
+          pointId: formData.point,
+          targetKl0:Number(formData.targetKl0),
+          targetKl1:formData.targetKl1==""?0:Number(formData.targetKl1),
+          targetKl2:formData.targetKl2==""?0:Number(formData.targetKl2),
+          currentRating:Number(formData.currentRating),
+          targetRating:Number(formData.targetRating)
+
         };
-        const { name,stateRef, ...objectWithoutName } = modifiedFormData;
+        const { name, point, ...objectWithoutName } = modifiedFormData;
         objecttoPass = objectWithoutName;
         typeName = "Water"
       }else if(activeButton == 3){
         functionName = 'createGasTargetProfileRecordsFromJson';
         const modifiedFormData = {
           ...formData, 
-          levelName: formData.name,
-          siteName:formData.siteRef
+          siteName: formData.name,
+          ratingPeriodStart: formData.ratingPeriodStart.toDate().toISOString().split("T")[0],
+          ratingPeriodEnd: formData.ratingPeriodEnd.toDate().toISOString().split("T")[0],
+          pointId: formData.point,
+          targetCum0:Number(formData.targetCum0),
+          targetCum1:formData.targetCum1==""?0:Number(formData.targetCum1),
+          targetCum2:formData.targetCum2==""?0:Number(formData.targetCum2),
+          currentRating:Number(formData.currentRating),
+          targetRating:Number(formData.targetRating)
+
         };
-        const { level,siteRef, ...objectWithoutName } = modifiedFormData
+        const { name, point, ...objectWithoutName } = modifiedFormData;
         objecttoPass = objectWithoutName;
         typeName = "Gas"
       }
@@ -779,7 +795,7 @@ const isFieldEditable = (fieldName) => {
             <Col span={24}>
               <Form.Item
                 name={activeButton === 2 ? "targetKl0" : activeButton === 3 ? "targetCum0" : "targetKwh0"}
-                label={activeButton === 2 ? "Target K10" : activeButton === 3 ? "Target Cum0" : "Target kwh0"}
+                label={activeButton === 2 ? "Target Kl0" : activeButton === 3 ? "Target Cum0" : "Target kwh0"}
                 wrapperCol={24}
                 rules={[
                   {
@@ -796,7 +812,7 @@ const isFieldEditable = (fieldName) => {
             <Col span={24}>
               <Form.Item
                 name={activeButton === 2 ? "targetKl1" : activeButton === 3 ? "targetCum1" : "targetKwh1"}
-                label={activeButton === 2 ? "Target kl1" : activeButton === 3 ? "Target Cum1" : "Target kwh1"}
+                label={activeButton === 2 ? "Target Kl1" : activeButton === 3 ? "Target Cum1" : "Target kwh1"}
                 wrapperCol={24}
                 initialValue="">
                 <Input className='form_input' type="number" readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl1'):activeButton===3?isFieldEditable('targetCum1'):isFieldEditable('targetKwh1')}/>
@@ -806,8 +822,8 @@ const isFieldEditable = (fieldName) => {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={activeButton === 2 ? "targetKl2" : "targetKwh2"}
-                label={activeButton === 2 ? "Target kl2" : "Target Kwh2"}
+                name={activeButton === 2 ? "targetKl2" :activeButton === 3 ? "targetCum2": "targetKwh2"}
+                label={activeButton === 2 ? "Target kl2" :activeButton === 3 ? "Target Cum2": "Target Kwh2"}
                 wrapperCol={24}
                 initialValue="">
                 <Input className='form_input' type='number' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl2'):isFieldEditable('targetKwh2')}/>
