@@ -389,7 +389,6 @@ function Sites() {
   };
 
   const onChangeText = (text) => {
-
     setSearchText(text);
     filter(text);
     if (text === "" || !text) {
@@ -403,18 +402,17 @@ function Sites() {
   };
 
   const filter = (text) => {
-
     const filteredData = site.filter(
       (record) =>
-        record.name.toLowerCase().includes(text.toLowerCase()) ||
-        record.area.toLowerCase().includes(text.toLowerCase()) ||
-        record.projId.toString().includes(text.toLowerCase()) ||
-        record.stateRef.toLowerCase().includes(searchText.toLowerCase()) ||
-        record.regionRef.toLowerCase().includes(searchText.toLowerCase()) ||
-        record.weatherStationRef.toLowerCase().includes(searchText.toLowerCase()) ||
-        record.armsProj.toLowerCase().includes(searchText.toLowerCase())
+        record.name?.toLowerCase().includes(text.toLowerCase()) ||
+        record.area?.toLowerCase().includes(text.toLowerCase()) ||
+        record.projId?.toString().includes(text.toLowerCase()) ||
+        record.stateRef?.toLowerCase().includes(text.toLowerCase()) ||
+        record.regionRef?.toLowerCase().includes(text.toLowerCase()) ||
+        record.weatherStationRef?.toLowerCase().includes(text.toLowerCase()) ||
+        record.armsProjId?.toLowerCase().includes(searchText.toLowerCase())
     );
-    setSite(filteredData);
+    setSite(filteredData);  
   };
   useEffect(() => {
     getData();

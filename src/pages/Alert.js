@@ -46,9 +46,19 @@ function Alerts() {
   const [alert, setAlert] = useState();
   const [showalertsData, setShowAlertsData] = useState([]);
   const [btnValues, setbtnValue] = useState(0);
+  const [isEditable , setEditable] = useState({});
+  const [addNewform , setAddNewForm] = useState(false);
   const [form] = Form.useForm();
   const Id = useRef(1);
   // const [confForm] = Form.useForm();
+  const isEditableFormField = (fieldName) => {
+    return(
+    typeof isEditable.editKeysUneditable === "object" &&
+            isEditable.editKeysUneditable.hasOwnProperty(fieldName)
+    )
+
+  };
+
   const screenHeight = window.innerHeight - 340;
 
   const validateMessages = {
@@ -77,6 +87,7 @@ function Alerts() {
 
 
   const onOpenModal = () => {
+    setAddNewForm(true);
     setOpen(true);
     form.resetFields();
   };
@@ -362,7 +373,6 @@ function Alerts() {
       onFilter: (value, record) => record.isactive.startsWith(value),
     },
 
-    // btnValues !==0?null:
     {
       title: "Actions",
       dataIndex: "actions",
@@ -370,15 +380,16 @@ function Alerts() {
       width: 200,
       Ellipsis: true,
       render: (text, record, index) => (
+        isEditable?.isEditable?
         <>
           <ConfigProvider>
             <Popover placement="bottomLeft" content={() => content(record)}>
               <EllipsisOutlined style={{ fontSize: "30px" }} />
             </Popover>
           </ConfigProvider>
-        </>
+        </>:null
       ),
-    },
+    }
   ];
 
   let data = [];
@@ -391,12 +402,12 @@ function Alerts() {
       };
       const alertsData = await postAlertsApiDataToAws(body);
       const alertList = await getApiDataFromAws("queryType=dropdownSite");
-      // const AlertConfigurationData = await getConfigDataFromAws("dropdownSite");
+      const AlertConfigurationData = await getConfigDataFromAws("alertConfiguration");
+      setEditable(AlertConfigurationData);
+      console.log(AlertConfigurationData,"alertconfiguration querydropownsite");
       setSiteListData(alertList);
-      console.log(alertList);
       const resp = await getAlertsList();
       setPost(alertsData);
-
       setTempData(alertsData);
       setloading(false);
       setIsLoading(false);
@@ -469,6 +480,7 @@ function Alerts() {
   const onEdit = async (record) => {
     form.setFieldsValue(record);
     setAlertsId(record.id);
+    setAddNewForm(false);
     setOpen(true);
   };
 
@@ -626,6 +638,7 @@ function Alerts() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
+                  disabled = {addNewform?false:isEditableFormField('sitename')}
                 >
                   {siteListData.length > 0 &&
                       siteListData.map((item, index) => (
@@ -658,6 +671,7 @@ function Alerts() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
+                  disabled = {addNewform?false:isEditableFormField('utilitytype')}
                 >
                   {
                     [...new Set(post.map(item => item.utilitytype))].map((item, index) => (
@@ -689,6 +703,7 @@ function Alerts() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
+                  disabled = {addNewform?false:isEditableFormField('reporttype')}
 
                 >
                   {
@@ -719,7 +734,7 @@ function Alerts() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-
+                  disabled = {addNewform?false:isEditableFormField('tz')}
                 >
                   {[...new Set(post.map(item => item.tz))].map((item, index) => (
                     <Select.Option key={index} value={item}>{item}</Select.Option>
@@ -744,7 +759,7 @@ function Alerts() {
                   },
                 ]}
               >
-                <Input className="form_input" />
+                <Input className="form_input"  readOnly = {addNewform?false:isEditableFormField('recipientemails')}/>
               </Form.Item>
             </Col>
           </Row>
@@ -763,7 +778,7 @@ function Alerts() {
                 ]}
               
               >
-                <Input className="form_input" />
+                <Input className="form_input"  readOnly = {addNewform?false:isEditableFormField('erroremails')}/>
               </Form.Item>
             </Col>
           </Row>
@@ -787,7 +802,7 @@ function Alerts() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                  
+                  disabled = {addNewform?false:isEditableFormField('isactive')}
                 >
                   {[...new Set(post.map(item => item.isactive))].map((item, index) => (
                     <Select.Option key={index} value={item}>{item ? "true" : "false"}</Select.Option>
