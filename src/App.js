@@ -47,9 +47,9 @@ function App() {
           <Switch>
             <Route path="/sign-up" exact component={SignUp} />
             <Route path="/sign-in" exact component={SignIn} />
-            {/** <Route path='/' exact component={Login} /> **/}
+            <Route path='/' exact component={Login} /> 
             <Main>
-             {/** <Route path="/callback" exact component={callback} /> **/}
+              <Route path="/callback" exact component={callback} /> 
               <Route exact path="/dashboard" component={Home} />
               <Route exact path="/sites" component={Sites} />
               <Route exact path="/projects" component={Projects} />

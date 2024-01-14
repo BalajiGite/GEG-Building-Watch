@@ -75,6 +75,12 @@ function Alerts() {
     onOpenConf();
   };
 
+
+  const onOpenModal = () => {
+    setOpen(true);
+    form.resetFields();
+  };
+
   const populateConfList = (record, data) => {
     let alertConfigurations = [];
     alertConfigurations = data?.filter((item) => item.alertId === record.id);
@@ -566,7 +572,7 @@ function Alerts() {
       <Row>
 
         <Col span={3}>
-          <button className="mb-5 custom-button" type="primary" onClick={() => setOpen(true)}>
+          <button className="mb-5 custom-button" type="primary" onClick={() => onOpenModal()}>
             Add New Alert
           </button>
         </Col>
@@ -607,7 +613,12 @@ function Alerts() {
                 label="Select Site Name"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Site Name.',
+                  },
+                ]}
               >
                 <Select
                   placeholder="Select Site Name"
@@ -634,7 +645,12 @@ function Alerts() {
                 label="Select Utility Type"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Select Utility Type.',
+                  },
+                ]}
               >
                 <Select
                   placeholder="Select Utility Type"
@@ -660,6 +676,12 @@ function Alerts() {
                 label="Select Report Type"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Report Type.',
+                  },
+                ]}
               >
                 <Select
                   placeholder="Select Report Type"
@@ -683,12 +705,16 @@ function Alerts() {
               <Form.Item
                 name={"tz"}
                 label="Select tz"
-                // labelCol={{ span: 8 }}
                 wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select tz.',
+                  },
+                ]}
               >
                 <Select
-                  placeholder="Select Report Type"
+                  placeholder="Select tz"
                   value={selectedItems}
                   onChange={setSelectedItems}
                   size="large"
@@ -699,7 +725,6 @@ function Alerts() {
                     <Select.Option key={index} value={item}>{item}</Select.Option>
                   ))}
                 </Select>
-
               </Form.Item>
             </Col>
 
@@ -712,7 +737,12 @@ function Alerts() {
                 label="Recipients Emails"
                 // labelCol={{ span: 8 }}
                 wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter the Recipients Emails.',
+                  },
+                ]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -725,8 +755,13 @@ function Alerts() {
                 label="Error Emails"
                 // labelCol={{ span: 5 }}
                 wrapperCol={{ span: 24 }}
-
-              // rules={[{ required: "" }]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter the Error Emails.',
+                  },
+                ]}
+              
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -739,7 +774,12 @@ function Alerts() {
                 label="Is Active"
                 // labelCol={{ span: 8 }}
                 wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select the Is Active.',
+                  },
+                ]}
               >
                 <Select
                   placeholder="Is Active"
@@ -747,6 +787,7 @@ function Alerts() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
+                  
                 >
                   {[...new Set(post.map(item => item.isactive))].map((item, index) => (
                     <Select.Option key={index} value={item}>{item ? "true" : "false"}</Select.Option>

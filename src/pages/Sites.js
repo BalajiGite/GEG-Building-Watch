@@ -398,7 +398,7 @@ function Sites() {
   };
 
   const filter = (text) => {
-    // debugger
+
     const filteredData = site.filter(
       (record) =>
         record.name.toLowerCase().includes(text.toLowerCase()) ||
