@@ -7,7 +7,7 @@ import Projects from "./pages/projects/projects";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Login from "./pages/login/Login";
-import callback from "./pages/login/Callback";
+//import callback from "./pages/login/Callback";
 import Main from "./components/layout/Main";
 import "antd/dist/antd.css";
 import "./assets/styles/main.css";
@@ -49,7 +49,7 @@ function App() {
             <Route path="/sign-in" exact component={SignIn} />
             <Route path='/' exact component={Login} /> 
             <Main>
-              <Route path="/callback" exact component={callback} /> 
+              {/**<Route path="/callback" exact component={callback} /> **/}
               <Route exact path="/dashboard" component={Home} />
               <Route exact path="/sites" component={Sites} />
               <Route exact path="/projects" component={Projects} />
