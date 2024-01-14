@@ -60,8 +60,5 @@
     "./jsx-dev-runtime": "./jsx-dev-runtime.js",
     "./jsx-runtime": "./jsx-runtime.js",
     "./": "./"
-  },
-  "devDependencies": {
-    "@types/react-router-dom": "^5.3.3"
   }
 }
