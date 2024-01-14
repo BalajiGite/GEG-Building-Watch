@@ -6,7 +6,6 @@ import Point from "./pages/Point";
 import Projects from "./pages/projects/projects";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
-import Login from "./pages/login/Login";
 import Main from "./components/layout/Main";
 import "antd/dist/antd.css";
 import "./assets/styles/main.css";
