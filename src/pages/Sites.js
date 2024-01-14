@@ -397,6 +397,11 @@ function Sites() {
     }
   };
 
+  const onOpenModal = () => {
+    setOpen(true);
+    form.resetFields();
+  };
+
   const filter = (text) => {
 
     const filteredData = site.filter(
@@ -431,7 +436,7 @@ function Sites() {
     <>
       <Row>
         <Col span={12}>
-          <button onClick={() => setOpen(true)} className="mb-5 custom-button">ADD New Site</button>
+          <button onClick={() => onOpenModal()} className="mb-5 custom-button">ADD New Site</button>
         </Col>
         <Col span={6} style={{ marginBottom: 10 }}>
           <Input
