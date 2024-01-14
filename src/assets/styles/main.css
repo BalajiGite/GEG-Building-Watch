@@ -30,8 +30,25 @@ background-color: transparent;
 .rc-virtual-list-holder-inner .ant-select-item{
   color: #C5C5C5;
 }
+
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  color: #C5C5C5;
+  font-weight: 600;
+  background-color: #04070B;
+}
+
+.ant-select-dropdown{
+  background-color: #0A1016;
+  border: 1px solid rgba(142, 142, 142, 0.30);
+  border-radius: 3px;
+}
+
+.ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background-color: #04070B;
+}
+
 .rc-virtual-list-holder-inner .ant-select-item:hover{
-  color: black;
+  color: #FFF;
 }
 .ant-select-arrow{
   color: white;
@@ -53,8 +70,8 @@ background-color: transparent;
 
 .ant-popover-inner-content{
   background: linear-gradient(0deg, #0A1016, #0A1016),
-linear-gradient(0deg, rgba(142, 142, 142, 0.3), rgba(142, 142, 142, 0.3));
-color: #C5C5C5;
+  linear-gradient(0deg, rgba(142, 142, 142, 0.3), rgba(142, 142, 142, 0.3));
+  color: #C5C5C5;
   border-radius: 5px;
 }
 .ant-popover-inner-content h6{
@@ -954,6 +971,11 @@ ul.ant-menu.ant-menu-root.ant-menu-inline.ant-menu-light.left-nav
 
 .ant-modal-close {
   color: #C5C5C5;
+}
+
+.ant-modal-close:focus, .ant-modal-close:hover {
+  color: #C8C8C8;
+  text-decoration: none;
 }
 
 .ant-modal-body {
