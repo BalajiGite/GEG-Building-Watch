@@ -276,6 +276,7 @@ function Meter() {
         meterData = await getApiDataFromAws("queryType=elecMeters");
         configData = await getConfigDataFromAws("elecMeters");
         setIsEditables(configData);
+        console.log(configData,"config meter")
       }
       else if (changeTableData === 2) {
         meterData = await getApiDataFromAws("queryType=waterMeters");
