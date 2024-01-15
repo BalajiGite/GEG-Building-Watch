@@ -1,8 +1,8 @@
 import React from 'react';
-import moment from 'moment';
 import { Button, Row, Col, Modal, Select, Popover, ConfigProvider, DatePicker } from "antd";
 import { Form, Input, Table, Divider, Spin, Radio, message } from "antd";
 import { EllipsisOutlined } from '@ant-design/icons';
+import moment from 'moment';
 import { useState, useEffect } from 'react';
 import { getApiDataFromAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
 import { targetEdit, addTarget } from '../services/targetService';
@@ -408,6 +408,15 @@ const isFieldEditable = (fieldName) => {
   const onEdit = async (record) => {
     form.setFieldsValue(record);
     setTargetId(record.id);
+    const startDate = moment(record.ratingPeriodStart); // You can set any date you want here
+    const endDate = moment(record.ratingPeriodEnd); // You can set any date you want here
+    
+    form.setFieldsValue({
+      ratingPeriodEnd: endDate,
+    });
+    form.setFieldsValue({
+      ratingPeriodStart: startDate,
+    });
     setOpen(true);
     setNewForm(false);
   };
