@@ -47,6 +47,8 @@ background-color: transparent;
   background-color: #04070B;
 }
 
+
+
 .rc-virtual-list-holder-inner .ant-select-item:hover{
   color: #FFF;
 }
@@ -544,7 +546,16 @@ me-color mb-2 .layout-dashboard .ant-layout-sider.sider-primary .footer-box p {
 
 /* table filter */
 .ant-table-filter-dropdown {
-  background-color: #051320;
+  background-color: #0A1016;
+}
+
+.ant-table-filter-dropdown-tree .ant-tree-treenode-checkbox-checked .ant-tree-node-content-wrapper, .ant-table-filter-dropdown-tree .ant-tree-treenode-checkbox-checked .ant-tree-node-content-wrapper:hover {
+  background-color: #04070B;
+}
+
+.ant-tree.ant-tree-block-node .ant-tree-list-holder-inner .ant-tree-node-content-wrapper:hover {
+  flex: auto;
+  background-color: #04070B;
 }
 
 .ant-tree {

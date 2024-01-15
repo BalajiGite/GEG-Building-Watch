@@ -63,7 +63,7 @@ function Sites() {
       title: "Id",
       dataIndex: "id",
       key: "1",
-      width: 300,
+      width: 200,
       ellipsis: true,
       sorter: (a, b) => a.id.localeCompare(b.id),
     },
@@ -87,7 +87,7 @@ function Sites() {
       title: "Area",
       dataIndex: "area",
       key: "3",
-      width: 200,
+      width: 120,
       ellipsis: true,
       sorter: (a, b) => a.area - b.area,
       filters: Array.from(new Set(site.map(item => item.area))).map((name, index) => ({
@@ -102,7 +102,7 @@ function Sites() {
       title: "Project ID",
       dataIndex: "projId",
       key: "4",
-      width: 200,
+      width: 140,
       ellipsis: true,
       sorter: (a, b) => a.projId.localeCompare(b.projId),
       filters: Array.from(new Set(site.map(item => item.projId))).map((name, index) => ({
@@ -117,7 +117,7 @@ function Sites() {
       title: "Site",
       dataIndex: "site",
       key: "5",
-      width: 200,
+      width: 120,
       ellipsis: true,
       sorter: (a, b) => (a.site === b.site ? 0 : a.site ? -1 : 1),
       render: (text) => (text ? "True" : "False"),
@@ -130,10 +130,10 @@ function Sites() {
       onFilter: (value, record) => record.site.startsWith(value),
     },
     {
-      title: "ARMS Project ID",
+      title: "ARMS Prj ID",
       dataIndex: "armsProjectId",
       key: "6",
-      width: 200,
+      width: 150,
       ellipsis: true,
       sorter: (a, b) => a.armsProjectId.localeCompare(b.armsProjectId),
       filters: Array.from(new Set(site.map(item => item.armsProjectId))).map((name, index) => ({
@@ -148,7 +148,7 @@ function Sites() {
       title: "Tz",
       dataIndex: "tz",
       key: "7",
-      width: 200,
+      width: 150,
       ellipsis: true,
       sorter: (a, b) => a.tz.localeCompare(b.tz),
       filters: Array.from(new Set(site.map(item => item.tz))).map((name, index) => ({
@@ -163,7 +163,7 @@ function Sites() {
       title: "ARMS Project",
       dataIndex: "armsProj",
       key: "8",
-      width: 200,
+      width: 160,
       ellipsis: true,
       sorter: (a, b) => a.armsProj.localeCompare(b.armsProj),
       filters: Array.from(new Set(site.map(item => item.armsProj))).map((name, index) => ({
@@ -178,7 +178,7 @@ function Sites() {
       title: "Observes Holidays",
       dataIndex: "observesHolidays",
       key: "9",
-      width: 200,
+      width: 190,
       ellipsis: true,
       sorter: (a, b) => a.observesHolidays.localeCompare(b.observesHolidays),
       render: (text) => (text ? "True" : "False"),
@@ -191,7 +191,7 @@ function Sites() {
       onFilter: (value, record) => record.observesHolidays.startsWith(value),
     },
     {
-      title: "Geographical Country",
+      title: "Geo Country",
       dataIndex: "geoCountry",
       key: "10",
       width: 200,
@@ -206,7 +206,7 @@ function Sites() {
       onFilter: (value, record) => record.geoCountry.startsWith(value),
     },
     {
-      title: "Geographical Address",
+      title: "Geo Address",
       dataIndex: "geoAddress",
       key: "11",
       width: 200,
@@ -224,7 +224,7 @@ function Sites() {
       title: "Longitude",
       dataIndex: "long",
       key: "12",
-      width: 200,
+      width: 140,
       ellipsis: true,
       sorter: (a, b) => a.long.localeCompare(b.long),
     },
@@ -232,7 +232,7 @@ function Sites() {
       title: "Latitude",
       dataIndex: "lat",
       key: "13",
-      width: 200,
+      width: 140,
       ellipsis: true,
       sorter: (a, b) => a.lat.localeCompare(b.lat),
     },
@@ -240,7 +240,7 @@ function Sites() {
       title: "State",
       dataIndex: "stateRef",
       key: "14",
-      width: 200,
+      width: 140,
       ellipsis: true,
       sorter: (a, b) => a.stateRef.localeCompare(b.stateRef),
       filters: Array.from(new Set(site.map(item => item.stateRef))).map((name, index) => ({
@@ -255,7 +255,7 @@ function Sites() {
       title: "Region",
       dataIndex: "regionRef",
       key: "15",
-      width: 200,
+      width: 160,
       ellipsis: true,
       sorter: (a, b) => a.regionRef.localeCompare(b.regionRef),
       filters: Array.from(new Set(site.map(item => item.regionRef))).map((name, index) => ({
@@ -425,7 +425,7 @@ function Sites() {
     <>
       <a onClick={() => onEdit(record)} style={{color:"white"}}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)} style={{color:"white"}}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{color:"white", display:"none"}}>DELETE</a>
     </>
   )
 
