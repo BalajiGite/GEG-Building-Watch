@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Spin, Divider, Select, Tooltip } from "antd";
+import { Spin, Divider, Select, Tooltip, Typography  } from "antd";
 import { Form, Input, Table, Checkbox } from "antd";
 import { Button, Row, Col, Modal, Popover, ConfigProvider, message } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
@@ -495,6 +495,7 @@ function Alerts() {
     setAlert(elementbutton);
     setActive(RowId)
   }
+  const totalRows = post.length;
   return (
     <>
 
@@ -510,6 +511,11 @@ function Alerts() {
           scroll={{
             x: 1000,
             y: 300
+          }}
+          pagination={{
+            showTotal: (total, range) => `Total ${total} rows`,
+            showSizeChanger: true,
+            showQuickJumper: true,
           }}
         />;
       </Modal>
@@ -855,7 +861,11 @@ function Alerts() {
             y: screenHeight,
             x: 1000
           }}
-
+          pagination={{
+            total: totalRows,
+            showTotal: (total, range) => (`Total Alerts ${total}`),
+          }}
+          
         />
       </Spin>
       <AlertModel
