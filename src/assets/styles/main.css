@@ -208,6 +208,10 @@ background-color: transparent;
   background: #0A1016;
 }
 
+textarea.ant-input {
+  background: transparent !important;
+}
+
 .layout-dashboard {
   background: transparent;
   text-align: left;

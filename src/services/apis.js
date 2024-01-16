@@ -42,7 +42,7 @@ export const postAlertsApiDataToAws = async (body) => {
         const data = response.data;
         return data;
     } catch (error) {
-        return console.error('Error fetching data:', error);
+        return error.response.data;
     }
 }
 
