@@ -6,7 +6,7 @@ import { message } from 'antd';
 import "reactjs-popup/dist/index.css";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
-
+import {SelectColumns} from '../components/widgets/SelectedColumns/SelectedColumns';
 import { getApiDataFromAws, postApiDataToAws, getConfigDataFromAws } from "../services/apis";
 import {
   addMeter,
@@ -41,6 +41,8 @@ function Meter() {
   const [activeButton, setActiveButton] = useState(1)
   const [isEditables, setIsEditables] = useState({});
   const [newForm, setNewForm] = useState(false);
+  const [visibleColumns, setVisibleColumns] = useState([]);
+
   const screenHeight = window.innerHeight - 340;
 
   const validateMessages = {
@@ -54,8 +56,6 @@ function Meter() {
     },
   };
   const [open, setOpen] = useState(false);
-  // console.log(open);
-
   const onCancelModal = () => {
     setOpen(false);
     setMeterId();
@@ -85,7 +85,7 @@ function Meter() {
           title: "Electricity",
           dataIndex: "elec",
           key: "electricity",
-          width: 200,
+          width: 120,
           Ellipsis: true,
           sorter: (a, b) => a.elec.localeCompare(b.elec),
           filter: Array.from(new Set(meters.map(item => item.elec))).map((electricity, index) => ({
@@ -97,6 +97,18 @@ function Meter() {
           onFilter: (value, record) => record.elec.startsWith(value),
 
         })
+    }
+    if(data.some(item => item.gegNabersExclusionPercent)){
+      dynamicColumns.push(
+        {
+          title: "GEG Nab Ex Per",
+          dataIndex: "gegNabersExclusionPercent",
+          key: "7",
+          width: 200,
+          Ellipsis: true,
+          sorter: (a, b) => a.gegNabersExclusionPercent - b.gegNabersExclusionPercent,
+        },
+      )
     }
 
     return dynamicColumns;
@@ -114,7 +126,7 @@ function Meter() {
       title: "Name",
       dataIndex: "name",
       key: "2",
-      width: 250,
+      width: 200,
       Ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       filters: Array.from(new Set(meters.map(item => item.name))).map((name, index) => ({
@@ -134,7 +146,7 @@ function Meter() {
       title: "Equip",
       dataIndex: "equip",
       key: "3",
-      width: 200,
+      width: 120,
       Ellipsis: true,
       sorter: (a, b) => a.equip.localeCompare(b.equip),
       filters: Array.from(new Set(meters.map(item => item.equip))).map((name, index) => ({
@@ -150,7 +162,7 @@ function Meter() {
       title: "Gate Meter",
       dataIndex: "gateMeter",
       key: "5",
-      width: 200,
+      width: 120,
       Ellipsis: true,
       sorter: (a, b) => a.gateMeter.localeCompare(b.gateMeter),
       filters: Array.from(new Set(meters.map(item => item.gateMeter))).map((name, index) => ({
@@ -162,10 +174,10 @@ function Meter() {
       onFilter: (value, record) => record.gateMeter.startsWith(value),
     },
     {
-      title: "GEG Equipment Type",
+      title: "GEG Equip Type",
       dataIndex: "gegEquipType",
       key: "6",
-      width: 250,
+      width: 140,
       Ellipsis: true,
       sorter: (a, b) => a.gegEquipType.localeCompare(b.gegEquipType),
       filters: Array.from(new Set(meters.map(item => item.gegEquipType))).map((name, index) => ({
@@ -177,21 +189,14 @@ function Meter() {
       onFilter: (value, record) => record.gegEquipType.startsWith(value),
     },
     {
-      title: "GEG Nabers Inclusion Percent",
+      title: "GEG Nab Incl Per",
       dataIndex: "gegNabersInclusionPercent",
       key: "7",
-      width: 300,
+      width: 120,
       Ellipsis: true,
       sorter: (a, b) => a.gegNabersInclusionPercent - b.gegNabersInclusionPercent,
     },
-    {
-      title: "GEG Nabers Exclusion Percent",
-      dataIndex: "gegNabersExclusionPercent",
-      key: "7",
-      width: 300,
-      Ellipsis: true,
-      sorter: (a, b) => a.gegNabersExclusionPercent - b.gegNabersExclusionPercent,
-    },
+    
     {
       title: "Level Reference",
       dataIndex: "levelRef",
@@ -211,7 +216,7 @@ function Meter() {
       title: "Meter",
       dataIndex: "meter",
       key: "9",
-      width: 200,
+      width: 150,
       Ellipsis: true,
       sorter: (a, b) => a.meter.localeCompare(b.meter),
       filters: Array.from(new Set(meters.map(item => item.meter))).map((name, index) => ({
@@ -276,7 +281,6 @@ function Meter() {
         meterData = await getApiDataFromAws("queryType=elecMeters");
         configData = await getConfigDataFromAws("elecMeters");
         setIsEditables(configData);
-        console.log(configData,"config meter")
       }
       else if (changeTableData === 2) {
         meterData = await getApiDataFromAws("queryType=waterMeters");
@@ -287,7 +291,6 @@ function Meter() {
         meterData = await getApiDataFromAws("queryType=gasMeters");
         configData = await getConfigDataFromAws("gasMeters");
         setIsEditables(configData);
-        console.log(meterData)
 
       }
 
@@ -325,13 +328,10 @@ function Meter() {
           funcName: 'createMeterRecordsFromJson',
           recList: [objectWithoutName]
         };
-        console.log(objectWithoutName);
         const addNewMeter = await postApiDataToAws(body)
         if (addNewMeter && addNewMeter.message ==="Success") {
-          console.log('Meter added successfully:', addNewMeter);
           message.success('Meter added successfully');
         } else {
-          console.log('Failed to add Meter:', addNewMeter);
           message.error('Failed to add site');
         }
       }
@@ -359,7 +359,7 @@ function Meter() {
     <>
       <a onClick={() => onEdit(record)} style={{color:"white"}}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)} style={{color:"white"}}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{color:"white",display:"none"}}>DELETE</a>
     </>
   )
 
@@ -390,7 +390,6 @@ function Meter() {
     // Fetch level data based on the selected site
     //const levelData = await getLevelDataForSite(siteId);
     const base64SiteId = btoa(siteId).replace(/=+$/, '');
-    console.log(base64SiteId)
     const levelData = await getApiDataFromAws("queryType=dropdownLevel&dropdownSiteFilter=" + base64SiteId)
     const gateMeterData = await getApiDataFromAws("queryType=dropdownElecGateMeters&dropdownSiteFilter=" + base64SiteId)
     setLevelListData(levelData);
@@ -419,11 +418,15 @@ function Meter() {
     setActiveButton(1);
   }, []);
 
+  const handleSelectColumns = (selectedColumns) => {
+    setVisibleColumns(selectedColumns);
+  };
+
   return (
     <>
       {" "}
       <Row>
-        <Col span={18}>
+        <Col span={15}>
           <Radio.Group>
             <Radio.Button className="ant-radio-button-css" style={{
               fontWeight: activeButton === 1 ? 'bold' : 'normal',
@@ -457,6 +460,9 @@ function Meter() {
             onChange={(e) => onChangeText(e.target.value)}
             className="custom-input"
           />
+        </Col>
+        <Col span={3}>
+          <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
         </Col>
       </Row>
       <Modal
@@ -717,7 +723,7 @@ function Meter() {
       </Modal >
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
         <Table
-          columns={columns}
+          columns={visibleColumns.length>0? columns.filter((item) => visibleColumns.includes(item.key)):columns}
           dataSource={meters}
           rowKey={"id"}
           scroll={{

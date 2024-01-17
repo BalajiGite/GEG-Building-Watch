@@ -3323,7 +3323,21 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile .btn-sig
   color: white;
 }
 
+.ant-popover-title{
+  background-color:#0A1016;
+  color: #8E8E8E;
+}
+.ant-checkbox-group li {
+  background-color: transparent !important
+}
 
+.custom-popover-buttons{
+  margin-top: 10px;
+}
+.custom-popover-buttons button {
+  background-color: transparent;
+  color: #8E8E8E;
+}
 .layout-dashboard-rtl .ant-progress-show-info .ant-progress-outer {
   margin-right: 0px;
   padding-right: 0px;

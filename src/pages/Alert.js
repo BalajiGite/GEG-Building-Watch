@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { getAlertConfList } from "../services/alertConfService";
 import { getApiDataFromAws, postAlertsApiDataToAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
 import { showalertscolumns } from "../components/widgets/AlertTableswidgest/AlertTable";
+import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
 import {
   addAlerts,
   deleteAlerts,
@@ -48,6 +49,7 @@ function Alerts() {
   const [btnValues, setbtnValue] = useState(0);
   const [isEditable , setEditable] = useState({});
   const [addNewform , setAddNewForm] = useState(false);
+  const [visibleColumns, setVisibleColumns] = useState([]);
   const [form] = Form.useForm();
   const Id = useRef(1);
   // const [confForm] = Form.useForm();
@@ -72,10 +74,9 @@ function Alerts() {
     },
   };
   const [open, setOpen] = useState(false);
-  // console.log(open);
   let resp = [];
   const onAlertClick = async (record) => {
-    // debugger;
+    
     try {
       resp = await getAlertConfList();
     } catch (error) { }
@@ -112,109 +113,109 @@ function Alerts() {
     form.resetFields();
   };
 
-  const DynamicColumns = (data) => {
-    let dynamicColumns = [];
-    if (data.some(item => item.alertconfigurationid)) {
-      dynamicColumns.push(
-        {
-          title: "Alert Configuration Id",
-          dataIndex: "alertconfigurationid",
-          key: "1",
-          width: 300,
-          ellipsis: true,
-          sorter: (a, b) => a.id.localeCompare(b.id),
-        })
-    }
+  // const DynamicColumns = (data) => {
+  //   let dynamicColumns = [];
+  //   if (data.some(item => item.alertconfigurationid)) {
+  //     dynamicColumns.push(
+  //       {
+  //         title: "Alert Configuration Id",
+  //         dataIndex: "alertconfigurationid",
+  //         key: "1",
+  //         width: 300,
+  //         ellipsis: true,
+  //         sorter: (a, b) => a.id.localeCompare(b.id),
+  //       })
+  //   }
 
-    if (data.some(item => item.startdate)) {
-      dynamicColumns.push(
-        {
-          title: "Start Date",
-          dataIndex: "startdate",
-          key: "6",
-          width: 200,
-          ellipsis: true,
-          sorter: (a, b) => a.armsProjectId.localeCompare(b.armsProjectId),
-        }
-      )
-    }
+  //   if (data.some(item => item.startdate)) {
+  //     dynamicColumns.push(
+  //       {
+  //         title: "Start Date",
+  //         dataIndex: "startdate",
+  //         key: "6",
+  //         width: 200,
+  //         ellipsis: true,
+  //         sorter: (a, b) => a.armsProjectId.localeCompare(b.armsProjectId),
+  //       }
+  //     )
+  //   }
 
-    if (data.some(item => item.enddata)) {
-      dynamicColumns.push(
-        {
-          title: "End Date",
-          dataIndex: "enddate",
-          key: "7",
-          width: 200,
-          ellipsis: true,
-          sorter: (a, b) => a.tz.localeCompare(b.tz),
-        }
-      )
-    }
+  //   if (data.some(item => item.enddata)) {
+  //     dynamicColumns.push(
+  //       {
+  //         title: "End Date",
+  //         dataIndex: "enddate",
+  //         key: "7",
+  //         width: 200,
+  //         ellipsis: true,
+  //         sorter: (a, b) => a.tz.localeCompare(b.tz),
+  //       }
+  //     )
+  //   }
 
-    if (data.some(item => item.emailsendtime)) {
-      dynamicColumns.push(
-        {
-          title: "Email Send Time",
-          dataIndex: "emailsendtime",
-          key: "9",
-          width: 200,
-          ellipsis: true,
-          sorter: (a, b) => a.observesHolidays.localeCompare(b.observesHolidays),
-        }
-      )
-    }
-    if (data.some(item => item.rangeconsumption)) {
-      dynamicColumns.push(
-        {
-          title: "Range Consumption",
-          dataIndex: "rangeconsumption",
-          key: "10",
-          width: 200,
-          ellipsis: true,
-          sorter: (a, b) => a.geoCountry.localeCompare(b.geoCountry),
+  //   if (data.some(item => item.emailsendtime)) {
+  //     dynamicColumns.push(
+  //       {
+  //         title: "Email Send Time",
+  //         dataIndex: "emailsendtime",
+  //         key: "9",
+  //         width: 200,
+  //         ellipsis: true,
+  //         sorter: (a, b) => a.observesHolidays.localeCompare(b.observesHolidays),
+  //       }
+  //     )
+  //   }
+  //   if (data.some(item => item.rangeconsumption)) {
+  //     dynamicColumns.push(
+  //       {
+  //         title: "Range Consumption",
+  //         dataIndex: "rangeconsumption",
+  //         key: "10",
+  //         width: 200,
+  //         ellipsis: true,
+  //         sorter: (a, b) => a.geoCountry.localeCompare(b.geoCountry),
 
-        }
-      )
-    }
-    if (data.some(item => item.rangetarget)) {
-      dynamicColumns.push(
-        {
-          title: "Range Target",
-          dataIndex: "rangetarget",
-          key: "11",
-          width: 200,
-          ellipsis: true,
-          sorter: (a, b) => a.geoAddress.localeCompare(b.geoAddress),
-        }
-      )
-    }
-    if (data.some(item => item.ytdconsumption)) {
-      dynamicColumns.push(
-        {
-          title: "Ytd Consumption",
-          dataIndex: "ytdconsumption",
-          key: "12",
-          width: 200,
-          ellipsis: true,
-          sorter: (a, b) => a.long.localeCompare(b.long),
-        },
-      )
-    }
-    if (data.some(item => item.ytdtarget)) {
-      dynamicColumns.push(
-        {
-          title: "Ytd Target",
-          dataIndex: "ytdtarget",
-          key: "13",
-          width: 200,
-          ellipsis: true,
-          sorter: (a, b) => a.lat.localeCompare(b.lat),
-        },
-      )
-    }
-    return;
-  }
+  //       }
+  //     )
+  //   }
+  //   if (data.some(item => item.rangetarget)) {
+  //     dynamicColumns.push(
+  //       {
+  //         title: "Range Target",
+  //         dataIndex: "rangetarget",
+  //         key: "11",
+  //         width: 200,
+  //         ellipsis: true,
+  //         sorter: (a, b) => a.geoAddress.localeCompare(b.geoAddress),
+  //       }
+  //     )
+  //   }
+  //   if (data.some(item => item.ytdconsumption)) {
+  //     dynamicColumns.push(
+  //       {
+  //         title: "Ytd Consumption",
+  //         dataIndex: "ytdconsumption",
+  //         key: "12",
+  //         width: 200,
+  //         ellipsis: true,
+  //         sorter: (a, b) => a.long.localeCompare(b.long),
+  //       },
+  //     )
+  //   }
+  //   if (data.some(item => item.ytdtarget)) {
+  //     dynamicColumns.push(
+  //       {
+  //         title: "Ytd Target",
+  //         dataIndex: "ytdtarget",
+  //         key: "13",
+  //         width: 200,
+  //         ellipsis: true,
+  //         sorter: (a, b) => a.lat.localeCompare(b.lat),
+  //       },
+  //     )
+  //   }
+  //   return;
+  // }
 
   const columns = [
     {
@@ -404,7 +405,6 @@ function Alerts() {
       const alertList = await getApiDataFromAws("queryType=dropdownSite");
       const AlertConfigurationData = await getConfigDataFromAws("alertConfiguration");
       setEditable(AlertConfigurationData);
-      console.log(AlertConfigurationData,"alertconfiguration querydropownsite");
       setSiteListData(alertList);
       const resp = await getAlertsList();
       setPost(alertsData);
@@ -426,7 +426,6 @@ function Alerts() {
       }
       const alertsData = await postAlertsApiDataToAws(body);
       setShowAlertsData(alertsData);
-      console.log("showing data", alertsData);
 
     } catch (error) {
       console.log(error);
@@ -453,13 +452,12 @@ function Alerts() {
           funcName: 'insertAlertConfiguration',
           recList: [modifiedFormData]
         };
-        console.log(modifiedFormData);
         const addNewAlert = await postApiDataToAws(body)
         if (addNewAlert && addNewAlert.message ==="Success") {
-          console.log('Alert added successfully:', addNewAlert);
+          // console.log('Alert added successfully:', addNewAlert);
           message.success(' added successfully');
         } else {
-          console.log('Failed to add Alert' , addNewAlert);
+          // console.log('Failed to add Alert' , addNewAlert);
           message.error('Failed to add Alert');
         }
         getData();
@@ -490,7 +488,7 @@ function Alerts() {
     <>
       <a onClick={() => onEdit(record)} style={{ color: "white" }}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)} style={{ color: "white" }}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{ color: "white",display:"none" }}>DELETE</a>
     </>
   )
   // const filter = (text) => {
@@ -516,7 +514,6 @@ function Alerts() {
     setPost(filterData);
   };
   const onChangeText = (text) => {
-    // console.log(text);
     setSearchText(text);
     filter(text);
     if (text === "" || !text) {
@@ -562,6 +559,10 @@ function Alerts() {
     setAlert(elementbutton);
     setActive(RowId)
   }
+    const handleSelectColumns = (selectedColumns) => {
+        setVisibleColumns(selectedColumns);
+    }
+
   return (
     <>
 
@@ -588,7 +589,7 @@ function Alerts() {
             Add New Alert
           </button>
         </Col>
-        <Col span={15}>{alert}</Col>
+        <Col span={12}>{alert}</Col>
         <Col span={6} style={{ marginBottom: 10 }}>
           <Input
             size="small"
@@ -597,6 +598,9 @@ function Alerts() {
             onChange={(e) => onChangeText(e.target.value)}
             className="custom-input"
           />
+        </Col>
+        <Col span={3}>
+          <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
         </Col>
       </Row>
       <Modal
@@ -881,7 +885,7 @@ function Alerts() {
           >
             <Row>
               <Col className="custom-modal-column" span={24}>
-                <button type='' htmlType='button' onClick={() => onCancelModal()}>Cancel</button>
+                <button type='' htmlType='button' onClick={() => onCancelModal()} className="custom-modal-button">Cancel</button>
                 <button type="" htmlType="submit">
                   Save
                 </button>
@@ -898,7 +902,7 @@ function Alerts() {
             style: { backgroundColor: record.id === active ? "#0A1016" : '' }
 
           })}
-          columns={columns}
+          columns={visibleColumns.length>0? columns.filter((item)=> visibleColumns.includes(item.key)):columns}
           dataSource={post}
           rowKey={"id"}
           scroll={{
