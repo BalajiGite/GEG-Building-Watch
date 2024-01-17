@@ -41,7 +41,7 @@ function Sites() {
   const siteConfigData = useRef();
   const context = useContext(AppContext);
 
-  const screenHeight = window.innerHeight - 340;
+  const screenHeight = window.innerHeight - 310;
   const validateMessages = {
     required: "${label} is required!",
     types: {
@@ -307,7 +307,7 @@ function Sites() {
         siteConfigData.current ?
           <>
             <ConfigProvider>
-              <Popover placement="bottomLeft" content={() => content(record)} >
+              <Popover overlayStyle={{ width: '100px' }} placement="right" content={() => content(record)} >
                 <EllipsisOutlined style={{ fontSize: "30px", }} />
               </Popover>
             </ConfigProvider>
@@ -423,11 +423,11 @@ function Sites() {
   // console.log(ObjectKeys);
 
   const content = (record) => (
-    <>
+    <div style={{marginLeft:"10px", backgroundColor:"#0A1016",paddingTop:"10px", marginRight:"10px",paddingLeft:"10px", paddingRight:"10px"}}>
       <a onClick={() => onEdit(record)} style={{ color: "white" }}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
       <a onClick={() => onDelete(record.id)} style={{ color: "white", display: "none" }}>DELETE</a>
-    </>
+    </div>
   );
 
   // const onPopoverVisibleChange = (visible) => {
@@ -468,9 +468,9 @@ function Sites() {
     <>
       <Row>
         <Col span={15}>
-          <button onClick={() => onOpenModal()} className="mb-5 custom-button">ADD New Site</button>
+          <button onClick={() => onOpenModal()} className="mb-4 custom-button">ADD New Site</button>
         </Col>
-        <Col span={6} style={{ marginBottom: 10 }}>
+        <Col span={9} style={{ marginBottom: 10,  textAlign: 'right'  }}>
           <Input
             size="small"
             placeholder="search here ..."
@@ -478,9 +478,7 @@ function Sites() {
             onChange={(e) => onChangeText(e.target.value)}
             className="custom-input"
           />
-        </Col>
-        <Col span={3}>
-          <SelectColumns columns={columns} onSelectColumns={handleSelectedColumns}/>
+           <SelectColumns columns={columns} onSelectColumns={handleSelectedColumns}/>
         </Col>
       </Row>
       <Modal
@@ -586,7 +584,7 @@ function Sites() {
             <Col span={24}>
               <Form.Item
                 name="projId"
-                label="Select Proj ID"
+                label="Select Project"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
                 rules={[
@@ -632,6 +630,7 @@ function Sites() {
                   placeholder="Select TZ"
                   style={{ width: "100%" }}
                   value={selectedItems}
+                  size="large"
                   onChange={setSelectedItems}
                 >
                   {
@@ -694,6 +693,7 @@ function Sites() {
                   placeholder="Select Region ID"
                   value={selectedItems}
                   onChange={setSelectedItems}
+                  size="large"
                   style={{ width: "100%" }}
                 >
                   {regionListData.length > 0 &&
@@ -724,6 +724,7 @@ function Sites() {
                   placeholder="Select Geo Country"
                   value={selectedItems}
                   onChange={setSelectedItems}
+                  size="large"
                   style={{ width: "100%" }}
                 >
                   {

@@ -40,7 +40,7 @@ export default function Point() {
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [form] = Form.useForm();
   // const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
-  const screenHeight = window.innerHeight - 340;
+  const screenHeight = window.innerHeight - 310;
 
   const validateMessages = {
     required: "${label} is required",
@@ -286,7 +286,7 @@ export default function Point() {
         isEditable?
         <>
           <ConfigProvider>
-            <Popover placement="bottomLeft" content={() => content(record)}>
+            <Popover overlayStyle={{ width: '100px' }} placement="right" content={() => content(record)}>
               <EllipsisOutlined style={{ fontSize: "30px" }} />
             </Popover>
           </ConfigProvider>
@@ -408,11 +408,11 @@ export default function Point() {
     }
   };
   const content = (record) => (
-    <>
+    <div style={{marginLeft:"10px", backgroundColor:"#0A1016",paddingTop:"10px", marginRight:"10px",paddingLeft:"10px", paddingRight:"10px"}}>
       <a onClick={() => onEdit(record)} style={{color:"white"}}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
       <a onClick={() => onDelete(record.id)} style={{color:"white",display:"none"}}>DELETE</a>
-    </>
+    </div>
   )
 
   const filter = (text) => {
@@ -456,11 +456,11 @@ export default function Point() {
               }}
               onClick={() => pointChangeData(3)} >Gas</Radio.Button>
           </Radio.Group>
-          <button className="mb-5 custom-button" type="primary" onClick={() => onOpenModal()} style={{ marginLeft: "20px" }}>
+          <button className="mb-4 custom-button" type="primary" onClick={() => onOpenModal()} style={{ marginLeft: "20px" }}>
             {activeButton === 1 ? "Add New Electric" : activeButton === 2 ? "Add New Water" : "Add New Gas"}
           </button>
         </Col>
-        <Col span={6} style={{ marginBottom: 10 }}> 
+        <Col span={9} style={{ marginBottom: 10, textAlign: 'right' }}> 
           <Input 
             size="small"
             placeholder="search here ..."
@@ -468,9 +468,7 @@ export default function Point() {
             onChange={(e) => onChangeText(e.target.value)}
             className="custom-input"
           />
-        </Col>
-        <Col span={3}>
-        <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
+          <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
         </Col>
       </Row>
       <Modal
@@ -571,6 +569,7 @@ export default function Point() {
                 <Select
                   placeholder="Select Site Name"
                   value={selectedItems}
+                  size="large"
                   onChange={(value) => {
                     onSiteNameChange(value);
                   }}
@@ -603,6 +602,7 @@ export default function Point() {
                   placeholder="Select Meter Dis"
                   value={selectedItems}
                   style={{ width: "100%" }}
+                  size="large"
                 >
                   {meterOptions && meterOptions.length > 0 &&
                     meterOptions.map((item, index) => (

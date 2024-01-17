@@ -41,7 +41,7 @@ function Config() {
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [form] = Form.useForm();
 
-  const screenHeight = window.innerHeight - 340;
+  const screenHeight = window.innerHeight - 310;
 
 
   const dynamicColumns = (data) => {
@@ -189,7 +189,7 @@ function Config() {
         isEditable?
         <>
           <ConfigProvider>
-            <Popover placement="bottomLeft" content={() => content(record)}>
+            <Popover overlayStyle={{ width: '100px' }} placement="right" content={() => content(record)}>
               <EllipsisOutlined style={{ fontSize: "30px" }} />
             </Popover>
           </ConfigProvider>
@@ -347,11 +347,11 @@ function Config() {
   }, []);
 
   const content = (record) => (
-    <>
+    <div style={{marginLeft:"10px", backgroundColor:"#0A1016",paddingTop:"10px", marginRight:"10px",paddingLeft:"10px", paddingRight:"10px"}}>
       <a onClick={() => onEdit(record)} style={{color:"white"}}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
       <a onClick={() => onDelete(record.id)} style={{color:"white",display:"none"}}>DELETE</a>
-    </>
+    </div>
   )
       const handleSelectColumns = (SelectColumns) => {
         setVisibleColumns(SelectColumns);
@@ -517,8 +517,7 @@ function Config() {
   return (
     <>
       <Row>
-        <Col span={15} style={{ marginBottom: 20 }}>
-
+        <Col span={15}>
           <Radio.Group>
             <Radio.Button className="ant-radio-button-css" style={{
               fontWeight: activeButton === 1 ? 'bold' : 'normal',
@@ -541,7 +540,7 @@ function Config() {
             {activeButton === 1 ? "Add New State" : activeButton === 2 ? "Add New Ragion" : "Add New Level"}
           </button>
         </Col>
-        <Col span={6} style={{ marginBottom: 20 }}>
+        <Col span={9} style={{ marginBottom: 10, textAlign: 'right' }}>
           <Form>
             <Input
               size="small"
@@ -550,10 +549,8 @@ function Config() {
               onChange={(e) => onChangeSelectedValue(e.target.value)}
               className="custom-input"
             />
+            <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
           </Form>
-        </Col>
-        <Col span={3}>
-        <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
         </Col>
       </Row>
       <Modal

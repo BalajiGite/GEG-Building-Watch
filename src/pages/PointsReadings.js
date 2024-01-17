@@ -23,7 +23,7 @@ const layout = {
 };
 const OPTIONS = ["Apples", "Nails", "Bananas", "Helicopters"];
 
-const screenHeight = window.innerHeight-340;
+const screenHeight = window.innerHeight-310;
 function Sites() {
   const [searchText, setSearchText] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);

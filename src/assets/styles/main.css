@@ -60,6 +60,8 @@ background-color: transparent;
   border-radius: 10px;
 }
 
+
+
 .ant-pagination-item-link-icon {
   color: #8e8e8e !important;
   ;
@@ -80,9 +82,38 @@ background-color: transparent;
   color: #C5C5C5;
 
 }
+
 .custom-input {
   background-color: transparent !important;
   border: 1px solid #8E8E8E !important;
+  width: 80%;
+}
+
+.ant-popover {
+  border: 1px solid  rgba(142, 142, 142, 0.30);
+  border-radius: 5px;
+}
+
+.ant-popover-placement-bottomRight .ant-popover-arrow {
+  right: 16px;
+  display: none;
+}
+
+.ant-popover-title {
+  min-width: 177px;
+  min-height: 32px;
+  margin: 0;
+  padding: 5px 16px 4px;
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: 500;
+  border-bottom: 1px solid rgba(142, 142, 142, 0.30);
+}
+
+.ant-popover-inner-content {
+  background: linear-gradient(0deg, #0A1016, #0A1016), linear-gradient(0deg, rgba(142, 142, 142, 0.3), rgba(142, 142, 142, 0.3));
+  color: #C5C5C5;
+  border-radius: 0px;
+  padding: 0px 0px;
 }
 
 .ant-modal-footer {
@@ -2340,6 +2371,7 @@ body {
   height: 40px;
   padding: 0 15px;
   line-height: 40px;
+  
 }
 
 .ant-btn {
@@ -3347,12 +3379,26 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile .btn-sig
 }
 
 .custom-popover-buttons{
-  margin-top: 10px;
+  padding: 0px 10px 10px 10px;
 }
 .custom-popover-buttons button {
   background-color: transparent;
   color: #8E8E8E;
+  border:1px solid rgba(142, 142, 142, 0.30);
 }
+
+.custom-menu-popover{
+  height: 30px !important;
+  margin-top: 2px !important;
+  margin-bottom: 2px !important;
+}
+
+.ant-btn:hover, .ant-btn:focus, .ant-btn:active {
+  color: white;
+  border: 1px solid rgba(142, 142, 142, 0.30);;
+  background-color: transparent;
+}
+
 .layout-dashboard-rtl .ant-progress-show-info .ant-progress-outer {
   margin-right: 0px;
   padding-right: 0px;

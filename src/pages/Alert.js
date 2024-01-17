@@ -61,7 +61,7 @@ function Alerts() {
 
   };
 
-  const screenHeight = window.innerHeight - 340;
+  const screenHeight = window.innerHeight - 310;
 
   const validateMessages = {
     required: "${label} is required!",
@@ -280,7 +280,7 @@ function Alerts() {
         isEditable?.isEditable?
         <>
           <ConfigProvider>
-            <Popover placement="bottomLeft" content={() => content(record)}>
+            <Popover overlayStyle={{ width: '100px' }} placement="right" content={() => content(record)}>
               <EllipsisOutlined style={{ fontSize: "30px" }} />
             </Popover>
           </ConfigProvider>
@@ -403,11 +403,11 @@ function Alerts() {
   data = loading ? [] : post;
 
   const content = (record) => (
-    <>
+    <div style={{marginLeft:"10px", backgroundColor:"#0A1016",paddingTop:"10px", marginRight:"10px",paddingLeft:"10px", paddingRight:"10px"}}>
       <a onClick={() => onEdit(record)} style={{ color: "white" }}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
       <a onClick={() => onDelete(record.id)} style={{ color: "white",display:"none" }}>DELETE</a>
-    </>
+    </div>
   )
   // const filter = (text) => {
   //   const filterData = data.filter((record) => {
@@ -527,12 +527,12 @@ function Alerts() {
       <Row>
 
         <Col span={3}>
-          <button className="mb-5 custom-button" type="primary" onClick={() => onOpenModal()}>
+          <button className="mb-4 custom-button" type="primary" onClick={() => onOpenModal()}>
             Add New Alert
           </button>
         </Col>
         <Col span={12}>{alert}</Col>
-        <Col span={6} style={{ marginBottom: 10 }}>
+        <Col span={9} style={{ marginBottom: 10, textAlign: 'right' }}>
           <Input
             size="small"
             placeholder="search here ..."
@@ -540,8 +540,6 @@ function Alerts() {
             onChange={(e) => onChangeText(e.target.value)}
             className="custom-input"
           />
-        </Col>
-        <Col span={3}>
           <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
         </Col>
       </Row>

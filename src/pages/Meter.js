@@ -43,7 +43,7 @@ function Meter() {
   const [newForm, setNewForm] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState([]);
 
-  const screenHeight = window.innerHeight - 340;
+  const screenHeight = window.innerHeight - 310;
 
   const validateMessages = {
     required: "${label} is required!",
@@ -252,7 +252,7 @@ function Meter() {
         isEditables?.isEditable?
         <>
           <ConfigProvider>
-            <Popover placement="bottomLeft" content={() => content(record)}>
+            <Popover overlayStyle={{ width: '100px' }} placement="right" content={() => content(record)}>
               <EllipsisOutlined style={{ fontSize: "30px" }} />
             </Popover>
           </ConfigProvider>
@@ -356,11 +356,11 @@ function Meter() {
   };
 
   const content = (record) => (
-    <>
+    <div style={{marginLeft:"10px", backgroundColor:"#0A1016",paddingTop:"10px", marginRight:"10px",paddingLeft:"10px", paddingRight:"10px"}}>
       <a onClick={() => onEdit(record)} style={{color:"white"}}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
       <a onClick={() => onDelete(record.id)} style={{color:"white",display:"none"}}>DELETE</a>
-    </>
+    </div>
   )
 
   data = loading ? [] : meters;
@@ -447,12 +447,11 @@ function Meter() {
 
           </Radio.Group>
 
-
-          <button className="mb-5 custom-button" onClick={() => onOpenModal()} style={{ marginLeft: "20px" }}>
+          <button className="mb-4 custom-button" onClick={() => onOpenModal()} style={{ marginLeft: "20px" }}>
             {activeButton===1?"Add New Electric":activeButton===2?"Add New Water":"Add New Gas"}
           </button>
         </Col>
-        <Col span={6} style={{ marginBottom: 10 }}>
+        <Col span={9} style={{ marginBottom: 10,textAlign: 'right' }}>
           <Input
             size="small"
             placeholder="search here ..."
@@ -460,8 +459,6 @@ function Meter() {
             onChange={(e) => onChangeText(e.target.value)}
             className="custom-input"
           />
-        </Col>
-        <Col span={3}>
           <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
         </Col>
       </Row>
