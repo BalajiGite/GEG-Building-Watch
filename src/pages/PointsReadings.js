@@ -270,7 +270,7 @@ function Sites() {
         <>
           <a onClick={() => onEdit(record)}>EDIT</a>
           <Divider type="vertical" />
-          <a onClick={() => onDelete(record.id)}>DELETE</a>
+          <a onClick={() => onDelete(record.id)} style={{display:"none"}}>DELETE</a>
         </>
       ),
     },

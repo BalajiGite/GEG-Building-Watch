@@ -1,11 +1,12 @@
 import "reactjs-popup/dist/index.css";
 import React, { useState } from "react";
-import { Spin, Divider, Select } from "antd";
+import { Spin, Divider, Select,Tooltip } from "antd";
 import { Form, Input, Table,Radio } from "antd";
 import { Button, Row, Col, Modal, Popover, ConfigProvider , message} from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
 import { getApiDataFromAws ,getConfigDataFromAws, postApiDataToAws} from "../services/apis";
+import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
 import {
   addSites,
   deleteSites,
@@ -35,7 +36,8 @@ export default function Point() {
   const [meterOptions, setMeterOptions] = useState([]);
   const [open, setOpen] = useState(false);
   const [activeButton, setActiveButton] = useState(1);
-  const [isEditable, setIsEditable] = useState()
+  const [isEditable, setIsEditable] = useState();
+  const [visibleColumns, setVisibleColumns] = useState([]);
   const [form] = Form.useForm();
   // const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
   const screenHeight = window.innerHeight - 340;
@@ -75,7 +77,7 @@ export default function Point() {
           dataIndex: "import",
           key: "5",
           Ellipsis: true,
-          width: 200,
+          width: 150,
           sorter: (a, b) => a.import.localeCompare(b.import),
           filters: Array.from(new Set(point.map(item => item.import))).map((name, index) => ({
             text: name,
@@ -94,7 +96,7 @@ export default function Point() {
           dataIndex: "active",
           key: "6",
           Ellipsis: true,
-          width: 200,
+          width: 150,
           sorter: (a, b) => a.active.localeCompare(b.active),
           filters: Array.from(new Set(point.map(item => item.active))).map((name, index) => ({
             text: name,
@@ -113,7 +115,7 @@ export default function Point() {
           dataIndex: "elec",
           key: "7",
           Ellipsis: true,
-          width: 200,
+          width: 150,
           sorter: (a, b) => a.elec.localeCompare(b.elec),
           filters: Array.from(new Set(point.map(item => item.elec))).map((name, index) => ({
             text: name,
@@ -132,7 +134,7 @@ export default function Point() {
           dataIndex: "energy",
           key: "10",
           Ellipsis: true,
-          width: 200,
+          width: 150,
           sorter: (a, b) => a.energy.localeCompare(b.energy),
           filters: Array.from(new Set(point.map(item => item.energy))).map((name, index) => ({
             text: name,
@@ -161,7 +163,7 @@ export default function Point() {
       dataIndex: "name",
       key: "2",
       Ellipsis: true,
-      width: 500,
+      width: 180,
       sorter: (a, b) => a.name.localeCompare(b.name),
       sorter: (a, b) => a.name.localeCompare(b.name),
       filters: Array.from(new Set(point.map(item => item.name))).map((name, index) => ({
@@ -171,6 +173,11 @@ export default function Point() {
       filterMode: "tree",
       filterSearch: true,
       onFilter: (value, record) => record.name.startsWith(value),
+      render: (text) => (
+        <Tooltip title={text}>
+          <span>{text.length > 18 ? `${text.slice(0, 18)}...` : text}</span>
+        </Tooltip>
+      ),
     },
     {
       title: "Geg Point Type",
@@ -192,7 +199,7 @@ export default function Point() {
       dataIndex: "unit",
       key: "4",
       Ellipsis: true,
-      width: 200,
+      width: 150,
       sorter: (a, b) => a.unit.localeCompare(b.unit),
       filters: Array.from(new Set(point.map(item => item.unit))).map((name, index) => ({
         text: name,
@@ -208,7 +215,7 @@ export default function Point() {
       dataIndex: "sensor",
       key: "8",
       Ellipsis: true,
-      width: 200,
+      width: 150,
       sorter: (a, b) => a.sensor.localeCompare(b.sensor),
       filters: Array.from(new Set(point.map(item => item.sensor))).map((name, index) => ({
         text: name,
@@ -223,7 +230,7 @@ export default function Point() {
       dataIndex: "point",
       key: "9",
       Ellipsis: true,
-      width: 200,
+      width: 150,
       sorter: (a, b) => a.point.localeCompare(b.point),
       filters: Array.from(new Set(point.map(item => item.point))).map((name, index) => ({
         text: name,
@@ -239,7 +246,7 @@ export default function Point() {
       dataIndex: "nem12Id",
       key: "11",
       Ellipsis: true,
-      width: 300,
+      width: 150,
       sorter: (a, b) => a.nem12Id.localeCompare(b.nem12Id),
       filters: Array.from(new Set(point.map(item => item.nem12Id))).map((name, index) => ({
         text: name,
@@ -254,7 +261,7 @@ export default function Point() {
       dataIndex: "equipRef",
       key: "12",
       Ellipsis: true,
-      width: 400,
+      width: 150,
       sorter: (a, b) => a.equipRef.localeCompare(b.equipRef),
       filters: Array.from(new Set(point.map(item => item.equipRef))).map((name, index) => ({
         text: name,
@@ -263,6 +270,11 @@ export default function Point() {
       filterMode: "tree",
       filterSearch: true,
       onFilter: (value, record) => record.equipRef.startsWith(value),
+      render: (text) => (
+        <Tooltip title={text}>
+          <span>{text.length > 18 ? `${text.slice(0, 18)}...` : text}</span>
+        </Tooltip>
+      ),
     },
     {
       title: "Actions",
@@ -298,17 +310,14 @@ export default function Point() {
         points = await getApiDataFromAws("queryType=elecPoints");
         pointsConfigData = await getConfigDataFromAws("elecPoints");
         setIsEditable(pointsConfigData.isEditable)
-        console.log(points);
       } else if (changeTableData === 2) {
         points = await getApiDataFromAws("queryType=waterPoints")
         pointsConfigData = await getConfigDataFromAws("waterPoints");
         setIsEditable(pointsConfigData.isEditable)
-        console.log("water data", points);
       } else if (changeTableData === 3) {
         points = await getApiDataFromAws("queryType=gasPoints")
         pointsConfigData = await getConfigDataFromAws("gasPoints");
         setIsEditable(pointsConfigData.isEditable)
-        console.log("gas data", points);
       }
 
       const sitesList = await getApiDataFromAws("queryType=dropdownSite");
@@ -319,7 +328,6 @@ export default function Point() {
       setIsLoading(false);
     } catch (error) { }
   };
-  console.log(isEditable)
 
   const setData = async () => {
     try {
@@ -341,13 +349,10 @@ export default function Point() {
           funcName: 'createNem12PointRecordsFromJson',
           recList: [objectWithoutName]
         };
-        console.log(objectWithoutName);
         const addNewPoint = await postApiDataToAws(body)
         if (addNewPoint && addNewPoint.message ==="Success") {
-          console.log('Point added successfully:', addNewPoint);
           message.success('Point added successfully');
         } else {
-          console.log('Failed to add Point:', addNewPoint);
           message.error('Failed to add Point');
         }
       }
@@ -406,11 +411,9 @@ export default function Point() {
     <>
       <a onClick={() => onEdit(record)} style={{color:"white"}}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)} style={{color:"white"}}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{color:"white",display:"none"}}>DELETE</a>
     </>
   )
-  // console.log(pointData)
-  // console.log(siteListData)
 
   const filter = (text) => {
     const filteredData = point.filter(
@@ -426,11 +429,15 @@ export default function Point() {
     getData(1);
   }, []);
 
+    const handleSelectColumns = (selectedColumns) => {
+      setVisibleColumns(selectedColumns);
+    }
+
   return (
     <>
       {" "}
       <Row>
-        <Col span={18}>
+        <Col span={15}>
           <Radio.Group>
             <Radio.Button className="ant-radio-button-css" style={{
               fontWeight: activeButton === 1 ? 'bold' : 'normal',
@@ -461,6 +468,9 @@ export default function Point() {
             onChange={(e) => onChangeText(e.target.value)}
             className="custom-input"
           />
+        </Col>
+        <Col span={3}>
+        <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
         </Col>
       </Row>
       <Modal
@@ -625,13 +635,14 @@ export default function Point() {
             <Row >
               <Col span={20} className="custom-modal-column">
                 <button
+                className="custom-modal-button"
                   type=""
                   htmlType="button"
                   onClick={() => onCancelModal()}
                 >
                   Cancel
                 </button>
-                <button type="" className="custom-modal-button" htmlType="submit">
+                <button type=""  htmlType="submit">
                   Save
                 </button>
               </Col>
@@ -642,7 +653,7 @@ export default function Point() {
       </Modal>
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
         <Table
-          columns={columns}
+          columns={visibleColumns.length>0? columns.filter((item)=> visibleColumns.includes(item.key)):columns}
           dataSource={point}
           rowKey={"id"}
           scroll={{

@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { getAlertConfList } from "../services/alertConfService";
 import { getApiDataFromAws, postAlertsApiDataToAws, getConfigDataFromAws } from "../services/apis";
 import { showalertscolumns } from "../components/widgets/AlertTableswidgest/AlertTable";
+import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
 import {
   deleteAlerts,
   editAlerts,
@@ -48,6 +49,7 @@ function Alerts() {
   const [btnValues, setbtnValue] = useState(0);
   const [isEditable , setEditable] = useState({});
   const [addNewform , setAddNewForm] = useState(false);
+  const [visibleColumns, setVisibleColumns] = useState([]);
   const [form] = Form.useForm();
   const Id = useRef(1);
   // const [confForm] = Form.useForm();
@@ -72,10 +74,9 @@ function Alerts() {
     },
   };
   const [open, setOpen] = useState(false);
-  // console.log(open);
   let resp = [];
   const onAlertClick = async (record) => {
-    // debugger;
+    
     try {
       resp = await getAlertConfList();
     } catch (error) { }
@@ -320,7 +321,6 @@ function Alerts() {
       }
       const alertsData = await postAlertsApiDataToAws(body);
       setShowAlertsData(alertsData);
-      console.log("showing data", alertsData);
 
     } catch (error) {
       console.log(error);
@@ -406,7 +406,7 @@ function Alerts() {
     <>
       <a onClick={() => onEdit(record)} style={{ color: "white" }}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)} style={{ color: "white" }}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{ color: "white",display:"none" }}>DELETE</a>
     </>
   )
   // const filter = (text) => {
@@ -432,7 +432,6 @@ function Alerts() {
     setPost(filterData);
   };
   const onChangeText = (text) => {
-    // console.log(text);
     setSearchText(text);
     filter(text);
     if (text === "" || !text) {
@@ -495,6 +494,11 @@ function Alerts() {
     setAlert(elementbutton);
     setActive(RowId)
   }
+  
+   const handleSelectColumns = (selectedColumns) => {
+        setVisibleColumns(selectedColumns);
+    }
+
   const totalRows = post.length;
   return (
     <>
@@ -527,7 +531,7 @@ function Alerts() {
             Add New Alert
           </button>
         </Col>
-        <Col span={15}>{alert}</Col>
+        <Col span={12}>{alert}</Col>
         <Col span={6} style={{ marginBottom: 10 }}>
           <Input
             size="small"
@@ -536,6 +540,9 @@ function Alerts() {
             onChange={(e) => onChangeText(e.target.value)}
             className="custom-input"
           />
+        </Col>
+        <Col span={3}>
+          <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
         </Col>
       </Row>
       <Modal
@@ -837,7 +844,7 @@ function Alerts() {
           >
             <Row>
               <Col className="custom-modal-column" span={24}>
-                <button type='' htmlType='button' onClick={() => onCancelModal()}>Cancel</button>
+                <button type='' htmlType='button' onClick={() => onCancelModal()} className="custom-modal-button">Cancel</button>
                 <button type="" htmlType="submit">
                   Save
                 </button>
@@ -854,7 +861,7 @@ function Alerts() {
             style: { backgroundColor: record.id === active ? "#0A1016" : '' }
 
           })}
-          columns={columns}
+          columns={visibleColumns.length>0? columns.filter((item)=> visibleColumns.includes(item.key)):columns}
           dataSource={post}
           rowKey={"id"}
           scroll={{

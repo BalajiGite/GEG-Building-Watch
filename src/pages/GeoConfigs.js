@@ -3,10 +3,11 @@ import { useEffect } from "react";
 import Region from "../components/widgets/Region";
 import Level from "../components/widgets/Level";
 import { getApiDataFromAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
+import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
 import {
   Select, Divider, Modal, Table, Form,
   Input, Button, Card, Col, Row, Spin,
-  Popover, ConfigProvider, Radio,message
+  Popover, ConfigProvider, Radio,message,Tooltip
 } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { useState } from "react";
@@ -36,7 +37,8 @@ function Config() {
   const [activeButton, setActiveButton] = useState(1);
   const [searchText, setSearchText] = useState("");
   const [templocationData, setTempLocationData] = useState([])
-  const [isEditable , setIsEditable] = useState()
+  const [isEditable , setIsEditable] = useState();
+  const [visibleColumns, setVisibleColumns] = useState([]);
   const [form] = Form.useForm();
 
   const screenHeight = window.innerHeight - 340;
@@ -83,6 +85,8 @@ function Config() {
         title: "State",
         dataIndex: "state",
         key: "state",
+        Ellipsis:true,
+        width:150,
         sorter: (a, b) => a.state.localeCompare(b.state),
         filters: Array.from(new Set(locationData.map(item => item.state))).map((name, index) => ({
           text: name,
@@ -99,6 +103,8 @@ function Config() {
         title: "Level",
         dataIndex: "level",
         key: "level",
+        Ellipsis:true,
+        width:150,
         sorter: (a, b) => a.level.localeCompare(b.level),
         filters: Array.from(new Set(locationData.map(item => item.level))).map((name, index) => ({
           text: name,
@@ -114,6 +120,8 @@ function Config() {
         title: "Site",
         dataIndex: "siteRef",
         key: "siteRef",
+        Ellipsis:true,
+        width:150,
         sorter: (a, b) => a.siteRef.localeCompare(b.siteRef),
         filters: Array.from(new Set(locationData.map(item => item.siteRef))).map((name, index) => ({
           text: name,
@@ -147,14 +155,14 @@ function Config() {
       dataIndex: "id",
       key: "id",
       Ellipsis: true,
-      width: 300,
+      width: 200,
       sorter: (a, b) => a.id.localeCompare(b.id),
-    },
+    },  
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      width: 300,
+      width: 150,
       Ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       filters: Array.from(new Set(locationData.map(item => item.name))).map((name, index) => ({
@@ -164,6 +172,11 @@ function Config() {
       filterMode: "tree",
       filterSearch: true,
       onFilter: (value, record) => record.name.startsWith(value),
+      render: (text) => (
+        <Tooltip title={text}>
+          <span>{text.length > 18 ? `${text.slice(0, 18)}...` : text}</span>
+        </Tooltip>
+      ),
     },
     ...dynamicColumns(locationData),
     {
@@ -171,7 +184,7 @@ function Config() {
       dataIndex: "delete",
       key: "delete",
       Ellipsis: true,
-
+      width:150,
       render: (text, record, index) => (
         isEditable?
         <>
@@ -225,13 +238,11 @@ function Config() {
         locationData = await getApiDataFromAws("queryType=region")
         locationConfigData = await getConfigDataFromAws("region")
         setIsEditable(locationConfigData.isEditable)  
-        console.log(locationConfigData)
 
       } else if (dataValues === 3) {
         locationData = await getApiDataFromAws("queryType=level")
         locationConfigData = await getConfigDataFromAws("level")
         setIsEditable(locationConfigData.isEditable)  
-        console.log(locationConfigData) 
       }
 
       const sitesList = await getApiDataFromAws("queryType=dropdownSite");
@@ -313,13 +324,12 @@ function Config() {
           funcName: functionName,
           recList: [objecttoPass]
         };
-        console.log(objecttoPass);
         const addNewLoc = await postApiDataToAws(body)
         if (addNewLoc && addNewLoc.message ==="Success") {
-          console.log(typeName +' added successfully:', addNewLoc);
+          // console.log(typeName +' added successfully:', addNewLoc);
           message.success(typeName + ' added successfully');
         } else {
-          console.log('Failed to add ' + typeName, addNewLoc);
+          // console.log('Failed to add ' + typeName, addNewLoc);
           message.error('Failed to add ' + typeName);
         }
       }
@@ -340,9 +350,12 @@ function Config() {
     <>
       <a onClick={() => onEdit(record)} style={{color:"white"}}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)} style={{color:"white"}}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{color:"white",display:"none"}}>DELETE</a>
     </>
   )
+      const handleSelectColumns = (SelectColumns) => {
+        setVisibleColumns(SelectColumns);
+      }
 
   const activeWidgestInputFields = () => {
     switch (activeButton) {
@@ -499,10 +512,12 @@ function Config() {
         )
     }
   }
+
+
   return (
     <>
       <Row>
-        <Col span={18} style={{ marginBottom: 20 }}>
+        <Col span={15} style={{ marginBottom: 20 }}>
 
           <Radio.Group>
             <Radio.Button className="ant-radio-button-css" style={{
@@ -537,6 +552,9 @@ function Config() {
             />
           </Form>
         </Col>
+        <Col span={3}>
+        <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
+        </Col>
       </Row>
       <Modal
         style={{ textAlign: "left" }}
@@ -565,7 +583,7 @@ function Config() {
             <Row>
               <Col span={20}  className="custom-modal-column">
                 <button
-                 
+                 className="custom-modal-button"
                   type=""
                   htmlType="button"
                   onClick={() => onCancelModal()}
@@ -574,7 +592,6 @@ function Config() {
                 </button>
                 <button
                   type="primary"
-                  className="custom-modal-button"
                   htmlType="submit"
                   //onClick={()=>setData()}
                 >
@@ -587,7 +604,7 @@ function Config() {
       </Modal>
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
         <Table
-          columns={columns}
+          columns={visibleColumns.length>0? columns.filter((item)=> visibleColumns.includes(item.key)):columns}
           dataSource={locationData}
           scroll={{
             x: 1000,

@@ -1,14 +1,15 @@
 import React, { useContext, useRef, useState } from "react";
-import { Spin, Divider, Select } from "antd";
+import { Spin, Divider, Select, Checkbox, Menu, Dropdown } from "antd";
 import { Form, Input, Table } from "antd";
 import { Button, Row, Col, Modal, Popover, ConfigProvider } from "antd";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { AppContext } from "../App";
 import { message } from 'antd';
-import { EllipsisOutlined } from "@ant-design/icons";
+import { EllipsisOutlined , DownOutlined} from "@ant-design/icons";
 import { Radio } from 'antd';
 import { getApiDataFromAws, postApiDataToAws, getConfigDataFromAws } from "../services/apis";
+import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
 import {
   deleteSites,
   editSites,
@@ -24,7 +25,6 @@ const layout = {
   },
 };
 
-
 function Sites() {
   const [form] = Form.useForm();
   const [searchText, setSearchText] = useState("");
@@ -36,10 +36,11 @@ function Sites() {
   const [site, setSite] = useState([]);
   const [open, setOpen] = useState(false);
   const [regionListData, setRegionListData] = useState([]);
-  const [selectedColumns, setSelectedColumns] = useState([]);
+  const [visibleColumns, setVisibleColumns] = useState([]);
+
   const siteConfigData = useRef();
   const context = useContext(AppContext);
-  
+
   const screenHeight = window.innerHeight - 340;
   const validateMessages = {
     required: "${label} is required!",
@@ -299,23 +300,23 @@ function Sites() {
     {
       title: "Actions",
       dataIndex: "delete",
-      key: "17",
+      key: "18",
       width: 200,
       ellipsis: true,
       render: (text, record, index) => (
-        siteConfigData.current?
-        <>
-          <ConfigProvider>
-            <Popover placement="bottomLeft" content={() => content(record)} >
-              <EllipsisOutlined style={{ fontSize: "30px", }} />
-            </Popover>
-          </ConfigProvider>
-        </>
-        :null
+        siteConfigData.current ?
+          <>
+            <ConfigProvider>
+              <Popover placement="bottomLeft" content={() => content(record)} >
+                <EllipsisOutlined style={{ fontSize: "30px", }} />
+              </Popover>
+            </ConfigProvider>
+          </>
+          : null
       ),
     },
   ]
- 
+
   const getData = async () => {
     setIsLoading(true);
     try {
@@ -331,23 +332,23 @@ function Sites() {
       setIsLoading(false);
     } catch (error) { }
   };
-  console.log(site);
+  // console.log(site);
   const setData = async () => {
     try {
 
       var formData = form.getFieldsValue();
 
       const modifiedFormData = {
-        ...formData, 
-        siteName: formData.name, 
-        siteId: "", 
-        area: Number(formData.area), 
-        armsProjectId: Number(formData.armsProjectId), 
+        ...formData,
+        siteName: formData.name,
+        siteId: "",
+        area: Number(formData.area),
+        armsProjectId: Number(formData.armsProjectId),
         regionRecId: formData.regionRef,
       };
 
-      const { name, regionRef,site, ...objectWithoutName } = modifiedFormData
-      console.log(objectWithoutName); // Log the form data to check its structure
+      const { name, regionRef, site, ...objectWithoutName } = modifiedFormData
+      // console.log(objectWithoutName); // Log the form data to check its structure
       if (SitesId) {
         const resp = await editSites(SitesId, formData);
       } else {
@@ -358,12 +359,12 @@ function Sites() {
         };
         const addSites = await postApiDataToAws(body)
         // Check if the addSites operation was successful
-        if (addSites && addSites.message ==="Success") {
+        if (addSites && addSites.message === "Success") {
           console.log('Site added successfully:', addSites);
           // Display a success message using Ant Design message component
           message.success('Site added successfully');
         } else {
-          console.log('Failed to add site:', addSites);
+          // console.log('Failed to add site:', addSites);
           // Display an error message using Ant Design message component
           message.error('Failed to add site');
         }
@@ -412,7 +413,7 @@ function Sites() {
         record.weatherStationRef?.toLowerCase().includes(text.toLowerCase()) ||
         record.armsProjId?.toLowerCase().includes(searchText.toLowerCase())
     );
-    setSite(filteredData);  
+    setSite(filteredData);
   };
   useEffect(() => {
     getData();
@@ -423,17 +424,50 @@ function Sites() {
 
   const content = (record) => (
     <>
-      <a onClick={() => onEdit(record)} style={{color:"white"}}>EDIT</a>
+      <a onClick={() => onEdit(record)} style={{ color: "white" }}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)} style={{color:"white", display:"none"}}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{ color: "white", display: "none" }}>DELETE</a>
     </>
-  )
+  );
 
+  // const onPopoverVisibleChange = (visible) => {
+  //   setPopoverVisible(visible);
+  // };
+  // const CancelHandler = () => {
+  //   setSelectedColumns([]);
+  //   setVisibleColumns([]);
+  //   setPopoverVisible(false);
+
+  // }
+  // const onClickHandler = () => {
+  //   setVisibleColumns(selectedColumns);
+  //   setPopoverVisible(false);
+  // }
   
+  // const contents = (
+  //   <>
+  //     <Menu style={{ maxHeight: '200px', overflowY: 'auto' ,backgroundColor:"#0A1016"}}>
+  //       <Checkbox.Group value={selectedColumns} onChange={(selectedItems) => setSelectedColumns(selectedItems)}>
+  //         {columns.map((item, index) => (
+  //           <Menu.Item key={item.key}>
+  //             <Checkbox value={item.key} style={{color: "#8E8E8E"}}>{item.title}</Checkbox>
+  //           </Menu.Item>
+  //         ))}
+  //       </Checkbox.Group>
+  //     </Menu>
+  //     <div className="custom-popover-buttons">
+  //     <Button type="button" className=""onClick={CancelHandler}>Cancel</Button>
+  //     <Button type="button" style={{ float: "inline-end",backgroundColor:"transparents" }} onClick={onClickHandler}>Ok</Button>
+  //     </div>
+  //   </>
+  // );
+            const handleSelectedColumns = (selectedColumns) => {
+              setVisibleColumns(selectedColumns)
+            }
   return (
     <>
       <Row>
-        <Col span={12}>
+        <Col span={15}>
           <button onClick={() => onOpenModal()} className="mb-5 custom-button">ADD New Site</button>
         </Col>
         <Col span={6} style={{ marginBottom: 10 }}>
@@ -445,19 +479,8 @@ function Sites() {
             className="custom-input"
           />
         </Col>
-        <Col span={6}>
-        <Select
-          placeholder="Select Column Name"
-          mode="multiple"
-          style={{ width: "100%", padding: "5px", maxHeight: "45px", overflow: "auto" }}
-          onChange={(selectedItems) => setSelectedColumns(selectedItems)}
-        >
-          {columns.map((item, index) => (
-            <Select.Option key={index} value={item.key}>
-              {item.title}
-            </Select.Option>
-          ))}
-        </Select>
+        <Col span={3}>
+          <SelectColumns columns={columns} onSelectColumns={handleSelectedColumns}/>
         </Col>
       </Row>
       <Modal
@@ -478,7 +501,6 @@ function Sites() {
           style={{ maxWidth: 1000 }}
           form={form}
           validateMessages={validateMessages}
-
         >
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
@@ -497,9 +519,6 @@ function Sites() {
               </Form.Item>
             </Col>
           </Row>
-
-          
-
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
@@ -559,7 +578,7 @@ function Sites() {
                   },
                 ]}
               >
-                <Input className="form_input" type="number"/>
+                <Input className="form_input" type="number" />
               </Form.Item>
             </Col>
           </Row>
@@ -756,7 +775,7 @@ function Sites() {
                 wrapperCol={{ span: 24 }}
               // rules={[{ required: "" }]}
               >
-                <Input className="form_input" readOnly/>
+                <Input className="form_input" readOnly />
               </Form.Item>
             </Col>
           </Row>
@@ -768,7 +787,7 @@ function Sites() {
           >
             <Row>
               <Col span={20} className="custom-modal-column"  >
-                <button  onClick={() => onCancelModal()} type="" htmlType=" " className="custom-modal-button">
+                <button onClick={() => onCancelModal()} type="" htmlType=" " className="custom-modal-button">
                   Cancel
                 </button>
                 <button htmlType="submit">
@@ -781,19 +800,13 @@ function Sites() {
       </Modal>
       <Spin spinning={isLoading} indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} />}>
         <Table
-          columns={selectedColumns.length > 0 ? columns.filter((item) => selectedColumns.includes(item.key)) : columns}
+          columns={visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns}
           dataSource={site}
           rowKey={"id"}
           scroll={{
             y: screenHeight,
             x: 1000,
           }}
-          
-        // pagination={{
-        //   className: "custom-pagination",
-
-        // }}
-
         />
       </Spin>
     </>

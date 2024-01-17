@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { getApiDataFromAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
 import { targetEdit, addTarget } from '../services/targetService';
 import spinnerjiff from "../assets/images/loader.gif";
+import { SelectColumns } from '../components/widgets/SelectedColumns/SelectedColumns';
 
 function Targets() {
   const [activeButton, setActiveButton] = useState(1);
@@ -21,17 +22,14 @@ function Targets() {
   const [selectedItem, setSelectedItem] = useState();
   const [isEditables, setIsEditables] = useState({});
   const [newForm, setNewForm] = useState(false);
+  const [visibleColumns, setVisibleColumns] = useState([]);
   // const isEditable = useRef({});
-  console.log(isEditables);
   const [form] = Form.useForm();
-
   const DATE_FORMAT = 'YYYY-MM-DD';
 
   const screenHeight = window.innerHeight - 340;
-// debugger
 // let edit = [];
 //  edit = Array.isArray(isEditable.current.editKeysUneditable)
-//     console.log(edit)
 
 const isFieldEditable = (fieldName) => {
   return (
@@ -425,7 +423,7 @@ const isFieldEditable = (fieldName) => {
     <>
       <a onClick={() => onEdit(record)} style={{ color: "white" }}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)} style={{ color: "white" }}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{ color: "white",display:"none  " }}>DELETE</a>
     </>
   )
 
@@ -446,7 +444,6 @@ const isFieldEditable = (fieldName) => {
       } else if (dataValues === 3) {
         targetsData = await getApiDataFromAws("queryType=gasTargetProfile")
         targetConfigData = await getConfigDataFromAws("gasTargetProfile")
-        // setIsEditable(targetConfigData);
       }
 
       const sitesList = await getApiDataFromAws("queryType=dropdownSite");
@@ -455,8 +452,6 @@ const isFieldEditable = (fieldName) => {
       setTargets(targetsData);
       setTargetTempData(targetsData);
       setIsEditables(targetConfigData)
-      // isEditable.current = targetConfigData;
-      // console.log("hii", isEditable.current)
       setloading(false);
       setIsLoading(false);
     } catch (error) { }
@@ -534,13 +529,12 @@ const isFieldEditable = (fieldName) => {
           funcName: functionName,
           recList: [objecttoPass]
         };
-        console.log(objecttoPass);
         const addNewTarget = await postApiDataToAws(body)
         if (addNewTarget && addNewTarget.message ==="Success") {
-          console.log(typeName +' target added successfully:', addNewTarget);
+          // console.log(typeName +' target added successfully:', addNewTarget);
           message.success(typeName + ' target added successfully');
         } else {
-          console.log('Failed to add target for ' + typeName, addNewTarget);
+          // console.log('Failed to add target for ' + typeName, addNewTarget);
           message.error('Failed to add target for ' + typeName);
         }
       }
@@ -587,11 +581,14 @@ const isFieldEditable = (fieldName) => {
     getData(1);
     setActiveButton(1);
   }, []);
+    const handleSelectColumns = (selectedCoumns) => {
+          setVisibleColumns(selectedCoumns)
+    }
 
   return (
     <div className="App">
       <Row>
-        <Col span={18} style={{ marginBottom: 20 }}>
+        <Col span={15} style={{ marginBottom: 20 }}>
           <Radio.Group>
             <Radio.Button className="ant-radio-button-css" style={{
               fontWeight: activeButton === 1 ? 'bold' : 'normal',
@@ -630,6 +627,9 @@ const isFieldEditable = (fieldName) => {
               className='custom-input'
             />
           </Form>
+        </Col>
+        <Col span={3}>
+          <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
         </Col>
       </Row>
       <Modal
@@ -873,7 +873,7 @@ const isFieldEditable = (fieldName) => {
       </Modal>
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
         <Table
-          columns={columns}
+          columns={visibleColumns.length>0? columns.filter((item) => visibleColumns.includes(item.key)):columns}
           dataSource={targets}
           scroll={{
             x: 1000,
