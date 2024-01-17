@@ -102,7 +102,7 @@ const profile = (
     <Row style={{ justifyContent: "center", display: "flex" }}>
       <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
         <circle cx="20" cy="20" r="20" fill="#1B2228" />
-        <text x="50%" y="50%" text-anchor="middle" alignment-baseline="middle" font-size="14" fill="#fff">NL</text>
+        <text x="50%" y="50%" textAnchor="middle" alignmentBaseline="middle" fontSize="14" fill="#fff">NL</text>
       </svg>
 
     </Row>
@@ -357,7 +357,7 @@ function Header({
               <Popover placement="bottomLeft" content={profile}>
                 <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 40 40" fill="none" style={{ cursor: 'pointer',width:"auto",height:"30px" }}>
                   <circle cx="20" cy="20" r="20" fill="#1B2228" />
-                  <text x="50%" y="50%" text-anchor="middle" alignment-baseline="middle" font-size="14" fill="#fff">NL</text>
+                  <text x="50%" y="50%" textAnchor="middle" alignmentBaseline="middle" fontSize="14" fill="#fff">NL</text>
                 </svg>
               </Popover>
             </ConfigProvider>

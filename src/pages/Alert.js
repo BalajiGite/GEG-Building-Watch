@@ -1,16 +1,15 @@
 import React, { useState, useRef } from "react";
-import { Spin, Divider, Select, Tooltip } from "antd";
-import { Form, Input, Table } from "antd";
+import { Spin, Divider, Select, Tooltip, Typography  } from "antd";
+import { Form, Input, Table, Checkbox } from "antd";
 import { Button, Row, Col, Modal, Popover, ConfigProvider, message } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { getAlertConfList } from "../services/alertConfService";
-import { getApiDataFromAws, postAlertsApiDataToAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
+import { getApiDataFromAws, postAlertsApiDataToAws, getConfigDataFromAws } from "../services/apis";
 import { showalertscolumns } from "../components/widgets/AlertTableswidgest/AlertTable";
 import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
 import {
-  addAlerts,
   deleteAlerts,
   editAlerts,
   getAlertsList,
@@ -39,6 +38,7 @@ function Alerts() {
   const [selectedRecord, setSelectedRecord] = useState();
   const [searchText, setSearchText] = useState();
   const [siteListData, setSiteListData] = useState([]);
+  const [prjNameData, setPrjNameData] = useState([]);
   const [post, setPost] = useState([]);
   const [loading, setloading] = useState(true);
   const [AlertsId, setAlertsId] = useState();
@@ -112,110 +112,6 @@ function Alerts() {
     setAlertsId();
     form.resetFields();
   };
-
-  // const DynamicColumns = (data) => {
-  //   let dynamicColumns = [];
-  //   if (data.some(item => item.alertconfigurationid)) {
-  //     dynamicColumns.push(
-  //       {
-  //         title: "Alert Configuration Id",
-  //         dataIndex: "alertconfigurationid",
-  //         key: "1",
-  //         width: 300,
-  //         ellipsis: true,
-  //         sorter: (a, b) => a.id.localeCompare(b.id),
-  //       })
-  //   }
-
-  //   if (data.some(item => item.startdate)) {
-  //     dynamicColumns.push(
-  //       {
-  //         title: "Start Date",
-  //         dataIndex: "startdate",
-  //         key: "6",
-  //         width: 200,
-  //         ellipsis: true,
-  //         sorter: (a, b) => a.armsProjectId.localeCompare(b.armsProjectId),
-  //       }
-  //     )
-  //   }
-
-  //   if (data.some(item => item.enddata)) {
-  //     dynamicColumns.push(
-  //       {
-  //         title: "End Date",
-  //         dataIndex: "enddate",
-  //         key: "7",
-  //         width: 200,
-  //         ellipsis: true,
-  //         sorter: (a, b) => a.tz.localeCompare(b.tz),
-  //       }
-  //     )
-  //   }
-
-  //   if (data.some(item => item.emailsendtime)) {
-  //     dynamicColumns.push(
-  //       {
-  //         title: "Email Send Time",
-  //         dataIndex: "emailsendtime",
-  //         key: "9",
-  //         width: 200,
-  //         ellipsis: true,
-  //         sorter: (a, b) => a.observesHolidays.localeCompare(b.observesHolidays),
-  //       }
-  //     )
-  //   }
-  //   if (data.some(item => item.rangeconsumption)) {
-  //     dynamicColumns.push(
-  //       {
-  //         title: "Range Consumption",
-  //         dataIndex: "rangeconsumption",
-  //         key: "10",
-  //         width: 200,
-  //         ellipsis: true,
-  //         sorter: (a, b) => a.geoCountry.localeCompare(b.geoCountry),
-
-  //       }
-  //     )
-  //   }
-  //   if (data.some(item => item.rangetarget)) {
-  //     dynamicColumns.push(
-  //       {
-  //         title: "Range Target",
-  //         dataIndex: "rangetarget",
-  //         key: "11",
-  //         width: 200,
-  //         ellipsis: true,
-  //         sorter: (a, b) => a.geoAddress.localeCompare(b.geoAddress),
-  //       }
-  //     )
-  //   }
-  //   if (data.some(item => item.ytdconsumption)) {
-  //     dynamicColumns.push(
-  //       {
-  //         title: "Ytd Consumption",
-  //         dataIndex: "ytdconsumption",
-  //         key: "12",
-  //         width: 200,
-  //         ellipsis: true,
-  //         sorter: (a, b) => a.long.localeCompare(b.long),
-  //       },
-  //     )
-  //   }
-  //   if (data.some(item => item.ytdtarget)) {
-  //     dynamicColumns.push(
-  //       {
-  //         title: "Ytd Target",
-  //         dataIndex: "ytdtarget",
-  //         key: "13",
-  //         width: 200,
-  //         ellipsis: true,
-  //         sorter: (a, b) => a.lat.localeCompare(b.lat),
-  //       },
-  //     )
-  //   }
-  //   return;
-  // }
 
   const columns = [
     {
@@ -341,7 +237,6 @@ function Alerts() {
       dataIndex: "erroremails",
       key: "8",
       width: 200,
-
       Ellipsis: true,
       sorter: (a, b) => a.erroremails.localeCompare(b.erroremails),
       filters: Array.from(new Set(post.map(item => item.erroremails))).map((name, index) => ({
@@ -357,23 +252,24 @@ function Alerts() {
         </Tooltip>
       ),
     },
-    // ...DynamicColumns(showalertsData),
     {
       title: "Is Active",
       dataIndex: "isactive",
       key: "9",
       width: 200,
-      Ellipsis: true,
-      sorter: (a, b) => a.isactive - b.isactive,
-      filters: Array.from(new Set(post.map(item => item.isactive))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.isactive.startsWith(value),
+      render: (text, record) => (
+        <Checkbox
+          checked={record.isactive}
+          disabled
+        />
+      ),
+      sorter: (a, b) => (a.isactive ? 1 : -1) - (b.isactive ? 1 : -1),
+      filters: [
+        { text: 'Active', value: true },
+        { text: 'Inactive', value: false },
+      ],
+      onFilter: (value, record) => record.isactive === value,
     },
-
     {
       title: "Actions",
       dataIndex: "actions",
@@ -397,16 +293,15 @@ function Alerts() {
   const getData = async () => {
     setIsLoading(true);
     try {
-
       const body = {
         funcName: "getAlertConfigurationsData",
       };
       const alertsData = await postAlertsApiDataToAws(body);
       const alertList = await getApiDataFromAws("queryType=dropdownSite");
+    
       const AlertConfigurationData = await getConfigDataFromAws("alertConfiguration");
       setEditable(AlertConfigurationData);
       setSiteListData(alertList);
-      const resp = await getAlertsList();
       setPost(alertsData);
       setTempData(alertsData);
       setloading(false);
@@ -432,36 +327,59 @@ function Alerts() {
     }
   }
 
+  const getProjectName = async(siteName) =>{
+
+    console.log('Selected Value:', siteName);
+
+    const selectedSite = siteListData.find(site => site.name === siteName);
+    const prjId = selectedSite.id.split(':')[1];
+
+    const prjList = await getApiDataFromAws("queryType=dropdownProjId")
+    const project = prjList.find(proj => proj.projId === prjId);
+    setPrjNameData(project.projName);
+    return project.projName;
+
+  }
+
   const setData = async () => {
     try {
 
       var formData = form.getFieldsValue();
 
-      const modifiedFormData = {
-        ...formData, 
-        project:"scentre_group",
-        freq:formData.reporttype=="Daily"? "H":"D"
-      };
-
-     
       if (AlertsId) {
-        const resp = await editAlerts(AlertsId, formData);
-        getData();
-      } else {
-        const body = {
-          funcName: 'insertAlertConfiguration',
-          recList: [modifiedFormData]
+        const prjName = await getProjectName(formData.sitename)
+        const modifiedFormData = {
+          ...formData, 
+          project:prjName,
+          freq:formData.reporttype=="Daily"? "H":"D",
+          funcName: 'updateAlertConfiguration',
+          id:AlertsId
         };
-        const addNewAlert = await postApiDataToAws(body)
-        if (addNewAlert && addNewAlert.message ==="Success") {
-          // console.log('Alert added successfully:', addNewAlert);
-          message.success(' added successfully');
+        const updateAlert = await postAlertsApiDataToAws(modifiedFormData)
+        if (updateAlert && updateAlert.message ==="Success") {
+          console.log('Alert updated successfully:', updateAlert);
+          message.success('Alert updated successfully');
         } else {
-          // console.log('Failed to add Alert' , addNewAlert);
-          message.error('Failed to add Alert');
+          console.log(updateAlert.message);
+          message.error(updateAlert.message);
         }
-        getData();
+      } else {
+        const modifiedFormData = {...formData, 
+          project:prjNameData,
+          freq:formData.reporttype=="Daily"? "H":"D",
+          funcName: 'insertAlertConfiguration'
+        };
+        const addNewAlert = await postAlertsApiDataToAws(modifiedFormData)
+        if (addNewAlert && addNewAlert.message ==="Success") {
+          console.log('Alert added successfully:', addNewAlert);
+          message.success('Alert added successfully');
+        } else {
+          console.log(addNewAlert.message);
+          message.error(addNewAlert.message);
+        }
+        
       }
+      getData();
       onCancelModal();
     } catch (error) {
       console.log(error);
@@ -540,6 +458,11 @@ function Alerts() {
   };
 
 
+  const handleSelectChange = async (selectedValue) => {
+    console.log('Selected Value:', selectedValue);
+    getProjectName(selectedValue)
+  };
+
   let elementbutton = (
     <>
       <button className="custom-button" type="button" onClick={() => showModal(1)}>
@@ -553,16 +476,30 @@ function Alerts() {
       </button>
     </>);
 
+  const validateEmails = (value) => {
+    const emailArray = value.split(',').map(email => email.trim());
+
+    for (const email of emailArray) {
+      // Use a regular expression for basic email format validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return Promise.reject('Please enter valid email addresses separated by commas.');
+      }
+    }
+    return Promise.resolve();
+  };
 
   const clickEventAlert = (RowId) => {
     Id.current = RowId;
     setAlert(elementbutton);
     setActive(RowId)
   }
-    const handleSelectColumns = (selectedColumns) => {
+  
+   const handleSelectColumns = (selectedColumns) => {
         setVisibleColumns(selectedColumns);
     }
 
+  const totalRows = post.length;
   return (
     <>
 
@@ -578,6 +515,11 @@ function Alerts() {
           scroll={{
             x: 1000,
             y: 300
+          }}
+          pagination={{
+            showTotal: (total, range) => `Total ${total} rows`,
+            showSizeChanger: true,
+            showQuickJumper: true,
           }}
         />;
       </Modal>
@@ -639,7 +581,10 @@ function Alerts() {
                 <Select
                   placeholder="Select Site Name"
                   value={selectedItems}
-                  onChange={setSelectedItems}
+                  onChange={(value) => {
+                    setSelectedItems(value); // Update the state if needed
+                    handleSelectChange(value); // Your custom function to handle the change
+                  }}
                   size="large"
                   style={{ width: "100%" }}
                   disabled = {addNewform?false:isEditableFormField('sitename')}
@@ -760,10 +705,17 @@ function Alerts() {
                   {
                     required: true,
                     message: 'Please enter the Recipients Emails.',
+                  },{
+                    validator: (_, value) => validateEmails(value),
                   },
                 ]}
               >
-                <Input className="form_input"  readOnly = {addNewform?false:isEditableFormField('recipientemails')}/>
+                <Input.TextArea
+                  className="form_input"
+                  placeholder="Enter emails separated by commas"
+                  readOnly={addNewform ? false : isEditableFormField('recipientemails')}
+                  autoSize={{ minRows: 2, maxRows: 6 }} // You can adjust the number of rows as needed
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -778,11 +730,18 @@ function Alerts() {
                   {
                     required: true,
                     message: 'Please enter the Error Emails.',
+                  },{
+                    validator: (_, value) => validateEmails(value),
                   },
                 ]}
               
               >
-                <Input className="form_input"  readOnly = {addNewform?false:isEditableFormField('erroremails')}/>
+                <Input.TextArea
+                  className="form_input"
+                  placeholder="Enter emails separated by commas"
+                  readOnly={addNewform ? false : isEditableFormField('erroremails')}
+                  autoSize={{ minRows: 2, maxRows: 6 }} // You can adjust the number of rows as needed
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -909,7 +868,11 @@ function Alerts() {
             y: screenHeight,
             x: 1000
           }}
-
+          pagination={{
+            total: totalRows,
+            showTotal: (total, range) => (`Total Alerts ${total}`),
+          }}
+          
         />
       </Spin>
       <AlertModel

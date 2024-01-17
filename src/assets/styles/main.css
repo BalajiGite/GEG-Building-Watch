@@ -208,6 +208,21 @@ background-color: transparent;
   background: #0A1016;
 }
 
+textarea.ant-input {
+  background: transparent !important;
+}
+
+.ant-pagination-total-text {
+  display: inline-block;
+  height: 32px;
+  margin-right: 8px;
+  line-height: 30px;
+  vertical-align: middle;
+  padding-right: 10px;
+  padding-left: 10px;
+  border-radius: 4px;
+}
+
 .layout-dashboard {
   background: transparent;
   text-align: left;
