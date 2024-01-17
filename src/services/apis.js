@@ -5,6 +5,25 @@ const POST_Alerts_API_URL = `https://kiln7uoo76.execute-api.ap-southeast-2.amazo
 const CONFIG_URL = `https://ooq5mqxlu8.execute-api.ap-southeast-2.amazonaws.com/default/neptuneViewerApis?queryType=viewerConfig`
 
 
+const login = async () => {
+    try {
+      const response = await axios.get('https://auth.apeiron.network/login', {
+        params: {
+          client_id: '6jk6h3n6hukhkqvul7hcqfh05u',
+          response_type: 'token',
+          scope: 'email openid phone profile',
+          redirect_uri: 'https://your-redirect-uri.com/callback',
+        },
+      });
+  
+      // Handle the response, which may contain the JWT token.
+      const jwtToken = response.data.token;
+      // Continue with token handling...
+    } catch (error) {
+      // Handle errors
+      console.error('Error during login:', error);
+    }
+  };
 
 export const getApiDataFromAws = async (item) => {
     try {

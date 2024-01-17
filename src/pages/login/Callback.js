@@ -1,14 +1,16 @@
 // Example using React Router
-import React, { useEffect } from 'react';
+import React, { useEffect,useContext } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
+import { AppContext } from "../../App";
 
 const Callback = () => {
   const location = useLocation();
   const history = useHistory();
+  const context = useContext(AppContext);
 
   useEffect(() => {
-    // Extract tokens or authorization code from the URL parameters
-    const params = new URLSearchParams(location.hash.substring(1)); // Remove the '#' from the hash
+
+    const params = new URLSearchParams(location.hash.substring(1));
     const token = params.get('access_token');
 
     const decodeIdToken = (token) => {
@@ -20,9 +22,8 @@ const Callback = () => {
     };
 
     const decodedToken = decodeIdToken(token);
-    // Log the decoded token (contains user details)
-    console.log('Decoded id_token:', decodedToken)
-    console.log('Decoded id_token:', token)
+    context.setToken(decodedToken)
+    localStorage.setItem('jwtToken', token);
 
     history.push('/sites');
   }, [location, history]);
