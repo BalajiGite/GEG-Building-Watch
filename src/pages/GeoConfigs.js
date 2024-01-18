@@ -54,6 +54,8 @@ function Config() {
         title: "State Ref",
         dataIndex: "stateRef",
         key: "stateRef",
+        ellipsis: true,
+        width: 160,
         sorter: (a, b) => a.stateRef.localeCompare(b.stateRef),
         filters: Array.from(new Set(data.map(item => item.stateRef))).map((name, index) => ({
           text: name,
@@ -69,6 +71,8 @@ function Config() {
         title: "Region",
         dataIndex: "region",
         key: "region",
+        ellipsis: true,
+        width: 160,
         sorter: (a, b) => a.region.localeCompare(b.region),
         filters: Array.from(new Set(locationData.map(item => item.region))).map((name, index) => ({
           text: name,
@@ -85,7 +89,7 @@ function Config() {
         title: "State",
         dataIndex: "state",
         key: "state",
-        Ellipsis:true,
+        ellipsis:true,
         width:150,
         sorter: (a, b) => a.state.localeCompare(b.state),
         filters: Array.from(new Set(locationData.map(item => item.state))).map((name, index) => ({
@@ -103,7 +107,7 @@ function Config() {
         title: "Level",
         dataIndex: "level",
         key: "level",
-        Ellipsis:true,
+        ellipsis:true,
         width:150,
         sorter: (a, b) => a.level.localeCompare(b.level),
         filters: Array.from(new Set(locationData.map(item => item.level))).map((name, index) => ({
@@ -120,7 +124,7 @@ function Config() {
         title: "Site",
         dataIndex: "siteRef",
         key: "siteRef",
-        Ellipsis:true,
+        ellipsis:true,
         width:150,
         sorter: (a, b) => a.siteRef.localeCompare(b.siteRef),
         filters: Array.from(new Set(locationData.map(item => item.siteRef))).map((name, index) => ({
@@ -137,6 +141,8 @@ function Config() {
         title: "Project ID",
         dataIndex: "projId",
         key: "projId",
+        ellipsis: true,
+        width: 200,
         sorter: (a, b) => a.projId.localeCompare(b.projId),
         filters: Array.from(new Set(locationData.map(item => item.projId))).map((name, index) => ({
           text: name,
@@ -154,7 +160,7 @@ function Config() {
       title: "ID",
       dataIndex: "id",
       key: "id",
-      Ellipsis: true,
+      ellipsis: true,
       width: 200,
       sorter: (a, b) => a.id.localeCompare(b.id),
     },  
@@ -163,7 +169,7 @@ function Config() {
       dataIndex: "name",
       key: "name",
       width: 150,
-      Ellipsis: true,
+      ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       filters: Array.from(new Set(locationData.map(item => item.name))).map((name, index) => ({
         text: name,
@@ -183,7 +189,7 @@ function Config() {
       title: "Actions",
       dataIndex: "delete",
       key: "delete",
-      Ellipsis: true,
+      ellipsis: true,
       width:150,
       render: (text, record, index) => (
         isEditable?

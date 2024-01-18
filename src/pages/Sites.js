@@ -407,11 +407,11 @@ function Sites() {
       (record) =>
         record.name?.toLowerCase().includes(text.toLowerCase()) ||
         record.area?.toLowerCase().includes(text.toLowerCase()) ||
-        record.projId?.toString().includes(text.toLowerCase()) ||
+        record.projId?.toLowerCase().includes(text.toLowerCase()) ||
         record.stateRef?.toLowerCase().includes(text.toLowerCase()) ||
         record.regionRef?.toLowerCase().includes(text.toLowerCase()) ||
         record.weatherStationRef?.toLowerCase().includes(text.toLowerCase()) ||
-        record.armsProjId?.toLowerCase().includes(searchText.toLowerCase())
+        record.armsProjId?.toLowerCase().includes(text.toLowerCase())
     );
     setSite(filteredData);
   };

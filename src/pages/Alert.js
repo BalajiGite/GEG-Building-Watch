@@ -118,8 +118,8 @@ function Alerts() {
       title: "ID",
       dataIndex: "id",
       key: "0",
-      width: 200,
-      Ellipsis: true,
+      width: 100,
+      ellipsis: true,
       sorter: (a, b) => a.id - b.id,
     },
     {
@@ -127,7 +127,7 @@ function Alerts() {
       dataIndex: "sitename",
       key: "1",
       width: 200,
-      Ellipsis: true,
+      ellipsis: true,
       sorter: (a, b) => a.sitename.localeCompare(b.sitename),
       filters: Array.from(new Set(post.map(item => item.sitename))).map((name, index) => ({
         text: name,
@@ -141,8 +141,8 @@ function Alerts() {
       title: "Utility Type",
       dataIndex: "utilitytype",
       key: "2",
-      width: 200,
-      Ellipsis: true,
+      width: 160,
+      ellipsis: true,
       sorter: (a, b) => a.utilitytype.localeCompare(b.utilitytype),
       filters: Array.from(new Set(post.map(item => item.utilitytype))).map((name, index) => ({
         text: name,
@@ -156,8 +156,8 @@ function Alerts() {
       title: "Project",
       dataIndex: "project",
       key: "3",
-      width: 200,
-      Ellipsis: true,
+      width: 160,
+      ellipsis: true,
       sorter: (a, b) => a.project.localeCompare(b.project),
       filters: Array.from(new Set(post.map(item => item.project))).map((name, index) => ({
         text: name,
@@ -171,8 +171,8 @@ function Alerts() {
       title: "Report Type",
       dataIndex: "reporttype",
       key: "4",
-      width: 200,
-      Ellipsis: true,
+      width: 160,
+      ellipsis: true,
       sorter: (a, b) => a.reporttype.localeCompare(b.reporttype),
       filters: Array.from(new Set(post.map(item => item.reporttype))).map((name, index) => ({
         text: name,
@@ -186,8 +186,8 @@ function Alerts() {
       title: "Frequency",
       dataIndex: "freq",
       key: "5",
-      width: 200,
-      Ellipsis: true,
+      width: 160,
+      ellipsis: true,
       sorter: (a, b) => a.freq.localeCompare(b.freq),
       filters: Array.from(new Set(post.map(item => item.freq))).map((name, index) => ({
         text: name,
@@ -201,8 +201,8 @@ function Alerts() {
       title: "Timezone",
       dataIndex: "tz",
       key: "6",
-      width: 200,
-      Ellipsis: true,
+      width: 160,
+      ellipsis: true,
       sorter: (a, b) => a.tz.localeCompare(b.tz),
       filters: Array.from(new Set(post.map(item => item.tz))).map((name, index) => ({
         text: name,
@@ -217,7 +217,7 @@ function Alerts() {
       dataIndex: "recipientemails",
       key: "7",
       width: 200,
-      Ellipsis: true,
+      ellipsis: true,
       sorter: (a, b) => a.recipientemails.localeCompare(b.recipientemails),
       filters: Array.from(new Set(post.map(item => item.recipientemails))).map((name, index) => ({
         text: name,
@@ -237,7 +237,7 @@ function Alerts() {
       dataIndex: "erroremails",
       key: "8",
       width: 200,
-      Ellipsis: true,
+      ellipsis: true,
       sorter: (a, b) => a.erroremails.localeCompare(b.erroremails),
       filters: Array.from(new Set(post.map(item => item.erroremails))).map((name, index) => ({
         text: name,
@@ -256,7 +256,7 @@ function Alerts() {
       title: "Is Active",
       dataIndex: "isactive",
       key: "9",
-      width: 200,
+      width: 120,
       render: (text, record) => (
         <Checkbox
           checked={record.isactive}
@@ -274,8 +274,8 @@ function Alerts() {
       title: "Actions",
       dataIndex: "actions",
       key: "14",
-      width: 200,
-      Ellipsis: true,
+      width: 160,
+      ellipsis: true,
       render: (text, record, index) => (
         isEditable?.isEditable?
         <>

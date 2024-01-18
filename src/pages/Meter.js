@@ -86,7 +86,7 @@ function Meter() {
           dataIndex: "elec",
           key: "electricity",
           width: 120,
-          Ellipsis: true,
+          ellipsis: true,
           sorter: (a, b) => a.elec.localeCompare(b.elec),
           filter: Array.from(new Set(meters.map(item => item.elec))).map((electricity, index) => ({
             text: electricity,
@@ -101,11 +101,11 @@ function Meter() {
     if(data.some(item => item.gegNabersExclusionPercent)){
       dynamicColumns.push(
         {
-          title: "GEG Nab Ex Per",
+          title: "Geg Nabers Exclusion Percent",
           dataIndex: "gegNabersExclusionPercent",
           key: "7",
           width: 200,
-          Ellipsis: true,
+          ellipsis: true,
           sorter: (a, b) => a.gegNabersExclusionPercent - b.gegNabersExclusionPercent,
         },
       )
@@ -118,8 +118,8 @@ function Meter() {
       title: "ID",
       dataIndex: "id",
       key: "1",
-      width: 300,
-      Ellipsis: true,
+      width: 200,
+      ellipsis: true,
       sorter: (a, b) => a.id.localeCompare(b.id),
     },
     {
@@ -127,7 +127,7 @@ function Meter() {
       dataIndex: "name",
       key: "2",
       width: 200,
-      Ellipsis: true,
+      ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       filters: Array.from(new Set(meters.map(item => item.name))).map((name, index) => ({
         text: name,
@@ -147,7 +147,7 @@ function Meter() {
       dataIndex: "equip",
       key: "3",
       width: 120,
-      Ellipsis: true,
+      ellipsis: true,
       sorter: (a, b) => a.equip.localeCompare(b.equip),
       filters: Array.from(new Set(meters.map(item => item.equip))).map((name, index) => ({
         text: name,
@@ -163,7 +163,7 @@ function Meter() {
       dataIndex: "gateMeter",
       key: "5",
       width: 120,
-      Ellipsis: true,
+      ellipsis: true,
       sorter: (a, b) => a.gateMeter.localeCompare(b.gateMeter),
       filters: Array.from(new Set(meters.map(item => item.gateMeter))).map((name, index) => ({
         text: name,
@@ -178,7 +178,7 @@ function Meter() {
       dataIndex: "gegEquipType",
       key: "6",
       width: 140,
-      Ellipsis: true,
+      ellipsis: true,
       sorter: (a, b) => a.gegEquipType.localeCompare(b.gegEquipType),
       filters: Array.from(new Set(meters.map(item => item.gegEquipType))).map((name, index) => ({
         text: name,
@@ -193,7 +193,7 @@ function Meter() {
       dataIndex: "gegNabersInclusionPercent",
       key: "7",
       width: 120,
-      Ellipsis: true,
+      ellipsis: true,
       sorter: (a, b) => a.gegNabersInclusionPercent - b.gegNabersInclusionPercent,
     },
     
@@ -202,7 +202,7 @@ function Meter() {
       dataIndex: "levelRef",
       key: "8",
       width: 200,
-      Ellipsis: true,
+      ellipsis: true,
       sorter: (a, b) => a.levelRef.localeCompare(b.levelRef),
       filters: Array.from(new Set(meters.map(item => item.levelRef))).map((name, index) => ({
         text: name,
@@ -217,7 +217,7 @@ function Meter() {
       dataIndex: "meter",
       key: "9",
       width: 150,
-      Ellipsis: true,
+      ellipsis: true,
       sorter: (a, b) => a.meter.localeCompare(b.meter),
       filters: Array.from(new Set(meters.map(item => item.meter))).map((name, index) => ({
         text: name,
@@ -232,7 +232,7 @@ function Meter() {
       dataIndex: "siteRef",
       key: "10",
       width: 200,
-      Ellipsis: true,
+      ellipsis: true,
       sorter: (a, b) => a.siteRef.localeCompare(b.siteRef),
       filters: Array.from(new Set(meters.map(item => item.siteRef))).map((name, index) => ({
         text: name,
@@ -247,7 +247,7 @@ function Meter() {
       dataIndex: "delete",
       key: "18",
       width: 200,
-      Ellipsis: true,
+      ellipsis: true,
       render: (text, record, index) => (
         isEditables?.isEditable?
         <>
@@ -378,7 +378,7 @@ function Meter() {
       (record) =>
         // debugger
         record.name.toLowerCase().includes(text.toLowerCase()) ||
-        record.levelRef.toString().includes(text.toLowerCase()) ||
+        record.levelRef.toLowerCase().includes(text.toLowerCase()) ||
         record.siteRef.toLowerCase().includes(text.toLowerCase())
 
     );

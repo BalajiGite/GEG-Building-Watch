@@ -67,11 +67,11 @@ const isFieldEditable = (fieldName) => {
     // For example, if "stateRef" exists in any of the items, add a column for it
     if (data.some(item => item.elecTargetProfile)) {
       dynamicColumns.push({
-        title: "Electricity Target Profile",
+        title: "Elec Target Profile",
         dataIndex: "elecTargetProfile",
         key: "elecTargetProfile",
-        width: 300,
-        Ellipsis: true,
+        width: 180,
+        ellipsis: true,
         sorter: (a, b) => a.elecTargetProfile.localeCompare(b.elecTargetProfile),
         filters: Array.from(new Set(targets.map(item => item.elecTargetProfile))).map((profile, index) => ({
           text: profile,
@@ -84,11 +84,11 @@ const isFieldEditable = (fieldName) => {
     }
     if (data.some(item => item.targetKwh0)) {
       dynamicColumns.push({
-        title: "Target kWh 0",
+        title: "Target kWh0",
         dataIndex: "targetKwh0",
         key: "targetKwh0",
-        width: 200,
-        Ellipsis: true,
+        width: 160,
+        ellipsis: true,
         sorter: (a, b) => parseFloat(a.targetKwh0) - parseFloat(b.targetKwh0),
         filters: Array.from(new Set(targets.map(item => item.targetKwh0))).map((kwh, index) => ({
           text: kwh,
@@ -102,11 +102,11 @@ const isFieldEditable = (fieldName) => {
 
     if (data.some(item => item.targetKwh1)) {
       dynamicColumns.push({
-        title: "Target kWh 1",
+        title: "Target kWh1",
         dataIndex: "targetKwh1",
         key: "targetKwh1",
-        width: 200,
-        Ellipsis: true,
+        width: 160,
+        ellipsis: true,
         sorter: (a, b) => parseFloat(a.targetKwh1) - parseFloat(b.targetKwh1),
         filters: Array.from(new Set(targets.map(item => item.targetKwh1))).map((kwh, index) => ({
           text: kwh,
@@ -120,11 +120,11 @@ const isFieldEditable = (fieldName) => {
 
     if (data.some(item => item.targetKwh2)) {
       dynamicColumns.push({
-        title: "Target kWh 2",
+        title: "Target kWh2",
         dataIndex: "targetKwh2",
         key: "targetKwh2",
-        width: 200,
-        Ellipsis: true,
+        width: 160,
+        ellipsis: true,
         sorter: (a, b) => parseFloat(a.targetKwh2) - parseFloat(b.targetKwh2),
         filters: Array.from(new Set(targets.map(item => item.targetKwh2))).map((kwh, index) => ({
           text: kwh,
@@ -140,8 +140,8 @@ const isFieldEditable = (fieldName) => {
         title: "Water Target Profile",
         dataIndex: "waterTargetProfile",
         key: "waterTargetProfile",
-        width: 350,
-        Ellipsis: true,
+        width: 200,
+        ellipsis: true,
         sorter: (a, b) => a.waterTargetProfile.localeCompare(b.waterTargetProfile),
         filters: Array.from(new Set(targets.map(item => item.waterTargetProfile))).map((name, index) => ({
           text: name,
@@ -157,8 +157,8 @@ const isFieldEditable = (fieldName) => {
         title: "Target Kl0",
         dataIndex: "targetKl0",
         key: "targetKl0",
-        width: 200,
-        Ellipsis: true,
+        width: 160,
+        ellipsis: true,
         sorter: (a, b) => a.targetKl0.localeCompare(b.targetKl0),
         filters: Array.from(new Set(targets.map(item => item.targetKl0))).map((name, index) => ({
           text: name,
@@ -175,8 +175,8 @@ const isFieldEditable = (fieldName) => {
         title: "Target Kl1",
         dataIndex: "targetKl1",
         key: "targetKl1",
-        width: 200,
-        Ellipsis: true,
+        width: 160,
+        ellipsis: true,
         sorter: (a, b) => a.targetKl1.localeCompare(b.targetKl1),
         filters: Array.from(new Set(targets.map(item => item.targetKl1))).map((name, index) => ({
           text: name,
@@ -192,8 +192,8 @@ const isFieldEditable = (fieldName) => {
         title: "Target Kl2",
         dataIndex: "targetKl2",
         key: "targetKl2",
-        width: 200,
-        Ellipsis: true,
+        width: 160,
+        ellipsis: true,
         sorter: (a, b) => a.targetKl2.localeCompare(b.targetKl2),
         filters: Array.from(new Set(targets.map(item => item.targetKl2))).map((name, index) => ({
           text: name,
@@ -209,8 +209,8 @@ const isFieldEditable = (fieldName) => {
         title: "Gas Target Profile",
         dataIndex: "gasTargetProfile",
         key: "gasTargetProfile",
-        width: 300,
-        Ellipsis: true,
+        width: 200,
+        ellipsis: true,
         sorter: (a, b) => a.gasTargetProfile.localeCompare(b.gasTargetProfile),
         filters: Array.from(new Set(targets.map(item => item.gasTargetProfile))).map((name, index) => ({
           text: name,
@@ -226,8 +226,8 @@ const isFieldEditable = (fieldName) => {
         title: "Target Cum0",
         dataIndex: "targetCum0",
         key: "targetCum0",
-        width: 200,
-        Ellipsis: true,
+        width: 160,
+        ellipsis: true,
         sorter: (a, b) => a.targetCum0.localeCompare(b.targetCum0),
         filters: Array.from(new Set(targets.map(item => item.targetCum0))).map((name, index) => ({
           text: name,
@@ -243,8 +243,8 @@ const isFieldEditable = (fieldName) => {
         title: "Target Cum1",
         dataIndex: "targetCum1",
         key: "targetCum1",
-        width: 200,
-        Ellipsis: true,
+        width: 160,
+        ellipsis: true,
         sorter: (a, b) => a.targetCum1.localeCompare(b.targetCum1),
         filters: Array.from(new Set(targets.map(item => item.targetCum1))).map((name, index) => ({
           text: name,
@@ -263,16 +263,16 @@ const isFieldEditable = (fieldName) => {
       title: "ID",
       dataIndex: "id",
       key: "id",
-      width: 300,
-      Ellipsis: true,
+      width: 200,
+      ellipsis: true,
       sorter: (a, b) => a.id.localeCompare(b.id),
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      width: 400,
-      Ellipsis: true,
+      width: 280,
+      ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       filters: Array.from(new Set(targets.map(item => item.name))).map((name, index) => ({
         text: name,
@@ -286,8 +286,8 @@ const isFieldEditable = (fieldName) => {
       title: "Unit",
       dataIndex: "unit",
       key: "unit",
-      width: 200,
-      Ellipsis: true,
+      width: 120,
+      ellipsis: true,
       sorter: (a, b) => a.unit.localeCompare(b.unit),
       filters: Array.from(new Set(targets.map(item => item.unit))).map((unit, index) => ({
         text: unit,
@@ -298,11 +298,26 @@ const isFieldEditable = (fieldName) => {
       onFilter: (value, record) => record.unit.startsWith(value),
     },
     {
+      title: "Current Rating",
+      dataIndex: "currentRating",
+      key: "currentRating",
+      width: 170,
+      ellipsis: true,
+      sorter: (a, b) => parseFloat(a.currentRating) - parseFloat(b.currentRating),
+      filters: Array.from(new Set(targets.map(item => item.currentRating))).map((rating, index) => ({
+        text: rating,
+        value: rating,
+      })),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.currentRating.startsWith(value),
+    },
+    {
       title: "Target Rating",
       dataIndex: "targetRating",
       key: "targetRating",
-      width: 200,
-      Ellipsis: true,
+      width: 170,
+      ellipsis: true,
       sorter: (a, b) => parseFloat(a.targetRating) - parseFloat(b.targetRating),
       filters: Array.from(new Set(targets.map(item => item.targetRating))).map((rating, index) => ({
         text: rating,
@@ -316,8 +331,8 @@ const isFieldEditable = (fieldName) => {
       title: "Point",
       dataIndex: "point",
       key: "point",
-      width: 200,
-      Ellipsis: true,
+      width: 130,
+      ellipsis: true,
       sorter: (a, b) => a.point.localeCompare(b.point),
       filters: Array.from(new Set(targets.map(item => item.point))).map((point, index) => ({
         text: point,
@@ -331,8 +346,8 @@ const isFieldEditable = (fieldName) => {
       title: "Rating Period Start",
       dataIndex: "ratingPeriodStart",
       key: "ratingPeriodStart",
-      width: 300,
-      Ellipsis: true,
+      width: 180,
+      ellipsis: true,
       sorter: (a, b) => a.ratingPeriodStart.localeCompare(b.ratingPeriodStart),
       filters: Array.from(new Set(targets.map(item => item.ratingPeriodStart))).map((start, index) => ({
         text: start,
@@ -346,8 +361,8 @@ const isFieldEditable = (fieldName) => {
       title: "Rating Period End",
       dataIndex: "ratingPeriodEnd",
       key: "ratingPeriodEnd",
-      width: 300,
-      Ellipsis: true,
+      width: 180,
+      ellipsis: true,
       sorter: (a, b) => a.ratingPeriodEnd.localeCompare(b.ratingPeriodEnd),
       filters: Array.from(new Set(targets.map(item => item.ratingPeriodEnd))).map((end, index) => ({
         text: end,
@@ -362,7 +377,7 @@ const isFieldEditable = (fieldName) => {
       dataIndex: "siteRef",
       key: "siteRef",
       width: 200,
-      Ellipsis: true,
+      ellipsis: true,
       sorter: (a, b) => a.siteRef.localeCompare(b.siteRef),
       filters: Array.from(new Set(targets.map(item => item.siteRef))).map((siteRef, index) => ({
         text: siteRef,
@@ -378,7 +393,7 @@ const isFieldEditable = (fieldName) => {
       dataIndex: "delete",
       key: "delete",
       width: 200,
-      Ellipsis: true,
+      ellipsis: true,
       render: (text, record, index) => (
         isEditables?.isEditable ?
           <>
@@ -457,6 +472,17 @@ const isFieldEditable = (fieldName) => {
     } catch (error) { }
   };
 
+  const getFormatedDate = (startDate) =>{
+       
+        const year = startDate.toDate().getFullYear();
+        const month = (startDate.toDate().getMonth() + 1).toString().padStart(2, '0');
+        const day = startDate.toDate().getDate().toString().padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`;
+        //console.log(formattedDate);
+        return formattedDate;
+
+  }
+
   const setData = async () => {
     try {
       var formData = form.getFieldsValue();
@@ -470,8 +496,8 @@ const isFieldEditable = (fieldName) => {
         const modifiedFormData = {
           ...formData, 
           siteName: formData.siteRef,
-          ratingPeriodStart: formData.ratingPeriodStart.toDate().toISOString().split("T")[0],
-          ratingPeriodEnd: formData.ratingPeriodEnd.toDate().toISOString().split("T")[0],
+          ratingPeriodStart: getFormatedDate(formData.ratingPeriodStart),
+          ratingPeriodEnd: getFormatedDate(formData.ratingPeriodEnd),
           pointId: formData.id,
           targetKwh0:Number(formData.targetKwh0),
           targetKwh1:formData.targetKwh1==""?0:Number(formData.targetKwh1),
@@ -488,8 +514,8 @@ const isFieldEditable = (fieldName) => {
         const modifiedFormData = {
           ...formData, 
           siteName: formData.siteRef,
-          ratingPeriodStart: formData.ratingPeriodStart.toDate().toISOString().split("T")[0],
-          ratingPeriodEnd: formData.ratingPeriodEnd.toDate().toISOString().split("T")[0],
+          ratingPeriodStart: getFormatedDate(formData.ratingPeriodStart),
+          ratingPeriodEnd: getFormatedDate(formData.ratingPeriodEnd),
           pointId: formData.id,
           targetKl0:Number(formData.targetKl0),
           targetKl1:formData.targetKl1==""?0:Number(formData.targetKl1),
@@ -506,8 +532,8 @@ const isFieldEditable = (fieldName) => {
         const modifiedFormData = {
           ...formData, 
           siteName: formData.siteRef,
-          ratingPeriodStart: formData.ratingPeriodStart.toDate().toISOString().split("T")[0],
-          ratingPeriodEnd: formData.ratingPeriodEnd.toDate().toISOString().split("T")[0],
+          ratingPeriodStart: getFormatedDate(formData.ratingPeriodStart),
+          ratingPeriodEnd: getFormatedDate(formData.ratingPeriodEnd),
           pointId: formData.id,
           targetCum0:Number(formData.targetCum0),
           targetCum1:formData.targetCum1==""?0:Number(formData.targetCum1),
@@ -556,6 +582,7 @@ const isFieldEditable = (fieldName) => {
       console.log(error)
     }
   }
+
   const onChangeText = (text) => {
     setSearchText(text);
     searchFilter(text);
@@ -565,7 +592,8 @@ const isFieldEditable = (fieldName) => {
   }
   const searchFilter = (text) => {
     const filterData = targets.filter((record) => (
-      record.name.toLowerCase().includes(text.toLowerCase())
+      record.name.toLowerCase().includes(text.toLowerCase()) ||
+      record.siteRef.toLowerCase().includes(text.toLowerCase())
     ))
     setTargets(filterData)
   }
@@ -820,18 +848,11 @@ const isFieldEditable = (fieldName) => {
                     required: true,
                     message: 'Please enter Target value.',
                   },
-                  {
-                    min: 0,
-                    max: 6,
-                    message: 'Please enter a number between 0 and 6 for the Target Rating.',
-                  },
                 ]}
               >
                 <Input
                   className='form_input'
                   type="number"
-                  min={0}
-                  max={6}
                   readOnly={newForm ? false : activeButton === 2 ? isFieldEditable('targetKl0') : activeButton === 3 ? isFieldEditable("targetCum0") : isFieldEditable('targetKwh0')}
                 />
               </Form.Item>
@@ -844,11 +865,6 @@ const isFieldEditable = (fieldName) => {
                 label={activeButton === 2 ? "Target Kl1" : activeButton === 3 ? "Target Cum1" : "Target kwh1"}
                 wrapperCol={24}
                 rules={[
-                  {
-                    min: 0,
-                    max: 6,
-                    message: 'Please enter a number between 0 and 6 for the Target Rating.',
-                  },
                   {
                     validator: (_, value) => {
                       if (value && form.getFieldValue(activeButton === 2 ? 'targetKl0' : activeButton === 3 ? 'targetCum0' : 'targetKwh0') >= value) {
@@ -863,8 +879,6 @@ const isFieldEditable = (fieldName) => {
                 <Input
                   className='form_input'
                   type="number"
-                  min={0}
-                  max={6}
                   readOnly={newForm ? false : activeButton === 2 ? isFieldEditable('targetKl1') : activeButton === 3 ? isFieldEditable('targetCum1') : isFieldEditable('targetKwh1')}
                 />
               </Form.Item>
@@ -877,11 +891,7 @@ const isFieldEditable = (fieldName) => {
                 label={activeButton === 2 ? "Target kl2" :activeButton === 3 ? "Target Cum2": "Target Kwh2"}
                 wrapperCol={24}
                 rules={[
-                  {
-                    min: 0,
-                    max: 6,
-                    message: 'Please enter a number between 0 and 6 for the Target Rating.',
-                  },
+                 
                   {
                     validator: (_, value) => {
                       if (value && form.getFieldValue(activeButton === 2 ? 'targetKl1' : activeButton === 3 ? 'targetCum1' : 'targetKwh1') >= value) {
@@ -892,7 +902,7 @@ const isFieldEditable = (fieldName) => {
                   },
                 ]}
                 initialValue="">
-                <Input className='form_input' type='number' min={0} max={6} readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl2'):isFieldEditable('targetKwh2')}/>
+                <Input className='form_input' type='number' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl2'):isFieldEditable('targetKwh2')}/>
               </Form.Item>
             </Col>
           </Row>
