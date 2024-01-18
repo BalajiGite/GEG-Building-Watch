@@ -42,7 +42,7 @@ function Config() {
   const [form] = Form.useForm();
 
   const screenHeight = window.innerHeight - 310;
-
+  const totalRows = locationData.length;
 
   const dynamicColumns = (data) => {
     const dynamicColumns = [];
@@ -606,6 +606,10 @@ function Config() {
           scroll={{
             x: 1000,
             y: screenHeight
+          }}
+          pagination={{
+            total:totalRows,
+            showTotal:(total, range) => (`Total Locations ${total}`)
           }}
         />
       </Spin>

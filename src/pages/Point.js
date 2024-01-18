@@ -41,7 +41,7 @@ export default function Point() {
   const [form] = Form.useForm();
   // const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
   const screenHeight = window.innerHeight - 310;
-
+  const totalRows = point.length;
   const validateMessages = {
     required: "${label} is required",
     types: {
@@ -659,6 +659,10 @@ export default function Point() {
           scroll={{
             x: 1000,
             y: screenHeight
+          }}
+          pagination={{
+            total:totalRows,
+            showTotal:(total, range) => (`Total Points ${total}`)
           }}
         />
       </Spin>

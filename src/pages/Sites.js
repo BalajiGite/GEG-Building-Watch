@@ -59,6 +59,8 @@ function Sites() {
     form.resetFields();
   };
 
+  const totalRows = site.length;
+
   const columns = [
     {
       title: "Id",
@@ -807,6 +809,10 @@ function Sites() {
           scroll={{
             y: screenHeight,
             x: 1000,
+          }}
+          pagination={{
+            total:totalRows,
+            showTotal:(total, range) => (`Total Sites ${total}`)
           }}
         />
       </Spin>
