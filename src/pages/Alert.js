@@ -425,7 +425,7 @@ function Alerts() {
         record.reporttype.toLowerCase().includes(text.toLowerCase()) ||
         record.freq.toLowerCase().includes(text.toLowerCase()) ||
         record.tz.toLowerCase().includes(text.toLowerCase()) ||
-        record.recipientemails.toString().includes(text.toLowerCase()) ||
+        record.recipientemails.toLowerCase().includes(text.toLowerCase()) ||
         record.erroremails.toLowerCase().includes(text.toLowerCase())
 
     );

@@ -462,17 +462,17 @@ const isFieldEditable = (fieldName) => {
       var formData = form.getFieldsValue();
 
       var objecttoPass = null;
-
+      debugger;
       var functionName = "";
       var typeName = ""
       if(activeButton == 1){
         functionName = 'createElecTargetProfileRecordsFromJson';
         const modifiedFormData = {
           ...formData, 
-          siteName: formData.name,
+          siteName: formData.siteRef,
           ratingPeriodStart: formData.ratingPeriodStart.toDate().toISOString().split("T")[0],
           ratingPeriodEnd: formData.ratingPeriodEnd.toDate().toISOString().split("T")[0],
-          pointId: formData.point,
+          pointId: formData.id,
           targetKwh0:Number(formData.targetKwh0),
           targetKwh1:formData.targetKwh1==""?0:Number(formData.targetKwh1),
           targetKwh2:formData.targetKwh2==""?0:Number(formData.targetKwh2),
@@ -480,17 +480,17 @@ const isFieldEditable = (fieldName) => {
           targetRating:Number(formData.targetRating)
 
         };
-        const { name, point, ...objectWithoutName } = modifiedFormData;
+        const { siteRef, id, ...objectWithoutName } = modifiedFormData;
         objecttoPass = objectWithoutName;
         typeName = "Electric"
       }else if(activeButton == 2){
         functionName = 'createWaterTargetProfileRecordsFromJson';
         const modifiedFormData = {
           ...formData, 
-          siteName: formData.name,
+          siteName: formData.siteRef,
           ratingPeriodStart: formData.ratingPeriodStart.toDate().toISOString().split("T")[0],
           ratingPeriodEnd: formData.ratingPeriodEnd.toDate().toISOString().split("T")[0],
-          pointId: formData.point,
+          pointId: formData.id,
           targetKl0:Number(formData.targetKl0),
           targetKl1:formData.targetKl1==""?0:Number(formData.targetKl1),
           targetKl2:formData.targetKl2==""?0:Number(formData.targetKl2),
@@ -498,17 +498,17 @@ const isFieldEditable = (fieldName) => {
           targetRating:Number(formData.targetRating)
 
         };
-        const { name, point, ...objectWithoutName } = modifiedFormData;
+        const { siteRef, id, ...objectWithoutName } = modifiedFormData;
         objecttoPass = objectWithoutName;
         typeName = "Water"
       }else if(activeButton == 3){
         functionName = 'createGasTargetProfileRecordsFromJson';
         const modifiedFormData = {
           ...formData, 
-          siteName: formData.name,
+          siteName: formData.siteRef,
           ratingPeriodStart: formData.ratingPeriodStart.toDate().toISOString().split("T")[0],
           ratingPeriodEnd: formData.ratingPeriodEnd.toDate().toISOString().split("T")[0],
-          pointId: formData.point,
+          pointId: formData.id,
           targetCum0:Number(formData.targetCum0),
           targetCum1:formData.targetCum1==""?0:Number(formData.targetCum1),
           targetCum2:formData.targetCum2==""?0:Number(formData.targetCum2),
@@ -516,13 +516,24 @@ const isFieldEditable = (fieldName) => {
           targetRating:Number(formData.targetRating)
 
         };
-        const { name, point, ...objectWithoutName } = modifiedFormData;
+        const { siteRef, id, ...objectWithoutName } = modifiedFormData;
         objecttoPass = objectWithoutName;
         typeName = "Gas"
       }
 
       if (targetId) {
-        const res = await targetEdit(targetId, formData)
+        const body = {
+          funcName: functionName,
+          recList: [objecttoPass]
+        };
+        const addNewTarget =await postApiDataToAws(body)
+        if (addNewTarget && addNewTarget.message ==="Success") {
+          // console.log(typeName +' target added successfully:', addNewTarget);
+          message.success(typeName + ' target updated successfully');
+        } else {
+          // console.log('Failed to add target for ' + typeName, addNewTarget);
+          message.error('Failed to update target for ' + typeName);
+        }
       }
       else {
         const body = {
@@ -656,7 +667,7 @@ const isFieldEditable = (fieldName) => {
               <Form.Item
                 label="Select Site"
                 wrapperCol={24}
-                name={"name"}
+                name={"siteRef"}
                 rules={[
                   {
                     required: true,
@@ -809,9 +820,20 @@ const isFieldEditable = (fieldName) => {
                     required: true,
                     message: 'Please enter Target value.',
                   },
-                ]}>
-                <Input className='form_input' type="number" readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl0'):activeButton===3?isFieldEditable("targetCum0"):
-              isFieldEditable('targetKwh0')}/>
+                  {
+                    min: 0,
+                    max: 6,
+                    message: 'Please enter a number between 0 and 6 for the Target Rating.',
+                  },
+                ]}
+              >
+                <Input
+                  className='form_input'
+                  type="number"
+                  min={0}
+                  max={6}
+                  readOnly={newForm ? false : activeButton === 2 ? isFieldEditable('targetKl0') : activeButton === 3 ? isFieldEditable("targetCum0") : isFieldEditable('targetKwh0')}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -821,8 +843,30 @@ const isFieldEditable = (fieldName) => {
                 name={activeButton === 2 ? "targetKl1" : activeButton === 3 ? "targetCum1" : "targetKwh1"}
                 label={activeButton === 2 ? "Target Kl1" : activeButton === 3 ? "Target Cum1" : "Target kwh1"}
                 wrapperCol={24}
-                initialValue="">
-                <Input className='form_input' type="number" readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl1'):activeButton===3?isFieldEditable('targetCum1'):isFieldEditable('targetKwh1')}/>
+                rules={[
+                  {
+                    min: 0,
+                    max: 6,
+                    message: 'Please enter a number between 0 and 6 for the Target Rating.',
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (value && form.getFieldValue(activeButton === 2 ? 'targetKl0' : activeButton === 3 ? 'targetCum0' : 'targetKwh0') >= value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error('Target 1 should be less than Target 0'));
+                    },
+                  },
+                ]}
+                initialValue=""
+              >
+                <Input
+                  className='form_input'
+                  type="number"
+                  min={0}
+                  max={6}
+                  readOnly={newForm ? false : activeButton === 2 ? isFieldEditable('targetKl1') : activeButton === 3 ? isFieldEditable('targetCum1') : isFieldEditable('targetKwh1')}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -832,8 +876,23 @@ const isFieldEditable = (fieldName) => {
                 name={activeButton === 2 ? "targetKl2" :activeButton === 3 ? "targetCum2": "targetKwh2"}
                 label={activeButton === 2 ? "Target kl2" :activeButton === 3 ? "Target Cum2": "Target Kwh2"}
                 wrapperCol={24}
+                rules={[
+                  {
+                    min: 0,
+                    max: 6,
+                    message: 'Please enter a number between 0 and 6 for the Target Rating.',
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (value && form.getFieldValue(activeButton === 2 ? 'targetKl1' : activeButton === 3 ? 'targetCum1' : 'targetKwh1') >= value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error('Target 2 should be less than Target 1'));
+                    },
+                  },
+                ]}
                 initialValue="">
-                <Input className='form_input' type='number' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl2'):isFieldEditable('targetKwh2')}/>
+                <Input className='form_input' type='number' min={0} max={6} readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl2'):isFieldEditable('targetKwh2')}/>
               </Form.Item>
             </Col>
           </Row>
@@ -853,7 +912,7 @@ const isFieldEditable = (fieldName) => {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={"point"}
+                name={"id"}
                 label="Point ID"
                 initialValue=""
                 wrapperCol={24}>
