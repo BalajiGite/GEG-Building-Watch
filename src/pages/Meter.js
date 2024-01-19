@@ -44,6 +44,7 @@ function Meter() {
   const [visibleColumns, setVisibleColumns] = useState([]);
 
   const screenHeight = window.innerHeight - 310;
+  const totolRows = meters.length;
 
   const validateMessages = {
     required: "${label} is required!",
@@ -726,6 +727,10 @@ function Meter() {
           scroll={{
             x: 1000,
             y: screenHeight
+          }}
+          pagination={{
+            total:totolRows,
+            showTotal:(total,range) => (`Total Meters ${total}`)
           }}
         />
       </Spin>

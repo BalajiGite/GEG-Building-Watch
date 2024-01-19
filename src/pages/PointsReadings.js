@@ -36,7 +36,7 @@ function Sites() {
   // console.log(open);
   const [form] = Form.useForm();
   const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
-
+  const totalRows = site.length;
   const validateMessages = {
     required: "${label} is required!",
     types: {
@@ -646,6 +646,10 @@ function Sites() {
           scroll={{
             x: 1000,
             y:screenHeight
+          }}
+          pagination={{
+            total:totalRows,
+            showTotal: (total, range) => (`Total Readings ${total}`)
           }}
         />
       </Spin>

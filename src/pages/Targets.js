@@ -28,6 +28,7 @@ function Targets() {
   const DATE_FORMAT = 'YYYY-MM-DD';
 
   const screenHeight = window.innerHeight - 310;
+  const totalRows = targets.length;
 // let edit = [];
 //  edit = Array.isArray(isEditable.current.editKeysUneditable)
 
@@ -945,6 +946,10 @@ const isFieldEditable = (fieldName) => {
           scroll={{
             x: 1000,
             y: screenHeight
+          }}
+          pagination={{
+            total:totalRows,
+            showTotal:(total, range) => (`Total Targets ${total}`)
           }}
         />
       </Spin>
