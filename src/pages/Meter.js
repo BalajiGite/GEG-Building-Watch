@@ -68,6 +68,7 @@ function Meter() {
   const onOpenModal = () => {
     setOpen(true);
     setNewForm(true);
+    form.resetFields();
   };
 
   const onOpenModalCheck = () => {
@@ -104,7 +105,7 @@ function Meter() {
         {
           title: "Geg Nabers Exclusion Percent",
           dataIndex: "gegNabersExclusionPercent",
-          key: "7",
+          key: "gegNabersExclusionPercent",
           width: 200,
           ellipsis: true,
           sorter: (a, b) => a.gegNabersExclusionPercent - b.gegNabersExclusionPercent,
@@ -172,8 +173,8 @@ function Meter() {
       })),
       filterMode: "tree",
       filterSearch: true,
-      onFilter: (value, record) => record.gateMeter.startsWith(value),
-    },
+      onFilter: (value, record) => record.gateMeter == value,
+    },    
     {
       title: "GEG Equip Type",
       dataIndex: "gegEquipType",
@@ -274,7 +275,6 @@ function Meter() {
     setIsLoading(true);
     // debugger
     try {
-      const resp = await getMeterList();
       let meterData = [];
       let configData = {};
       const sitesList = await getApiDataFromAws("queryType=dropdownSite")
@@ -315,15 +315,24 @@ function Meter() {
         gegNabersExclusionPercent: formData.gegNabersExclusionPercent !=""?Number(formData.gegNabersExclusionPercent):"", 
         gegNabersInclusionPercent: formData.gegNabersInclusionPercent !=""?Number(formData.gegNabersInclusionPercent):"",  
         isGateMeter: formData.gateMeter,
-        submeterOf: formData.meter,
       };
-
-
-
-      const { name,levelRef,gateMeter, meter,siteRef, ...objectWithoutName } = modifiedFormData
+      const { name,levelRef,gateMeter,siteRef, ...objectWithoutName } = modifiedFormData
 
       if (MeterId) {
-        const resp = await editMeter(MeterId, formData);
+        const objectWithMeterId = {
+          ...objectWithoutName,
+          meterId: MeterId,
+        };
+        const body = {
+          funcName: 'updateMeterInclusionExclusionVals',
+          recList: [objectWithMeterId]
+        };
+        const updateNewMeter = await postApiDataToAws(body)
+        if (updateNewMeter && updateNewMeter.message ==="Success") {
+          message.success('Meter Updated successfully');
+        } else  {
+          message.error(updateNewMeter[0].row1[0]);
+        }
       } else {
         const body = {
           funcName: 'createMeterRecordsFromJson',
@@ -332,8 +341,8 @@ function Meter() {
         const addNewMeter = await postApiDataToAws(body)
         if (addNewMeter && addNewMeter.message ==="Success") {
           message.success('Meter added successfully');
-        } else {
-          message.error('Failed to add site');
+        } else  {
+          message.error(addNewMeter[0].row1[0]);
         }
       }
       onCancelModal();
@@ -353,6 +362,7 @@ function Meter() {
   const onEdit = async (record) => {
     form.setFieldsValue(record);
     setMeterId(record.id);
+    setNewForm(false);
     setOpen(true);
   };
 
@@ -497,7 +507,8 @@ function Meter() {
                   },
                 ]}
               >
-                <Input className="form_input" readOnly={newForm?false:isFieldEditable('name')}/>
+                <Input className="form_input" readOnly={newForm?false:true}/> 
+                {/**  isFieldEditable('name') */}
               </Form.Item>
             </Col>
           </Row>
@@ -510,7 +521,8 @@ function Meter() {
                 wrapperCol={{ span: 24 }}
               // rules={[{ required: "" }]}
               >
-                <Input className="form_input" readOnly={newForm?false:isFieldEditable('gegEquipType')}/>
+                <Input className="form_input" readOnly={true}/>
+                {/**isFieldEditable('gegEquipType')*/}
               </Form.Item>
             </Col>
           </Row>
@@ -535,7 +547,7 @@ function Meter() {
                   onChange={handleSiteChange}
                   size="large"
                   style={{ width: "100%" }}
-                  disabled = {newForm?false:isFieldEditable('siteRef')}
+                  disabled = {newForm?false:true}
                 >
                   {siteListData.length > 0 &&
                     siteListData.map((item, index) => (
@@ -543,6 +555,7 @@ function Meter() {
                     ))
                   }
                 </Select>
+                {/**isFieldEditable('siteRef')*/}
               </Form.Item>
             </Col>
           </Row>
@@ -566,8 +579,7 @@ function Meter() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                  readOnly={newForm?false:isFieldEditable('levelRef')}
-
+                  disabled={newForm?false:true}
                 >
                   {levelListData.length > 0 &&
                     levelListData.map((item, index) => (
@@ -575,10 +587,59 @@ function Meter() {
                     ))
                   }
                 </Select>
+                {/* isFieldEditable("levelRef") */}
               </Form.Item>
             </Col>
           </Row>
-
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name={"gateMeter"}
+                label="Select Is Gate Meter"
+                wrapperCol={{ span: 24 }}
+              >
+                <Select
+                  placeholder="Select Is Gate Meter"
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                  size="large"
+                  style={{ width: "100%" }}
+                  disabled={newForm ? false : true}
+                >
+                  <Select.Option value={true}>True</Select.Option>
+                  <Select.Option value={false}>False</Select.Option>
+                </Select>
+                {/**isFieldEditable('gateMeter') */}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name={"submeterOf"}
+                label="Select Sub-meter of"
+                initialValue=""
+                wrapperCol={{ span: 24 }}
+                
+              >
+                <Select
+                  placeholder="Select Sub-meter of"
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                  size="large"
+                  style={{ width: "100%" }}
+                  disabled = {newForm ? false : isFieldEditable('submeterOf')}
+                >
+                  {gateListData.length > 0 &&
+                    gateListData.map((item, index) => (
+                      <Select.Option key={index} value={item.id}>
+                        {item.name}
+                      </Select.Option>
+                    ))}
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
@@ -590,24 +651,31 @@ function Meter() {
                   {
                     pattern: /^[0-9]*$/,
                     message: 'Please enter a valid number for the Percent less than 100.',
-                  }                 
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!getFieldValue('gateMeter')) {
+                        // When gateMeter is false, the value should be empty
+                        if (value) {
+                          return Promise.reject('Inclusion Percent should be empty when "Is Gate Meter" is false.');
+                        }
+                      }else{
+                        const exclusionPercent = getFieldValue('gegNabersExclusionPercent');
+                        if (exclusionPercent && value) {
+                          return Promise.reject('Please enter only one of Inclusion Percent or Exclusion Percent.');
+                        }
+                      }
+
+                      // Additional validation logic if needed
+
+                      return Promise.resolve();
+                    },
+                  }),
                 ]}
               >
-                <Input className="form_input" type="number" readOnly={newForm?false:isFieldEditable('gegNabersInclusionPercent')}/>
+                <Input className="form_input" type="number" readOnly={newForm ? false : isFieldEditable('gegNabersInclusionPercent')} />
               </Form.Item>
             </Col>
-            {/* <Col span={12}>
-              <Form.Item
-                name={"mpid"}
-                label="MPID"
-                labelCol={{ span: 5 }}
-                wrapperCol={{ span: 16 }}
-
-                // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col> */}
           </Row>
 
           <Row justify={"center"} gutter={[30, 30]}>
@@ -621,72 +689,46 @@ function Meter() {
                   {
                     pattern: /^[0-9]*$/,
                     message: 'Please enter a valid number for the Percent less than 100.',
-                  }                 
+                  },
+                  {
+                    min: 0,
+                    max: 100,
+                    message: 'Please enter a number between 0 and 100 for the Exclusion Percent.',
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!getFieldValue('gateMeter')) {
+                        // When gateMeter is false, the value should be empty
+                        if (value) {
+                          return Promise.reject('Exclusion Percent should be empty when "Is Gate Meter" is false.');
+                        }
+                      }else{
+                        const inclusionPercent = getFieldValue('gegNabersInclusionPercent');
+                        if (inclusionPercent && value) {
+                          return Promise.reject('Please enter only one of Inclusion Percent or Exclusion Percent.');
+                        }
+                        if(getFieldValue('gateMeter') && value){
+                          return Promise.reject('gegNabersExclusionPercent cannot be a gateMeter.');
+                        }
+                      }
+
+                      // Additional validation logic if needed
+
+                      return Promise.resolve();
+                    },
+                  }),
                 ]}
               >
-                <Input className="form_input" type="number" readOnly={newForm?false:isFieldEditable('gegNabersExclusionPercent')}/>
+                <Input className="form_input" type="number" min={0} max={100} readOnly={newForm ? false : isFieldEditable('gegNabersExclusionPercent')} />
               </Form.Item>
             </Col>
           </Row>
-
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"meter"}
-                label="Select Sub-meter of "
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
-              >
-                <Select
-                  placeholder="Select Sub-meter of"
-                  value={selectedItems}
-                  onChange={setSelectedItems}
-                  size="large"
-                  style={{ width: "100%" }}
-                  disabled={newForm?false:isFieldEditable('meter')}
-                >
-                  {gateListData.length > 0 &&
-                    gateListData.map((item, index) => (
-                      <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
-                    ))
-                  }
-                </Select>
-                {/* <Input className="form_input" /> */}
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"gateMeter"}
-                label="Select Is Gate Meter"
-                // rules={[{ required: "" }]}
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-              >
-                <Select
-                  placeholder="Select Is Gate Meter"
-                  value={selectedItems}
-                  onChange={setSelectedItems}
-                  size="large"
-                  style={{ width: "100%" }}
-                  disabled ={newForm?false:isFieldEditable('gateMeter')}
-                >
-                   <Select.Option value={true}>True</Select.Option>
-                   <Select.Option value={false}>False</Select.Option>
-                </Select>
-                {/* <Input className="form_input" /> */}
-              </Form.Item>
-            </Col>
-          </Row>
-
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
                 name={"help"}
                 label="Help"
+                initialValue=""
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
               // rules={[{ required: "" }]}
