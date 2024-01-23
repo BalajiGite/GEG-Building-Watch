@@ -300,6 +300,9 @@ function Meter() {
       setTempData(meterData)
       setloading(false);
       setIsLoading(false);
+      if(searchText !=""){
+        filterData(searchText)
+      }
     } catch (error) { }
   };
 

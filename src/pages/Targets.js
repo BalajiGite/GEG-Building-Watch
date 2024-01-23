@@ -470,6 +470,9 @@ const isFieldEditable = (fieldName) => {
       setIsEditables(targetConfigData)
       setloading(false);
       setIsLoading(false);
+      if(searchText !=""){
+        searchFilter(searchText)
+      }
     } catch (error) { }
   };
 

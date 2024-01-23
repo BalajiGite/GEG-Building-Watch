@@ -332,6 +332,9 @@ function Sites() {
       setSite(sites);
       setloading(false);
       setIsLoading(false);
+      if(searchText !=""){
+        filter(searchText)
+      }
     } catch (error) { }
   };
   // console.log(site);

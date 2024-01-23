@@ -36,7 +36,7 @@ function Alerts() {
   const [isLoading, setIsLoading] = useState(false);
   const [confList, setConfList] = useState([]);
   const [selectedRecord, setSelectedRecord] = useState();
-  const [searchText, setSearchText] = useState();
+  const [searchText, setSearchText] = useState('');
   const [siteListData, setSiteListData] = useState([]);
   const [prjNameData, setPrjNameData] = useState([]);
   const [post, setPost] = useState([]);
@@ -306,6 +306,9 @@ function Alerts() {
       setTempData(alertsData);
       setloading(false);
       setIsLoading(false);
+      if(searchText !=""){
+        filter(searchText)
+      }
     } catch (error) { }
   };
 

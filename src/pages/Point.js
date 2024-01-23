@@ -326,6 +326,9 @@ export default function Point() {
       setPoint(points);
       setloading(false);
       setIsLoading(false);
+      if(searchText !=""){
+        filter(searchText)
+      }
     } catch (error) { }
   };
 

@@ -264,6 +264,9 @@ function Config() {
       setTempLocationData(locationData);
       setloading(false);
       setIsLoading(false);
+      if(searchText !=""){
+        filterData(searchText)
+      }
     } catch (error) { }
   };
 
