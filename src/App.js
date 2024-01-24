@@ -29,7 +29,7 @@ function App() {
 
   const [sidenavColor, setSidenavColor] = useState("#1C88B2");
   const [backgroundColor, setBackgroundColor] = useState("#0A1016");
-  const [token, setToken] = useState();
+  const [token, setToken] = useState({});
 
 
   return (

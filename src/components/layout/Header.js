@@ -21,6 +21,7 @@ import {
   Popover,
   ConfigProvider,
 } from "antd";
+import { userInfo } from "../../services/apis";
 
 
 import { } from "@ant-design/icons";
@@ -57,8 +58,9 @@ const ButtonContainer = styled.div`
   }
 `;
 
+
 const content = (
-  <div style={{ width: "204px", height: "154px" }}>
+  <div style={{ width: "204px", height: "154px", paddingTop:"12px",  paddingLeft:'20px', paddingRight:'20px',backgroundColor:"#0A1016",}}>
     <Row style={{ justifyContent: "space-between" }}>
       <Col>
         <div style={{ justifyContent: "center", display: "flex" }}>
@@ -97,45 +99,33 @@ const content = (
     </Row>
   </div>
 );
-const profile = (
-  <div style={{ height: "249px", width: "221px", }}>
+
+const handleSignOut = () => {
+  localStorage.removeItem('jwtToken');
+  window.location.href = 'https://auth.apeiron.network/logout';
+  window.location.href = '/';
+};
+
+const profile = (userInfo)=>(
+  <div style={{ paddingLeft:'12px', paddingRight:'12px',backgroundColor:"#0A1016", height: "200px", width: "221px", }}>
     <Row style={{ justifyContent: "center", display: "flex" }}>
       <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
         <circle cx="20" cy="20" r="20" fill="#1B2228" />
-        <text x="50%" y="50%" textAnchor="middle" alignmentBaseline="middle" fontSize="14" fill="#fff">NL</text>
+        <text x="50%" y="50%" textAnchor="middle" alignmentBaseline="middle" fontSize="14" fill="#fff">{userInfo!=null?userInfo["custom:Initials"]:""}</text>
       </svg>
 
     </Row>
     <div style={{ textAlign: "center" }}>
-      <p style={{ marginBottom: "0px" }}><b>Nicolas Lianos</b></p>
-      <p>nicolas.lianos@sample.email</p>
+      <p style={{ marginBottom: "0px" }}><b>{userInfo!=null?userInfo["custom:ContactFullName"]:""}</b></p>
+      <p>{userInfo!=null?userInfo.email:""}</p>
     </div>
     <div>
       <h6>Account Setting</h6>
       <hr style={{boxSizing:"border-box"}}/>
-      <NavLink to ={"/sign-in"}><h6>Logout</h6></NavLink>
+      <button className="logout-button" onClick={handleSignOut}><h6>Logout</h6></button>
     </div>
   </div>
 );
-const bell = [
-  <svg
-    width="20"
-    height="20"
-    viewBox="0 0 20 20"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    key={0}
-  >
-    <path
-      d="M10 2C6.68632 2 4.00003 4.68629 4.00003 8V11.5858L3.29292 12.2929C3.00692 12.5789 2.92137 13.009 3.07615 13.3827C3.23093 13.7564 3.59557 14 4.00003 14H16C16.4045 14 16.7691 13.7564 16.9239 13.3827C17.0787 13.009 16.9931 12.5789 16.7071 12.2929L16 11.5858V8C16 4.68629 13.3137 2 10 2Z"
-      fill="#111827"
-    ></path>
-    <path
-      d="M10 18C8.34315 18 7 16.6569 7 15H13C13 16.6569 11.6569 18 10 18Z"
-      fill="#111827"
-    ></path>
-  </svg>,
-];
 
 const wifi = [
   <svg
@@ -266,13 +256,21 @@ function Header({
   handleFixedNavbar,
 }) {
   const context = useContext(AppContext);
-
   const { Title, Text } = Typography;
-
   const [visible, setVisible] = useState(false);
   const [sidenavType, setSidenavType] = useState("transparent");
-
-  useEffect(() => window.scrollTo(0, 0));
+  
+  var userData = userInfo(context.token);
+  if(userData == null){
+    if(localStorage.getItem('jwtToken') !=null){
+      userData = userInfo(localStorage.getItem('jwtToken'))
+    }
+  }
+  
+  
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, []);
 
   const showDrawer = () => setVisible(true);
   const hideDrawer = () => setVisible(false);
@@ -354,10 +352,10 @@ function Header({
           </Button>
           <Col >
             <ConfigProvider>
-              <Popover placement="bottomLeft" content={profile}>
+              <Popover placement="bottomLeft" content={profile(userData)}>
                 <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 40 40" fill="none" style={{ cursor: 'pointer',width:"auto",height:"30px" }}>
                   <circle cx="20" cy="20" r="20" fill="#1B2228" />
-                  <text x="50%" y="50%" textAnchor="middle" alignmentBaseline="middle" fontSize="14" fill="#fff">NL</text>
+                  <text x="50%" y="50%" textAnchor="middle" alignmentBaseline="middle" fontSize="14" fill="#fff">{userData!=null?userData["custom:Initials"]:""}</text>
                 </svg>
               </Popover>
             </ConfigProvider>

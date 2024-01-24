@@ -11,7 +11,8 @@ const Login = () => {
   const history = useHistory();
   const handleLogin = async () => {
     const storedToken = localStorage.getItem('jwtToken');
-    if(storedToken){
+    const debubMode = false;
+    if(!debubMode && storedToken){
       history.push('/sites');
     }else{
       //const authUrl = `https://auth.apeiron.network/login?client_id=6jk6h3n6hukhkqvul7hcqfh05u&response_type=token&scope=email+openid+phone+profile&redirect_uri=http://localhost:3000/callback`;

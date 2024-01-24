@@ -2,6 +2,7 @@
 import React, { useEffect,useContext } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import { AppContext } from "../../App";
+import { Header } from "../../components/layout/Header"
 
 const Callback = () => {
   const location = useLocation();
@@ -11,20 +12,9 @@ const Callback = () => {
   useEffect(() => {
 
     const params = new URLSearchParams(location.hash.substring(1));
-    const token = params.get('access_token');
-
-    const decodeIdToken = (token) => {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
-  
-        return JSON.parse(jsonPayload);
-    };
-
-    const decodedToken = decodeIdToken(token);
-    context.setToken(decodedToken)
+    const token = params.get('id_token');
     localStorage.setItem('jwtToken', token);
-
+    context.setToken(token);
     history.push('/sites');
   }, [location, history]);
 

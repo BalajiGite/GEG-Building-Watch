@@ -6,7 +6,7 @@ body {
   font-size: 14px;
   line-height: 1.6;
   font-weight: 400;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: 'Inter', Arial, sans-serif;
 }
 
 /* .custom-select{
@@ -92,6 +92,7 @@ background-color: transparent;
 .ant-popover {
   border: 1px solid  rgba(142, 142, 142, 0.30);
   border-radius: 5px;
+  background-color: rgb(10, 16, 22)
 }
 
 .ant-popover-placement-bottomRight .ant-popover-arrow {
@@ -3873,6 +3874,13 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile .header-
   border: 1px solid #8E8E8E;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.logout-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0px;
 }
 
 .custom-modal-column button {
