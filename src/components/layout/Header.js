@@ -28,7 +28,7 @@ import { } from "@ant-design/icons";
 
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import avtar from "../../assets/images/team-2.jpg";
+import avtar from "../../assets/images/img-signin.jpg";
 import menubar from "../../assets/images/menu_bar_svg.svg";
 import alert from "../../assets/images/alert_svg.svg";
 import Ellips from "../../assets/images/Ellipse 45.svg";

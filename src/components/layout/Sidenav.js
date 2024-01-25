@@ -5,7 +5,7 @@ import sitesIcons from "../../assets/images/sidebarSVG/Sites.svg";
 import meterIcon from "../../assets/images/sidebarSVG/Meter.svg";
 import pointIcon from "../../assets/images/sidebarSVG/Point.svg";
 import targetIcon from "../../assets/images/sidebarSVG/targets.svg";
-import configIcon from "../../assets/images/sidebarSVG/Config.svg";
+import configIcon from "../../assets/images/sidebarSVG/location.svg";
 import alertsIcon from "../../assets/images/sidebarSVG/Alerts.svg";
 import mpReadings from "../../assets/images/sidebarSVG/mpReadings.svg";
 // import logo from "../../assets/images/buildlogo.jpg";

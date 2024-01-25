@@ -10,6 +10,8 @@ import { EllipsisOutlined , DownOutlined} from "@ant-design/icons";
 import { Radio } from 'antd';
 import { getApiDataFromAws, postApiDataToAws, getConfigDataFromAws } from "../services/apis";
 import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
+import { isAuthenticated, userInfo } from "../services/apis";
+import { useHistory } from 'react-router-dom';
 import {
   deleteSites,
   editSites,
@@ -40,7 +42,8 @@ function Sites() {
 
   const siteConfigData = useRef();
   const context = useContext(AppContext);
-
+  const history = useHistory();
+  
   const screenHeight = window.innerHeight - 310;
   const validateMessages = {
     required: "${label} is required!",
@@ -421,7 +424,17 @@ function Sites() {
     setSite(filteredData);
   };
   useEffect(() => {
-    getData();
+    const authenticated = isAuthenticated()
+    if(authenticated){
+      getData();
+    }else {
+      var userData = userInfo(context.token);
+      if(userData == null){
+        history.push('/');
+      }else{
+        getData();
+      }
+    }
   }, []);
 
   // let ObjectKeys = [...new Set(site.map(Obj => Object.keys(Obj)))];

@@ -3,11 +3,14 @@ import { Button, Row, Col, Modal, Select, Popover, ConfigProvider, DatePicker } 
 import { Form, Input, Table, Divider, Spin, Radio, message } from "antd";
 import { EllipsisOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { getApiDataFromAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
 import { targetEdit, addTarget } from '../services/targetService';
 import spinnerjiff from "../assets/images/loader.gif";
 import { SelectColumns } from '../components/widgets/SelectedColumns/SelectedColumns';
+import { isAuthenticated, userInfo } from "../services/apis";
+import { useHistory } from 'react-router-dom';
+import { AppContext } from "../App";
 
 function Targets() {
   const [activeButton, setActiveButton] = useState(1);
@@ -25,8 +28,10 @@ function Targets() {
   const [visibleColumns, setVisibleColumns] = useState([]);
   // const isEditable = useRef({});
   const [form] = Form.useForm();
-  const DATE_FORMAT = 'YYYY-MM-DD';
+  const context = useContext(AppContext);
+  const history = useHistory();
 
+  const DATE_FORMAT = 'YYYY-MM-DD';
   const screenHeight = window.innerHeight - 310;
   const totalRows = targets.length;
 // let edit = [];
@@ -621,12 +626,24 @@ const isFieldEditable = (fieldName) => {
   }, [activeButton, onCancelModal]);
 
   useEffect(() => {
-    getData(1);
-    setActiveButton(1);
-  }, []);
-    const handleSelectColumns = (selectedCoumns) => {
-          setVisibleColumns(selectedCoumns)
+    const authenticated = isAuthenticated()
+    if(authenticated){
+      getData(1);
+      setActiveButton(1);
+    }else {
+      var userData = userInfo(context.token);
+      if(userData == null){
+        history.push('/');
+      }else{
+        getData(1);
+        setActiveButton(1);
+      }
     }
+  }, []);
+
+  const handleSelectColumns = (selectedCoumns) => {
+        setVisibleColumns(selectedCoumns)
+  }
 
   return (
     <div className="App">

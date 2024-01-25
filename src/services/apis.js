@@ -5,6 +5,7 @@ const POST_Alerts_API_URL = `https://kiln7uoo76.execute-api.ap-southeast-2.amazo
 const CONFIG_URL = `https://ooq5mqxlu8.execute-api.ap-southeast-2.amazonaws.com/default/neptuneViewerApis?queryType=viewerConfig`
 
 const storedToken = localStorage.getItem('jwtToken');
+var localToken = "";
 export const isAuthenticated = (tokenData=false) =>{
     var decodedToken = null;
     var isValidToken = false;
@@ -16,8 +17,11 @@ export const isAuthenticated = (tokenData=false) =>{
       
             return JSON.parse(jsonPayload);
         };
-        decodedToken = decodeIdToken(storedToken);
-        console.log('Decoded Token:', decodedToken);
+        if(storedToken !=null){
+            decodedToken = decodeIdToken(storedToken);
+            isValidToken = true;
+        }
+        //console.log('Decoded Token:', decodedToken);
     } catch (error) {
         console.error('Error decoding token:', error.message);
     }
@@ -37,10 +41,11 @@ export const userInfo = (token) =>{
       
             return JSON.parse(jsonPayload);
         };
-        if(token !=null){
+        if(Object.keys(token).length !== 0){
             decodedToken = decodeIdToken(token);
+            localToken = token;
         }
-        console.log('Decoded Token:', decodedToken);
+        //console.log('Decoded Token:', decodedToken);
     } catch (error) {
         console.error('Error decoding token:', error.message);
     }
@@ -50,10 +55,10 @@ export const userInfo = (token) =>{
 export const getApiDataFromAws = async (item) => {
     try {
         const headers = {
-            'jwtToken': storedToken,
+            'Authorization': storedToken == null?localToken:storedToken,
         };
 
-        const response = await axios.get(API_URL + item);
+        const response = await axios.get(API_URL + item, {headers});
         const data = response.data;
         return data;
     } catch (error) {
@@ -65,7 +70,8 @@ export const postApiDataToAws = async (body) => {
     try {
         const headers = {
             'Content-Type': 'application/json',
-            'x-api-key': '5DwkxSENaM4vfLyRYMeRHaxViuV7Nhvv21sYu9P4'
+            'x-api-key': '5DwkxSENaM4vfLyRYMeRHaxViuV7Nhvv21sYu9P4',
+            'Authorization': storedToken == null?localToken:storedToken,
         };
 
         const response = await axios.post(POST_API_URL, body, {headers});
@@ -81,7 +87,8 @@ export const postAlertsApiDataToAws = async (body) => {
     try {
         const headers = {
             'Content-Type': 'application/json',
-            'x-api-key': '30jiTelrj53mcKS1AtDblnD4iizBj1U1ZZS8o93j'
+            'x-api-key': '30jiTelrj53mcKS1AtDblnD4iizBj1U1ZZS8o93j',
+            'Authorization': storedToken == null?localToken:storedToken,
         };
 
         const response = await axios.post(POST_Alerts_API_URL, body, {headers});
@@ -94,7 +101,10 @@ export const postAlertsApiDataToAws = async (body) => {
 
 export const getConfigDataFromAws = async (item) => {
     try {
-        const response = await axios.get(CONFIG_URL);
+        const headers = {
+            'Authorization': storedToken == null?localToken:storedToken,
+        };
+        const response = await axios.get(CONFIG_URL, {headers});
         const data = response.data[item];
         return data;
     } catch (error) {

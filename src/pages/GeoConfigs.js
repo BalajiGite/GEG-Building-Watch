@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import Region from "../components/widgets/Region";
 import Level from "../components/widgets/Level";
 import { getApiDataFromAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
@@ -12,6 +12,9 @@ import {
 import { EllipsisOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import spinnerjiff from "../assets/images/loader.gif";
+import { isAuthenticated, userInfo } from "../services/apis";
+import { useHistory } from 'react-router-dom';
+import { AppContext } from "../App";
 
 const layout = {
   labelCol: {
@@ -40,6 +43,8 @@ function Config() {
   const [isEditable , setIsEditable] = useState();
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [form] = Form.useForm();
+  const context = useContext(AppContext);
+  const history = useHistory();
 
   const screenHeight = window.innerHeight - 310;
   const totalRows = locationData.length;
@@ -351,8 +356,19 @@ function Config() {
 
 
   useEffect(() => {
-    getData(1);
-    setActiveButton(1);
+    const authenticated = isAuthenticated()
+    if(authenticated){
+      getData(1);
+      setActiveButton(1);
+    }else {
+      var userData = userInfo(context.token);
+      if(userData == null){
+        history.push('/');
+      }else{
+        getData(1);
+        setActiveButton(1);
+      }
+    }
   }, []);
 
   const content = (record) => (

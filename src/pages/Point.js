@@ -1,5 +1,5 @@
 import "reactjs-popup/dist/index.css";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Spin, Divider, Select,Tooltip } from "antd";
 import { Form, Input, Table,Radio } from "antd";
 import { Button, Row, Col, Modal, Popover, ConfigProvider , message} from "antd";
@@ -14,6 +14,9 @@ import {
   getSitesList,
 } from "../services/sitesService";
 import spinnerjiff from "../assets/images/loader.gif";
+import { isAuthenticated, userInfo } from "../services/apis";
+import { useHistory } from 'react-router-dom';
+import { AppContext } from "../App";
 
 const layout = {
   labelCol: {
@@ -39,7 +42,8 @@ export default function Point() {
   const [isEditable, setIsEditable] = useState();
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [form] = Form.useForm();
-  // const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
+  const context = useContext(AppContext);
+  const history = useHistory();
   const screenHeight = window.innerHeight - 310;
   const totalRows = point.length;
   const validateMessages = {
@@ -429,7 +433,17 @@ export default function Point() {
     setPoint(filteredData);
   };
   useEffect(() => {
-    getData(1);
+    const authenticated = isAuthenticated()
+    if(authenticated){
+      getData(1);
+    }else {
+      var userData = userInfo(context.token);
+      if(userData == null){
+        history.push('/');
+      }else{
+        getData(1);
+      }
+    }
   }, []);
 
     const handleSelectColumns = (selectedColumns) => {

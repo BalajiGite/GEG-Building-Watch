@@ -36,7 +36,7 @@ import {
 
 import { NavLink, Link } from "react-router-dom";
 import styled from "styled-components";
-import avtar from "../assets/images/team-2.jpg";
+import avtar from "../assets/images/img-signin.jpg";
 
 const ButtonContainer = styled.div`
   .ant-btn-primary {

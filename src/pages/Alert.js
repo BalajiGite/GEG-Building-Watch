@@ -4,7 +4,7 @@ import { Form, Input, Table, Checkbox } from "antd";
 import { Button, Row, Col, Modal, Popover, ConfigProvider, message } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 import "reactjs-popup/dist/index.css";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { getAlertConfList } from "../services/alertConfService";
 import { getApiDataFromAws, postAlertsApiDataToAws, getConfigDataFromAws } from "../services/apis";
 import { showalertscolumns } from "../components/widgets/AlertTableswidgest/AlertTable";
@@ -19,6 +19,9 @@ import AlertModel from "./AlertConfiguration";
 import spinnerjiff from "../assets/images/loader.gif";
 // import { showalertscolumns } from "../components/widgets/AlertTableswidgest/AlertTable"
 import { buildQueries } from "@testing-library/react";
+import { isAuthenticated, userInfo } from "../services/apis";
+import { useHistory } from 'react-router-dom';
+import { AppContext } from "../App";
 
 const layout = {
   labelCol: {
@@ -52,7 +55,9 @@ function Alerts() {
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [form] = Form.useForm();
   const Id = useRef(1);
-  // const [confForm] = Form.useForm();
+  const context = useContext(AppContext);
+  const history = useHistory();
+  
   const isEditableFormField = (fieldName) => {
     return(
     typeof isEditable.editKeysUneditable === "object" &&
@@ -442,7 +447,17 @@ function Alerts() {
     }
   };
   useEffect(() => {
-    getData();
+    const authenticated = isAuthenticated()
+    if(authenticated){
+      getData();
+    }else {
+      var userData = userInfo(context.token);
+      if(userData == null){
+        history.push('/');
+      }else{
+        getData();
+      }
+    }
   }, []);
 
   const showModal = async (btnValue) => {

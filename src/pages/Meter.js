@@ -5,7 +5,7 @@ import { Button, Row, Col, Modal, Popover, ConfigProvider } from "antd";
 import { message } from 'antd';
 import "reactjs-popup/dist/index.css";
 import { EllipsisOutlined } from "@ant-design/icons";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import {SelectColumns} from '../components/widgets/SelectedColumns/SelectedColumns';
 import { getApiDataFromAws, postApiDataToAws, getConfigDataFromAws } from "../services/apis";
 import {
@@ -16,6 +16,9 @@ import {
 } from "../services/meterService";
 import { Item } from "devextreme-react/accordion";
 import spinnerjiff from "../assets/images/loader.gif";
+import { isAuthenticated, userInfo } from "../services/apis";
+import { useHistory } from 'react-router-dom';
+import { AppContext } from "../App";
 
 const layout = {
   labelCol: {
@@ -42,6 +45,9 @@ function Meter() {
   const [isEditables, setIsEditables] = useState({});
   const [newForm, setNewForm] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState([]);
+
+  const context = useContext(AppContext);
+  const history = useHistory();
 
   const screenHeight = window.innerHeight - 310;
   const totolRows = meters.length;
@@ -428,8 +434,19 @@ function Meter() {
   }, [activeButton, onCancelModal]);
 
   useEffect(() => {
-    getData(1);
-    setActiveButton(1);
+    const authenticated = isAuthenticated()
+    if(authenticated){
+      getData(1);
+      setActiveButton(1);
+    }else {
+      var userData = userInfo(context.token);
+      if(userData == null){
+        history.push('/');
+      }else{
+        getData(1);
+        setActiveButton(1);
+      }
+    }
   }, []);
 
   const handleSelectColumns = (selectedColumns) => {
