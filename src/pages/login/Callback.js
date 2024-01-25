@@ -1,8 +1,9 @@
 // Example using React Router
 import React, { useEffect,useContext } from 'react';
+import { Spin, Divider, Select } from "antd";
 import { useLocation, useHistory } from 'react-router-dom';
 import { AppContext } from "../../App";
-import { Header } from "../../components/layout/Header"
+import spinnerjiff from "../../assets/images/loader.gif";
 
 const Callback = () => {
   const location = useLocation();
@@ -15,13 +16,17 @@ const Callback = () => {
     const token = params.get('id_token');
     localStorage.setItem('jwtToken', token);
     context.setToken(token);
-    history.push('/sites');
+    history.push('/GeoConfigs');
   }, [location, history]);
 
   return (
-    <div>
-      <h1>Callback Page</h1>
-      {/* You can add loading indicators or messages here */}
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh', // Optional: Set the height of the container to 100% of the viewport height
+    }}>
+        <Spin spinning={true} indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} />} />
     </div>
   );
 };

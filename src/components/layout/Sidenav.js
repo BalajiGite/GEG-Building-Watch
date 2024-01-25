@@ -82,6 +82,17 @@ function Sidenav({ color }) {
             </NavLink>
           </Menu.Item>
           */}
+          <Menu.Item key="5">
+            <NavLink to="/GeoConfigs">
+            <span className="icon">
+                <img src={configIcon} alt="configIcon" />
+              </span>
+              <span className ="ant-menu-item-text">
+                Location
+              </span>
+            </NavLink>
+          </Menu.Item>
+
           <Menu.Item key="2">
             <NavLink to="/sites">
               <span className="icon">
@@ -113,28 +124,6 @@ function Sidenav({ color }) {
               </span>
             </NavLink>
           </Menu.Item>
-
-          <Menu.Item key="5">
-            <NavLink to="/GeoConfigs">
-            <span className="icon">
-                <img src={configIcon} alt="configIcon" />
-              </span>
-              <span className ="ant-menu-item-text">
-                Location
-              </span>
-            </NavLink>
-          </Menu.Item>
-
-          <Menu.Item key="6">
-            <NavLink to="/alert">
-            <span className="icon">
-                <img src={alertsIcon} alt="alertIcon" />
-              </span>
-              <span className ="ant-menu-item-text">
-                Alerts
-              </span>
-            </NavLink>
-          </Menu.Item>
           <Menu.Item key="7">
             <NavLink to="/targets">
             <span className="icon">
@@ -145,6 +134,17 @@ function Sidenav({ color }) {
               </span>
             </NavLink>
           </Menu.Item>
+          <Menu.Item key="6">
+            <NavLink to="/alert">
+            <span className="icon">
+                <img src={alertsIcon} alt="alertIcon" />
+              </span>
+              <span className ="ant-menu-item-text">
+                Alerts
+              </span>
+            </NavLink>
+          </Menu.Item>
+
           <Divider />
           <Menu.Item className="menu-item-header" key="8">
             <span className ="ant-menu-item-text">
