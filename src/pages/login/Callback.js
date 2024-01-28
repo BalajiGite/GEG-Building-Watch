@@ -4,6 +4,7 @@ import { Spin, Divider, Select } from "antd";
 import { useLocation, useHistory } from 'react-router-dom';
 import { AppContext } from "../../App";
 import spinnerjiff from "../../assets/images/loader.gif";
+import { login, setupTokens } from '../../services/apis';
 
 const Callback = () => {
   const location = useLocation();
@@ -11,12 +12,20 @@ const Callback = () => {
   const context = useContext(AppContext);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const callbackCode = new URLSearchParams(location.search).get('code');
+        const awsTokens = await login(callbackCode);
+        setupTokens(awsTokens)
+        context.setToken(awsTokens.id_token);
+        context.setRefreshToken(awsTokens.refresh_token)
+        history.push('/GeoConfigs');
+      } catch (error) {
+        console.error('Error during login:', error);
+      }
+    };
+    fetchData();
 
-    const params = new URLSearchParams(location.hash.substring(1));
-    const token = params.get('id_token');
-    localStorage.setItem('jwtToken', token);
-    context.setToken(token);
-    history.push('/GeoConfigs');
   }, [location, history]);
 
   return (

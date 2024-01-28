@@ -30,8 +30,8 @@ function App() {
   const [sidenavColor, setSidenavColor] = useState("#1C88B2");
   const [backgroundColor, setBackgroundColor] = useState("#0A1016");
   const [token, setToken] = useState({});
-
-
+  const [refreshToken, setRefreshToken] = useState({});
+  
   return (
     <>
       {" "}
@@ -44,7 +44,9 @@ function App() {
           backgroundColor,
           setBackgroundColor,
           setToken,
-          token
+          token,
+          refreshToken,
+          setRefreshToken
         }}
       >
         <div className="App">

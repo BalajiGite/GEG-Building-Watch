@@ -21,7 +21,7 @@ import {
   Popover,
   ConfigProvider,
 } from "antd";
-import { userInfo } from "../../services/apis";
+import { userInfo,removeToken } from "../../services/apis";
 
 
 import { } from "@ant-design/icons";
@@ -101,7 +101,7 @@ const content = (
 );
 
 const handleSignOut = () => {
-  localStorage.removeItem('jwtToken');
+  removeToken()
   window.location.href = 'https://auth.apeiron.network/logout';
   window.location.href = '/';
 };
