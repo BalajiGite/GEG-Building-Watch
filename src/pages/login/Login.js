@@ -11,7 +11,7 @@ const Login = () => {
   const history = useHistory();
   const handleLogin = async () => {
     const storedToken = localStorage.getItem('jwtToken');
-    const debubMode = true;
+    const debubMode = false;
     if(!debubMode && storedToken){
       history.push('/GeoConfigs');
     }else{

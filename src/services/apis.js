@@ -3,7 +3,7 @@ const API_URL = `https://ooq5mqxlu8.execute-api.ap-southeast-2.amazonaws.com/def
 const POST_API_URL = `https://7chg1o6vnc.execute-api.ap-southeast-2.amazonaws.com/default/gemsPushServices`;
 const POST_Alerts_API_URL = `https://kiln7uoo76.execute-api.ap-southeast-2.amazonaws.com/default/postgresCrudFuncsForUI`;
 const CONFIG_URL = `https://ooq5mqxlu8.execute-api.ap-southeast-2.amazonaws.com/default/neptuneViewerApis?queryType=viewerConfig`
-
+const MP_READINGS_URL = `https://2uwa6zvw9a.execute-api.ap-southeast-2.amazonaws.com/default/generateSiteConsumptionsForView`
 
 var localToken = "";
 const decodeIdToken = (token) => {
@@ -81,6 +81,23 @@ export const postApiDataToAws = async (body) => {
     }
 }
 
+export const postMpReadingsDataToAws = async (body) => {
+    try {
+        const headers = {
+            'Content-Type': 'application/json',
+           // 'x-api-key': '5DwkxSENaM4vfLyRYMeRHaxViuV7Nhvv21sYu9P4',
+            'Authorization': localStorage.getItem('jwtToken') == null?localToken:localStorage.getItem('jwtToken'),
+        };
+
+        const response = await axios.post(MP_READINGS_URL, body, {headers});
+        const data = response.data;
+        return data;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return error.response.data
+    }
+}
+
 export const postAlertsApiDataToAws = async (body) => {
     try {
         const headers = {
@@ -128,9 +145,9 @@ export const login = async (code) => {
             client_secret: '1vuaa8jb2m5t4hb95cgtmuuhb0nptm7bjfasp9lpovjrssj9kflo',
             scope: 'email openid phone profile',
             redirect_uri: 'https://gems2.d2hjsv3slbr4gu.amplifyapp.com/callback',
-          };
+            //redirect_uri: 'http://localhost:3000/callback',
+        };
 
-       //redirect_uri: 'http://localhost:3000/callback',
        console.log("Checking code" + code);
        const response = await axios.post('https://auth.apeiron.network/oauth2/token',params, {headers});
 

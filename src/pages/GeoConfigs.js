@@ -161,14 +161,7 @@ function Config() {
     return dynamicColumns;
   };
   const columns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-      ellipsis: true,
-      width: 200,
-      sorter: (a, b) => a.id.localeCompare(b.id),
-    },  
+    
     {
       title: "Name",
       dataIndex: "name",
@@ -190,6 +183,14 @@ function Config() {
       ),
     },
     ...dynamicColumns(locationData),
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+      ellipsis: true,
+      width: 200,
+      sorter: (a, b) => a.id.localeCompare(b.id),
+    },
     {
       title: "Actions",
       dataIndex: "delete",
@@ -553,7 +554,7 @@ function Config() {
                 fontWeight: activeButton === 2 ? 'bold' : 'normal',
                 color: activeButton === 2 ? '#FFFFFF' : '#8E8E8E',
               }}
-              onClick={() => changeWidgets(2)} >Ragion</Radio.Button>
+              onClick={() => changeWidgets(2)} >Region</Radio.Button>
             <Radio.Button className="ant-radio-button-css"
               style={{
                 fontWeight: activeButton === 3 ? 'bold' : 'normal',
@@ -562,7 +563,7 @@ function Config() {
               onClick={() => changeWidgets(3)} >Level</Radio.Button>
           </Radio.Group>
           <button className="mb-4 ml-4 custom-button" type="primary" onClick={() => onOpenModal()} >
-            {activeButton === 1 ? "Add New State" : activeButton === 2 ? "Add New Ragion" : "Add New Level"}
+            {activeButton === 1 ? "Add New State" : activeButton === 2 ? "Add New Region" : "Add New Level"}
           </button>
         </Col>
         <Col span={9} style={{ marginBottom: 10, textAlign: 'right' }}>

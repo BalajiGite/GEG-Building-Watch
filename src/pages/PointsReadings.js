@@ -1,16 +1,17 @@
-import React, { useState } from "react";
-import { Spin, Divider, Select } from "antd";
+import React, { useState, useContext } from "react";
+import { Spin, Divider, Select,DatePicker } from "antd";
 import { Form, Input, Table } from "antd";
 import { Button, Row, Col, Modal } from "antd";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
-import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
+import { AppContext } from "../App";
+import { getApiDataFromAws, postMpReadingsDataToAws, isAuthenticated, userInfo } from "../services/apis";
 import {
   addSites,
   deleteSites,
-  editSites,
-  getSitesList,
+  editSites
 } from "../services/sitesService";
+import { useHistory } from 'react-router-dom';
 import spinnerjiff from "../assets/images/loader.gif";
 
 const layout = {
@@ -21,33 +22,27 @@ const layout = {
     span: 16,
   },
 };
-const OPTIONS = ["Apples", "Nails", "Bananas", "Helicopters"];
 
+const DATE_FORMAT = 'YYYY-MM-DD';
 const screenHeight = window.innerHeight-310;
 function Sites() {
   const [searchText, setSearchText] = useState("");
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [selectedItemUt, setSelectedItemUt] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [siteData, setSiteData] = useState({});
   const [loading, setloading] = useState(true);
   const [SitesId, setSitesId] = useState();
   const [site, setSite] = useState([]);
   const [open, setOpen] = useState(false);
+  const context = useContext(AppContext);
+  const history = useHistory();
   // console.log(open);
   const [form] = Form.useForm();
-  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
   const totalRows = site.length;
-  const validateMessages = {
-    required: "${label} is required!",
-    types: {
-      email: "${label} is not a valid email!",
-      number: "${label} is not a valid number!",
-    },
-    number: {
-      range: "${label} must be between ${min} and ${max}",
-    },
-  };
-
+ 
   const onCancelModal = () => {
     setOpen(false);
     setSitesId();
@@ -276,21 +271,34 @@ function Sites() {
     },
   ];
 
+  const getFormatedDate = (startDate) =>{
+       
+    const year = startDate.toDate().getFullYear();
+    const month = (startDate.toDate().getMonth() + 1).toString().padStart(2, '0');
+    const day = startDate.toDate().getDate().toString().padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    //console.log(formattedDate);
+    return formattedDate;
 
-  let data = [];
+}
+
+  const loadSiteData = async() =>{
+    const sitesList = await getApiDataFromAws("queryType=dropdownSite");
+    setSiteData(sitesList);
+  }
+
   const getData = async () => {
     setIsLoading(true);
     try {
 
-      const sites = await getApiDataFromAws("queryType=site")
-      // console.log(sites)
       const body = {
-        funcName: 'createStateRecordsFromJson',
-        recList: [{ stateName: 'TestState123FromGEMS' }]
-      };
-      //const addSites = await postApiDataToAws(body)
-      setSiteData(sites);
-      setSite(sites);
+        siteName:selectedItem,
+        utilityType:selectedItemUt,
+        startDate:getFormatedDate(startDate),
+        endDate:getFormatedDate(endDate)
+    }
+      const pointsData = await postMpReadingsDataToAws(body)
+      //setSite(pointsData);
       setloading(false);
       setIsLoading(false);
     } catch (error) { }
@@ -331,6 +339,36 @@ function Sites() {
     }
   };
 
+  useEffect(() => {
+    if(selectedItem !=null && selectedItemUt !=null && startDate !=null && endDate !=null){
+      getData();
+    }
+  }, [selectedItem, selectedItemUt, startDate, endDate]);
+
+
+  const handleSelectChange = (value) => {
+    setSelectedItem(value);
+    //checkSelectedValues(value)
+  };
+
+  const handleSelectChangeUt = (value) => {
+    setSelectedItemUt(value);
+    //checkSelectedValues(value)
+  };
+
+  const handleStartDateChange = (date, dateString) => {
+    console.log("Selected Start Date:", dateString);
+    setStartDate(date);
+    //checkSelectedValues(date)
+  };
+
+  const handleEndDateChange = (date, dateString) => {
+    console.log("Selected Start Date:", dateString);
+    setEndDate(date);
+    //checkSelectedValues(date)
+  };
+
+
   const filter = (text) => {
     // debugger
     const filteredData = site.filter(
@@ -345,8 +383,18 @@ function Sites() {
     );
     setSite(filteredData);
   };
-  useEffect(() => {
-    getData();
+ useEffect(() => {
+    const authenticated = isAuthenticated()
+    if(authenticated){
+      loadSiteData();
+    }else {
+      var userData = userInfo(context.token);
+      if(userData == null){
+        history.push('/');
+      }else{
+        loadSiteData();
+      }
+    }
   }, []);
 
   return (
@@ -354,290 +402,56 @@ function Sites() {
       {" "}
       <Row>
         <Col span={17}>
-      <button className="mb-5 custom-button" type="primary" onClick={() => setOpen(true)}>
-        Create New
-      </button>
-        </Col>
+         <Select
+            className="mb-4"
+            placeholder="Select Utility Type"
+            value={selectedItemUt}
+            onChange={handleSelectChangeUt}
+            size="large"
+            style={{ marginRight: '10px',minWidth: '200px' }} 
+          >
+              <Select.Option key="elect" value="elec">elec</Select.Option>
+              <Select.Option key="water" value="water">water</Select.Option>
+              <Select.Option key="gas" value="gas">gas</Select.Option>
+          </Select>
+          <Select
+            placeholder="Select Site"
+            value={selectedItem}
+            onChange={handleSelectChange}
+            size="large"
+            style={{ marginRight: '10px',minWidth: '200px' }} 
+          >
+            {siteData.length > 0 &&
+                siteData.map((item, index) => (
+                  <Select.Option key={index} value={item.name}>{item.name}</Select.Option>
+                ))
+              }
 
-        <Col span={7} style={{ marginBottom: 10 }}>
-          <Input
+          </Select>
+          <DatePicker
+            placeholder="Select Start Date"
+            className='form_input dtPickerMPReadings'
+            format={DATE_FORMAT}
+            style={{ marginRight: '10px' }}
+            onChange={handleStartDateChange}
+          />
+          <DatePicker
+            placeholder="Select End Date"
+            className='form_input dtPickerMPReadings'
+            format={DATE_FORMAT}
+            onChange={handleEndDateChange}
+          />
+        </Col>
+        <Col span={7} style={{ marginBottom: 10, textAlign: 'right'  }}>
+         {/* <Input
             size="small"
             placeholder="search here ..."
             className="custom-input"
             value={searchText}
             onChange={(e) => onChangeText(e.target.value)}
-          />
+          />*/}
         </Col>
       </Row>
-      <Modal
-        style={{ textAlign: "left", backgroundColor: "#001629" }}
-        title="Add New Reading"
-        centered
-        open={open}
-        onCancel={() => onCancelModal()}
-        width={700}
-        footer={null}
-        maskClosable={false}
-      >
-        <Form
-          {...layout}
-          name="nest-messages"
-          onFinish={setData}
-          layout="vertical"
-          style={{ maxWidth: 1000 }}
-          form={form}
-          validateMessages={validateMessages}
-
-        >
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"name"}
-                label="Site Name"
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"site"}
-                label="Site ID"
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"area"}
-                label="Area"
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-              >
-                <Input className="form_input" />
-
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"armsProj"}
-                label="Arms Prj"
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"armsProjectId"}
-                label="Arms Proj ID"
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"projId"}
-                label="Select Proj ID"
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
-              >
-                <Select
-                  placeholder="Select Project"
-                  value={selectedItems}
-                  onChange={setSelectedItems}
-                  size="large"
-                  style={{ width: "100%" }}
-                >
-                  {[...new Set(site.map(item => item.projId))].map((item, index) => (
-                    <Select.Option key={index} value={item}>
-                      {item}
-                    </Select.Option>
-                  ))}
-                </Select>
-                {/* <Input className="form_input" /> */}
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"tz"}
-                label="Select TZ"
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
-              >
-                <Select
-                  placeholder="Select TZ"
-                  style={{ width: "100%" }}
-                  value={selectedItems}
-                  onChange={setSelectedItems}
-                >
-                 {
-                  [...new Set(site.map(item => item.tz))].map((item,index)=>(
-                    <Select.Option key={index} value={item}>{item}</Select.Option>
-                  ))
-                 }
-                </Select>
-
-                {/* <Input className="form_input" /> */}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"observesHolidays"}
-                label="Select Observe Holidays"
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-              // rules={[{required:""}]}
-              >
-                <Select
-                  placeholder="Select Observe Holidays"
-                  size="large"
-                  style={{ width: "100%" }}
-                  value={selectedItems}
-                  onChange={setSelectedItems}
-                >
-                {
-                  [...new Set(site.map(item=>item.observesHolidays))].map((item , index)=>(
-                    <Select.Option key={index} value={item}>{item}</Select.Option>
-                  ))
-                }
-                </Select>
-                {/* <Input className="form_input" /> */}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"regionRef"}
-                label="Select Region ID"
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-              // rules={[{required:""}]}
-              >
-                <Select
-                  placeholder="Select Region ID"
-                  value={selectedItems}
-                  onChange={setSelectedItems}
-                  style={{ width: "100%" }}
-                >
-                 {
-                  [...new Set(site.map(item=>item.regionRef))].map((item , index)=> (
-                    <Select.Option key={index} value={item}>{item}</Select.Option>
-                  ))
-                 }
-                </Select>
-                {/* <Input className="form_input" /> */}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"geoCountry"}
-                label="Select Geo Country"
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-              // rules={[{required:""}]}
-              >
-                <Select
-                  placeholder="Select Geo Country"
-                  value={selectedItems}
-                  onChange={setSelectedItems}
-                  style={{ width: "100%" }}
-                >
-                  {
-                    [...new Set(site.map(item => item.geoCountry))].map((item, index)=>(
-                      <Select.Option key={index} value={item}>{item}</Select.Option>
-                    ))
-                  }
-                </Select>
-                {/* <Input className="form_input" /> */}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={"geoAddress"}
-                label="Geo Address"
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-              // rules={[{required:""}]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name={""}
-                label="Help"
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-              // rules={[{required:""}]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Form.Item
-                wrapperCol={{
-                  offset:11,
-                  span: 16,
-                }}
-              >
-          <Row>
-            <Col span={20} className="custom-modal-column">
-              
-                <button type="" htmlType="" className="custom-modal-button">
-                  Cancel
-                </button>
-                <button
-                  type=""
-                  style={{ marginLeft: 10 }}
-                  htmlType="submit"
-                  onClick={() => onCancelModal()}
-                >
-                  Submit
-                </button>
-            </Col>
-          </Row>
-              </Form.Item>
-        </Form>
-      </Modal>
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
         <Table
           columns={columns}

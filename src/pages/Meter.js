@@ -122,14 +122,7 @@ function Meter() {
     return dynamicColumns;
   }
   const columns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "1",
-      width: 200,
-      ellipsis: true,
-      sorter: (a, b) => a.id.localeCompare(b.id),
-    },
+    
     {
       title: "Name",
       dataIndex: "name",
@@ -249,6 +242,14 @@ function Meter() {
       filterMode: "tree",
       filterSearch: true,
       onFilter: (value, record) => record.siteRef.startsWith(value),
+    },
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "1",
+      width: 200,
+      ellipsis: true,
+      sorter: (a, b) => a.id.localeCompare(b.id),
     },
     {
       title: "Actions",

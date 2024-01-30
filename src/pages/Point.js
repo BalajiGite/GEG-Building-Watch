@@ -154,14 +154,7 @@ export default function Point() {
   }
 
   const columns = [
-    {
-      title: "Id",
-      dataIndex: "id",
-      key: "1",
-      ellipsis: true,
-      width: 300,
-      sorter: (a, b) => a.id.localeCompare(b.id),
-    },
+    
     {
       title: "Name",
       dataIndex: "name",
@@ -184,7 +177,7 @@ export default function Point() {
       ),
     },
     {
-      title: "Geg Point Type",
+      title: "Point Type",
       dataIndex: "gegPointType",
       key: "3",
       ellipsis: true,
@@ -279,6 +272,14 @@ export default function Point() {
           <span>{text.length > 18 ? `${text.slice(0, 18)}...` : text}</span>
         </Tooltip>
       ),
+    },
+    {
+      title: "Id",
+      dataIndex: "id",
+      key: "1",
+      ellipsis: true,
+      width: 300,
+      sorter: (a, b) => a.id.localeCompare(b.id),
     },
     {
       title: "Actions",

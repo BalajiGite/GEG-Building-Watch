@@ -45,9 +45,25 @@ function Sidenav({ color }) {
         {/*<img src={context.logoUrl} alt=""  width={150} />*/}
         Sustainable Building Manager(SBM)
       </div>
-      <Divider/>
+      <Divider className="custom-divider"/>
       <div className="menu-wrapper">
         <Menu theme="light" mode="inline">
+          <Menu.Item className="menu-item-header" key="8">
+            <span className ="ant-menu-item-text">
+              Monitoring
+            </span>
+          </Menu.Item>
+          <Menu.Item key="9">
+            <NavLink to="/pointsReadings">
+            <span className="icon">
+                <img src={mpReadings} alt="profieIcon" />
+              </span>
+              <span className ="ant-menu-item-text">
+                MP Readings
+              </span>
+            </NavLink>
+          </Menu.Item>
+          <Divider className="custom-divider" />
           <Menu.Item className="menu-item-header" key="0">
             <span className ="ant-menu-item-text">
               Configuration
@@ -144,23 +160,7 @@ function Sidenav({ color }) {
               </span>
             </NavLink>
           </Menu.Item>
-
-          <Divider />
-          <Menu.Item className="menu-item-header" key="8">
-            <span className ="ant-menu-item-text">
-              Monitoring
-            </span>
-          </Menu.Item>
-          <Menu.Item key="9">
-            <NavLink to="/pointsReadings">
-            <span className="icon">
-                <img src={mpReadings} alt="profieIcon" />
-              </span>
-              <span className ="ant-menu-item-text">
-                MP Readings
-              </span>
-            </NavLink>
-          </Menu.Item>
+          <Divider className="custom-divider"/>
           {/* <Menu.Item key="5">
             <NavLink to="/projects">
               <span

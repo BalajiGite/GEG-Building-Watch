@@ -265,14 +265,7 @@ const isFieldEditable = (fieldName) => {
   };
 
   const columns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-      width: 200,
-      ellipsis: true,
-      sorter: (a, b) => a.id.localeCompare(b.id),
-    },
+
     {
       title: "Name",
       dataIndex: "name",
@@ -394,6 +387,14 @@ const isFieldEditable = (fieldName) => {
       onFilter: (value, record) => record.siteRef.startsWith(value),
     },
     ...dynamicColumns(targets),
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+      width: 200,
+      ellipsis: true,
+      sorter: (a, b) => a.id.localeCompare(b.id),
+    },
     {
       title: "Actions",
       dataIndex: "delete",
@@ -752,7 +753,7 @@ const isFieldEditable = (fieldName) => {
                 wrapperCol={24}
                 rules={[
                   {
-                    pattern: /^[0-9]*$/,
+                    pattern: /^([0-5](\.[05]?)?|6(\.0?)?)$/,
                     message: 'Please enter a valid number for the Current Rating.',
                   },
                   {
@@ -765,7 +766,7 @@ const isFieldEditable = (fieldName) => {
                     message: 'Please enter the Current Rating.',
                   },
                 ]}>
-                <Input className='form_input' type="number" min={0} max={6}/>
+                <Input className='form_input' type="number" step={0.5} min={0} max={6}/>
               </Form.Item>
             </Col>
           </Row>
@@ -777,7 +778,7 @@ const isFieldEditable = (fieldName) => {
                 wrapperCol={24}
                 rules={[
                   {
-                    pattern: /^[0-9]*$/,
+                    pattern: /^([0-5](\.[05]?)?|6(\.0?)?)$/,
                     message: 'Please enter a valid number for the Target Rating.',
                   },
                   {
@@ -799,7 +800,7 @@ const isFieldEditable = (fieldName) => {
                     message: 'Please enter the Target Rating.',
                   },
                 ]}>
-                <Input className='form_input' type="number" min={0} max={6}/>
+                <Input className='form_input' type="number" min={0} max={6} step={0.5} />
               </Form.Item>
             </Col>
           </Row>

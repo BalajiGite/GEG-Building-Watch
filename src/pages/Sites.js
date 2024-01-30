@@ -65,14 +65,7 @@ function Sites() {
   const totalRows = site.length;
 
   const columns = [
-    {
-      title: "Id",
-      dataIndex: "id",
-      key: "1",
-      width: 200,
-      ellipsis: true,
-      sorter: (a, b) => a.id.localeCompare(b.id),
-    },
+    
     {
       title: "Name",
       dataIndex: "name",
@@ -135,7 +128,7 @@ function Sites() {
       filterSearch: true,
       onFilter: (value, record) => record.site.startsWith(value),
     },
-    {
+    /*{
       title: "ARMS Prj ID",
       dataIndex: "armsProjectId",
       key: "6",
@@ -149,7 +142,7 @@ function Sites() {
       filterMode: "tree",
       filterSearch: true,
       onFilter: (value, record) => record.armsProjectId.startsWith(value),
-    },
+    },*/
     {
       title: "Tz",
       dataIndex: "tz",
@@ -165,7 +158,7 @@ function Sites() {
       filterSearch: true,
       onFilter: (value, record) => record.tz.startsWith(value),
     },
-    {
+    /*{
       title: "ARMS Project",
       dataIndex: "armsProj",
       key: "8",
@@ -179,7 +172,7 @@ function Sites() {
       filterMode: "tree",
       filterSearch: true,
       onFilter: (value, record) => record.armsProj.startsWith(value),
-    },
+    },*/
     {
       title: "Observes Holidays",
       dataIndex: "observesHolidays",
@@ -301,6 +294,14 @@ function Sites() {
       filterMode: "tree",
       filterSearch: true,
       onFilter: (value, record) => record.help.startsWith(value),
+    },
+    {
+      title: "Id",
+      dataIndex: "id",
+      key: "1",
+      width: 200,
+      ellipsis: true,
+      sorter: (a, b) => a.id.localeCompare(b.id),
     },
     {
       title: "Actions",
