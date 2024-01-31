@@ -101,7 +101,7 @@ function Meter() {
             value: electricity
           })),
           filterMode: "tree",
-          filterSearch: true,
+          filterSearch: false,
           onFilter: (value, record) => record.elec.startsWith(value),
 
         })
@@ -135,7 +135,7 @@ function Meter() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.name.startsWith(value),
       render: (text) => (
         <Tooltip title={text}>
@@ -155,7 +155,7 @@ function Meter() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.equip.startsWith(value),
     },
     ...DynamicColumns(meters),
@@ -171,7 +171,7 @@ function Meter() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.gateMeter == value,
     },    
     {
@@ -186,7 +186,7 @@ function Meter() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.gegEquipType.startsWith(value),
     },
     {
@@ -210,7 +210,7 @@ function Meter() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.levelRef.startsWith(value),
     },
     {
@@ -225,7 +225,7 @@ function Meter() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.meter.startsWith(value),
     },
     {
@@ -240,7 +240,7 @@ function Meter() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.siteRef.startsWith(value),
     },
     {

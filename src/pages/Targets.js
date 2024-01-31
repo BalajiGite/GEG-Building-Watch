@@ -84,7 +84,7 @@ const isFieldEditable = (fieldName) => {
           value: profile,
         })),
         filterMode: "tree",
-        filterSearch: true,
+        filterSearch: false,
         onFilter: (value, record) => record.elecTargetProfile.startsWith(value),
       });
     }
@@ -101,7 +101,7 @@ const isFieldEditable = (fieldName) => {
           value: kwh,
         })),
         filterMode: "tree",
-        filterSearch: true,
+        filterSearch: false,
         onFilter: (value, record) => record.targetKwh0.startsWith(value),
       })
     }
@@ -119,7 +119,7 @@ const isFieldEditable = (fieldName) => {
           value: kwh,
         })),
         filterMode: "tree",
-        filterSearch: true,
+        filterSearch: false,
         onFilter: (value, record) => record.targetKwh1.startsWith(value),
       })
     }
@@ -137,7 +137,7 @@ const isFieldEditable = (fieldName) => {
           value: kwh,
         })),
         filterMode: "tree",
-        filterSearch: true,
+        filterSearch: false,
         onFilter: (value, record) => record.targetKwh2.startsWith(value),
       })
     }
@@ -154,7 +154,7 @@ const isFieldEditable = (fieldName) => {
           value: name,
         })),
         filterMode: "tree",
-        filterSearch: true,
+        filterSearch: false,
         onFilter: (value, record) => record.waterTargetProfile.startsWith(value),
       })
     }
@@ -171,7 +171,7 @@ const isFieldEditable = (fieldName) => {
           value: name,
         })),
         filterMode: "tree",
-        filterSearch: true,
+        filterSearch: false,
         onFilter: (value, record) => record.targetKl0.startsWith(value),
       })
     }
@@ -189,7 +189,7 @@ const isFieldEditable = (fieldName) => {
           value: name,
         })),
         filterMode: "tree",
-        filterSearch: true,
+        filterSearch: false,
         onFilter: (value, record) => record.targetKl1.startsWith(value),
       })
     }
@@ -206,7 +206,7 @@ const isFieldEditable = (fieldName) => {
           value: name,
         })),
         filterMode: "tree",
-        filterSearch: true,
+        filterSearch: false,
         onFilter: (value, record) => record.targetKl2.startsWith(value),
       })
     }
@@ -223,7 +223,7 @@ const isFieldEditable = (fieldName) => {
           value: name,
         })),
         filterMode: "tree",
-        filterSearch: true,
+        filterSearch: false,
         onFilter: (value, record) => record.gasTargetProfile.startsWith(value),
       })
     }
@@ -240,7 +240,7 @@ const isFieldEditable = (fieldName) => {
           value: name,
         })),
         filterMode: "tree",
-        filterSearch: true,
+        filterSearch: false,
         onFilter: (value, record) => record.targetCum0.startsWith(value),
       })
     }
@@ -257,7 +257,7 @@ const isFieldEditable = (fieldName) => {
           value: name,
         })),
         filterMode: "tree",
-        filterSearch: true,
+        filterSearch: false,
         onFilter: (value, record) => record.targetCum1.startsWith(value),
       })
     }
@@ -278,7 +278,7 @@ const isFieldEditable = (fieldName) => {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.name.startsWith(value),
     },
     {
@@ -293,7 +293,7 @@ const isFieldEditable = (fieldName) => {
         value: unit,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.unit.startsWith(value),
     },
     {
@@ -308,7 +308,7 @@ const isFieldEditable = (fieldName) => {
         value: rating,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.currentRating.startsWith(value),
     },
     {
@@ -323,7 +323,7 @@ const isFieldEditable = (fieldName) => {
         value: rating,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.targetRating.startsWith(value),
     },
     {
@@ -338,7 +338,7 @@ const isFieldEditable = (fieldName) => {
         value: point,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.point.startsWith(value),
     },
     {
@@ -353,7 +353,7 @@ const isFieldEditable = (fieldName) => {
         value: start,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.ratingPeriodStart.startsWith(value),
     },
     {
@@ -368,7 +368,7 @@ const isFieldEditable = (fieldName) => {
         value: end,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.ratingPeriodEnd.startsWith(value),
     },
     {
@@ -383,7 +383,7 @@ const isFieldEditable = (fieldName) => {
         value: siteRef,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.siteRef.startsWith(value),
     },
     ...dynamicColumns(targets),

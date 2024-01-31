@@ -88,7 +88,7 @@ export default function Point() {
             value: name,
           })),
           filterMode: "tree",
-          filterSearch: true,
+          filterSearch: false,
           onFilter: (value, record) => record.import.startsWith(value),
         },
       )
@@ -107,7 +107,7 @@ export default function Point() {
             value: name,
           })),
           filterMode: "tree",
-          filterSearch: true,
+          filterSearch: false,
           onFilter: (value, record) => record.active.startsWith(value),
         },
       )
@@ -126,7 +126,7 @@ export default function Point() {
             value: name,
           })),
           filterMode: "tree",
-          filterSearch: true,
+          filterSearch: false,
           onFilter: (value, record) => record.elec.startsWith(value),
         },
       )
@@ -145,7 +145,7 @@ export default function Point() {
             value: name,
           })),
           filterMode: "tree",
-          filterSearch: true,
+          filterSearch: false,
           onFilter: (value, record) => record.energy.startsWith(value),
         },
       )
@@ -168,7 +168,7 @@ export default function Point() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.name.startsWith(value),
       render: (text) => (
         <Tooltip title={text}>
@@ -188,7 +188,7 @@ export default function Point() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.gegPointType.startsWith(value),
     },
     {
@@ -203,7 +203,7 @@ export default function Point() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.unit.startsWith(value),
     },
     ...DynamicColumns(point),
@@ -219,7 +219,7 @@ export default function Point() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.sensor.startsWith(value),
     },
     {
@@ -234,7 +234,7 @@ export default function Point() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.point.startsWith(value),
     },
 
@@ -250,7 +250,7 @@ export default function Point() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.nem12Id.startsWith(value),
     },
     {
@@ -265,7 +265,7 @@ export default function Point() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.equipRef.startsWith(value),
       render: (text) => (
         <Tooltip title={text}>

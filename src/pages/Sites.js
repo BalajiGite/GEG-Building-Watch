@@ -79,7 +79,7 @@ function Sites() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.name.startsWith(value),
     },
     {
@@ -94,7 +94,7 @@ function Sites() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.area.startsWith(value),
     },
     {
@@ -109,7 +109,7 @@ function Sites() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.projId.startsWith(value),
     },
     {
@@ -125,7 +125,7 @@ function Sites() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.site.startsWith(value),
     },
     /*{
@@ -140,7 +140,7 @@ function Sites() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.armsProjectId.startsWith(value),
     },*/
     {
@@ -155,7 +155,7 @@ function Sites() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.tz.startsWith(value),
     },
     /*{
@@ -170,7 +170,7 @@ function Sites() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.armsProj.startsWith(value),
     },*/
     {
@@ -186,7 +186,7 @@ function Sites() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.observesHolidays.startsWith(value),
     },
     {
@@ -201,7 +201,7 @@ function Sites() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.geoCountry.startsWith(value),
     },
     {
@@ -216,7 +216,7 @@ function Sites() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.geoAddress.startsWith(value),
     },
     {
@@ -247,7 +247,7 @@ function Sites() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.stateRef.startsWith(value),
     },
     {
@@ -262,7 +262,7 @@ function Sites() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.regionRef.startsWith(value),
     },
     {
@@ -277,7 +277,7 @@ function Sites() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.weatherStationRef.startsWith(value),
     },
     {
@@ -292,7 +292,7 @@ function Sites() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.help.startsWith(value),
     },
     {

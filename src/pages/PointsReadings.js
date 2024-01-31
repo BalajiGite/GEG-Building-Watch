@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Spin, Divider, Select,DatePicker } from "antd";
+import { Spin, Divider, Select,DatePicker, message } from "antd";
 import { Form, Input, Table } from "antd";
 import { Button, Row, Col, Modal } from "antd";
 import "reactjs-popup/dist/index.css";
@@ -35,13 +35,13 @@ function Sites() {
   const [siteData, setSiteData] = useState({});
   const [loading, setloading] = useState(true);
   const [SitesId, setSitesId] = useState();
-  const [site, setSite] = useState([]);
+  const [mpReadings, setMpReadings] = useState([]);
   const [open, setOpen] = useState(false);
   const context = useContext(AppContext);
   const history = useHistory();
   // console.log(open);
   const [form] = Form.useForm();
-  const totalRows = site.length;
+  const totalRows = mpReadings.length;
  
   const onCancelModal = () => {
     setOpen(false);
@@ -50,227 +50,40 @@ function Sites() {
   };
 
 
-  const columns = [
-    {
-      title: "Id",
-      dataIndex: "id",
-      key: "1",
-      width:300,
-      sorter: (a, b) => a.id.localeCompare(b.id),
-    },
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "2",
-      width:200,
-      sorter: (a, b) => a.name.localeCompare(b.name),
-      filters: Array.from(new Set(site.map(item => item.name))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.name.startsWith(value),
-    },
-    {
-      title: "Area",
-      dataIndex: "area",
-      key: "3",
-      width:200,
-      sorter: (a, b) => a.area - b.area,
-      filters: Array.from(new Set(site.map(item => item.area))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.area.startsWith(value),
-    },
-    {
-      title: "Project ID",
-      dataIndex: "projId",
-      key: "4",
-      width:200,
-      sorter: (a, b) => a.projId.localeCompare(b.projId),
-      filters: Array.from(new Set(site.map(item => item.projId))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.projId.startsWith(value),
-    },
-    {
-      title: "Site",
-      dataIndex: "site",
-      key: "5",
-      width:200,
-      sorter: (a, b) => (a.site === b.site ? 0 : a.site ? -1 : 1),
-      render: (text) => (text ? "True" : "False"),
-      filters: Array.from(new Set(site.map(item => item.site))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.site.startsWith(value),
-    },
-    {
-      title: "ARMS Project ID",
-      dataIndex: "armsProjectId",
-      key: "6",
-      width:200,
-      sorter: (a, b) => a.armsProjectId.localeCompare(b.armsProjectId),
-      filters: Array.from(new Set(site.map(item => item.armsProjectId))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.armsProjectId.startsWith(value),
-    },
-    {
-      title: "Tz",
-      dataIndex: "tz",
-      key: "7",
-      width:200,
-      sorter: (a, b) => a.tz.localeCompare(b.tz),
-      filters: Array.from(new Set(site.map(item => item.tz))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.tz.startsWith(value),
-    },
-    {
-      title: "ARMS Project",
-      dataIndex: "armsProj",
-      key: "8",
-      width:200,
-      sorter: (a, b) => a.armsProj.localeCompare(b.armsProj),
-      filters: Array.from(new Set(site.map(item => item.armsProj))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.armsProj.startsWith(value),
-    },
-    {
-      title: "Observes Holidays",
-      dataIndex: "observesHolidays",
-      key: "9",
-      width:200,
-      sorter: (a, b) => a.observesHolidays.localeCompare(b.observesHolidays),
-      render: (text) => (text ? "True" : "False"),
-      filters: Array.from(new Set(site.map(item => item.observesHolidays))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.observesHolidays.startsWith(value),
-    },
-    {
-      title: "Geographical Country",
-      dataIndex: "geoCountry",
-      key: "10",
-      width:200,
-      sorter: (a, b) => a.geoCountry.localeCompare(b.geoCountry),
-      filters: Array.from(new Set(site.map(item => item.geoCountry))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.geoCountry.startsWith(value),
-    },
-    {
-      title: "Geographical Address",
-      dataIndex: "geoAddress",
-      key: "11",
-      width:200,
-      sorter: (a, b) => a.geoAddress.localeCompare(b.geoAddress),
-      filters: Array.from(new Set(site.map(item => item.geoAddress))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.geoAddress.startsWith(value),
-    },
-    {
-      title: "Longitude",
-      dataIndex: "long",
-      key: "12",
-      width:200,
-      sorter: (a, b) => a.long.localeCompare(b.long),
-    },
-    {
-      title: "Latitude",
-      dataIndex: "lat",
-      key: "13",
-      width:200,
-      sorter: (a, b) => a.lat.localeCompare(b.lat),
-    },
-    {
-      title: "State",
-      dataIndex: "stateRef",
-      key: "14",
-      width:200,
-      sorter: (a, b) => a.stateRef.localeCompare(b.stateRef),
-      filters: Array.from(new Set(site.map(item => item.stateRef))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.stateRef.startsWith(value),
-    },
-    {
-      title: "Region",
-      dataIndex: "regionRef",
-      key: "15",
-      width:200,
-      sorter: (a, b) => a.regionRef.localeCompare(b.regionRef),
-      filters: Array.from(new Set(site.map(item => item.regionRef))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.regionRef.startsWith(value),
-    },
-    {
-      title: "Weather Station",
-      dataIndex: "weatherStationRef",
-      key: "16",
-      width:300,
-      sorter: (a, b) => a.weatherStationRef.localeCompare(b.weatherStationRef),
-      filters: Array.from(new Set(site.map(item => item.weatherStationRef))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.weatherStationRef.startsWith(value),
-    },
-    {
-      title: "Actions",
-      dataIndex: "delete",
-      key: "17",
-      width:200,
-      render: (text, record, index) => (
-        <>
-          <a onClick={() => onEdit(record)}>EDIT</a>
-          <Divider type="vertical" />
-          <a onClick={() => onDelete(record.id)} style={{display:"none"}}>DELETE</a>
-        </>
-      ),
-    },
-  ];
-
+ 
+  const keys = [...new Set(mpReadings.flatMap(item => Object.keys(item)))];
+  const tsFilter = Array.from(new Set(mpReadings.map(item => item.ts))).map((name, index) => ({
+    text: name,
+    value: name,
+  }));
+  const columns = keys.map((key, index) => {
+    if (key === "ts") {
+        return {
+            title: "TimeStamp",
+            dataIndex: "ts",
+            key: `${index + 1}`,
+            width: 200,
+            sorter: (a, b) => a.ts.localeCompare(b.ts),
+            filters: tsFilter,
+            filterMode: "tree",
+            filterSearch: false,
+            onFilter: (value, record) => record.ts.startsWith(value),
+        };
+    } else {
+        return {
+            title: key,
+            dataIndex: key,
+            key: `${index + 1}`,
+            width: 200,
+            sorter: (a, b) => {
+                if (typeof a[key] === 'string' && typeof b[key] === 'string') {
+                    return a[key].localeCompare(b[key]);
+                }
+                return a[key] - b[key];
+            }
+        };
+    }
+  });
   const getFormatedDate = (startDate) =>{
        
     const year = startDate.toDate().getFullYear();
@@ -289,6 +102,7 @@ function Sites() {
 
   const getData = async () => {
     setIsLoading(true);
+    setMpReadings([{ts:""}])
     try {
 
       const body = {
@@ -298,9 +112,23 @@ function Sites() {
         endDate:getFormatedDate(endDate)
     }
       const pointsData = await postMpReadingsDataToAws(body)
-      //setSite(pointsData);
+      if (!Array.isArray(pointsData) || pointsData.length === 0) {
+        setMpReadings([])
+        setloading(false);
+        setIsLoading(false);
+        message.error({
+          content: pointsData, // Display the error message
+          style: {
+              marginTop: 'calc(50vh - 30px)', // Center vertically
+              marginLeft: 'calc(20vw - 150px)', // Center horizontally
+          },
+      });
+    } else {
+      setMpReadings(pointsData);
       setloading(false);
       setIsLoading(false);
+    }
+      
     } catch (error) { }
   };
 
@@ -335,7 +163,7 @@ function Sites() {
     setSearchText(text);
     filter(text);
     if (text === "" || !text) {
-      setSite(siteData);
+      setMpReadings(siteData);
     }
   };
 
@@ -371,7 +199,7 @@ function Sites() {
 
   const filter = (text) => {
     // debugger
-    const filteredData = site.filter(
+    const filteredData = mpReadings.filter(
       (record) =>
         record.name.toLowerCase().includes(text.toLowerCase()) ||
         record.area.toLowerCase().includes(text.toLowerCase()) ||
@@ -381,7 +209,7 @@ function Sites() {
         record.weatherStationRef.toLowerCase().includes(searchText.toLowerCase()) ||
         record.armsProj.toLowerCase().includes(searchText.toLowerCase())
     );
-    setSite(filteredData);
+    setMpReadings(filteredData);
   };
  useEffect(() => {
     const authenticated = isAuthenticated()
@@ -401,7 +229,7 @@ function Sites() {
     <>
       {" "}
       <Row>
-        <Col span={17}>
+        <Col span={20}>
          <Select
             className="mb-4"
             placeholder="Select Utility Type"
@@ -442,7 +270,7 @@ function Sites() {
             onChange={handleEndDateChange}
           />
         </Col>
-        <Col span={7} style={{ marginBottom: 10, textAlign: 'right'  }}>
+        <Col span={4} style={{ marginBottom: 10, textAlign: 'right'  }}>
          {/* <Input
             size="small"
             placeholder="search here ..."
@@ -452,21 +280,23 @@ function Sites() {
           />*/}
         </Col>
       </Row>
-      <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
-        <Table
-          columns={columns}
-          dataSource={site}
-          rowKey={"id"}
-          scroll={{
-            x: 1000,
-            y:screenHeight
-          }}
-          pagination={{
-            total:totalRows,
-            showTotal: (total, range) => (`Total Readings ${total}`)
-          }}
-        />
-      </Spin>
+      {mpReadings.length > 0 && (
+        <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
+            <Table
+              columns={columns}
+              dataSource={mpReadings}
+              rowKey={"id"}
+              scroll={{
+                x: 1000,
+                y:screenHeight
+              }}
+              pagination={{
+                total:totalRows,
+                showTotal: (total, range) => (`Total Readings ${total}`)
+              }}
+            />      
+        </Spin>
+      )}
     </>
   );
 }

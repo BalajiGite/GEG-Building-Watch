@@ -67,7 +67,7 @@ function Config() {
           value: name,
         })),
         filterMode: "tree",
-        filterSearch: true,
+        filterSearch: false,
         onFilter: (value, record) => record.stateRef.startsWith(value),
       });
     }
@@ -84,7 +84,7 @@ function Config() {
           value: name,
         })),
         filterMode: "tree",
-        filterSearch: true,
+        filterSearch: false,
         onFilter: (value, record) => record.region.startsWith(value),
       })
     }
@@ -102,7 +102,7 @@ function Config() {
           value: name,
         })),
         filterMode: "tree",
-        filterSearch: true,
+        filterSearch: false,
         onFilter: (value, record) => record.state.startsWith(value),
       })
     }
@@ -120,7 +120,7 @@ function Config() {
           value: name,
         })),
         filterMode: "tree",
-        filterSearch: true,
+        filterSearch: false,
         onFilter: (value, record) => record.level.startsWith(value),
       })
     }
@@ -137,7 +137,7 @@ function Config() {
           value: name,
         })),
         filterMode: "tree",
-        filterSearch: true,
+        filterSearch: false,
         onFilter: (value, record) => record.siteRef.startsWith(value),
       })
     }
@@ -154,7 +154,7 @@ function Config() {
           value: name,
         })),
         filterMode: "tree",
-        filterSearch: true,
+        filterSearch: false,
         onFilter: (value, record) => record.projId.startsWith(value),
       })
     }
@@ -174,7 +174,7 @@ function Config() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.name.startsWith(value),
       render: (text) => (
         <Tooltip title={text}>

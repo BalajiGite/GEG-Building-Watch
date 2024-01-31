@@ -139,7 +139,7 @@ function Alerts() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.sitename.startsWith(value),
     },
     {
@@ -154,7 +154,7 @@ function Alerts() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.utilitytype.startsWith(value),
     },
     {
@@ -169,7 +169,7 @@ function Alerts() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.project.startsWith(value),
     },
     {
@@ -184,7 +184,7 @@ function Alerts() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.reporttype.startsWith(value),
     },
     {
@@ -199,7 +199,7 @@ function Alerts() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.freq.startsWith(value),
     },
     {
@@ -214,7 +214,7 @@ function Alerts() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.tz.startsWith(value),
     },
     {
@@ -229,7 +229,7 @@ function Alerts() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.recipientemails.startsWith(value),
       render: (text) => (
         <Tooltip title={text}>
@@ -249,7 +249,7 @@ function Alerts() {
         value: name,
       })),
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.erroremails.startsWith(value),
       render: (text) => (
         <Tooltip title={text}>

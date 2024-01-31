@@ -163,6 +163,10 @@ export const login = async (code) => {
   export const refreshToken = async () => {
     try {
 
+        if (refreshToken === null || refreshToken === undefined) {
+           handleSignOut()
+        }
+
         const clientId = '6jk6h3n6hukhkqvul7hcqfh05u';
         const clientSecret = '1vuaa8jb2m5t4hb95cgtmuuhb0nptm7bjfasp9lpovjrssj9kflo'; 
         const authHeader = `Basic ${btoa(`${clientId}:${clientSecret}`)}`;
@@ -203,3 +207,9 @@ export const login = async (code) => {
     localStorage.setItem('refreshToken', refresh_token);
     localStorage.setItem('expires_in', expires_in);
   }
+
+  export const handleSignOut = () => {
+    removeToken()
+    window.location.href = 'https://auth.apeiron.network/logout';
+    window.location.href = '/';
+  };

@@ -82,7 +82,7 @@ function Building() {
         },
       ],
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.projectName.startsWith(value),
     },
     {
@@ -105,7 +105,7 @@ function Building() {
         },
       ],
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.projectType.startsWith(value),
     },
     {
@@ -128,7 +128,7 @@ function Building() {
         },
       ],
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.projectNo.startsWith(value),
     },
     {
@@ -151,7 +151,7 @@ function Building() {
         },
       ],
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.buildingName.startsWith(value),
     },
     {
@@ -174,7 +174,7 @@ function Building() {
         },
       ],
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.area.startsWith(value),
     },
     {
@@ -197,7 +197,7 @@ function Building() {
         },
       ],
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.street.startsWith(value),
     },
     {
@@ -220,7 +220,7 @@ function Building() {
         },
       ],
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.postcode.startsWith(value),
     },
     {
@@ -243,7 +243,7 @@ function Building() {
         },
       ],
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.zone.startsWith(value),
     },
     {
@@ -293,7 +293,7 @@ function Building() {
         },
       ],
       filterMode: "tree",
-      filterSearch: true,
+      filterSearch: false,
       onFilter: (value, record) => record.rating.startsWith(value),
     },
     {

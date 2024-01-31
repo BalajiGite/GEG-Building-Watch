@@ -21,7 +21,7 @@ import {
   Popover,
   ConfigProvider,
 } from "antd";
-import { userInfo,removeToken } from "../../services/apis";
+import { userInfo,removeToken, handleSignOut } from "../../services/apis";
 
 
 import { } from "@ant-design/icons";
@@ -100,11 +100,6 @@ const content = (
   </div>
 );
 
-const handleSignOut = () => {
-  removeToken()
-  window.location.href = 'https://auth.apeiron.network/logout';
-  window.location.href = '/';
-};
 
 const profile = (userInfo)=>(
   <div style={{ paddingLeft:'12px', paddingRight:'12px',backgroundColor:"#0A1016", height: "200px", width: "221px", }}>
@@ -347,9 +342,10 @@ function Header({
           </div>
         </Col>
         <Col span={24} md={12} className="header-control">
-          <Button type="link" onClick={showDrawer}>
-            <IoSettingsOutline />
-          </Button>
+         {/*<Button type="link" onClick={showDrawer}>
+              <IoSettingsOutline />
+            </Button> 
+          */}
           <Col >
             <ConfigProvider>
               <Popover placement="bottomLeft" content={profile(userData)}>
@@ -378,7 +374,7 @@ function Header({
             {toggler}
           </Button>
           <div>
-            <Drawer
+            {/*<Drawer
               className="settings-drawer"
               mask={true}
               width={360}
@@ -637,7 +633,7 @@ function Header({
                   </Row>
                 </div>
               </div>
-            </Drawer>
+            </Drawer>*/}
           </div>
         </Col>
       </Row>
