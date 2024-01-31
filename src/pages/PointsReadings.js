@@ -117,7 +117,7 @@ function Sites() {
         setloading(false);
         setIsLoading(false);
         message.error({
-          content: pointsData, // Display the error message
+          content: pointsData.length === 0?"Readings not found for selected site or utility":pointsData, // Display the error message
           style: {
               marginTop: 'calc(50vh - 30px)', // Center vertically
               marginLeft: 'calc(20vw - 150px)', // Center horizontally

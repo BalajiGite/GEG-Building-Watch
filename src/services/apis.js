@@ -4,6 +4,7 @@ const POST_API_URL = `https://7chg1o6vnc.execute-api.ap-southeast-2.amazonaws.co
 const POST_Alerts_API_URL = `https://kiln7uoo76.execute-api.ap-southeast-2.amazonaws.com/default/postgresCrudFuncsForUI`;
 const CONFIG_URL = `https://ooq5mqxlu8.execute-api.ap-southeast-2.amazonaws.com/default/neptuneViewerApis?queryType=viewerConfig`
 const MP_READINGS_URL = `https://2uwa6zvw9a.execute-api.ap-southeast-2.amazonaws.com/default/generateSiteConsumptionsForView`
+const COMPUTE_PROFILE_URL = 'https://yn6x0486e6.execute-api.ap-southeast-2.amazonaws.com/default/generateSiteUtilityProfile?'
 
 var localToken = "";
 const decodeIdToken = (token) => {
@@ -57,6 +58,20 @@ export const getApiDataFromAws = async (item) => {
         };
 
         const response = await axios.get(API_URL + item, {headers});
+        const data = response.data;
+        return data;
+    } catch (error) {
+         console.error('Error fetching data:', error);    
+    }
+}
+
+export const getRecompueteProfile = async (item) => {
+    try {
+        const headers = {
+            'Authorization': localStorage.getItem('jwtToken') == null?localToken:localStorage.getItem('jwtToken'),
+        };
+
+        const response = await axios.get(COMPUTE_PROFILE_URL + item, {headers});
         const data = response.data;
         return data;
     } catch (error) {
@@ -163,7 +178,7 @@ export const login = async (code) => {
   export const refreshToken = async () => {
     try {
 
-        if (refreshToken === null || refreshToken === undefined) {
+        if (localStorage.getItem('refreshToken') === null || localStorage.getItem('refreshToken') === "undefined") {
            handleSignOut()
         }
 

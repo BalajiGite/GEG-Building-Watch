@@ -8,7 +8,7 @@ import { getApiDataFromAws, getConfigDataFromAws, postApiDataToAws } from "../se
 import { targetEdit, addTarget } from '../services/targetService';
 import spinnerjiff from "../assets/images/loader.gif";
 import { SelectColumns } from '../components/widgets/SelectedColumns/SelectedColumns';
-import { isAuthenticated, userInfo } from "../services/apis";
+import { isAuthenticated, userInfo, getRecompueteProfile } from "../services/apis";
 import { useHistory } from 'react-router-dom';
 import { AppContext } from "../App";
 
@@ -25,6 +25,8 @@ function Targets() {
   const [selectedItem, setSelectedItem] = useState();
   const [isEditables, setIsEditables] = useState({});
   const [newForm, setNewForm] = useState(false);
+  const [active, setActive] = useState(null);
+  const [showButton, setShowButton] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState([]);
   // const isEditable = useRef({});
   const [form] = Form.useForm();
@@ -64,6 +66,31 @@ const isFieldEditable = (fieldName) => {
     number: {
       range: "${lebel} must be between ${min} and ${max}",
     },
+  };
+
+  const clickEventMpPoint = (RowId) => {
+    //Id.current = RowId;
+    setShowButton(true)
+    setActive(RowId)
+  }
+
+  const handleButtonClick = async() => {
+    const base64SiteId = btoa(active).replace(/=+$/, '');
+    setIsLoading(true)
+    const utilityType = activeButton == 1?"elec":activeButton==2?"water":"gas"
+    const computeRes = await getRecompueteProfile("siteName="+base64SiteId+"&pointType=" + utilityType)
+    if(computeRes == undefined){
+      message.error('Error in fetching data')
+      setShowButton(false);
+      setIsLoading(false)
+      return false
+    }else{
+      message.success(computeRes.message)
+      setActive();
+      setShowButton(false);
+      setIsLoading(false)
+
+    }
   };
 
   const dynamicColumns = (data) => {
@@ -643,13 +670,13 @@ const isFieldEditable = (fieldName) => {
   }, []);
 
   const handleSelectColumns = (selectedCoumns) => {
-        setVisibleColumns(selectedCoumns)
+      setVisibleColumns(selectedCoumns)
   }
 
   return (
     <div className="App">
       <Row>
-        <Col span={15}>
+        <Col span={9}>
           <Radio.Group>
             <Radio.Button className="ant-radio-button-css" style={{
               fontWeight: activeButton === 1 ? 'bold' : 'normal',
@@ -678,7 +705,13 @@ const isFieldEditable = (fieldName) => {
                 "Add New Electric"}
           </button>
         </Col>
-        <Col span={9} style={{ marginBottom: 10, textAlign: 'right' }}>
+        <Col span={7} style={{ textAlign: 'left' }}>
+        {showButton && (
+          <button onClick={handleButtonClick} className="mb-4 ml-4 custom-button" type="primary">
+            Recompute Profile
+          </button>)}
+        </Col>
+        <Col span={8} style={{ marginBottom: 10, textAlign: 'right' }}>
           <Form>
             <Input
               size="small"
@@ -962,6 +995,11 @@ const isFieldEditable = (fieldName) => {
       </Modal>
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
         <Table
+          onRow={(record) => ({
+            onClick: () => clickEventMpPoint(record.siteRef),
+            style: { backgroundColor: record.siteRef === active ? "#0A1016" : '' }
+
+          })}
           columns={visibleColumns.length>0? columns.filter((item) => visibleColumns.includes(item.key)):columns}
           dataSource={targets}
           scroll={{
