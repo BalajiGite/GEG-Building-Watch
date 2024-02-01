@@ -111,10 +111,17 @@ function Meter() {
         {
           title: "Geg Nabers Exclusion Percent",
           dataIndex: "gegNabersExclusionPercent",
-          key: "gegNabersExclusionPercent",
+          key: "11",
           width: 200,
           ellipsis: true,
           sorter: (a, b) => a.gegNabersExclusionPercent - b.gegNabersExclusionPercent,
+          filters: Array.from(new Set(meters.map(item => item.gegNabersExclusionPercent))).map((name, index) => ({
+            text: name,
+            value: name
+          })),
+          filterMode: "tree",
+          filterSearch: false,
+          onFilter: (value, record) => record.gegNabersExclusionPercent == value,
         },
       )
     }
@@ -137,11 +144,6 @@ function Meter() {
       filterMode: "tree",
       filterSearch: false,
       onFilter: (value, record) => record.name.startsWith(value),
-      render: (text) => (
-        <Tooltip title={text}>
-          <span>{text.length > 18 ? `${text.slice(0, 18)}...` : text}</span>
-        </Tooltip>
-      ),
     },
     {
       title: "Equip",
@@ -196,6 +198,13 @@ function Meter() {
       width: 120,
       ellipsis: true,
       sorter: (a, b) => a.gegNabersInclusionPercent - b.gegNabersInclusionPercent,
+      filters: Array.from(new Set(meters.map(item => item.gegNabersInclusionPercent))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: false,
+      onFilter: (value, record) => record.gegNabersInclusionPercent == value,
     },
     
     {
@@ -641,6 +650,12 @@ function Meter() {
                 label="Select Sub-meter of"
                 initialValue=""
                 wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: form.getFieldValue("gateMeter") === false,
+                    message: "Please select Sub-meter of",
+                  },
+                ]}
                 
               >
                 <Select
@@ -649,7 +664,7 @@ function Meter() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                  disabled = {newForm ? false : isFieldEditable('submeterOf')}
+                  disabled = {form.getFieldValue("gateMeter") === true?true:newForm ? false : isFieldEditable('submeterOf')}
                 >
                   {gateListData.length > 0 &&
                     gateListData.map((item, index) => (
@@ -672,29 +687,23 @@ function Meter() {
                   {
                     pattern: /^[0-9]*$/,
                     message: 'Please enter a valid number for the Percent less than 100.',
+                  }, {
+                    min: 0,
+                    max: 100,
+                    message: 'Please enter a number between 0 and 100 for the Inclusion Percent.',
                   },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
-                      if (!getFieldValue('gateMeter')) {
-                        // When gateMeter is false, the value should be empty
-                        if (value) {
-                          return Promise.reject('Inclusion Percent should be empty when "Is Gate Meter" is false.');
-                        }
-                      }else{
-                        const exclusionPercent = getFieldValue('gegNabersExclusionPercent');
+                      const exclusionPercent = getFieldValue('gegNabersExclusionPercent');
                         if (exclusionPercent && value) {
                           return Promise.reject('Please enter only one of Inclusion Percent or Exclusion Percent.');
                         }
-                      }
-
-                      // Additional validation logic if needed
-
                       return Promise.resolve();
                     },
                   }),
                 ]}
               >
-                <Input className="form_input" type="number" readOnly={newForm ? false : isFieldEditable('gegNabersInclusionPercent')} />
+                <Input className="form_input" type="number" min={0} max={100} readOnly={newForm ? false : isFieldEditable('gegNabersInclusionPercent')} />
               </Form.Item>
             </Col>
           </Row>
@@ -718,23 +727,13 @@ function Meter() {
                   },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
-                      if (!getFieldValue('gateMeter')) {
-                        // When gateMeter is false, the value should be empty
-                        if (value) {
-                          return Promise.reject('Exclusion Percent should be empty when "Is Gate Meter" is false.');
-                        }
-                      }else{
-                        const inclusionPercent = getFieldValue('gegNabersInclusionPercent');
-                        if (inclusionPercent && value) {
+                      const inclusionPercent = getFieldValue('gegNabersInclusionPercent');
+                      if (inclusionPercent && value) {
                           return Promise.reject('Please enter only one of Inclusion Percent or Exclusion Percent.');
-                        }
-                        if(getFieldValue('gateMeter') && value){
-                          return Promise.reject('gegNabersExclusionPercent cannot be a gateMeter.');
-                        }
                       }
-
-                      // Additional validation logic if needed
-
+                      if(getFieldValue('gateMeter') && value){
+                          return Promise.reject('gegNabersExclusionPercent cannot be a gateMeter.');
+                      }
                       return Promise.resolve();
                     },
                   }),

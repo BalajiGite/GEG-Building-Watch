@@ -175,12 +175,7 @@ function Config() {
       })),
       filterMode: "tree",
       filterSearch: false,
-      onFilter: (value, record) => record.name.startsWith(value),
-      render: (text) => (
-        <Tooltip title={text}>
-          <span>{text.length > 18 ? `${text.slice(0, 18)}...` : text}</span>
-        </Tooltip>
-      ),
+      onFilter: (value, record) => record.name.startsWith(value)
     },
     ...dynamicColumns(locationData),
     {

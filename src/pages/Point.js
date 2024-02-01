@@ -160,7 +160,8 @@ export default function Point() {
       dataIndex: "name",
       key: "2",
       ellipsis: true,
-      width: 180,
+      width: 250,
+      resizable: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
       sorter: (a, b) => a.name.localeCompare(b.name),
       filters: Array.from(new Set(point.map(item => item.name))).map((name, index) => ({
@@ -170,11 +171,6 @@ export default function Point() {
       filterMode: "tree",
       filterSearch: false,
       onFilter: (value, record) => record.name.startsWith(value),
-      render: (text) => (
-        <Tooltip title={text}>
-          <span>{text.length > 18 ? `${text.slice(0, 18)}...` : text}</span>
-        </Tooltip>
-      ),
     },
     {
       title: "Point Type",
