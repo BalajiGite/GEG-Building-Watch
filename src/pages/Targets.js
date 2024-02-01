@@ -822,7 +822,7 @@ const isFieldEditable = (fieldName) => {
                   {
                     validator: (_, value) => {
                       const currentRating = form.getFieldValue('currentRating');
-                      if (value && currentRating && value <= currentRating) {
+                      if (value && currentRating && value < currentRating) {
                         return Promise.reject('Target Rating should be greater than Current Rating.');
                       }
                       return Promise.resolve();
