@@ -192,6 +192,21 @@ export default function Point() {
       onFilter: (value, record) => record.gegPointType.startsWith(value),
     },
     {
+      title: "Data Type",
+      dataIndex: "gegDataType",
+      key: "14",
+      ellipsis: true,
+      width: 120,
+      sorter: (a, b) => a.gegDataType.localeCompare(b.gegDataType),
+      filters: Array.from(new Set(point.map(item => item.gegDataType))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: false,
+      onFilter: (value, record) => record.gegDataType.startsWith(value),
+    },
+    {
       title: "Unit",
       dataIndex: "unit",
       key: "4",
@@ -570,6 +585,33 @@ export default function Point() {
                     ) : activeButton === 2?(
                       <Select.Option value={"volumewater"}>volumewater</Select.Option>
                     ):<Select.Option value={"volumegas"}>volumegas</Select.Option>}
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name={"gegDataType"}
+                label="Select Data Type"
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Data Type.',
+                  },
+                ]}
+              >
+                <Select
+                  placeholder="Select Data Type"
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                  size="large"
+                  style={{ width: "100%" }}
+                >
+                  <Select.Option value={"cumulative"}>cumulative</Select.Option>
+                  <Select.Option value={"delta"}>delta</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
