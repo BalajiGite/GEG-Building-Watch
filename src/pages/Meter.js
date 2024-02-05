@@ -279,17 +279,16 @@ function Meter() {
       ),
     },
   ];
-      const isFieldEditable = (fieldName) => {
-       return (
-        typeof isEditables.editKeysUneditable === 'object'&&
-        isEditables.editKeysUneditable.hasOwnProperty(fieldName)
-       );
-      };
 
-  let data = [];
+  const isFieldEditable = (fieldName) => {
+    return (
+    typeof isEditables.editKeysUneditable === 'object'&&
+    isEditables.editKeysUneditable.hasOwnProperty(fieldName)
+    );
+  };
+
   const getData = async (changeTableData) => {
     setIsLoading(true);
-    // debugger
     try {
       let meterData = [];
       let configData = {};
@@ -310,17 +309,20 @@ function Meter() {
         setIsEditables(configData);
 
       }
-
       setSiteListData(sitesList);
       setMeters(meterData);
       setTempData(meterData)
       setloading(false);
       setIsLoading(false);
-      if(searchText !=""){
-        filterData(searchText)
-      }
     } catch (error) { }
   };
+
+  useEffect(() => {
+    // This effect will run whenever either tempData or alerts state changes
+    if (searchText !== "") {
+      onChangeText(searchText);
+    }
+  }, [tempData]);
 
   const setData = async () => {
     try {
@@ -393,8 +395,7 @@ function Meter() {
     </div>
   )
 
-  data = loading ? [] : meters;
-
+  
   const onChangeText = (text) => {
     setSearchText(text);
     filterData(text)
@@ -404,9 +405,8 @@ function Meter() {
   }
 
   const filterData = (text) => {
-    const filtersData = meters.filter(
+    const filtersData = tempData.filter(
       (record) =>
-        // debugger
         record.name.toLowerCase().includes(text.toLowerCase()) ||
         record.levelRef.toLowerCase().includes(text.toLowerCase()) ||
         record.siteRef.toLowerCase().includes(text.toLowerCase())

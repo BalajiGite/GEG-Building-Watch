@@ -503,11 +503,16 @@ const isFieldEditable = (fieldName) => {
       setIsEditables(targetConfigData)
       setloading(false);
       setIsLoading(false);
-      if(searchText !=""){
-        searchFilter(searchText)
-      }
+      
     } catch (error) { }
   };
+
+  useEffect(() => {
+    // This effect will run whenever either tempData or alerts state changes
+    if (searchText !== "") {
+      onChangeText(searchText);
+    }
+  }, [targetTempData]);
 
   const getFormatedDate = (startDate) =>{
        
@@ -628,7 +633,7 @@ const isFieldEditable = (fieldName) => {
     }
   }
   const searchFilter = (text) => {
-    const filterData = targets.filter((record) => (
+    const filterData = targetTempData.filter((record) => (
       record.name.toLowerCase().includes(text.toLowerCase()) ||
       record.siteRef.toLowerCase().includes(text.toLowerCase())
     ))
