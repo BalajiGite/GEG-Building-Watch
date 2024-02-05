@@ -59,7 +59,7 @@ function Sidenav({ color }) {
                 <img src={mpReadings} alt="profieIcon" />
               </span>
               <span className ="ant-menu-item-text">
-                MP Readings
+                Meter Readings
               </span>
             </NavLink>
           </Menu.Item>

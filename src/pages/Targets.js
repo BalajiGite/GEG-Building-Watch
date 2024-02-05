@@ -922,12 +922,18 @@ const isFieldEditable = (fieldName) => {
                 rules={[
                   {
                     validator: (_, value) => {
-                      if (value && form.getFieldValue(activeButton === 2 ? 'targetKl0' : activeButton === 3 ? 'targetCum0' : 'targetKwh0') >= value) {
+                      const targetValue = parseFloat(value); 
+                      const targetKl0Value = parseFloat(form.getFieldValue(activeButton === 2 ? 'targetKl0' : activeButton === 3 ? 'targetCum0' : 'targetKwh0')); // Parse the other field's value to a number
+                  
+                      if (targetValue === "" || isNaN(targetValue)) {
                         return Promise.resolve();
+                      } else if (targetValue > targetKl0Value) {
+                        return Promise.reject(new Error('Target 1 should be less than Target 0'));
                       }
-                      return Promise.reject(new Error('Target 1 should be less than Target 0'));
+                      return Promise.resolve();
                     },
-                  },
+                  }
+                  
                 ]}
                 initialValue=""
               >
@@ -946,15 +952,19 @@ const isFieldEditable = (fieldName) => {
                 label={activeButton === 2 ? "Target kl2" :activeButton === 3 ? "Target Cum2": "Target Kwh2"}
                 wrapperCol={24}
                 rules={[
-                 
                   {
                     validator: (_, value) => {
-                      if (value && form.getFieldValue(activeButton === 2 ? 'targetKl1' : activeButton === 3 ? 'targetCum1' : 'targetKwh1') >= value) {
+                      const targetValue = parseFloat(value); 
+                      const targetKl1Value = parseFloat(form.getFieldValue(activeButton === 2 ? 'targetKl1' : activeButton === 3 ? 'targetCum1' : 'targetKwh1')); // Parse the other field's value to a number
+                  
+                      if (isNaN(targetValue) || targetValue === "") {
                         return Promise.resolve();
+                      } else if (targetValue > targetKl1Value) {
+                        return Promise.reject(new Error('Target 2 should be less than Target 1'));
                       }
-                      return Promise.reject(new Error('Target 2 should be less than Target 1'));
+                      return Promise.resolve();
                     },
-                  },
+                  }
                 ]}
                 initialValue="">
                 <Input className='form_input' type='number' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl2'):isFieldEditable('targetKwh2')}/>
