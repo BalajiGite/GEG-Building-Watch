@@ -208,7 +208,7 @@ background-color: transparent;
 .ant-table-body::-webkit-scrollbar {
   width: 5px;
   /* Adjust the width as needed */
-  height: 5px;
+  height: 15px;
 }
 
 
