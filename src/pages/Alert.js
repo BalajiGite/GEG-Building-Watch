@@ -42,7 +42,7 @@ function Alerts() {
   const [searchText, setSearchText] = useState('');
   const [siteListData, setSiteListData] = useState([]);
   const [prjNameData, setPrjNameData] = useState([]);
-  const [post, setPost] = useState([]);
+  const [alerts, setAlerts] = useState([]);
   const [loading, setloading] = useState(true);
   const [AlertsId, setAlertsId] = useState();
   const [active, setActive] = useState(null);
@@ -134,7 +134,7 @@ function Alerts() {
       width: 200,
       ellipsis: true,
       sorter: (a, b) => a.sitename.localeCompare(b.sitename),
-      filters: Array.from(new Set(post.map(item => item.sitename))).map((name, index) => ({
+      filters: Array.from(new Set(alerts.map(item => item.sitename))).map((name, index) => ({
         text: name,
         value: name,
       })),
@@ -149,7 +149,7 @@ function Alerts() {
       width: 160,
       ellipsis: true,
       sorter: (a, b) => a.utilitytype.localeCompare(b.utilitytype),
-      filters: Array.from(new Set(post.map(item => item.utilitytype))).map((name, index) => ({
+      filters: Array.from(new Set(alerts.map(item => item.utilitytype))).map((name, index) => ({
         text: name,
         value: name,
       })),
@@ -164,7 +164,7 @@ function Alerts() {
       width: 160,
       ellipsis: true,
       sorter: (a, b) => a.project.localeCompare(b.project),
-      filters: Array.from(new Set(post.map(item => item.project))).map((name, index) => ({
+      filters: Array.from(new Set(alerts.map(item => item.project))).map((name, index) => ({
         text: name,
         value: name,
       })),
@@ -179,7 +179,7 @@ function Alerts() {
       width: 160,
       ellipsis: true,
       sorter: (a, b) => a.reporttype.localeCompare(b.reporttype),
-      filters: Array.from(new Set(post.map(item => item.reporttype))).map((name, index) => ({
+      filters: Array.from(new Set(alerts.map(item => item.reporttype))).map((name, index) => ({
         text: name,
         value: name,
       })),
@@ -194,7 +194,7 @@ function Alerts() {
       width: 160,
       ellipsis: true,
       sorter: (a, b) => a.freq.localeCompare(b.freq),
-      filters: Array.from(new Set(post.map(item => item.freq))).map((name, index) => ({
+      filters: Array.from(new Set(alerts.map(item => item.freq))).map((name, index) => ({
         text: name,
         value: name,
       })),
@@ -209,7 +209,7 @@ function Alerts() {
       width: 160,
       ellipsis: true,
       sorter: (a, b) => a.tz.localeCompare(b.tz),
-      filters: Array.from(new Set(post.map(item => item.tz))).map((name, index) => ({
+      filters: Array.from(new Set(alerts.map(item => item.tz))).map((name, index) => ({
         text: name,
         value: name,
       })),
@@ -224,7 +224,7 @@ function Alerts() {
       width: 200,
       ellipsis: true,
       sorter: (a, b) => a.recipientemails.localeCompare(b.recipientemails),
-      filters: Array.from(new Set(post.map(item => item.recipientemails))).map((name, index) => ({
+      filters: Array.from(new Set(alerts.map(item => item.recipientemails))).map((name, index) => ({
         text: name,
         value: name,
       })),
@@ -244,7 +244,7 @@ function Alerts() {
       width: 200,
       ellipsis: true,
       sorter: (a, b) => a.erroremails.localeCompare(b.erroremails),
-      filters: Array.from(new Set(post.map(item => item.erroremails))).map((name, index) => ({
+      filters: Array.from(new Set(alerts.map(item => item.erroremails))).map((name, index) => ({
         text: name,
         value: name,
       })),
@@ -294,7 +294,6 @@ function Alerts() {
     }
   ];
 
-  let data = [];
   const getData = async () => {
     setIsLoading(true);
     try {
@@ -307,15 +306,19 @@ function Alerts() {
       const AlertConfigurationData = await getConfigDataFromAws("alertConfiguration");
       setEditable(AlertConfigurationData);
       setSiteListData(alertList);
-      setPost(alertsData);
+      setAlerts(alertsData);
       setTempData(alertsData);
       setloading(false);
       setIsLoading(false);
-      if(searchText !=""){
-        filter(searchText)
-      }
     } catch (error) { }
   };
+
+  useEffect(() => {
+    // This effect will run whenever either tempData or alerts state changes
+    if (searchText !== "") {
+      onChangeText(searchText);
+    }
+  }, [tempData]);
 
   const showAlert = async (id, buttonValue) => {
     try {
@@ -408,8 +411,7 @@ function Alerts() {
     setOpen(true);
   };
 
-  data = loading ? [] : post;
-
+ 
   const content = (record) => (
     <div style={{marginLeft:"10px", backgroundColor:"#0A1016",paddingTop:"10px", marginRight:"10px",paddingLeft:"10px", paddingRight:"10px"}}>
       <a onClick={() => onEdit(record)} style={{ color: "white" }}>EDIT</a>
@@ -425,7 +427,7 @@ function Alerts() {
   // };
 
   const filter = (text) => {
-    const filterData = data.filter(
+    const filterData = alerts.filter(
       (record) =>
         record.sitename.toLowerCase().includes(text.toLowerCase()) ||
         record.utilitytype.toString().includes(text.toLowerCase()) ||
@@ -437,13 +439,13 @@ function Alerts() {
         record.erroremails.toLowerCase().includes(text.toLowerCase())
 
     );
-    setPost(filterData);
+    setAlerts(filterData);
   };
   const onChangeText = (text) => {
     setSearchText(text);
     filter(text);
     if (text === "" || !text) {
-      setPost(tempData);
+      setAlerts(tempData);
     }
   };
   useEffect(() => {
@@ -517,7 +519,7 @@ function Alerts() {
         setVisibleColumns(selectedColumns);
     }
 
-  const totalRows = post.length;
+  const totalRows = alerts.length;
   return (
     <>
 
@@ -639,7 +641,7 @@ function Alerts() {
                   disabled = {addNewform?false:isEditableFormField('utilitytype')}
                 >
                   {
-                    [...new Set(post.map(item => item.utilitytype))].map((item, index) => (
+                    [...new Set(alerts.map(item => item.utilitytype))].map((item, index) => (
                       <Select.Option key={index} value={item}>{item}</Select.Option>
                     ))
                   }
@@ -672,7 +674,7 @@ function Alerts() {
 
                 >
                   {
-                    [...new Set(post.map(item => item.reporttype))].map((item, index) => (
+                    [...new Set(alerts.map(item => item.reporttype))].map((item, index) => (
                       <Select.Option key={index} value={item}>{item}</Select.Option>
                     ))
                   }
@@ -701,7 +703,7 @@ function Alerts() {
                   style={{ width: "100%" }}
                   disabled = {addNewform?false:isEditableFormField('tz')}
                 >
-                  {[...new Set(post.map(item => item.tz))].map((item, index) => (
+                  {[...new Set(alerts.map(item => item.tz))].map((item, index) => (
                     <Select.Option key={index} value={item}>{item}</Select.Option>
                   ))}
                 </Select>
@@ -783,7 +785,7 @@ function Alerts() {
                   style={{ width: "100%" }}
                   disabled = {addNewform?false:isEditableFormField('isactive')}
                 >
-                  {[...new Set(post.map(item => item.isactive))].map((item, index) => (
+                  {[...new Set(alerts.map(item => item.isactive))].map((item, index) => (
                     <Select.Option key={index} value={item}>{item ? "true" : "false"}</Select.Option>
                   ))}
                 </Select>
@@ -878,7 +880,7 @@ function Alerts() {
 
           })}
           columns={visibleColumns.length>0? columns.filter((item)=> visibleColumns.includes(item.key)):columns}
-          dataSource={post}
+          dataSource={alerts}
           rowKey={"id"}
           scroll={{
             y: screenHeight,
