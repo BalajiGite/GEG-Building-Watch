@@ -153,6 +153,31 @@ background-color: transparent;
 
 }
 
+
+.apexcharts-zoom-icon.apexcharts-selected svg {
+  fill: #8E8E8E !important;
+}
+
+.apexcharts-zoom-icon.apexcharts-selected:hover svg {
+  fill: #8E8E8E !important;
+}
+
+.apexcharts-menu-icon svg, .apexcharts-pan-icon svg, .apexcharts-reset-icon svg, .apexcharts-selection-icon svg, .apexcharts-toolbar-custom-icon svg, .apexcharts-zoom-icon svg, .apexcharts-zoomin-icon svg, .apexcharts-zoomout-icon svg {
+  fill: #8E8E8E !important;
+}
+
+.chart-container .apexcharts-gridline.yaxis-0::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% - 30px); /* Adjust width as needed */
+  height: 1px; /* Adjust height as needed */
+  background-color: #C5C5C5; /* Adjust color as needed */
+  border-radius: 2px; /* Adjust border-radius as needed */
+  border-style: dashed;
+}
+
 .ant-radio-button-css {
   border: 1px solid #8E8E8E !important;
   background: #0A1016 !important;
@@ -176,6 +201,20 @@ background-color: transparent;
   background-color: rgba(142, 142, 142, 0.3);
 }
 
+
+
+/* Webkit (Chrome, Safari, Opera) */
+html::-webkit-scrollbar {
+  width: 5px;
+}
+
+html::-webkit-scrollbar-track {
+  background-color: #909090;
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: #001629;
+}
 
 .menu-wrapper {
   height: calc(100vh - 120px);
@@ -2692,6 +2731,14 @@ section.ant-layout.layout-content .ant-layout-content.content-ant {
   box-shadow: 0 20px 27px rgba(0, 0, 0, 0.05);
 }
 
+.custom-card{
+  background: linear-gradient(104.5deg, #2A3035 0%, rgba(27, 34, 40, 0) 100%),
+  linear-gradient(0deg, rgba(142, 142, 142, 0.3), rgba(142, 142, 142, 0.3));
+  border: 1px solid #8E8E8E4D;
+  box-shadow: 0px 6px 10px 0px #6060600D;
+  
+}
+
 .card-credit {
   background-image: url("../images/info-card-3.jpg");
   background-position: 50%;
@@ -3511,10 +3558,14 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile .btn-sig
 }
 
 .layout-dashboard .ant-affix .ant-layout-header {
-  background: #fff;
-  box-shadow: 0 20px 27px rgba(0, 0, 0, 0.05);
-  margin: 10px 20px;
-  z-index: 10;
+     /* background: transparent; */
+     height: auto;
+     flex-shrink: 0;
+     padding: 16px;
+     line-height: inherit;
+     transition: 0.2s;
+     background: #001629;
+     box-shadow: 0px 6px 10px 0px rgba(96, 96, 96, 0.10);
 }
 
 aside.ant-layout-sider.ant-layout-sider-light.sider-primary.ant-layout-sider-primary.active-route a.active {

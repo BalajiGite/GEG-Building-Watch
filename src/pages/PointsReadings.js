@@ -5,6 +5,7 @@ import { Button, Row, Col, Modal } from "antd";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { AppContext } from "../App";
+import MeterReadings  from   "../components/chart/apex_charts/MeterReadings"
 import { getApiDataFromAws, postMpReadingsDataToAws, isAuthenticated, userInfo } from "../services/apis";
 import {
   addSites,
@@ -225,23 +226,17 @@ function Sites() {
     }
   }, []);
 
+  useEffect(() => {
+    // Do something when mpReadings changes, maybe fetch more data or update some UI
+    // For now, let's just log that mpReadings changed
+    //console.log("mpReadings changed:", mpReadings);
+  }, [mpReadings]);
+
   return (
     <>
       {" "}
       <Row>
         <Col span={20}>
-         <Select
-            className="mb-4"
-            placeholder="Select Utility Type"
-            value={selectedItemUt}
-            onChange={handleSelectChangeUt}
-            size="large"
-            style={{ marginRight: '10px',minWidth: '200px' }} 
-          >
-              <Select.Option key="elect" value="elec">elec</Select.Option>
-              <Select.Option key="water" value="water">water</Select.Option>
-              <Select.Option key="gas" value="gas">gas</Select.Option>
-          </Select>
           <Select
             placeholder="Select Site"
             value={selectedItem}
@@ -255,6 +250,18 @@ function Sites() {
                 ))
               }
 
+          </Select>
+          <Select
+            className="mb-4"
+            placeholder="Select Utility Type"
+            value={selectedItemUt}
+            onChange={handleSelectChangeUt}
+            size="large"
+            style={{ marginRight: '10px',minWidth: '200px' }} 
+          >
+              <Select.Option key="elect" value="elec">elec</Select.Option>
+              <Select.Option key="water" value="water">water</Select.Option>
+              <Select.Option key="gas" value="gas">gas</Select.Option>
           </Select>
           <DatePicker
             placeholder="Select Start Date"
@@ -281,6 +288,11 @@ function Sites() {
         </Col>
       </Row>
       {mpReadings.length > 0 && (
+        <Row style={{ marginBottom: '20px' }}>
+            <MeterReadings data={mpReadings} isLoading={isLoading} unit={selectedItemUt=="elec"?"kWh":selectedItemUt=="water"?"kL":"cf"}/>
+        </Row>
+      )}
+      {mpReadings.length > 0 && (
         <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
             <Table
               columns={columns}
@@ -297,6 +309,7 @@ function Sites() {
             />      
         </Spin>
       )}
+      
     </>
   );
 }

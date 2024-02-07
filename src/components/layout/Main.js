@@ -12,7 +12,7 @@ function Main({ children }) {
   const [visible, setVisible] = useState(false);
   const [placement, setPlacement] = useState("right");
   const [sidenavType, setSidenavType] = useState("#001629");
-  const [fixed, setFixed] = useState(false);
+  const [fixed, setFixed] = useState(true);
 
   const context = useContext(AppContext);
   const openDrawer = () => setVisible(!visible);
@@ -69,19 +69,19 @@ function Main({ children }) {
           </Sider>
         </Layout>
       </Drawer>
-
-      <AntHeader className={`${fixed ? "ant-header-fixed" : ""}`}>
-        <Header
-          onPress={openDrawer}
-          name={pathname}
-          subName={pathname}
-          handleSidenavColor={handleSidenavColor}
-          handleSidenavType={handleSidenavType}
-          handleFixedNavbar={handleFixedNavbar}
-          handleBackgroundColor={handleBackgroundColor}
-        />
-      </AntHeader>
-
+      <Affix offsetTop={0}>
+        <AntHeader className={`${fixed ? "ant-header-fixed" : ""}`}>
+          <Header
+            onPress={openDrawer}
+            name={pathname}
+            subName={pathname}
+            handleSidenavColor={handleSidenavColor}
+            handleSidenavType={handleSidenavType}
+            handleFixedNavbar={handleFixedNavbar}
+            handleBackgroundColor={handleBackgroundColor}
+          />
+        </AntHeader>
+      </Affix>
       <Layout>
         <Sider
           breakpoint="lg"
