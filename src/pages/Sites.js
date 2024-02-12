@@ -399,10 +399,14 @@ function Sites() {
   };
 
   const onChangeText = (text) => {
-    setSearchText(text);
-    filter(text);
-    if (text === "" || !text) {
+
+    if (text == "" || !text || text.length < searchText.length) {
       setSite(siteData);
+      setSearchText(text);
+      filter(text, siteData);
+    }else{
+      setSearchText(text);
+      filter(text, site);
     }
   };
 
@@ -411,8 +415,8 @@ function Sites() {
     form.resetFields();
   };
 
-  const filter = (text) => {
-    const filteredData = site.filter(
+  const filter = (text, data) => {
+    const filteredData = data.filter(
       (record) =>
         record.name?.toLowerCase().includes(text.toLowerCase()) ||
         record.area?.toLowerCase().includes(text.toLowerCase()) ||

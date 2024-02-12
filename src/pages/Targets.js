@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Row, Col, Modal, Select, Popover, ConfigProvider, DatePicker } from "antd";
-import { Form, Input, Table, Divider, Spin, Radio, message } from "antd";
+import { Form, Input, Table, Divider, Spin, Radio, message, Tooltip } from "antd";
 import { EllipsisOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useState, useEffect, useContext } from 'react';
@@ -117,7 +117,7 @@ const isFieldEditable = (fieldName) => {
     }
     if (data.some(item => item.targetKwh0)) {
       dynamicColumns.push({
-        title: "Target kWh0",
+        title: "Lower Performance target p.a.",
         dataIndex: "targetKwh0",
         key: "targetKwh0",
         width: 160,
@@ -135,7 +135,7 @@ const isFieldEditable = (fieldName) => {
 
     if (data.some(item => item.targetKwh1)) {
       dynamicColumns.push({
-        title: "Target kWh1",
+        title: "Current Performance target p.a.",
         dataIndex: "targetKwh1",
         key: "targetKwh1",
         width: 160,
@@ -153,7 +153,7 @@ const isFieldEditable = (fieldName) => {
 
     if (data.some(item => item.targetKwh2)) {
       dynamicColumns.push({
-        title: "Target kWh2",
+        title: "Higher Performance target p.a.",
         dataIndex: "targetKwh2",
         key: "targetKwh2",
         width: 160,
@@ -187,7 +187,7 @@ const isFieldEditable = (fieldName) => {
     }
     if (data.some(item => item.targetKl0)) {
       dynamicColumns.push({
-        title: "Target Kl0",
+        title: "Lower Performance target p.a.",
         dataIndex: "targetKl0",
         key: "targetKl0",
         width: 160,
@@ -205,7 +205,7 @@ const isFieldEditable = (fieldName) => {
 
     if (data.some(item => item.targetKl1)) {
       dynamicColumns.push({
-        title: "Target Kl1",
+        title: "Current Performance target p.a.",
         dataIndex: "targetKl1",
         key: "targetKl1",
         width: 160,
@@ -222,7 +222,7 @@ const isFieldEditable = (fieldName) => {
     }
     if (data.some(item => item.targetKl2)) {
       dynamicColumns.push({
-        title: "Target Kl2",
+        title: "Higher Performance target p.a.",
         dataIndex: "targetKl2",
         key: "targetKl2",
         width: 160,
@@ -256,7 +256,7 @@ const isFieldEditable = (fieldName) => {
     }
     if (data.some(item => item.targetCum0)) {
       dynamicColumns.push({
-        title: "Target Cum0",
+        title: "Lower Performance target p.a.",
         dataIndex: "targetCum0",
         key: "targetCum0",
         width: 160,
@@ -273,7 +273,7 @@ const isFieldEditable = (fieldName) => {
     }
     if (data.some(item => item.targetCum1)) {
       dynamicColumns.push({
-        title: "Target Cum1",
+        title: "Current Performance target p.a.",
         dataIndex: "targetCum1",
         key: "targetCum1",
         width: 160,
@@ -286,6 +286,23 @@ const isFieldEditable = (fieldName) => {
         filterMode: "tree",
         filterSearch: false,
         onFilter: (value, record) => record.targetCum1.startsWith(value),
+      })
+    }
+    if (data.some(item => item.targetCum2)) {
+      dynamicColumns.push({
+        title: "Higher Performance target p.a.",
+        dataIndex: "targetCum2",
+        key: "targetCum2",
+        width: 160,
+        ellipsis: true,
+        sorter: (a, b) => a.targetCum2.localeCompare(b.targetCum2),
+        filters: Array.from(new Set(targets.map(item => item.targetCum2))).map((name, index) => ({
+          text: name,
+          value: name,
+        })),
+        filterMode: "tree",
+        filterSearch: false,
+        onFilter: (value, record) => record.targetCum2.startsWith(value),
       })
     }
     return dynamicColumns;
@@ -626,14 +643,17 @@ const isFieldEditable = (fieldName) => {
   }
 
   const onChangeText = (text) => {
-    setSearchText(text);
-    searchFilter(text);
-    if (text === "" || !text) {
+    if (text == "" || !text || text.length < searchText.length) {
       setTargets(targetTempData)
-    }
+      setSearchText(text);
+      searchFilter(text, targetTempData);
+    }else{
+      setSearchText(text);
+      searchFilter(text, targets);
+    } 
   }
-  const searchFilter = (text) => {
-    const filterData = targetTempData.filter((record) => (
+  const searchFilter = (text, data) => {
+    const filterData = data.filter((record) => (
       record.name.toLowerCase().includes(text.toLowerCase()) ||
       record.siteRef.toLowerCase().includes(text.toLowerCase())
     ))
@@ -828,7 +848,7 @@ const isFieldEditable = (fieldName) => {
                     validator: (_, value) => {
                       const currentRating = form.getFieldValue('currentRating');
                       if (value && currentRating && value < currentRating) {
-                        return Promise.reject('Target Rating should be greater than Current Rating.');
+                        return Promise.reject('Target Rating should be greater or equal to than Current Rating.');
                       }
                       return Promise.resolve();
                     },
@@ -858,6 +878,7 @@ const isFieldEditable = (fieldName) => {
                     className='form_input dtPicker'
                     format={DATE_FORMAT}
                     readOnly={newForm ? false : !isFieldEditable('ratingPeriodStart')}
+                    inputReadOnly={true}
                   />
               </Form.Item>
             </Col>
@@ -881,11 +902,11 @@ const isFieldEditable = (fieldName) => {
                       }
           
                       const diffInDays = value.diff(startDate, 'days');
-                      const isValid = diffInDays >= 363 && diffInDays <= 365;
+                      const isValid = diffInDays >= 363 && diffInDays <= 367;
           
                       return isValid
                         ? Promise.resolve()
-                        : Promise.reject('The difference in days should be between 363 and 365.');
+                        : Promise.reject('The difference in days should be between 363 and 367.');
                     },
                   }),
                 ]}>
@@ -893,6 +914,7 @@ const isFieldEditable = (fieldName) => {
                     className='form_input dtPicker'
                     format={DATE_FORMAT}
                     readOnly={newForm ? false : !isFieldEditable('ratingPeriodEnd')}
+                    inputReadOnly={true}
                   />
               </Form.Item>
             </Col>
@@ -901,7 +923,7 @@ const isFieldEditable = (fieldName) => {
             <Col span={24}>
               <Form.Item
                 name={activeButton === 2 ? "targetKl0" : activeButton === 3 ? "targetCum0" : "targetKwh0"}
-                label={activeButton === 2 ? "Target Kl0" : activeButton === 3 ? "Target Cum0" : "Target kwh0"}
+                label={activeButton === 2 ? "Lower Performance target p.a." : activeButton === 3 ? "Lower Performance target p.a." : "Lower Performance target p.a."}
                 wrapperCol={24}
                 rules={[
                   {
@@ -910,11 +932,13 @@ const isFieldEditable = (fieldName) => {
                   },
                 ]}
               >
-                <Input
-                  className='form_input'
-                  type="number"
-                  readOnly={newForm ? false : activeButton === 2 ? isFieldEditable('targetKl0') : activeButton === 3 ? isFieldEditable("targetCum0") : isFieldEditable('targetKwh0')}
-                />
+                <Tooltip title="e.g. -0.5 stars NABERS">
+                  <Input
+                    className='form_input'
+                    type="number"
+                    readOnly={newForm ? false : activeButton === 2 ? isFieldEditable('targetKl0') : activeButton === 3 ? isFieldEditable("targetCum0") : isFieldEditable('targetKwh0')}
+                  />
+                </Tooltip>
               </Form.Item>
             </Col>
           </Row>
@@ -922,7 +946,7 @@ const isFieldEditable = (fieldName) => {
             <Col span={24}>
               <Form.Item
                 name={activeButton === 2 ? "targetKl1" : activeButton === 3 ? "targetCum1" : "targetKwh1"}
-                label={activeButton === 2 ? "Target Kl1" : activeButton === 3 ? "Target Cum1" : "Target kwh1"}
+                label={activeButton === 2 ? "Current Performance target p.a." : activeButton === 3 ? "Current Performance target p.a." : "Current Performance target p.a."}
                 wrapperCol={24}
                 rules={[
                   {
@@ -942,11 +966,13 @@ const isFieldEditable = (fieldName) => {
                 ]}
                 initialValue=""
               >
-                <Input
-                  className='form_input'
-                  type="number"
-                  readOnly={newForm ? false : activeButton === 2 ? isFieldEditable('targetKl1') : activeButton === 3 ? isFieldEditable('targetCum1') : isFieldEditable('targetKwh1')}
-                />
+                <Tooltip title="e.g. Current NABERS star rating">
+                  <Input
+                    className='form_input'
+                    type="number"
+                    readOnly={newForm ? false : activeButton === 2 ? isFieldEditable('targetKl1') : activeButton === 3 ? isFieldEditable('targetCum1') : isFieldEditable('targetKwh1')}
+                  />
+                </Tooltip>
               </Form.Item>
             </Col>
           </Row>
@@ -954,7 +980,7 @@ const isFieldEditable = (fieldName) => {
             <Col span={24}>
               <Form.Item
                 name={activeButton === 2 ? "targetKl2" :activeButton === 3 ? "targetCum2": "targetKwh2"}
-                label={activeButton === 2 ? "Target kl2" :activeButton === 3 ? "Target Cum2": "Target Kwh2"}
+                label={activeButton === 2 ? "Higher Performance target p.a." :activeButton === 3 ? "Higher Performance target p.a.":  "Higher Performance target p.a."}
                 wrapperCol={24}
                 rules={[
                   {
@@ -972,7 +998,9 @@ const isFieldEditable = (fieldName) => {
                   }
                 ]}
                 initialValue="">
-                <Input className='form_input' type='number' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl2'):isFieldEditable('targetKwh2')}/>
+                <Tooltip title="e.g. +0.5 stars NABERS">
+                  <Input className='form_input' type='number' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl2'):isFieldEditable('targetKwh2')}/>
+                </Tooltip>
               </Form.Item>
             </Col>
           </Row>

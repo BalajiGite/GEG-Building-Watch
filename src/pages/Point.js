@@ -419,11 +419,13 @@ export default function Point() {
   };
 
   const onChangeText = async (text) => {
-    setSearchText(text);
-    filter(text);
-    if (text === "" || !text) {
-      setPoint(pointData
-      );
+    if (text == "" || !text || text.length < searchText.length) {
+      setPoint(pointData);
+      setSearchText(text);
+      filter(text, pointData);
+    }else{
+      setSearchText(text);
+      filter(text,point);
     }
   };
   const content = (record) => (
@@ -434,8 +436,8 @@ export default function Point() {
     </div>
   )
 
-  const filter = (text) => {
-    const filteredData = point.filter(
+  const filter = (text, data) => {
+    const filteredData = data.filter(
       (record) =>
         record.name.toLowerCase().includes(text.toLowerCase()) ||
         record.gegPointType.toLowerCase().includes(text.toLowerCase()) ||

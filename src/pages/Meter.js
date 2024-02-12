@@ -397,15 +397,18 @@ function Meter() {
 
   
   const onChangeText = (text) => {
-    setSearchText(text);
-    filterData(text)
-    if (text == "" || !text) {
+    if (text == "" || !text || text.length < searchText.length) {
       setMeters(tempData);
+      setSearchText(text);
+      filterData(text, tempData)
+    }else{
+      setSearchText(text);
+      filterData(text, tempData)
     }
   }
 
-  const filterData = (text) => {
-    const filtersData = tempData.filter(
+  const filterData = (text, data) => {
+    const filtersData = data.filter(
       (record) =>
         record.name.toLowerCase().includes(text.toLowerCase()) ||
         record.levelRef.toLowerCase().includes(text.toLowerCase()) ||

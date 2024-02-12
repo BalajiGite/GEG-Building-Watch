@@ -173,7 +173,7 @@ function Alerts() {
       onFilter: (value, record) => record.project.startsWith(value),
     },
     {
-      title: "Report Type",
+      title: "Report Frequency",
       dataIndex: "reporttype",
       key: "4",
       width: 160,
@@ -426,8 +426,8 @@ function Alerts() {
   //   setTempData(filterData);
   // };
 
-  const filter = (text) => {
-    const filterData = alerts.filter(
+  const filter = (text, data) => {
+    const filterData = data.filter(
       (record) =>
         record.sitename.toLowerCase().includes(text.toLowerCase()) ||
         record.utilitytype.toString().includes(text.toLowerCase()) ||
@@ -441,11 +441,15 @@ function Alerts() {
     );
     setAlerts(filterData);
   };
+
   const onChangeText = (text) => {
-    setSearchText(text);
-    filter(text);
-    if (text === "" || !text) {
+    if (text == "" || !text || text.length < searchText.length) {
       setAlerts(tempData);
+      setSearchText(text);
+      filter(text,tempData);
+    }else{
+      setSearchText(text);
+      filter(text, alerts);
     }
   };
   useEffect(() => {

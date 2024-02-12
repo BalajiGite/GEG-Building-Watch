@@ -266,20 +266,25 @@ function Config() {
       setloading(false);
       setIsLoading(false);
       if(searchText !=""){
-        filterData(searchText)
+        filterData(searchText, locationData)
       }
     } catch (error) { }
   };
 
   const onChangeSelectedValue = (value) => {
-    setSearchText(value);
-    filterData(value);
-    if (value == "" || !value) {
+    
+    if (value == "" || !value || value.length < searchText.length) {
       setLocationData(templocationData);
+      setSearchText(value);
+      filterData(value, templocationData);
+    }else{
+      setSearchText(value);
+      filterData(value, locationData);
     }
   }
-  const filterData = (value) => {
-    const filtersData = locationData.filter((record) => (
+
+  const filterData = (value, data) => {
+    const filtersData = data.filter((record) => (
       record.name.toLowerCase().includes(value.toLowerCase()) ||
       record?.stateRef?.toLowerCase().includes(value.toLowerCase()) ||
       record?.siteRef?.toLowerCase().includes(value.toLowerCase())
