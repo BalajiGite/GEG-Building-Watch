@@ -8,6 +8,7 @@ import targetIcon from "../../assets/images/sidebarSVG/targets.svg";
 import configIcon from "../../assets/images/sidebarSVG/location.svg";
 import alertsIcon from "../../assets/images/sidebarSVG/Alerts.svg";
 import mpReadings from "../../assets/images/sidebarSVG/mpReadings.svg";
+import tracker from "../../assets/images/sidebarSVG/tracker.svg";
 // import logo from "../../assets/images/buildlogo.jpg";
 import { AppContext } from "../../App";
 function Sidenav({ color }) {
@@ -59,7 +60,17 @@ function Sidenav({ color }) {
                 <img src={mpReadings} alt="profieIcon" />
               </span>
               <span className ="ant-menu-item-text">
-                Meter Readings
+              Meter Readings
+              </span>
+            </NavLink>
+          </Menu.Item>
+          <Menu.Item key="10">
+            <NavLink to="/tracker">
+            <span className="icon">
+                <img src={tracker} alt="trackerIcon" />
+              </span>
+              <span className ="ant-menu-item-text">
+                Tracker
               </span>
             </NavLink>
           </Menu.Item>

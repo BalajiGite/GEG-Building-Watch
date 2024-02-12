@@ -17,6 +17,7 @@ import Config from "./pages/GeoConfigs";
 import Alert from "./pages/Alert";
 import Targets from "./pages/Targets";
 import PointsReadings from "./pages/PointsReadings";
+import Tracker from "./pages/Tracker";
 import BuildingPerformance from "./pages/BuildingPerformance";
 import React, { useState } from "react";
 import Report from "./pages/report/Report";
@@ -70,6 +71,7 @@ function App() {
               <Route exact path="/GeoConfigs" component={Config} />
               <Route exact path="/targets" component={Targets}/>
               <Route exact path="/pointsReadings" component={PointsReadings}/>
+              <Route exact path="/tracker" component={Tracker} /> 
               <Route exact path="/report" component={Report} />             
             </Main>
           </Switch>
