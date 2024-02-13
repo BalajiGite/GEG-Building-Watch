@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Row, Col, Modal, Select, Popover, ConfigProvider, DatePicker } from "antd";
 import { Form, Input, Table, Divider, Spin, Radio, message, Tooltip } from "antd";
 import { EllipsisOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useState, useEffect, useContext } from 'react';
 import { getApiDataFromAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
@@ -74,8 +75,11 @@ const isFieldEditable = (fieldName) => {
     setActive(RowId)
   }
 
-  const handleButtonClick = async() => {
-    const base64SiteId = btoa(active).replace(/=+$/, '');
+  const handleButtonClick = async(siteName) => {
+    var base64SiteId = btoa(active).replace(/=+$/, '');
+    if(typeof siteName === 'string'){
+      base64SiteId = btoa(siteName).replace(/=+$/, '');
+    }
     setIsLoading(true)
     const utilityType = activeButton == 1?"elec":activeButton==2?"water":"gas"
     const computeRes = await getRecompueteProfile("siteName="+base64SiteId+"&pointType=" + utilityType)
@@ -85,7 +89,12 @@ const isFieldEditable = (fieldName) => {
       setIsLoading(false)
       return false
     }else{
-      message.success(computeRes.message)
+      if(computeRes.message === "Success"){
+        message.success("Target Recomputed Sucessfully")
+      }else{
+        message.success(computeRes.message)
+      }
+      
       setActive();
       setShowButton(false);
       setIsLoading(false)
@@ -547,7 +556,6 @@ const isFieldEditable = (fieldName) => {
       var formData = form.getFieldsValue();
 
       var objecttoPass = null;
-      debugger;
       var functionName = "";
       var typeName = ""
       if(activeButton == 1){
@@ -636,6 +644,7 @@ const isFieldEditable = (fieldName) => {
       }
       getData(activeButton);
       onCancelModal();
+      handleButtonClick(formData.siteRef)
     }
     catch(error){
       console.log(error)
@@ -924,6 +933,7 @@ const isFieldEditable = (fieldName) => {
               <Form.Item
                 name={activeButton === 2 ? "targetKl0" : activeButton === 3 ? "targetCum0" : "targetKwh0"}
                 label={activeButton === 2 ? "Lower Performance target p.a." : activeButton === 3 ? "Lower Performance target p.a." : "Lower Performance target p.a."}
+                tooltip={{ title: 'e.g. -0.5 stars NABERS', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }}/> }}
                 wrapperCol={24}
                 rules={[
                   {
@@ -932,13 +942,11 @@ const isFieldEditable = (fieldName) => {
                   },
                 ]}
               >
-                <Tooltip title="e.g. -0.5 stars NABERS">
                   <Input
                     className='form_input'
                     type="number"
                     readOnly={newForm ? false : activeButton === 2 ? isFieldEditable('targetKl0') : activeButton === 3 ? isFieldEditable("targetCum0") : isFieldEditable('targetKwh0')}
                   />
-                </Tooltip>
               </Form.Item>
             </Col>
           </Row>
@@ -947,6 +955,7 @@ const isFieldEditable = (fieldName) => {
               <Form.Item
                 name={activeButton === 2 ? "targetKl1" : activeButton === 3 ? "targetCum1" : "targetKwh1"}
                 label={activeButton === 2 ? "Current Performance target p.a." : activeButton === 3 ? "Current Performance target p.a." : "Current Performance target p.a."}
+                tooltip={{ title: 'e.g. Current NABERS star rating', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 wrapperCol={24}
                 rules={[
                   {
@@ -966,13 +975,11 @@ const isFieldEditable = (fieldName) => {
                 ]}
                 initialValue=""
               >
-                <Tooltip title="e.g. Current NABERS star rating">
-                  <Input
-                    className='form_input'
-                    type="number"
-                    readOnly={newForm ? false : activeButton === 2 ? isFieldEditable('targetKl1') : activeButton === 3 ? isFieldEditable('targetCum1') : isFieldEditable('targetKwh1')}
-                  />
-                </Tooltip>
+                <Input
+                  className='form_input'
+                  type="number"
+                  readOnly={newForm ? false : activeButton === 2 ? isFieldEditable('targetKl1') : activeButton === 3 ? isFieldEditable('targetCum1') : isFieldEditable('targetKwh1')}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -981,6 +988,7 @@ const isFieldEditable = (fieldName) => {
               <Form.Item
                 name={activeButton === 2 ? "targetKl2" :activeButton === 3 ? "targetCum2": "targetKwh2"}
                 label={activeButton === 2 ? "Higher Performance target p.a." :activeButton === 3 ? "Higher Performance target p.a.":  "Higher Performance target p.a."}
+                tooltip={{ title: 'e.g. +0.5 stars NABERS', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }}/> }}
                 wrapperCol={24}
                 rules={[
                   {
@@ -998,9 +1006,7 @@ const isFieldEditable = (fieldName) => {
                   }
                 ]}
                 initialValue="">
-                <Tooltip title="e.g. +0.5 stars NABERS">
                   <Input className='form_input' type='number' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl2'):isFieldEditable('targetKwh2')}/>
-                </Tooltip>
               </Form.Item>
             </Col>
           </Row>
