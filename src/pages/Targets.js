@@ -109,7 +109,7 @@ const isFieldEditable = (fieldName) => {
     // For example, if "stateRef" exists in any of the items, add a column for it
     if (data.some(item => item.elecTargetProfile)) {
       dynamicColumns.push({
-        title: "Elec Target Profile",
+        title: "Electricity Target Profile",
         dataIndex: "elecTargetProfile",
         key: "elecTargetProfile",
         width: 180,
@@ -664,6 +664,7 @@ const isFieldEditable = (fieldName) => {
   const searchFilter = (text, data) => {
     const filterData = data.filter((record) => (
       record.name.toLowerCase().includes(text.toLowerCase()) ||
+      record.id.toLowerCase().includes(text.toLowerCase()) ||
       record.siteRef.toLowerCase().includes(text.toLowerCase())
     ))
     setTargets(filterData)
@@ -715,7 +716,7 @@ const isFieldEditable = (fieldName) => {
             <Radio.Button className="ant-radio-button-css" style={{
               fontWeight: activeButton === 1 ? 'bold' : 'normal',
               color: activeButton === 1 ? '#FFFFFF' : '#8E8E8E',
-            }} onClick={() => targetWidgets(1)} >Electric</Radio.Button>
+            }} onClick={() => targetWidgets(1)} >Electricity</Radio.Button>
             <Radio.Button className="ant-radio-button-css"
               style={{
                 fontWeight: activeButton === 2 ? 'bold' : 'normal',
@@ -736,7 +737,7 @@ const isFieldEditable = (fieldName) => {
           >
             {activeButton === 2 ? "Add New Water"
               : activeButton === 3 ? "Add New Gas" :
-                "Add New Electric"}
+                "Add New Electricity"}
           </button>
         </Col>
         <Col span={7} style={{ textAlign: 'left' }}>
@@ -761,7 +762,7 @@ const isFieldEditable = (fieldName) => {
       <Modal
         style={{ textAlign: "left" }}
         title={activeButton === 2 ? "Add New Water Target Profile" :
-          activeButton === 3 ? "Add New Gas Target Profile" : "Add New Electric Target Profile"}
+          activeButton === 3 ? "Add New Gas Target Profile" : "Add New Electricity Target Profile"}
         centered
         open={open}
         onCancel={() => onCancelModal()}
@@ -932,7 +933,7 @@ const isFieldEditable = (fieldName) => {
             <Col span={24}>
               <Form.Item
                 name={activeButton === 2 ? "targetKl0" : activeButton === 3 ? "targetCum0" : "targetKwh0"}
-                label={activeButton === 2 ? "Lower Performance target p.a." : activeButton === 3 ? "Lower Performance target p.a." : "Lower Performance target p.a."}
+                label={activeButton === 2 ? "Lower Performance Target P.A." : activeButton === 3 ? "Lower Performance Target P.A." : "Lower Performance Target P.A."}
                 tooltip={{ title: 'e.g. -0.5 stars NABERS', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }}/> }}
                 wrapperCol={24}
                 rules={[
@@ -954,7 +955,7 @@ const isFieldEditable = (fieldName) => {
             <Col span={24}>
               <Form.Item
                 name={activeButton === 2 ? "targetKl1" : activeButton === 3 ? "targetCum1" : "targetKwh1"}
-                label={activeButton === 2 ? "Current Performance target p.a." : activeButton === 3 ? "Current Performance target p.a." : "Current Performance target p.a."}
+                label={activeButton === 2 ? "Current Performance Target P.A." : activeButton === 3 ? "Current Performance Target P.A." : "Current Performance Target P.A."}
                 tooltip={{ title: 'e.g. Current NABERS star rating', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 wrapperCol={24}
                 rules={[
@@ -987,7 +988,7 @@ const isFieldEditable = (fieldName) => {
             <Col span={24}>
               <Form.Item
                 name={activeButton === 2 ? "targetKl2" :activeButton === 3 ? "targetCum2": "targetKwh2"}
-                label={activeButton === 2 ? "Higher Performance target p.a." :activeButton === 3 ? "Higher Performance target p.a.":  "Higher Performance target p.a."}
+                label={activeButton === 2 ? "Higher Performance Target P.A." :activeButton === 3 ? "Higher Performance target P.A.":  "Higher Performance Target P.A."}
                 tooltip={{ title: 'e.g. +0.5 stars NABERS', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }}/> }}
                 wrapperCol={24}
                 rules={[
