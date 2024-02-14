@@ -19,8 +19,6 @@ const DynamicColumns = (data) => {
         key: "1",
         width: 300,
         ellipsis: true,
-        sorter: (a, b) => a.id.localeCompare(b.id),
-
       })
   }
 
@@ -32,7 +30,7 @@ const DynamicColumns = (data) => {
         key: "6",
         width: 200,
         ellipsis: true,
-        sorter: (a, b) => a.armsProjectId.localeCompare(b.armsProjectId),
+        sorter: (a, b) => a.startdate.localeCompare(b.startdate),
       }
     )
   }
@@ -45,7 +43,7 @@ const DynamicColumns = (data) => {
         key: "7",
         width: 200,
         ellipsis: true,
-        sorter: (a, b) => a.tz.localeCompare(b.tz),
+        sorter: (a, b) => a.enddate.localeCompare(b.enddate),
       }
     )
   }
@@ -58,7 +56,7 @@ const DynamicColumns = (data) => {
         key: "9",
         width: 200,
         ellipsis: true,
-        sorter: (a, b) => a.observesHolidays.localeCompare(b.observesHolidays),
+        sorter: (a, b) => a.emailsendtime.localeCompare(b.emailsendtime),
       }
     )
   }
@@ -70,7 +68,7 @@ const DynamicColumns = (data) => {
         key: "10",
         width: 200,
         ellipsis: true,
-        sorter: (a, b) => a.geoCountry.localeCompare(b.geoCountry),
+        sorter: (a, b) => a.rangeconsumption.localeCompare(b.rangeconsumption),
 
       }
     )
@@ -83,7 +81,7 @@ const DynamicColumns = (data) => {
         key: "11",
         width: 200,
         ellipsis: true,
-        sorter: (a, b) => a.geoAddress.localeCompare(b.geoAddress),
+        sorter: (a, b) => a.rangetarget.localeCompare(b.rangetarget),
       }
     )
   }
@@ -95,7 +93,7 @@ const DynamicColumns = (data) => {
         key: "12",
         width: 200,
         ellipsis: true,
-        sorter: (a, b) => a.long.localeCompare(b.long),
+        sorter: (a, b) => a.ytdconsumption.localeCompare(b.ytdconsumption),
       },
     )
   }
@@ -107,7 +105,7 @@ const DynamicColumns = (data) => {
         key: "13",
         width: 200,
         ellipsis: true,
-        sorter: (a, b) => a.lat.localeCompare(b.lat),
+        sorter: (a, b) => a.ytdtarget.localeCompare(b.ytdtarget),
       },
     )
   }
@@ -122,7 +120,6 @@ const DynamicColumns = (data) => {
           key: "1",
           width: 300,
           ellipsis: true,
-          sorter: (a, b) => a.id.localeCompare(b.id),
         },
         {
           title: "Site Name",
@@ -130,7 +127,7 @@ const DynamicColumns = (data) => {
           key: "2",
           width: 200,
           ellipsis: true,
-          sorter: (a, b) => a.name.localeCompare(b.name),
+          sorter: (a, b) => a.sitename.localeCompare(b.sitename),
         },
         {
           title: "Utiliy Type",
@@ -146,7 +143,7 @@ const DynamicColumns = (data) => {
           key: "4",
           width: 200,
           ellipsis: true,
-          sorter: (a, b) => a.projId.localeCompare(b.projId),
+          sorter: (a, b) => a.project.localeCompare(b.project),
         },
         {
           title: "Report Type",
@@ -154,8 +151,7 @@ const DynamicColumns = (data) => {
           key: "5",
           width: 200,
           ellipsis: true,
-          sorter: (a, b) => (a.site === b.site ? 0 : a.site ? -1 : 1),
-          render: (text) => (text ? "True" : "False"),
+          sorter: (a, b) => a.reporttype.localeCompare(b.reporttype),
         },
         {
           title: "Start Date",
@@ -163,7 +159,7 @@ const DynamicColumns = (data) => {
           key: "6",
           width: 200,
           ellipsis: true,
-          sorter: (a, b) => a.armsProjectId.localeCompare(b.armsProjectId),
+          sorter: (a, b) => a.startdate.localeCompare(b.startdate),
         },
         {
           title: "End Date",
@@ -171,7 +167,7 @@ const DynamicColumns = (data) => {
           key: "7",
           width: 200,
           ellipsis: true,
-          sorter: (a, b) => a.tz.localeCompare(b.tz),
+          sorter: (a, b) => a.enddate.localeCompare(b.enddate),
         },
         {
           title: "Recipient Emails",
@@ -179,7 +175,7 @@ const DynamicColumns = (data) => {
           key: "8",
           width: 200,
           ellipsis: true,
-          sorter: (a, b) => a.armsProj.localeCompare(b.armsProj),
+          sorter: (a, b) => a.recipientemails.localeCompare(b.recipientemails),
         },
         {
           title: "Email Send Time",
@@ -187,7 +183,7 @@ const DynamicColumns = (data) => {
           key: "9",
           width: 200,
           ellipsis: true,
-          sorter: (a, b) => a.observesHolidays.localeCompare(b.observesHolidays),
+          sorter: (a, b) => a.emailsendtime.localeCompare(b.emailsendtime),
         },
         {
           title: "Range Consumption",
@@ -195,7 +191,7 @@ const DynamicColumns = (data) => {
           key: "10",
           width: 200,
           ellipsis: true,
-          sorter: (a, b) => a.geoCountry.localeCompare(b.geoCountry),
+          sorter: (a, b) => a.rangeconsumption.localeCompare(b.rangeconsumption),
         },
         {
           title: "Range Target",
@@ -203,7 +199,7 @@ const DynamicColumns = (data) => {
           key: "11",
           width: 200,
           ellipsis: true,
-          sorter: (a, b) => a.geoAddress.localeCompare(b.geoAddress),
+          sorter: (a, b) => a.rangetarget.localeCompare(b.rangetarget),
        
         },
         {
@@ -212,7 +208,7 @@ const DynamicColumns = (data) => {
           key: "12",
           width: 200,
           ellipsis: true,
-          sorter: (a, b) => a.long.localeCompare(b.long),
+          sorter: (a, b) => a.ytdconsumption.localeCompare(b.long),
         },
         {
           title: "Ytd Target",
@@ -220,7 +216,7 @@ const DynamicColumns = (data) => {
           key: "13",
           width: 200,
           ellipsis: true,
-          sorter: (a, b) => a.lat.localeCompare(b.lat),
+          sorter: (a, b) => a.ytdtarget.localeCompare(b.ytdtarget),
         },
       ].filter(item => !item.hidden);
       
