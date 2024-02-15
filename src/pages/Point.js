@@ -153,8 +153,7 @@ export default function Point() {
     return dynamicColumns;
   }
 
-  const columns = [
-    
+  const columns = [ 
     {
       title: "Name",
       dataIndex: "name",
@@ -162,7 +161,6 @@ export default function Point() {
       ellipsis: true,
       width: 250,
       resizable: true,
-      sorter: (a, b) => a.name.localeCompare(b.name),
       sorter: (a, b) => a.name.localeCompare(b.name),
       filters: Array.from(new Set(point.map(item => item.name))).map((name, index) => ({
         text: name,

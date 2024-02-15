@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
-import { Spin, Divider, Select, Tooltip, Typography  } from "antd";
+import { Spin, Divider, Select, Tooltip, Space   } from "antd";
+import { MailOutlined } from '@ant-design/icons';
 import { Form, Input, Table, Checkbox } from "antd";
-import { Button, Row, Col, Modal, Popover, ConfigProvider, message } from "antd";
+import { Button, Row, Col, Modal, Popover, ConfigProvider, message, DatePicker } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 import "reactjs-popup/dist/index.css";
 import { useEffect, useContext } from "react";
@@ -53,11 +54,14 @@ function Alerts() {
   const [isEditable , setEditable] = useState({});
   const [addNewform , setAddNewForm] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [openSendAlert, setOpenSendAlert] = useState(false);
   const [form] = Form.useForm();
   const Id = useRef(1);
   const context = useContext(AppContext);
   const history = useHistory();
   
+  const DATE_FORMAT = 'YYYY-MM-DD';
   const isEditableFormField = (fieldName) => {
     return(
     typeof isEditable.editKeysUneditable === "object" &&
@@ -78,7 +82,7 @@ function Alerts() {
       range: "${label} must be between ${min} and ${max}",
     },
   };
-  const [open, setOpen] = useState(false);
+ 
   let resp = [];
   const onAlertClick = async (record) => {
     
@@ -118,6 +122,13 @@ function Alerts() {
     form.resetFields();
   };
 
+  const onEmailAlertCancelModal = () => {
+    setOpenSendAlert(false);
+    setAlertsId();
+    form.resetFields();
+  };
+
+
   const columns = [
     {
       title: "ID",
@@ -126,6 +137,12 @@ function Alerts() {
       width: 100,
       ellipsis: true,
       sorter: (a, b) => a.id - b.id,
+      render: (text, record) => (
+        <Space>
+          <MailOutlined  onClick={() => onSendEmail(record)} />
+          {text}
+        </Space>
+      ),
     },
     {
       title: "Site Name",
@@ -352,6 +369,42 @@ function Alerts() {
 
   }
 
+
+  const getFormatedDate = (startDate) =>{
+       
+    const year = startDate.toDate().getFullYear();
+    const month = (startDate.toDate().getMonth() + 1).toString().padStart(2, '0');
+    const day = startDate.toDate().getDate().toString().padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    //console.log(formattedDate);
+    return formattedDate;
+
+}
+
+  const sendAlerts = async() =>{
+    try {
+
+      var formData = form.getFieldsValue();
+      const modifiedFormData = {
+        startDate:getFormatedDate(formData.dates),
+        recipientEmails:formData.recipientemails,
+        errorEmails:formData.erroremails,
+        funcName: 'insertAdhocAlert',
+        alertconfigurationid:AlertsId
+      };
+      const sentAlert = await postAlertsApiDataToAws(modifiedFormData)
+      if (sentAlert && sentAlert.message ==="Success") {
+        console.log('Email sent successfully:', sentAlert);
+        message.success('Email sent successfully');
+      } else {
+        console.log(sentAlert.message);
+        message.error(sentAlert.message);
+      }
+    }catch(err){
+      console.log(err);
+    }
+  }
+
   const setData = async () => {
     try {
 
@@ -409,6 +462,12 @@ function Alerts() {
     setAlertsId(record.id);
     setAddNewForm(false);
     setOpen(true);
+  };
+
+  const onSendEmail = async (record) => {
+    form.setFieldsValue(record);
+    setAlertsId(record.id);
+    setOpenSendAlert(true);
   };
 
  
@@ -567,6 +626,108 @@ function Alerts() {
           <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
         </Col>
       </Row>
+
+      <Modal
+        style={{ textAlign: "left" }}
+        title="Send Alerts"
+        centered
+        visible={openSendAlert}
+        onCancel={onEmailAlertCancelModal}
+        width={700}
+        footer={null}
+        maskClosable={false}
+      >
+        <Form
+          {...layout}
+          name="nest-messages"
+          layout="vertical"
+          onFinish={sendAlerts}
+          style={{ maxWidth: 1000 }}
+          form={form}
+        >
+                    <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name={"dates"}
+                label="Select Date"
+                wrapperCol={24}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Date.',
+                  },
+                ]}>
+                  <DatePicker
+                    className='form_input dtPicker'
+                    format={DATE_FORMAT}
+                    inputReadOnly={true}
+                  />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name={"recipientemails"}
+                label="Recipients Emails"
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter the Recipients Emails.',
+                  },{
+                    validator: (_, value) => validateEmails(value),
+                  },
+                ]}
+              >
+                <Input.TextArea
+                  className="form_input"
+                  placeholder="Enter emails separated by commas"
+                  readOnly={addNewform ? false : isEditableFormField('recipientemails')}
+                  autoSize={{ minRows: 2, maxRows: 6 }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name={"erroremails"}
+                label="Error Emails"
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter the Error Emails.',
+                  },{
+                    validator: (_, value) => validateEmails(value),
+                  },
+                ]}
+              >
+                <Input.TextArea
+                  className="form_input"
+                  placeholder="Enter emails separated by commas"
+                  readOnly={addNewform ? false : isEditableFormField('erroremails')}
+                  autoSize={{ minRows: 2, maxRows: 6 }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Form.Item
+            wrapperCol={{
+              span: 24,
+            }}
+          >
+            <Row>
+              <Col className="custom-modal-column" span={24}>
+                <Button type="default" onClick={onEmailAlertCancelModal} className="custom-modal-button">Cancel</Button>
+                <Button type="primary" htmlType="submit">Send</Button>
+              </Col>
+            </Row>
+          </Form.Item>
+        </Form>
+      </Modal>{" "}
+
       <Modal
         style={{ textAlign: "left" }}
         title="Add New Alerts"
@@ -796,69 +957,6 @@ function Alerts() {
               </Form.Item>
             </Col>
           </Row>
-          {/* 
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={11}>
-              <Form.Item
-                name={"upperthreshold"}
-                label="Upper Threshold (%)"
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 8 }}
-              // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name={"frequencytype"}
-                label="Frequency"
-                labelCol={{ span: 5 }}
-                wrapperCol={{ span: 16 }}
-              // rules={[{ required: "" }]}
-              >
-                <Select
-                  placeholder="Frequency"
-                  value={selectedItems}
-                  onChange={setSelectedItems}
-                  size="large"
-                  style={{ width: "100%" }}
-                  options={filteredFrequency.map((item, index) => ({
-                    value: item,
-                    label: item,
-                    key: index,
-                  }))}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={11}>
-              <Form.Item
-                name={"active"}
-                label="Active"
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 16 }}
-              // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name={"demand"}
-                label="On Demand"
-                labelCol={{ span: 5 }}
-                wrapperCol={{ span: 16 }}
-
-              // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-          </Row> */}
-
           <Form.Item
             wrapperCol={{
               span: 24,
