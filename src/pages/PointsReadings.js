@@ -14,6 +14,7 @@ import {
 } from "../services/sitesService";
 import { useHistory } from 'react-router-dom';
 import spinnerjiff from "../assets/images/loader.gif";
+import { CSVLink } from 'react-csv';
 
 const layout = {
   labelCol: {
@@ -50,13 +51,12 @@ function Sites() {
     form.resetFields();
   };
 
-
- 
   const keys = [...new Set(mpReadings.flatMap(item => Object.keys(item)))];
   const tsFilter = Array.from(new Set(mpReadings.map(item => item.ts))).map((name, index) => ({
     text: name,
     value: name,
   }));
+
   const columns = keys.map((key, index) => {
     if (key === "ts") {
         return {
@@ -85,6 +85,7 @@ function Sites() {
         };
     }
   });
+
   const getFormatedDate = (startDate) =>{
        
     const year = startDate.toDate().getFullYear();
@@ -94,7 +95,7 @@ function Sites() {
     //console.log(formattedDate);
     return formattedDate;
 
-}
+  }
 
   const loadSiteData = async() =>{
     const sitesList = await getApiDataFromAws("queryType=dropdownSite");
@@ -198,6 +199,15 @@ function Sites() {
   };
 
 
+  const exportToCSV = () => {
+    const csvData = mpReadings.map(item => ({
+      ...item, // Assuming mpReadings is an array of objects
+    }));
+
+    return csvData;
+  };
+
+
   const filter = (text) => {
     // debugger
     const filteredData = mpReadings.filter(
@@ -278,14 +288,10 @@ function Sites() {
           />
         </Col>
         <Col span={4} style={{ marginBottom: 10, textAlign: 'right'  }}>
-         {/* <Input
-            size="small"
-            placeholder="search here ..."
-            className="custom-input"
-            value={searchText}
-            onChange={(e) => onChangeText(e.target.value)}
-          />*/}
-        </Col>
+          <CSVLink data={exportToCSV()} filename={"mpReadings.csv"}>
+                <Button type="primary" style={{ marginTop: '10px' }}>Export to CSV</Button>
+              </CSVLink>      
+          </Col>
       </Row>
       {mpReadings.length > 0 && (
         <Row style={{ marginBottom: '20px' }}>
@@ -306,7 +312,7 @@ function Sites() {
                 total:totalRows,
                 showTotal: (total, range) => (`Total Readings ${total}`)
               }}
-            />      
+            />
         </Spin>
       )}
       

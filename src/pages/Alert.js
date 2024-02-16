@@ -56,6 +56,7 @@ function Alerts() {
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [open, setOpen] = useState(false);
   const [openSendAlert, setOpenSendAlert] = useState(false);
+  const [selectedRepFreq, setSelectedRepFreq] = useState("");
   const [form] = Form.useForm();
   const Id = useRef(1);
   const context = useContext(AppContext);
@@ -125,6 +126,7 @@ function Alerts() {
   const onEmailAlertCancelModal = () => {
     setOpenSendAlert(false);
     setAlertsId();
+    setSelectedRepFreq();
     form.resetFields();
   };
 
@@ -467,6 +469,8 @@ function Alerts() {
   const onSendEmail = async (record) => {
     form.setFieldsValue(record);
     setAlertsId(record.id);
+    const freq = record.reporttype=="Daily"?"date":record.reporttype == "Weekly"? "week": "month";
+    setSelectedRepFreq(freq)
     setOpenSendAlert(true);
   };
 
@@ -582,6 +586,16 @@ function Alerts() {
         setVisibleColumns(selectedColumns);
     }
 
+    const disabledDate = (current, picker) => {
+      if (picker === 'week') {
+        return current && current.day() !== 1; // Disable all days except Monday for weekly selection
+      } else if (picker === 'month') {
+        return current && current.date() !== 1; // Disable all days except the first day of the month for monthly selection
+      }
+      // For daily selection, no dates are disabled
+      return false;
+    };
+
   const totalRows = alerts.length;
   return (
     <>
@@ -629,7 +643,7 @@ function Alerts() {
 
       <Modal
         style={{ textAlign: "left" }}
-        title="Send Alerts"
+        title="Send Ad-Hoc Alerts"
         centered
         visible={openSendAlert}
         onCancel={onEmailAlertCancelModal}
@@ -645,7 +659,7 @@ function Alerts() {
           style={{ maxWidth: 1000 }}
           form={form}
         >
-                    <Row justify={"center"} gutter={[30, 30]}>
+          <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
                 name={"dates"}
@@ -659,6 +673,8 @@ function Alerts() {
                 ]}>
                   <DatePicker
                     className='form_input dtPicker'
+                    picker="date"
+                    disabledDate={(current) => disabledDate(current, selectedRepFreq)} // Initial disabled dates based on week picker
                     format={DATE_FORMAT}
                     inputReadOnly={true}
                   />

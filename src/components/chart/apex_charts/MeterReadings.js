@@ -38,7 +38,7 @@ class MeterReadings extends Component {
             offsetX: 0, // Adjust the horizontal offset as needed
             offsetY:-25, // Adjust the vertical offset as needed
             tools: {
-              download: false,
+              download: true,
               selection: true,
               zoom: true,
               zoomin: true,
@@ -47,6 +47,16 @@ class MeterReadings extends Component {
               reset: true ,
               customIcons: []
             },
+            export: {
+              csv: {
+                filename:"Meter Readings",
+                headerCategory: 'DateTime',
+                headerValue: 'value',
+                dateFormatter: function(timestamp) {
+                  return timestamp;
+                },
+              }
+            }
           }
         },
         colors: ['#0360A2', '#FAAD14', '#44C380', '#F46649', '#4CAF50', '#FF5722', '#2196F3', '#FFC107', '#9C27B0', '#E91E63'],
