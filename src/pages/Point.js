@@ -17,7 +17,7 @@ import spinnerjiff from "../assets/images/loader.gif";
 import { isAuthenticated, userInfo } from "../services/apis";
 import { useHistory } from 'react-router-dom';
 import { AppContext } from "../App";
-
+import { CSVLink } from 'react-csv';
 const layout = {
   labelCol: {
     span: 8,
@@ -444,6 +444,14 @@ export default function Point() {
     );
     setPoint(filteredData);
   };
+  const exportToCSV = () => {
+    const csvData = point.map(item => ({
+      ...item, // Assuming mpReadings is an array of objects
+    }));
+
+    return csvData;
+  };
+
   useEffect(() => {
     const authenticated = isAuthenticated()
     if(authenticated){
@@ -466,7 +474,7 @@ export default function Point() {
     <>
       {" "}
       <Row>
-        <Col span={15}>
+        <Col span={12}>
           <Radio.Group>
             <Radio.Button className="ant-radio-button-css" style={{
               fontWeight: activeButton === 1 ? 'bold' : 'normal',
@@ -489,7 +497,7 @@ export default function Point() {
             {activeButton === 1 ? "Add New Electric" : activeButton === 2 ? "Add New Water" : "Add New Gas"}
           </button>
         </Col>
-        <Col span={9} style={{ marginBottom: 10, textAlign: 'right' }}> 
+        <Col span={12} style={{ marginBottom: 10, textAlign: 'right' }}> 
           <Input 
             size="small"
             placeholder="search here ..."
@@ -498,6 +506,9 @@ export default function Point() {
             className="custom-input"
           />
           <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
+          <CSVLink data={exportToCSV()} filename={"mpReadings.csv"}>
+          <button  className="custom-button">Export to CSV</button>
+              </CSVLink>   
         </Col>
       </Row>
       <Modal

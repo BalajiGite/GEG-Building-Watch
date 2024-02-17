@@ -15,7 +15,7 @@ import spinnerjiff from "../assets/images/loader.gif";
 import { isAuthenticated, userInfo } from "../services/apis";
 import { useHistory } from 'react-router-dom';
 import { AppContext } from "../App";
-
+import { CSVLink } from 'react-csv';
 const layout = {
   labelCol: {
     span: 8,
@@ -291,7 +291,13 @@ function Config() {
     ));
     setLocationData(filtersData)
   }
+  const exportToCSV = () => {
+    const csvData = locationData.map(item => ({
+      ...item, // Assuming mpReadings is an array of objects
+    }));
 
+    return csvData;
+  };
   const setData = async () => {
     try {
 
@@ -543,7 +549,7 @@ function Config() {
   return (
     <>
       <Row>
-        <Col span={15}>
+        <Col span={12}>
           <Radio.Group>
             <Radio.Button className="ant-radio-button-css" style={{
               fontWeight: activeButton === 1 ? 'bold' : 'normal',
@@ -566,7 +572,7 @@ function Config() {
             {activeButton === 1 ? "Add New State" : activeButton === 2 ? "Add New Region" : "Add New Level"}
           </button>
         </Col>
-        <Col span={9} style={{ marginBottom: 10, textAlign: 'right' }}>
+        <Col span={12} style={{ marginBottom: 10, textAlign: 'right' }}>
           <Form>
             <Input
               size="small"
@@ -576,8 +582,14 @@ function Config() {
               className="custom-input"
             />
             <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
+            <CSVLink data={exportToCSV()} filename={"mpReadings.csv"}>
+          <button  className="custom-button">Export to CSV</button>
+              </CSVLink>   
           </Form>
         </Col>
+        {/* <Col span={3} style={{ marginBottom: 10, textAlign: 'right' }}>
+           
+        </Col> */}
       </Row>
       <Modal
         style={{ textAlign: "left" }}

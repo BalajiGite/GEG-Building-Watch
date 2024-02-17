@@ -65,7 +65,7 @@ function CunsumptionChart() {
       '08/01/2003', '09/01/2003', '10/01/2003', '11/01/2003'
     ],
     markers: {
-      size: 1
+      size: 0
     },
     grid: {
       show: true,

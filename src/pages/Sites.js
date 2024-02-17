@@ -17,6 +17,7 @@ import {
   editSites,
 } from "../services/sitesService";
 import spinnerjiff from "../assets/images/loader.gif";
+import { CSVLink } from 'react-csv';
 import { useReducer } from "react";
 const layout = {
   labelCol: {
@@ -428,6 +429,13 @@ function Sites() {
     );
     setSite(filteredData);
   };
+  const exportToCSV = () => {
+    const csvData = site.map(item => ({
+      ...item, // Assuming mpReadings is an array of objects
+    }));
+
+    return csvData;
+  };
   useEffect(() => {
     const authenticated = isAuthenticated()
     if(authenticated){
@@ -490,10 +498,10 @@ function Sites() {
   return (
     <>
       <Row>
-        <Col span={15}>
+        <Col span={12}>
           <button onClick={() => onOpenModal()} className="mb-4 custom-button">ADD New Site</button>
         </Col>
-        <Col span={9} style={{ marginBottom: 10,  textAlign: 'right'  }}>
+        <Col span={12} style={{ marginBottom: 10,  textAlign: 'right'  }}>
           <Input
             size="small"
             placeholder="search here ..."
@@ -502,6 +510,9 @@ function Sites() {
             className="custom-input"
           />
            <SelectColumns columns={columns} onSelectColumns={handleSelectedColumns}/>
+           <CSVLink data={exportToCSV()} filename={"mpReadings.csv"}>
+          <button  className="custom-button">Export to CSV</button>
+              </CSVLink>   
         </Col>
       </Row>
       <Modal
