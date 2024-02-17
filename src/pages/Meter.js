@@ -19,7 +19,7 @@ import spinnerjiff from "../assets/images/loader.gif";
 import { isAuthenticated, userInfo } from "../services/apis";
 import { useHistory } from 'react-router-dom';
 import { AppContext } from "../App";
-
+import { CSVLink } from 'react-csv';
 const layout = {
   labelCol: {
     span: 8,
@@ -417,7 +417,13 @@ function Meter() {
     );
     setMeters(filtersData);
   };
+  const exportToCSV = () => {
+    const csvData = meters.map(item => ({
+      ...item, // Assuming mpReadings is an array of objects
+    }));
 
+    return csvData;
+  };
   const handleSiteChange = async (siteId) => {
     
     // Fetch level data based on the selected site
@@ -470,7 +476,7 @@ function Meter() {
     <>
       {" "}
       <Row>
-        <Col span={15}>
+        <Col span={12}>
           <Radio.Group>
             <Radio.Button className="ant-radio-button-css" style={{
               fontWeight: activeButton === 1 ? 'bold' : 'normal',
@@ -495,7 +501,7 @@ function Meter() {
             {activeButton===1?"Add New Electric":activeButton===2?"Add New Water":"Add New Gas"}
           </button>
         </Col>
-        <Col span={9} style={{ marginBottom: 10,textAlign: 'right' }}>
+        <Col span={12} style={{ marginBottom: 10,textAlign: 'right' }}>
           <Input
             size="small"
             placeholder="search here ..."
@@ -504,6 +510,9 @@ function Meter() {
             className="custom-input"
           />
           <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
+          <CSVLink data={exportToCSV()} filename={"mpReadings.csv"}>
+          <button  className="custom-button">Export to CSV</button>
+              </CSVLink>   
         </Col>
       </Row>
       <Modal

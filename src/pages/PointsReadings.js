@@ -289,7 +289,7 @@ function Sites() {
         </Col>
         <Col span={4} style={{ marginBottom: 10, textAlign: 'right'  }}>
           <CSVLink data={exportToCSV()} filename={"mpReadings.csv"}>
-                <Button type="primary" style={{ marginTop: '10px' }}>Export to CSV</Button>
+          <button  className="custom-button"style={{ marginTop: '10px' }}>Export to CSV</button>
               </CSVLink>      
           </Col>
       </Row>

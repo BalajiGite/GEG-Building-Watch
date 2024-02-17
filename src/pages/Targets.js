@@ -12,6 +12,7 @@ import { SelectColumns } from '../components/widgets/SelectedColumns/SelectedCol
 import { isAuthenticated, userInfo, getRecompueteProfile } from "../services/apis";
 import { useHistory } from 'react-router-dom';
 import { AppContext } from "../App";
+import { CSVLink } from 'react-csv';
 
 function Targets() {
   const [activeButton, setActiveButton] = useState(1);
@@ -669,7 +670,13 @@ const isFieldEditable = (fieldName) => {
     ))
     setTargets(filterData)
   }
+  const exportToCSV = () => {
+    const csvData = targets.map(item => ({
+      ...item, // Assuming mpReadings is an array of objects
+    }));
 
+    return csvData;
+  };
   const getDefaultUnit = (activeButton) => {
 
     switch (activeButton) {
@@ -711,7 +718,7 @@ const isFieldEditable = (fieldName) => {
   return (
     <div className="App">
       <Row>
-        <Col span={9}>
+        <Col span={8}>
           <Radio.Group>
             <Radio.Button className="ant-radio-button-css" style={{
               fontWeight: activeButton === 1 ? 'bold' : 'normal',
@@ -740,13 +747,13 @@ const isFieldEditable = (fieldName) => {
                 "Add New Electricity"}
           </button>
         </Col>
-        <Col span={7} style={{ textAlign: 'left' }}>
+        <Col span={4} style={{ textAlign: 'left' }}>
         {showButton && (
           <button onClick={handleButtonClick} className="mb-4 ml-4 custom-button" type="primary">
             Recompute Profile
           </button>)}
         </Col>
-        <Col span={8} style={{ marginBottom: 10, textAlign: 'right' }}>
+        <Col span={12} style={{ marginBottom: 10, textAlign: 'right' }}>
           <Form>
             <Input
               size="small"
@@ -756,6 +763,9 @@ const isFieldEditable = (fieldName) => {
               className='custom-input'
             />
             <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
+            <CSVLink data={exportToCSV()} filename={"mpReadings.csv"}>
+          <button  className="custom-button">Export to CSV</button>
+              </CSVLink> 
           </Form>
         </Col>
       </Row>

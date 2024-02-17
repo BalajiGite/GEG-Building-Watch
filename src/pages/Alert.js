@@ -23,6 +23,7 @@ import { buildQueries } from "@testing-library/react";
 import { isAuthenticated, userInfo } from "../services/apis";
 import { useHistory } from 'react-router-dom';
 import { AppContext } from "../App";
+import { CSVLink } from 'react-csv';
 
 const layout = {
   labelCol: {
@@ -504,7 +505,13 @@ function Alerts() {
     );
     setAlerts(filterData);
   };
+  const exportToCSV = () => {
+    const csvData = alerts.map(item => ({
+      ...item, // Assuming mpReadings is an array of objects
+    }));
 
+    return csvData;
+  };
   const onChangeText = (text) => {
     if (text == "" || !text || text.length < searchText.length) {
       setAlerts(tempData);
@@ -628,16 +635,20 @@ function Alerts() {
             Add New Alert
           </button>
         </Col>
-        <Col span={12}>{alert}</Col>
-        <Col span={9} style={{ marginBottom: 10, textAlign: 'right' }}>
+        <Col span={9}>{alert}</Col>
+        <Col span={12} style={{ marginBottom: 10, textAlign: 'right' }}>
           <Input
-            size="small"
+            size="small"  
             placeholder="search here ..."
             value={searchText}
             onChange={(e) => onChangeText(e.target.value)}
             className="custom-input"
           />
           <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
+
+          <CSVLink data={exportToCSV()} filename={"mpReadings.csv"}>
+          <button  className="custom-button">Export to CSV</button>
+              </CSVLink> 
         </Col>
       </Row>
 

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Spin, Divider, Select, DatePicker, message, Rate,Progress,Space } from "antd";
 import { Form, Input, Table } from "antd";
-import { Button, Row, Col, Modal } from "antd";
+import { Button, Row, Col, Modal,Card } from "antd";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { AppContext } from "../App";
@@ -291,8 +291,9 @@ function Sites() {
           />*/}
         </Col>
       </Row>
-      <Row gutter={[16]} style={{ marginBottom: '20px',alignItems:'center' }}>
+      <Row gutter={[16]} style={{ marginBottom: '20px',padding:'20px'}}>
         <Col span={12}>
+      <Card className="custom-card" style={{height:'100%'}}>
           <div className="semibold" style={{ color: '#C5C5C5', marginBottom: '20px',fontSize:'18px' }}>27/11/2023 - 03/12/2023 Consumption - Target<br /> Report - Electricity</div>
           <div className="semibold" style={{ color: '#C5C5C5' ,fontSize:'18px'}}>Perth Office | 59 Belmont Ave, Belmont WA 6104
           </div>
@@ -306,6 +307,7 @@ function Sites() {
           </div>
           </div>
           
+        </Card>
         </Col>
         <Col span={6} >
           <GaugeChart />
