@@ -54,13 +54,13 @@ class BaseLoadChart extends React.Component {
                     bar: {
                         columnWidth: '12%',
                         borderRadius: 4,
-                        stroke: {
-                            show: false
+                        border: {
+                            color: 'transparent'
                         }
                     }
                 },
                 fill: {
-                    opacity: [1],
+                    opacity: [1,1,1],
                     gradient: {
                         inverseColors: false,
                         shade: 'light',
@@ -156,7 +156,7 @@ class BaseLoadChart extends React.Component {
                             text: "",
                         },
                         tooltip: {
-                            enabled: true
+                            enabled: false
                         }
                     },
                     {
