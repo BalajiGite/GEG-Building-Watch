@@ -42,7 +42,7 @@ export const SelectColumns = ({columns, onSelectColumns}) => {
   
     return(
       <Popover overlayStyle={{ width: '280px' }} placement="bottomRight" content={contents} open={popoverVisible} onOpenChange={onPopoverVisibleChange} title="Configure Columns" trigger="click">
-        <button className="ant-dropdown-link custom-button" style={{marginLeft:"5px", marginRight:"10px",paddingLeft:"10px", paddingRight:"10px"}} >
+        <button className="ant-dropdown-link custom-button" style={{marginLeft:"5px", marginRight:"5px",paddingLeft:"10px", paddingRight:"10px"}} >
           <img src={column} />
         </button>
       </Popover>

@@ -763,8 +763,8 @@ const isFieldEditable = (fieldName) => {
               className='custom-input'
             />
             <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
-            <CSVLink data={exportToCSV()} filename={"mpReadings.csv"}>
-          <button  className="custom-button">Export to CSV</button>
+            <CSVLink data={exportToCSV()} filename={"targets.csv"}>
+          <button type='button' className="custom-button">Export to CSV</button>
               </CSVLink> 
           </Form>
         </Col>

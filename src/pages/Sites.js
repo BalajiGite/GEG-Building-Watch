@@ -510,8 +510,8 @@ function Sites() {
             className="custom-input"
           />
            <SelectColumns columns={columns} onSelectColumns={handleSelectedColumns}/>
-           <CSVLink data={exportToCSV()} filename={"mpReadings.csv"}>
-          <button  className="custom-button">Export to CSV</button>
+           <CSVLink data={exportToCSV()} filename={"sites.csv"}>
+          <button type="button" className="custom-button">Export to CSV</button>
               </CSVLink>   
         </Col>
       </Row>
