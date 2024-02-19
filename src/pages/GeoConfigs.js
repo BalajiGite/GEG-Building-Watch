@@ -573,7 +573,6 @@ function Config() {
           </button>
         </Col>
         <Col span={12} style={{ marginBottom: 10, textAlign: 'right' }}>
-          <Form>
             <Input
               size="small"
               placeholder="search here ..."
@@ -582,10 +581,9 @@ function Config() {
               className="custom-input"
             />
             <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
-            <CSVLink data={exportToCSV()} filename={"mpReadings.csv"}>
-          <button  className="custom-button">Export to CSV</button>
+            <CSVLink data={exportToCSV()} filename={"location.csv"}>
+          <button type="button" className="custom-button">Export to CSV</button>
               </CSVLink>   
-          </Form>
         </Col>
         {/* <Col span={3} style={{ marginBottom: 10, textAlign: 'right' }}>
            

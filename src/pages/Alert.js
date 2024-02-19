@@ -647,11 +647,10 @@ function Alerts() {
           <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
 
           <CSVLink data={exportToCSV()} filename={"mpReadings.csv"}>
-          <button  className="custom-button">Export to CSV</button>
+          <button type="button" className="custom-button">Export to CSV</button>
               </CSVLink> 
         </Col>
       </Row>
-
       <Modal
         style={{ textAlign: "left" }}
         title="Send Ad-Hoc Alerts"

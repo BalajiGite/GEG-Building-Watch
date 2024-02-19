@@ -506,8 +506,8 @@ export default function Point() {
             className="custom-input"
           />
           <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
-          <CSVLink data={exportToCSV()} filename={"mpReadings.csv"}>
-          <button  className="custom-button">Export to CSV</button>
+          <CSVLink data={exportToCSV()} filename={"point.csv"}>
+          <button type="button" className="custom-button">Export to CSV</button>
               </CSVLink>   
         </Col>
       </Row>
