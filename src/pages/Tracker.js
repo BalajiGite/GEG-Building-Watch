@@ -291,7 +291,7 @@ function Sites() {
           />*/}
         </Col>
       </Row>
-      <Row gutter={[16]} style={{ marginBottom: '20px',padding:'20px'}}>
+      <Row gutter={[16]} style={{ marginBottom: '20px'}}>
         <Col span={12}>
       <Card className="custom-card" style={{height:'100%'}}>
           <div className="semibold" style={{ color: '#C5C5C5', marginBottom: '20px',fontSize:'18px' }}>27/11/2023 - 03/12/2023 Consumption - Target<br /> Report - Electricity</div>
