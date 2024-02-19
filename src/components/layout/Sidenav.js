@@ -54,16 +54,6 @@ function Sidenav({ color }) {
               Monitoring
             </span>
           </Menu.Item>
-          <Menu.Item key="9">
-            <NavLink to="/pointsReadings">
-            <span className="icon">
-                <img src={mpReadings} alt="profieIcon" />
-              </span>
-              <span className ="ant-menu-item-text">
-              Meter Readings
-              </span>
-            </NavLink>
-          </Menu.Item>
           <Menu.Item key="10">
             <NavLink to="/tracker">
             <span className="icon">
@@ -71,6 +61,16 @@ function Sidenav({ color }) {
               </span>
               <span className ="ant-menu-item-text">
                 Tracker
+              </span>
+            </NavLink>
+          </Menu.Item>
+          <Menu.Item key="9">
+            <NavLink to="/pointsReadings">
+            <span className="icon">
+                <img src={mpReadings} alt="profieIcon" />
+              </span>
+              <span className ="ant-menu-item-text">
+              Meter Readings
               </span>
             </NavLink>
           </Menu.Item>

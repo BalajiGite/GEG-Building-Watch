@@ -54,7 +54,9 @@ class BaseLoadChart extends React.Component {
                     bar: {
                         columnWidth: '12%',
                         borderRadius: 4,
-
+                        stroke: {
+                            show: false
+                        }
                     }
                 },
                 fill: {
@@ -92,6 +94,7 @@ class BaseLoadChart extends React.Component {
                         },
                     }
                 },
+                colors: ['#9243F6', '#C31BA8', '#0360A2'],
                 xaxis: {
                     categories: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016],
                     labels: {
@@ -107,6 +110,7 @@ class BaseLoadChart extends React.Component {
                     },
 
                 },
+                
                 yaxis: [
                     {
                         title: {
@@ -140,10 +144,7 @@ class BaseLoadChart extends React.Component {
                         axisTicks: {
                             show: false,
                         },
-                        axisBorder: {
-                            show: false,
-                            color: '#008FFB'
-                        },
+                        
                         labels: {
                             show: false,
                             style: {
@@ -155,7 +156,7 @@ class BaseLoadChart extends React.Component {
                             text: "",
                         },
                         tooltip: {
-                            enabled: false
+                            enabled: true
                         }
                     },
                     {

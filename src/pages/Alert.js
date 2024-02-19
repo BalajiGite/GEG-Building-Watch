@@ -140,12 +140,6 @@ function Alerts() {
       width: 100,
       ellipsis: true,
       sorter: (a, b) => a.id - b.id,
-      render: (text, record) => (
-        <Space>
-          <MailOutlined  onClick={() => onSendEmail(record)} />
-          {text}
-        </Space>
-      ),
     },
     {
       title: "Site Name",
@@ -294,6 +288,20 @@ function Alerts() {
         { text: 'Inactive', value: false },
       ],
       onFilter: (value, record) => record.isactive === value,
+    },
+    {
+      title: "Ad-Hoc Alerts",
+      dataIndex: "adhoc",
+      key: "15",
+      width: 145,
+      ellipsis: true,
+      sorter: (a, b) => a.id - b.id,
+      render: (text, record) => (
+        <Space>
+          <MailOutlined  onClick={() => onSendEmail(record)} />
+          {text}
+        </Space>
+      ),
     },
     {
       title: "Actions",

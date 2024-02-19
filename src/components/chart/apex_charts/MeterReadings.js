@@ -107,7 +107,7 @@ class MeterReadings extends Component {
         xaxis: {
           categories: categories,
           type: 'datetime',
-          tickAmount: '12',
+          tickAmount: '10',
           title: {
             text: '',
             style: {
@@ -152,6 +152,10 @@ class MeterReadings extends Component {
             }
           },
           labels: {
+            formatter: function (val) {
+              // Round the value to two decimal places
+              return val.toFixed(2);
+            },
             style: {
               colors: '#C5C5C5', // Set the color of y-axis labels
               fontSize: '10px', // Set font size
@@ -164,7 +168,7 @@ class MeterReadings extends Component {
           },
           //min: 10,
           //max: 40,
-          tickAmount: 5
+          tickAmount:5 
         },
         markers: {
           size: 0,
