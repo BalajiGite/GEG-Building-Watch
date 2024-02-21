@@ -404,9 +404,9 @@ function Alerts() {
         alertconfigurationid:AlertsId
       };
       const sentAlert = await postAlertsApiDataToAws(modifiedFormData)
-      if (sentAlert && sentAlert.message ==="Success") {
+      if (sentAlert) {
         console.log('Email sent successfully:', sentAlert);
-        message.success('Email sent successfully');
+        message.success(sentAlert.message);
       } else {
         console.log(sentAlert.message);
         message.error(sentAlert.message);

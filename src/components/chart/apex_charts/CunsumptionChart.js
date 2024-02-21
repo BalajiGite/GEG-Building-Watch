@@ -3,23 +3,23 @@ import ReactApexChart from "react-apexcharts";
 import { Spin, Card } from "antd";
 import spinnerjiff from "../../../assets/images/loader.gif";
 
-function CunsumptionChart() {
+function CunsumptionChart({ seriesData }) {
   const [spin, setSpin] = useState(false);
+
+  const categories = seriesData.map(item => item.ts);
+  const consumptionData = seriesData.map(item => item.consumption);
+  const otherSeries = Object.keys(seriesData[0]).filter(key => key !== 'ts' && key !== 'consumption').map(key => ({
+    name: key,
+    type: 'line',
+    data: seriesData.map(item => item[key])
+  }));
 
   const options = {
     series: [{
-      name: '1.5*',
+      name: 'Consumption',
       type: 'column',
-      data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]
-    }, {
-      name: '2.0*',
-      type: 'line',
-      data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43]
-    }, {
-      name: '3.0*',
-      type: 'line',
-      data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39]
-    }],
+      data: consumptionData
+    }, ...otherSeries],
     chart: {
       height: 350,
       type: 'line',
@@ -61,9 +61,7 @@ function CunsumptionChart() {
         stops: [0, 100, 100, 100]
       }
     },
-    labels: ['01/01/2003', '02/01/2003', '03/01/2003', '04/01/2003', '05/01/2003', '06/01/2003', '07/01/2003',
-      '08/01/2003', '09/01/2003', '10/01/2003', '11/01/2003'
-    ],
+    
     markers: {
       size: 0
     },
@@ -72,7 +70,7 @@ function CunsumptionChart() {
       borderColor: '#8E8E8E4D',
       strokeDashArray: 3,
       row: {
-        colors: ['transparent', 'transparent'],
+        colors: ['transparent', 'transparent', 'transparent'],
         opacity: 0.5,
       },
       xaxis: {
@@ -82,7 +80,8 @@ function CunsumptionChart() {
       },
     },
     xaxis: {
-      type: 'datetime',
+      //type: 'datetime',
+      categories: categories,
       style: {
         color: '#C5C5C5',
         fontSize: '12px',
@@ -130,7 +129,26 @@ function CunsumptionChart() {
           }
         },
       },
-     
+      {
+        opposite: true,
+        axisTicks: {
+          show: false,
+        },
+      
+        labels: {
+            show: false,
+            style: {
+                colors: '#C5C5C5',
+            }
+        },
+        title: {
+            show: false,
+            text: "",
+        },
+        tooltip: {
+            enabled: false
+        }
+      },
       {
         opposite: true,
         title: {
@@ -164,7 +182,7 @@ function CunsumptionChart() {
       y: {
         formatter: function (y) {
           if (typeof y !== "undefined") {
-            return y.toFixed(0) + " points";
+            return y.toFixed(0) + "";
           }
           return y;
         }

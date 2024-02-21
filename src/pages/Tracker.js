@@ -8,7 +8,7 @@ import { AppContext } from "../App";
 import MeterReadings from "../components/chart/apex_charts/MeterReadings"
 import CunsumptionChart
 from "../components/chart/apex_charts/CunsumptionChart";
-import { getApiDataFromAws, postMpReadingsDataToAws, isAuthenticated, userInfo } from "../services/apis";
+import { getApiDataFromAws, postAlertsApiDataToAws, postMpReadingsDataToAws, isAuthenticated, userInfo } from "../services/apis";
 import {
   addSites,
   deleteSites,
@@ -29,66 +29,19 @@ const layout = {
 };
 
 const DATE_FORMAT = 'YYYY-MM-DD';
-const screenHeight = window.innerHeight - 310;
 function Sites() {
-  const [searchText, setSearchText] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
   const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
   const [selectedItemUt, setSelectedItemUt] = useState(null);
+  const [selectedItemFt, setSelectedItemFt] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [siteData, setSiteData] = useState({});
   const [loading, setloading] = useState(true);
-  const [SitesId, setSitesId] = useState();
-  const [mpReadings, setMpReadings] = useState([]);
-  const [open, setOpen] = useState(false);
+  const [tracker, setTracker] = useState({});
   const context = useContext(AppContext);
   const history = useHistory();
-  // console.log(open);
-  const [form] = Form.useForm();
-  const totalRows = mpReadings.length;
 
-  const onCancelModal = () => {
-    setOpen(false);
-    setSitesId();
-    form.resetFields();
-  };
-
-
-
-  const keys = [...new Set(mpReadings.flatMap(item => Object.keys(item)))];
-  const tsFilter = Array.from(new Set(mpReadings.map(item => item.ts))).map((name, index) => ({
-    text: name,
-    value: name,
-  }));
-  const columns = keys.map((key, index) => {
-    if (key === "ts") {
-      return {
-        title: "TimeStamp",
-        dataIndex: "ts",
-        key: `${index + 1}`,
-        width: 200,
-        sorter: (a, b) => a.ts.localeCompare(b.ts),
-        filters: tsFilter,
-        filterMode: "tree",
-        filterSearch: false,
-        onFilter: (value, record) => record.ts.startsWith(value),
-      };
-    } else {
-      return {
-        title: key,
-        dataIndex: key,
-        key: `${index + 1}`,
-        width: 200,
-        sorter: (a, b) => {
-          if (typeof a[key] === 'string' && typeof b[key] === 'string') {
-            return a[key].localeCompare(b[key]);
-          }
-          return a[key] - b[key];
-        }
-      };
-    }
-  });
+ 
   const getFormatedDate = (startDate) => {
 
     const year = startDate.toDate().getFullYear();
@@ -107,76 +60,57 @@ function Sites() {
 
   const getData = async () => {
     setIsLoading(true);
-    setMpReadings([{ ts: "" }])
     try {
 
       const body = {
-        siteName: selectedItem,
-        utilityType: selectedItemUt,
-        startDate: getFormatedDate(startDate),
-        endDate: getFormatedDate(endDate)
+        funcName:"getPreprocessedReportData",
+        sitename: selectedItem,
+        utilitytype: selectedItemUt,
+        reporttype : selectedItemFt,
+        startdate: getFormatedDate(startDate),
       }
-      const pointsData = await postMpReadingsDataToAws(body)
-      if (!Array.isArray(pointsData) || pointsData.length === 0) {
-        setMpReadings([])
+      const trackerData = await postAlertsApiDataToAws(body)
+      if (Object.keys(trackerData).length === 0) {
+        setTracker([])
         setloading(false);
         setIsLoading(false);
         message.error({
-          content: pointsData.length === 0 ? "Readings not found for selected site or utility" : pointsData, // Display the error message
+          content: trackerData.length === 0 ? "Readings not found for selected site or utility" : trackerData, // Display the error message
           style: {
             marginTop: 'calc(50vh - 30px)', // Center vertically
             marginLeft: 'calc(20vw - 150px)', // Center horizontally
           },
         });
       } else {
-        setMpReadings(pointsData);
-        setloading(false);
-        setIsLoading(false);
+        if(trackerData == "Not Found"){
+          message.error('No data available for the selected measures.');
+        }else{
+          setTracker(trackerData);
+          setloading(false);
+          setIsLoading(false);
+        }
       }
 
     } catch (error) { }
   };
 
-  const setData = async (formData) => {
-    try {
-      if (SitesId) {
-        const resp = await editSites(SitesId, formData);
-      } else {
-        const resp = await addSites(formData);
-      }
-      onCancelModal();
-      getData();
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
-  const onDelete = async (id) => {
-    try {
-      const resp = await deleteSites(id);
-      getData();
-    } catch (error) { }
-  };
+  let ratingPeriodEndDate = new Date(tracker.ratingPeriodEndDate); // yyyy-mm-dd
+  let ratingPeriodStartDate = new Date(tracker.ratingPeriodStartDate); // yyyy-mm-dd
+  let dayNSd = ratingPeriodStartDate.toLocaleString('default', { day: '2-digit' });
+  let monthSd = ratingPeriodStartDate.toLocaleString('default', { month: 'short' });
+  let yearSd = ratingPeriodStartDate.toLocaleString('default', { year: 'numeric' });
 
-  const onEdit = async (record) => {
-    form.setFieldsValue(record);
-    setSitesId(record.id);
-    setOpen(true);
-  };
-
-  const onChangeText = (text) => {
-    setSearchText(text);
-    filter(text);
-    if (text === "" || !text) {
-      setMpReadings(siteData);
-    }
-  };
+  let month = ratingPeriodEndDate.toLocaleString('default', { month: 'short' });
+  let dayN = ratingPeriodEndDate.toLocaleString('default', { day: '2-digit' });
+  let day = ratingPeriodEndDate.toLocaleString('default', { weekday: 'long' });
+  let year = ratingPeriodEndDate.toLocaleString('default', { year: 'numeric' });
 
   useEffect(() => {
-    if (selectedItem != null && selectedItemUt != null && startDate != null && endDate != null) {
+    if (selectedItem != null && selectedItemUt != null && startDate != null && selectedItemFt != null) {
       getData();
     }
-  }, [selectedItem, selectedItemUt, startDate, endDate]);
+  }, [selectedItem, selectedItemUt, startDate, selectedItemFt]);
 
 
   const handleSelectChange = (value) => {
@@ -189,33 +123,18 @@ function Sites() {
     //checkSelectedValues(value)
   };
 
+  const handleSelectChangeFt = (value) => {
+    setSelectedItemFt(value);
+    //checkSelectedValues(value)
+  };
+
   const handleStartDateChange = (date, dateString) => {
     console.log("Selected Start Date:", dateString);
     setStartDate(date);
     //checkSelectedValues(date)
   };
 
-  const handleEndDateChange = (date, dateString) => {
-    console.log("Selected Start Date:", dateString);
-    setEndDate(date);
-    //checkSelectedValues(date)
-  };
 
-
-  const filter = (text) => {
-    // debugger
-    const filteredData = mpReadings.filter(
-      (record) =>
-        record.name.toLowerCase().includes(text.toLowerCase()) ||
-        record.area.toLowerCase().includes(text.toLowerCase()) ||
-        record.projId.toString().includes(text.toLowerCase()) ||
-        record.stateRef.toLowerCase().includes(searchText.toLowerCase()) ||
-        record.regionRef.toLowerCase().includes(searchText.toLowerCase()) ||
-        record.weatherStationRef.toLowerCase().includes(searchText.toLowerCase()) ||
-        record.armsProj.toLowerCase().includes(searchText.toLowerCase())
-    );
-    setMpReadings(filteredData);
-  };
   useEffect(() => {
     const authenticated = isAuthenticated()
     if (authenticated) {
@@ -231,10 +150,10 @@ function Sites() {
   }, []);
 
   useEffect(() => {
-    // Do something when mpReadings changes, maybe fetch more data or update some UI
-    // For now, let's just log that mpReadings changed
-    //console.log("mpReadings changed:", mpReadings);
-  }, [mpReadings]);
+    // Do something when tracker changes, maybe fetch more data or update some UI
+    // For now, let's just log that tracker changed
+    //console.log("tracker changed:", tracker);
+  }, [tracker]);
 
   return (
     <>
@@ -263,9 +182,21 @@ function Sites() {
             size="large"
             style={{ marginRight: '10px', minWidth: '200px' }}
           >
-            <Select.Option key="elect" value="elec">elec</Select.Option>
+            <Select.Option key="elec" value="elec">elec</Select.Option>
             <Select.Option key="water" value="water">water</Select.Option>
             <Select.Option key="gas" value="gas">gas</Select.Option>
+          </Select>
+          <Select
+            className="mb-4"
+            placeholder="Select Frequency"
+            value={selectedItemFt}
+            onChange={handleSelectChangeFt}
+            size="large"
+            style={{ marginRight: '10px', minWidth: '200px' }}
+          >
+            <Select.Option key="Daily" value="Daily">Daily</Select.Option>
+            <Select.Option key="Weekly" value="Weekly">Weekly</Select.Option>
+            <Select.Option key="Monthly" value="Monthly">Monthly</Select.Option>
           </Select>
           <DatePicker
             placeholder="Select Start Date"
@@ -274,76 +205,43 @@ function Sites() {
             style={{ marginRight: '10px' }}
             onChange={handleStartDateChange}
           />
-          <DatePicker
-            placeholder="Select End Date"
-            className='form_input dtPickerMPReadings'
-            format={DATE_FORMAT}
-            onChange={handleEndDateChange}
-          />
         </Col>
         <Col span={4} style={{ marginBottom: 10, textAlign: 'right' }}>
-          {/* <Input
-            size="small"
-            placeholder="search here ..."
-            className="custom-input"
-            value={searchText}
-            onChange={(e) => onChangeText(e.target.value)}
-          />*/}
         </Col>
       </Row>
       <Row gutter={[16]} style={{ marginBottom: '20px'}}>
         <Col span={12}>
-      <Card className="custom-card" style={{height:'100%'}}>
-          <div className="semibold" style={{ color: '#C5C5C5', marginBottom: '20px',fontSize:'18px' }}>27/11/2023 - 03/12/2023 Consumption - Target<br /> Report - Electricity</div>
-          <div className="semibold" style={{ color: '#C5C5C5' ,fontSize:'18px'}}>Perth Office | 59 Belmont Ave, Belmont WA 6104
-          </div>
-          <Rate style={{ color: '#008DB1' , marginBottom: '20px'}} disabled defaultValue={2} /><span style={{ color: '#C5C5C5', marginLeft: '4px',fontSize:'12px' }}>current Target</span>
-          <p style={{color:'#C5C5C5',marginBottom:'0px'}}>Rating Period (RP)</p>
-          <div>
-          <Progress percent={50} showInfo={false} />
-          <div style={{justifyContent:'space-between',display:'flex'}}>
-            <p style={{color:'#8E8E8E'}}>01/05/2023</p>
-            <p style={{color:'#8E8E8E'}}>01/06/2023</p>
-          </div>
-          </div>
-          
-        </Card>
+          {(tracker && Object.keys(tracker).length !== 0) &&
+          <Card className="custom-card" style={{height:'100%'}}>
+              <div className="semibold" style={{ color: '#C5C5C5', marginBottom: '20px',fontSize:'18px' }}>{tracker.reportName.replace(tracker.reportName.split("-")[0] + "-", "")}</div>
+              <div className="semibold" style={{ color: '#C5C5C5' ,fontSize:'18px'}}>{tracker.siteAddress}
+              </div>
+              <Rate allowHalf style={{ color: '#008DB1' , marginBottom: '20px'}} disabled defaultValue={tracker.currentStarRatingTarget} 
+                count={6} 
+              />
+              <span style={{ color: '#C5C5C5', marginLeft: '4px',fontSize:'12px' }}>current Target</span>
+              <p style={{color:'#C5C5C5',marginBottom:'0px'}}>Rating Period (RP)</p>
+              <div>
+                <Progress percent={tracker.ratingPeriodPassedFactor*100} showInfo={false} strokeWidth={18} trailColor={'#8E8E8E33'} strokeColor={{ '0%': '#4397F6', '100%': '#3069b9' }} />
+                <div style={{justifyContent:'space-between',display:'flex'}}>
+                  <p style={{color:'#8E8E8E'}}>{dayNSd} {monthSd}  {yearSd}</p>
+                  <p style={{color:'#8E8E8E'}}>{dayN} {month}  {year}</p>
+                </div>
+              </div>
+            </Card>}
         </Col>
         <Col span={6} >
-          <GaugeChart />
+          {(tracker && Object.keys(tracker).length !== 0) && <GaugeChart gaugeData={tracker.rangePerformance} repFreq={tracker.reportFrequencyType} title={""}/>  }
         </Col>
         <Col span={6}>
-          <GaugeChart />
+          {(tracker && Object.keys(tracker).length !== 0) && <GaugeChart gaugeData={tracker.ytdPerformance} repFreq={tracker.reportFrequencyType} title={"RP START TO DATE"}/> }
         </Col>
       </Row>
 
-      {mpReadings.length > 0 && (
-        <Row style={{ marginBottom: '20px' }}>
-          <MeterReadings data={mpReadings} isLoading={isLoading} unit={selectedItemUt == "elec" ? "kWh" : selectedItemUt == "water" ? "kL" : "cf"} />
-        </Row>
-      )}
-
-      {mpReadings.length > 0 && (
-        <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
-          <Table
-            columns={columns}
-            dataSource={mpReadings}
-            rowKey={"id"}
-            scroll={{
-              x: 1000,
-              y: screenHeight
-            }}
-            pagination={{
-              total: totalRows,
-              showTotal: (total, range) => (`Total Readings ${total}`)
-            }}
-          />
-        </Spin>
-      )}
       <Row style={{ marginBottom: '20px' }}>
-        <CunsumptionChart />
+       {(tracker && Object.keys(tracker).length !== 0) && <CunsumptionChart seriesData={tracker.consumpionProfile}/>}
       </Row>
-      <BaseLoadChart />
+      {(tracker && Object.keys(tracker).length !== 0) && <BaseLoadChart seriesConData={tracker.baseloadPeakConsumptionData} seriesTempData={tracker.baseloadPeakTemp}/>}
     </>
   );
 }

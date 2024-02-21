@@ -5,27 +5,15 @@ import HighchartsReact from 'highcharts-react-official';
 import { Card, Col, Row } from 'antd';
 import Vector from '../../../assets/images/Vector.png'
 
-const GaugeChart = () => {
-    const chartRef = useRef(null);
+const GaugeChart = ({gaugeData, repFreq, title}) => {
 
-    useEffect(() => {
-        const chart = chartRef.current.chart;
-        const updateChart = () => {
-            if (chart && !chart.renderer.forExport) {
-                const point = chart.series[0].points[0];
-                const inc = Math.round((Math.random() - 0.5) * 20);
-                let newVal = point.y + inc;
-                if (newVal < 0 || newVal > 200) {
-                    newVal = point.y - inc;
-                }
-                point.update(newVal);
-            }
-        };
-
-        const interval = setInterval(updateChart, 3000);
-
-        return () => clearInterval(interval);
-    }, []);
+    let perValue = parseFloat(gaugeData.conTarPer.replace(",", ""));
+    let dataValue = perValue;
+    if(perValue < 75){
+        dataValue = 75;
+    }else if(perValue > 125){
+        dataValue = 125
+    }
 
     const options = {
         chart: {
@@ -104,14 +92,14 @@ const GaugeChart = () => {
         },
 
         series: [{
-            name: 'Speed',
-            data: [80],
+            name: 'Consumption',
+            data: [dataValue],
             tooltip: {
                 valueSuffix: '%'
             },
             dataLabels: {
                 enabled: true,
-                format: '123%',
+                format: dataValue.toString() + " %",//'115%',
                 borderWidth: 0,
                 color: '#C5C5C5',
                 font: 'inter',
@@ -136,9 +124,11 @@ const GaugeChart = () => {
 
     return (
         <Card className="custom-card" style={{ width: "100%" }}>
-            <big className="brand" style={{ fontSize: "18px", color: "#F46649", justifyContent: 'center', display: 'flex' }}>Red Week</big>
-            <HighchartsReact highcharts={Highcharts} options={options} ref={chartRef} />;
-            <p style={{ textAlign: 'center', color: '#C5C5C5', fontSize: '14px', marginTop: '-35px' }}>Weekly Cunsumption</p>
+            <big className="brand" style={{ fontSize: "18px", color:gaugeData.conTarPerColor, justifyContent: 'center', display: 'flex' }}>
+                {title===""?gaugeData.conTarPerColorName.toUpperCase():""}{title!==""?title:repFreq=="Daily"?" DAY":repFreq=="Weekly"?" WEEK": repFreq=="Monthly"?" MONTH": " YEAR"}
+            </big>
+            <HighchartsReact highcharts={Highcharts} options={options} />
+            <p style={{ textAlign: 'center', color: '#C5C5C5', fontSize: '14px', marginTop: '-20px' }}>{repFreq} Cunsumption</p>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', color: '#C5C5C5', alignItems: 'center' }}>
                     <img src={Vector}
