@@ -409,7 +409,7 @@ function Alerts() {
         message.success(sentAlert.message);
       } else {
         console.log(sentAlert.message);
-        message.error(sentAlert.message);
+        message.info(sentAlert.message);
       }
     }catch(err){
       console.log(err);
@@ -436,7 +436,7 @@ function Alerts() {
           message.success('Alert updated successfully');
         } else {
           console.log(updateAlert.message);
-          message.error(updateAlert.message);
+          message.info(updateAlert.message);
         }
       } else {
         const modifiedFormData = {...formData, 
@@ -450,7 +450,7 @@ function Alerts() {
           message.success('Alert added successfully');
         } else {
           console.log(addNewAlert.message);
-          message.error(addNewAlert.message);
+          message.info(addNewAlert.message);
         }
         
       }

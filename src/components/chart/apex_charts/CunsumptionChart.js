@@ -3,11 +3,12 @@ import ReactApexChart from "react-apexcharts";
 import { Spin, Card } from "antd";
 import spinnerjiff from "../../../assets/images/loader.gif";
 
-function CunsumptionChart({ seriesData }) {
+function CunsumptionChart({ seriesData, temp }) {
   const [spin, setSpin] = useState(false);
 
   const categories = seriesData.map(item => item.ts);
   const consumptionData = seriesData.map(item => item.consumption);
+  const tempData = temp.map(item=>item.oat)
   const otherSeries = Object.keys(seriesData[0]).filter(key => key !== 'ts' && key !== 'consumption').map(key => ({
     name: key,
     type: 'line',
@@ -19,7 +20,11 @@ function CunsumptionChart({ seriesData }) {
       name: 'Consumption',
       type: 'column',
       data: consumptionData
-    }, ...otherSeries],
+    }, ...otherSeries, {
+      name: 'Temprature(C)',
+      type: 'line',
+      data: tempData
+    }],
     chart: {
       height: 350,
       type: 'line',
@@ -46,7 +51,7 @@ function CunsumptionChart({ seriesData }) {
     },
     plotOptions: {
       bar: {
-        columnWidth: '12%',
+        columnWidth: '18%',
         borderRadius: 4
       }
     },

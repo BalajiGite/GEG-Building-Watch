@@ -3,9 +3,11 @@ import React, { useEffect, useRef } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { Card, Col, Row } from 'antd';
-import Vector from '../../../assets/images/Vector.png'
+import Vector from '../../../assets/images/elec.svg'
+import gas from '../../../assets/images/gas.svg'
+import water from '../../../assets/images/water.svg'
 
-const GaugeChart = ({gaugeData, repFreq, title}) => {
+const GaugeChart = ({gaugeData, repFreq, title, utilityType}) => {
 
     let perValue = parseFloat(gaugeData.conTarPer.replace(",", ""));
     let dataValue = perValue;
@@ -45,7 +47,7 @@ const GaugeChart = ({gaugeData, repFreq, title}) => {
             startAngle: -90,
             endAngle: 89.9,
             background: null,
-            center: ['50%', '71%'],
+            center: ['50%', '73%'],
             size: '125%',
             backgroundColor: 'transparent',
         },
@@ -99,7 +101,7 @@ const GaugeChart = ({gaugeData, repFreq, title}) => {
             },
             dataLabels: {
                 enabled: true,
-                format: dataValue.toString() + " %",//'115%',
+                format: gaugeData.conTarPer,//'115%',
                 borderWidth: 0,
                 color: '#C5C5C5',
                 font: 'inter',
@@ -131,15 +133,13 @@ const GaugeChart = ({gaugeData, repFreq, title}) => {
             <p style={{ textAlign: 'center', color: '#C5C5C5', fontSize: '14px', marginTop: '-20px' }}>{repFreq} Cunsumption</p>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', color: '#C5C5C5', alignItems: 'center' }}>
-                    <img src={Vector}
-                        alt='vector png' width={15} height={25} />
-                    <div className='semibold' style={{ marginLeft: '8px' }}>Consumption <br /><span className='medium'>1,344 kWh</span></div>
+                    <img src={utilityType == "gas" ? gas : utilityType == "water" ? water : Vector} alt='' width={25} height={25} />
+                    <div className='semibold' style={{ marginLeft: '8px' }}>Consumption <br /><span style={{fontSize:"13px"}}>{gaugeData.consumption}</span></div>
                 </div>
 
                 <div style={{ display: 'flex', color: '#C5C5C5', alignItems: 'center' }}>
-                    <img src={Vector}
-                        alt='vector png' width={15} height={25} />
-                    <div className='semibold' style={{ marginLeft: '8px' }}>Target<br /><span className='medium'>1,097 kWh</span></div>
+                    <img src={utilityType == "gas" ? gas : utilityType == "water" ? water : Vector} alt='' width={25} height={25} />
+                    <div className='semibold' style={{ marginLeft: '8px' }}>Target<br /><span style={{fontSize:"13px"}}>{gaugeData.target}</span></div>
                 </div>
             </div>
         </Card>

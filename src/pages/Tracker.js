@@ -231,15 +231,15 @@ function Sites() {
             </Card>}
         </Col>
         <Col span={6} >
-          {(tracker && Object.keys(tracker).length !== 0) && <GaugeChart gaugeData={tracker.rangePerformance} repFreq={tracker.reportFrequencyType} title={""}/>  }
+          {(tracker && Object.keys(tracker).length !== 0) && <GaugeChart gaugeData={tracker.rangePerformance} repFreq={tracker.reportFrequencyType} title={""} utilityType={tracker.utilityType}/>  }
         </Col>
         <Col span={6}>
-          {(tracker && Object.keys(tracker).length !== 0) && <GaugeChart gaugeData={tracker.ytdPerformance} repFreq={tracker.reportFrequencyType} title={"RP START TO DATE"}/> }
+          {(tracker && Object.keys(tracker).length !== 0) && <GaugeChart gaugeData={tracker.ytdPerformance} repFreq={tracker.reportFrequencyType} title={"RP START TO DATE"} utilityType={tracker.utilityType}/> }
         </Col>
       </Row>
 
       <Row style={{ marginBottom: '20px' }}>
-       {(tracker && Object.keys(tracker).length !== 0) && <CunsumptionChart seriesData={tracker.consumpionProfile}/>}
+       {(tracker && Object.keys(tracker).length !== 0) && <CunsumptionChart seriesData={tracker.consumpionProfile} temp={tracker.temp}/>}
       </Row>
       {(tracker && Object.keys(tracker).length !== 0) && <BaseLoadChart seriesConData={tracker.baseloadPeakConsumptionData} seriesTempData={tracker.baseloadPeakTemp}/>}
     </>

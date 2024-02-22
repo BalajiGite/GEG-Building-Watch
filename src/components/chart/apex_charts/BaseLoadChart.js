@@ -21,7 +21,7 @@ function BaseLoadChart({ seriesConData,seriesTempData }){
             group: 'actual',
             data: peakLoadData
         }, {
-            name: 'Temperature in celcius ',
+            name: 'Temperature',
             type: 'line',
             group: 'budget',
             data: tempData
@@ -55,7 +55,7 @@ function BaseLoadChart({ seriesConData,seriesTempData }){
         },
         plotOptions: {
             bar: {
-                columnWidth: '12%',
+                columnWidth: '18%',
                 borderRadius: 4,
                 border: {
                     color: 'transparent'
@@ -165,7 +165,7 @@ function BaseLoadChart({ seriesConData,seriesTempData }){
             {
                 opposite: true,
                 title: {
-                    text: 'Temperature (C)',
+                    text: 'Max Temperature (°C)',
                     style: {
                         color: '#C5C5C5',
                         fontSize: '12px',
@@ -206,7 +206,7 @@ function BaseLoadChart({ seriesConData,seriesTempData }){
     return (
         <Card className="custom-card" style={{ width: "100%" }}>
             <big className="brand" style={{ fontSize: "18px", color: "#C5C5C5" }}>Base load / Peak load</big>
-            <ReactApexChart options={options} series={options.series} type="line" height={350} />
+            <ReactApexChart options={options} series={options.series} type="line" height={250} />
         </Card>
     );
     
