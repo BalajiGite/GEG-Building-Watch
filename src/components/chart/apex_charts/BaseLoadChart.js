@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Spin, Card } from "antd";
 import ReactApexChart from "react-apexcharts";
 
-function BaseLoadChart({ seriesConData,seriesTempData }){
+function BaseLoadChart({ seriesConData,seriesTempData, utilityType, unit }){
 
     const categories = seriesConData.map(item => item.ts);
     const baseLoadData = seriesConData.map(item => item.baseload);
@@ -21,7 +21,7 @@ function BaseLoadChart({ seriesConData,seriesTempData }){
             group: 'actual',
             data: peakLoadData
         }, {
-            name: 'Temperature',
+            name: 'Max Temperature',
             type: 'line',
             group: 'budget',
             data: tempData
@@ -50,7 +50,7 @@ function BaseLoadChart({ seriesConData,seriesTempData }){
             enabled: false
         },
         stroke: {
-            width: [1],
+            width: [1,1,1.5],
             curve: 'smooth'
         },
         plotOptions: {
@@ -117,7 +117,7 @@ function BaseLoadChart({ seriesConData,seriesTempData }){
         yaxis: [
             {
                 title: {
-                    text: "Electricity (KWh)",
+                    text: (utilityType == "gas"? "Gas ": utilityType == "water"?"Water ":"Electricity ") + "(" + unit + ")",
                     style: {
                         color: '#C5C5C5',
                         fontSize: '12px',
@@ -187,6 +187,7 @@ function BaseLoadChart({ seriesConData,seriesTempData }){
                         textAlign: 'left'
                     }
                 },
+                min: 20,
             },
         ],
         tooltip: {

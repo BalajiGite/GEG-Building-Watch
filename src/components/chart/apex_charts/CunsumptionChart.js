@@ -3,7 +3,7 @@ import ReactApexChart from "react-apexcharts";
 import { Spin, Card } from "antd";
 import spinnerjiff from "../../../assets/images/loader.gif";
 
-function CunsumptionChart({ seriesData, temp }) {
+function CunsumptionChart({ seriesData, temp,utilityType, unit }) {
   const [spin, setSpin] = useState(false);
 
   const categories = seriesData.map(item => item.ts);
@@ -12,19 +12,22 @@ function CunsumptionChart({ seriesData, temp }) {
   const otherSeries = Object.keys(seriesData[0]).filter(key => key !== 'ts' && key !== 'consumption').map(key => ({
     name: key,
     type: 'line',
+    yAxisIndex: 0,
     data: seriesData.map(item => item[key])
   }));
 
   const options = {
     series: [{
-      name: 'Consumption',
+      name: (utilityType == "gas"? "Gas ": utilityType == "water"?"Water ":"Electricity "),
       type: 'column',
+      yAxisIndex: 0,
       data: consumptionData
-    }, ...otherSeries, {
-      name: 'Temprature(C)',
+    }, {
+      name: 'Temperature',
       type: 'line',
-      data: tempData
-    }],
+      yAxisIndex: 1,
+      data: tempData,
+    }, ...otherSeries],
     chart: {
       height: 350,
       type: 'line',
@@ -46,7 +49,7 @@ function CunsumptionChart({ seriesData, temp }) {
       }
     },
     stroke: {
-      width: [1],
+      width: [1,1.2,1.2,1.2,1.2],
       curve: 'smooth'
     },
     plotOptions: {
@@ -75,7 +78,7 @@ function CunsumptionChart({ seriesData, temp }) {
       borderColor: '#8E8E8E4D',
       strokeDashArray: 3,
       row: {
-        colors: ['transparent', 'transparent', 'transparent'],
+        colors: ['transparent', 'transparent', 'transparent','transparent', 'transparent'],
         opacity: 0.5,
       },
       xaxis: {
@@ -111,7 +114,7 @@ function CunsumptionChart({ seriesData, temp }) {
     yaxis: [
       {
         title: {
-          text: 'Electricity (KWh)',
+          text: (utilityType == "gas"? "Gas ": utilityType == "water"?"Water ":"Electricity ") + "(" + unit + ")",
           style: {
             color: '#C5C5C5',
             fontSize: '12px',
@@ -133,6 +136,52 @@ function CunsumptionChart({ seriesData, temp }) {
             textAlign: 'left'
           }
         },
+      },
+      {
+        opposite: true,
+        title: {
+          text: 'Temperature (°C)',
+          style: {
+            color: '#C5C5C5',
+            fontSize: '12px',
+            fontFamily: 'Inter',
+            fontWeight: 400,
+            lineHeight: '12px',
+            letterSpacing: '0em',
+            textAlign: 'left'
+          }
+        },
+        labels: {
+          style: {
+            colors: '#C5C5C5',
+            fontSize: '10px',
+            fontFamily: 'Inter',
+            fontWeight: 400,
+            lineHeight: '12px',
+            letterSpacing: '0em',
+            textAlign: 'left'
+          }
+        },
+        min: 20,
+      }, {
+        opposite: false,
+        axisTicks: {
+          show: false,
+        },
+      
+        labels: {
+            show: false,
+            style: {
+                colors: '#C5C5C5',
+            }
+        },
+        title: {
+            show: false,
+            text: "",
+        },
+        tooltip: {
+            enabled: false
+        }
       },
       {
         opposite: true,
@@ -154,32 +203,6 @@ function CunsumptionChart({ seriesData, temp }) {
             enabled: false
         }
       },
-      {
-        opposite: true,
-        title: {
-          text: 'Temperature (C)',
-          style: {
-            color: '#C5C5C5',
-            fontSize: '12px',
-            fontFamily: 'Inter',
-            fontWeight: 400,
-            lineHeight: '12px',
-            letterSpacing: '0em',
-            textAlign: 'left'
-          }
-        },
-        labels: {
-          style: {
-            colors: '#C5C5C5',
-            fontSize: '10px',
-            fontFamily: 'Inter',
-            fontWeight: 400,
-            lineHeight: '12px',
-            letterSpacing: '0em',
-            textAlign: 'left'
-          }
-        },
-      }
     ],
     tooltip: {
       shared: true,

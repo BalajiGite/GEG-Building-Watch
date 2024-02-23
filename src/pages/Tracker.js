@@ -239,9 +239,9 @@ function Sites() {
       </Row>
 
       <Row style={{ marginBottom: '20px' }}>
-       {(tracker && Object.keys(tracker).length !== 0) && <CunsumptionChart seriesData={tracker.consumpionProfile} temp={tracker.temp}/>}
+       {(tracker && Object.keys(tracker).length !== 0) && <CunsumptionChart seriesData={tracker.consumpionProfile} temp={tracker.temp} utilityType={tracker.utilityType} unit={tracker.uom}/>}
       </Row>
-      {(tracker && Object.keys(tracker).length !== 0) && <BaseLoadChart seriesConData={tracker.baseloadPeakConsumptionData} seriesTempData={tracker.baseloadPeakTemp}/>}
+      {(tracker && Object.keys(tracker).length !== 0) && <BaseLoadChart seriesConData={tracker.baseloadPeakConsumptionData} seriesTempData={tracker.baseloadPeakTemp} utilityType={tracker.utilityType} unit={tracker.uom}/>}
     </>
   );
 }
