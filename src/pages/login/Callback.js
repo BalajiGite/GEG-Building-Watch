@@ -19,7 +19,7 @@ const Callback = () => {
         setupTokens(awsTokens)
         context.setToken(awsTokens.id_token);
         context.setRefreshToken(awsTokens.refresh_token)
-        history.push('/GeoConfigs');
+        history.push('/Tracker');
       } catch (error) {
         console.error('Error during login:', error);
       }

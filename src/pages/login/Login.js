@@ -13,7 +13,7 @@ const Login = () => {
     const storedToken = localStorage.getItem('jwtToken');
     const debubMode = false;
     if(!debubMode && storedToken){
-      history.push('/GeoConfigs');
+      history.push('/Tracker');
     }else{
       //const authUrl = `https://auth.apeiron.network/login?client_id=6jk6h3n6hukhkqvul7hcqfh05u&response_type=code&scope=email+openid+phone+profile&redirect_uri=http://localhost:3000/callback`;
       const authUrl = `https://auth.apeiron.network/login?client_id=6jk6h3n6hukhkqvul7hcqfh05u&response_type=code&scope=email+openid+phone+profile&redirect_uri=https://gems2.d2hjsv3slbr4gu.amplifyapp.com/callback`;
