@@ -24,7 +24,7 @@ const GaugeChart = ({gaugeData, repFreq, title, utilityType}) => {
             plotBackgroundImage: null,
             plotBorderWidth: 0,
             plotShadow: false,
-            height: '70%',
+            height: '75%',
             backgroundColor: null,
 
         },
@@ -44,11 +44,11 @@ const GaugeChart = ({gaugeData, repFreq, title, utilityType}) => {
         },
 
         pane: {
-            startAngle: -90,
-            endAngle: 89.9,
+            startAngle: -120,
+            endAngle: 120,
             background: null,
-            center: ['50%', '73%'],
-            size: '125%',
+            center: ['50%', '65%'],
+            size: '110%',
             backgroundColor: 'transparent',
         },
 

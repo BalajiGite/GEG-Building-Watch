@@ -1,7 +1,9 @@
 import React, { useState, useContext } from "react";
-import { Spin, Divider, Select, DatePicker, message, Rate,Progress,Space } from "antd";
+import { Spin, Divider, Select, DatePicker, message, Rate,Progress,Space, Tooltip  } from "antd";
 import { Form, Input, Table } from "antd";
 import { Button, Row, Col, Modal,Card } from "antd";
+import { EllipsisOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { AppContext } from "../App";
@@ -134,6 +136,16 @@ function Sites() {
     //checkSelectedValues(date)
   };
 
+  const disabledDate = (current, picker) => {
+    if (picker === 'Weekly') {
+      return current && current.day() !== 1; // Disable all days except Monday for weekly selection
+    } else if (picker === 'Monthly') {
+      return current && current.date() !== 1; // Disable all days except the first day of the month for monthly selection
+    }
+    // For daily selection, no dates are disabled
+    return false;
+  };
+
 
   useEffect(() => {
     const authenticated = isAuthenticated()
@@ -199,14 +211,30 @@ function Sites() {
             <Select.Option key="Monthly" value="Monthly">Monthly</Select.Option>
           </Select>
           <DatePicker
-            placeholder="Select Start Date"
+            placeholder="Select Date"
+            picker="date"
             className='form_input dtPickerMPReadings'
+            disabledDate={(current) => disabledDate(current, selectedItemFt)} // Initial disabled dates based on week picker
             format={DATE_FORMAT}
             style={{ marginRight: '10px' }}
             onChange={handleStartDateChange}
           />
         </Col>
         <Col span={4} style={{ marginBottom: 10, textAlign: 'right' }}>
+          <Tooltip title={
+             <div>
+             <p style={{ fontSize: '16px', color:'#c5c5c5', fontWeight: 'bold', marginBottom: '8px' }}>Disclaimer:</p>
+             <p style={{ fontSize: '14px', marginBottom: '0', color:'#c5c5c5'}}>
+               The NABERS tracking is determined from assumptions relating to historical gas, afterhours and exclusions.
+               The NABERs tracking is an indication of NABERS performance but does not constitute an official NABERS rating,
+               the results of an official NABERS rating may differ.
+             </p>
+           </div>
+          }
+          overlayStyle={{  backgroundColor: '#0A1016', width: '300px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' }}
+          >
+            <InfoCircleOutlined style={{ fontSize: '24px', color: '#c5c5c5' }} />
+          </Tooltip>
         </Col>
       </Row>
       <Row gutter={[16]} style={{ marginBottom: '20px'}}>
@@ -224,8 +252,8 @@ function Sites() {
               <div>
                 <Progress percent={tracker.ratingPeriodPassedFactor*100} showInfo={false} strokeWidth={18} trailColor={'#8E8E8E33'} strokeColor={{ '0%': '#4397F6', '100%': '#3069b9' }} />
                 <div style={{justifyContent:'space-between',display:'flex'}}>
-                  <p style={{color:'#8E8E8E'}}>{dayNSd} {monthSd}  {yearSd}</p>
-                  <p style={{color:'#8E8E8E'}}>{dayN} {month}  {year}</p>
+                  <p style={{color:'#C5C5C5'}}>{dayNSd} {monthSd}  {yearSd}</p>
+                  <p style={{color:'#C5C5C5'}}>{dayN} {month}  {year}</p>
                 </div>
               </div>
             </Card>}

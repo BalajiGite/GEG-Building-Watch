@@ -54,8 +54,11 @@ function CunsumptionChart({ seriesData, temp,utilityType, unit }) {
     },
     plotOptions: {
       bar: {
-        columnWidth: '18%',
-        borderRadius: 4
+        columnWidth: '25%',
+        borderRadius: 4,
+        border: {
+          color: 'transparent'
+      },
       }
     },
     fill: {
@@ -163,6 +166,7 @@ function CunsumptionChart({ seriesData, temp,utilityType, unit }) {
           }
         },
         min: 20,
+        tickAmount: 4, // This will show 5 labels on the y-axis
       }, {
         opposite: false,
         axisTicks: {

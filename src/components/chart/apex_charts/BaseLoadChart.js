@@ -55,11 +55,11 @@ function BaseLoadChart({ seriesConData,seriesTempData, utilityType, unit }){
         },
         plotOptions: {
             bar: {
-                columnWidth: '18%',
+                columnWidth: '30%',
                 borderRadius: 4,
                 border: {
                     color: 'transparent'
-                }
+                },
             }
         },
         fill: {
@@ -188,6 +188,7 @@ function BaseLoadChart({ seriesConData,seriesTempData, utilityType, unit }){
                     }
                 },
                 min: 20,
+                tickAmount: 5, // This will show 5 labels on the y-axis
             },
         ],
         tooltip: {
