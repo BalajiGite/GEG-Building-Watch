@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Spin, Divider, Select, DatePicker, message, Rate,Progress,Space, Tooltip  } from "antd";
+import moment from 'moment';
 import { Form, Input, Table } from "antd";
 import { Button, Row, Col, Modal,Card } from "antd";
 import { EllipsisOutlined } from '@ant-design/icons';
@@ -20,6 +21,7 @@ import GaugeChart from "../components/chart/apex_charts/GaugeChart";
 import BaseLoadChart from "../components/chart/apex_charts/BaseLoadChart";
 import { useHistory } from 'react-router-dom';
 import spinnerjiff from "../assets/images/loader.gif";
+
 
 const layout = {
   labelCol: {
@@ -45,32 +47,41 @@ function Sites() {
 
  
   const getFormatedDate = (startDate) => {
-
-    const year = startDate.toDate().getFullYear();
-    const month = (startDate.toDate().getMonth() + 1).toString().padStart(2, '0');
-    const day = startDate.toDate().getDate().toString().padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
-    //console.log(formattedDate);
-    return formattedDate;
-
+    try{
+      const year = startDate.toDate().getFullYear();
+      const month = (startDate.toDate().getMonth() + 1).toString().padStart(2, '0');
+      const day = startDate.toDate().getDate().toString().padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+      //console.log(formattedDate);
+      return formattedDate;
+    }catch(e){
+      return startDate
+    }
   }
 
   const loadSiteData = async () => {
     const sitesList = await getApiDataFromAws("queryType=dropdownSite");
     setSiteData(sitesList);
+
+    setSelectedItem(sitesList[0].name); // Set first site as default
+    setSelectedItemUt('elec'); // Set utility type as 'elec' by default
+    setSelectedItemFt('Daily'); // Set frequency as 'Daily' by default
+    const yesterday = moment().subtract(1, 'day').format(DATE_FORMAT);
+    setStartDate(yesterday);
+    const body = {
+      funcName:"getPreprocessedReportData",
+      sitename: sitesList[0].name,
+      utilitytype: 'elec',
+      reporttype : 'Daily',
+      startdate: yesterday,
+    }
+    getData(body)
   }
 
-  const getData = async () => {
+  const getData = async (body) => {
     setIsLoading(true);
     try {
 
-      const body = {
-        funcName:"getPreprocessedReportData",
-        sitename: selectedItem,
-        utilitytype: selectedItemUt,
-        reporttype : selectedItemFt,
-        startdate: getFormatedDate(startDate),
-      }
       const trackerData = await postAlertsApiDataToAws(body)
       if (Object.keys(trackerData).length === 0) {
         setTracker([])
@@ -87,7 +98,11 @@ function Sites() {
         if(trackerData == "Not Found"){
           message.error('No data available for the selected measures.');
         }else{
-          setTracker(trackerData);
+          if (trackerData?.reporthaserror == true) {
+            message.error('No report available for the selected measures.');
+          }else{
+            setTracker(trackerData);
+          }
           setloading(false);
           setIsLoading(false);
         }
@@ -110,7 +125,14 @@ function Sites() {
 
   useEffect(() => {
     if (selectedItem != null && selectedItemUt != null && startDate != null && selectedItemFt != null) {
-      getData();
+      const body = {
+        funcName:"getPreprocessedReportData",
+        sitename: selectedItem,
+        utilitytype: selectedItemUt,
+        reporttype : selectedItemFt,
+        startdate: getFormatedDate(startDate),
+      }
+      getData(body);
     }
   }, [selectedItem, selectedItemUt, startDate, selectedItemFt]);
 
@@ -212,10 +234,10 @@ function Sites() {
           </Select>
           <DatePicker
             placeholder="Select Date"
-            picker="date"
             className='form_input dtPickerMPReadings'
             disabledDate={(current) => disabledDate(current, selectedItemFt)} // Initial disabled dates based on week picker
             format={DATE_FORMAT}
+            defaultValue={moment("2024-02-26", DATE_FORMAT)}
             style={{ marginRight: '10px' }}
             onChange={handleStartDateChange}
           />
@@ -241,7 +263,7 @@ function Sites() {
         <Col span={12}>
           {(tracker && Object.keys(tracker).length !== 0) &&
           <Card className="custom-card" style={{height:'100%'}}>
-              <div className="semibold" style={{ color: '#C5C5C5', marginBottom: '20px',fontSize:'18px' }}>{tracker.reportName.replace(tracker.reportName.split("-")[0] + "-", "")}</div>
+              <div className="semibold" style={{ color: '#C5C5C5', marginBottom: '20px',fontSize:'18px' }}>{tracker.reportName?.replace(tracker.reportName?.split("-")[0] + "-", "")}</div>
               <div className="semibold" style={{ color: '#C5C5C5' ,fontSize:'18px'}}>{tracker.siteAddress}
               </div>
               <Rate allowHalf style={{ color: '#008DB1' , marginBottom: '20px'}} disabled defaultValue={tracker.currentStarRatingTarget} 
