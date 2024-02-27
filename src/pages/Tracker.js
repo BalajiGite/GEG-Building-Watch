@@ -193,7 +193,7 @@ function Sites() {
     <>
       {" "}
       <Row>
-        <Col span={20}>
+        <Col span={18}>
           <Select
             placeholder="Select Site"
             value={selectedItem}
@@ -242,8 +242,8 @@ function Sites() {
             onChange={handleStartDateChange}
           />
         </Col>
-        <Col span={4} style={{ marginBottom: 10, textAlign: 'right' }}>
-          <Tooltip title={
+        <Col span={6} style={{ marginBottom: 10, textAlign: 'right' }}>
+          <Tooltip placement="leftBottom" title={
              <div>
              <p style={{ fontSize: '16px', color:'#c5c5c5', fontWeight: 'bold', marginBottom: '8px' }}>Disclaimer:</p>
              <p style={{ fontSize: '14px', marginBottom: '0', color:'#c5c5c5'}}>
@@ -253,7 +253,7 @@ function Sites() {
              </p>
            </div>
           }
-          overlayStyle={{  backgroundColor: '#0A1016', width: '300px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' }}
+          overlayStyle={{  backgroundColor: '#0A1016', width: '500px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' }}
           >
             <InfoCircleOutlined style={{ fontSize: '24px', color: '#c5c5c5' }} />
           </Tooltip>
@@ -263,6 +263,7 @@ function Sites() {
         <Col span={12}>
           {(tracker && Object.keys(tracker).length !== 0) &&
           <Card className="custom-card" style={{height:'100%'}}>
+              <div className="semibold" style={{ color: '#C5C5C5', marginBottom: '20px',fontSize:'18px' }}>{tracker.siteAddress}</div>
               <div className="semibold" style={{ color: '#C5C5C5', marginBottom: '20px',fontSize:'18px' }}>{tracker.reportName?.replace(tracker.reportName?.split("-")[0] + "-", "")}</div>
               <div className="semibold" style={{ color: '#C5C5C5' ,fontSize:'18px'}}>{tracker.siteAddress}
               </div>
