@@ -113,6 +113,14 @@ export const postMpReadingsDataToAws = async (body) => {
     }
 }
 
+const parseJSON = (responseData) => {
+    try {
+        return JSON.parse(responseData.replace(/NaN/g, "null"));
+    } catch (error) {
+        return responseData;
+    }
+};
+
 export const postAlertsApiDataToAws = async (body) => {
     try {
         const headers = {
@@ -122,7 +130,7 @@ export const postAlertsApiDataToAws = async (body) => {
         };
 
         const response = await axios.post(POST_Alerts_API_URL, body, {headers});
-        const data = response.data;
+        const data = parseJSON(response.data);
         return data;
     } catch (error) {
         return error.response.data;
