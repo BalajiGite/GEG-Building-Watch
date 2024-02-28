@@ -193,7 +193,7 @@ function Sites() {
     <>
       {" "}
       <Row>
-        <Col span={18}>
+        <Col span={20}>
           <Select
             placeholder="Select Site"
             value={selectedItem}
@@ -237,12 +237,12 @@ function Sites() {
             className='form_input dtPickerMPReadings'
             disabledDate={(current) => disabledDate(current, selectedItemFt)} // Initial disabled dates based on week picker
             format={DATE_FORMAT}
-            defaultValue={moment("2024-02-26", DATE_FORMAT)}
+            defaultValue={moment(moment().subtract(1, 'day').format(DATE_FORMAT), DATE_FORMAT)}
             style={{ marginRight: '10px' }}
             onChange={handleStartDateChange}
           />
         </Col>
-        <Col span={6} style={{ marginBottom: 10, textAlign: 'right' }}>
+        <Col span={4} style={{ marginBottom: 10, textAlign: 'right' }}>
           <Tooltip placement="leftBottom" title={
              <div>
              <p style={{ fontSize: '16px', color:'#c5c5c5', fontWeight: 'bold', marginBottom: '8px' }}>Disclaimer:</p>

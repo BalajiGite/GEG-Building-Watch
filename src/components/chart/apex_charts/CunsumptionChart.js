@@ -16,6 +16,13 @@ function CunsumptionChart({ seriesData, temp,utilityType, unit }) {
     data: seriesData.map(item => item[key])
   }));
 
+  const otherSeriesDataOnly = Object.keys(seriesData[0]).filter(key => key !== 'ts' && key !== 'consumption').reduce((combinedArray, key) => {
+    const series = seriesData.map(item => item[key]);
+    return [...combinedArray, ...series];
+  }, []);
+  const combinedArray = consumptionData.concat(otherSeriesDataOnly);
+  const maxNumber = Math.max(...combinedArray);
+
   const options = {
     series: [{
       name: (utilityType == "gas"? "Gas ": utilityType == "water"?"Water ":"Electricity "),
@@ -166,7 +173,7 @@ function CunsumptionChart({ seriesData, temp,utilityType, unit }) {
           }
         },
         min: 20,
-        tickAmount: 4, // This will show 5 labels on the y-axis
+        tickAmount: 5, // This will show 5 labels on the y-axis
       }, {
         opposite: false,
         axisTicks: {

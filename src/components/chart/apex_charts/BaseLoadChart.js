@@ -8,7 +8,11 @@ function BaseLoadChart({ seriesConData,seriesTempData, utilityType, unit }){
     const baseLoadData = seriesConData.map(item => item.baseload);
     const peakLoadData = seriesConData.map(item => item.peak);
     const tempData = seriesTempData.map(item=>item.oat)
-        
+    
+    const combinedArray = baseLoadData.concat(peakLoadData);
+    const maxNumber = Math.max(...combinedArray);
+
+
     const options = {
         series: [{
             name: 'Base Load',
@@ -141,7 +145,10 @@ function BaseLoadChart({ seriesConData,seriesTempData, utilityType, unit }){
                 },
                 tooltip: {
                     enabled: false
-                }
+                },
+                min: 0,
+                max:maxNumber,
+                tickAmount: 5
             },
             {
                 axisTicks: {
@@ -160,7 +167,9 @@ function BaseLoadChart({ seriesConData,seriesTempData, utilityType, unit }){
                 },
                 tooltip: {
                     enabled: false
-                }
+                },
+                min: 0,
+                max:maxNumber,
             },
             {
                 opposite: true,
