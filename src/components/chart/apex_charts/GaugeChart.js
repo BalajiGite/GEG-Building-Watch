@@ -57,7 +57,7 @@ const GaugeChart = ({gaugeData, repFreq, title, utilityType}) => {
             min: 75,
             max: 125,
             tickPixelInterval: 40,
-            tickPositions: [75, 90, 105, 125],
+            tickPositions: [75, 90, 100, 125],
             tickColor: '#FFFFFF',
             lineWidth: 0,
             //  lineColor:'#8E8E8E',
@@ -82,11 +82,11 @@ const GaugeChart = ({gaugeData, repFreq, title, utilityType}) => {
                 thickness: 30,
             }, {
                 from: 90,
-                to: 105,
+                to: 100,
                 color: '#FAAD14', // orange
                 thickness: 30
             }, {
-                from: 105,
+                from: 100,
                 to: 125,
                 color: '#F4664A', // red
                 thickness: 30

@@ -133,6 +133,9 @@ function BaseLoadChart({ seriesConData,seriesTempData, utilityType, unit }){
                     }
                 },
                 labels: {
+                    formatter: function (value) {
+                        return Math.round(value); // Round the value to remove decimal points
+                      },
                     style: {
                         colors: '#C5C5C5',
                         fontSize: '10px',
@@ -186,6 +189,9 @@ function BaseLoadChart({ seriesConData,seriesTempData, utilityType, unit }){
                     }
                 },
                 labels: {
+                    formatter: function (value) {
+                        return Math.round(value); // Round the value to remove decimal points
+                      },
                     style: {
                         colors: '#C5C5C5',
                         fontSize: '10px',

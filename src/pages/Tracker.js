@@ -35,6 +35,7 @@ const layout = {
 const DATE_FORMAT = 'YYYY-MM-DD';
 function Sites() {
   const [selectedItem, setSelectedItem] = useState(null);
+  const [currentStarRatingTarget, setCurrentStarRatingTarget] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [selectedItemUt, setSelectedItemUt] = useState(null);
   const [selectedItemFt, setSelectedItemFt] = useState(null);
@@ -114,6 +115,7 @@ function Sites() {
             message.error('No report available for the selected measures.');
           }else{
             setTracker(trackerData);
+            setCurrentStarRatingTarget(trackerData.currentStarRatingTarget)
           }
           setloading(false);
           setIsLoading(false);
@@ -283,7 +285,7 @@ function Sites() {
               <div className="semibold" style={{ color: '#C5C5C5', marginBottom: '20px',fontSize:'18px' }}>{tracker.reportName?.replace(tracker.reportName?.split("-")[0] + "-", "")}</div>
               <div className="semibold" style={{ color: '#C5C5C5' ,fontSize:'18px'}}>{tracker.siteAddress}
               </div>
-              <Rate allowHalf style={{ color: '#008DB1' , marginBottom: '20px'}} disabled defaultValue={tracker.currentStarRatingTarget} 
+              <Rate allowHalf style={{ color: '#008DB1' , marginBottom: '20px'}} disabled value={tracker.currentStarRatingTarget}
                 count={6} 
               />
               <span style={{ color: '#C5C5C5', marginLeft: '4px',fontSize:'12px' }}>current Target</span>

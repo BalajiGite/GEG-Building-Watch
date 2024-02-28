@@ -136,6 +136,9 @@ function CunsumptionChart({ seriesData, temp,utilityType, unit }) {
           }
         },
         labels: {
+          formatter: function (value) {
+            return Math.round(value); // Round the value to remove decimal points
+          },
           style: {
             colors: '#C5C5C5',
             fontSize: '10px',
@@ -144,7 +147,8 @@ function CunsumptionChart({ seriesData, temp,utilityType, unit }) {
             lineHeight: '12px',
             letterSpacing: '0em',
             textAlign: 'left'
-          }
+          },
+          format: '{value:,.0f}',
         },
       },
       {
@@ -162,6 +166,9 @@ function CunsumptionChart({ seriesData, temp,utilityType, unit }) {
           }
         },
         labels: {
+          formatter: function (value) {
+            return Math.round(value); // Round the value to remove decimal points
+          },
           style: {
             colors: '#C5C5C5',
             fontSize: '10px',
@@ -170,7 +177,8 @@ function CunsumptionChart({ seriesData, temp,utilityType, unit }) {
             lineHeight: '12px',
             letterSpacing: '0em',
             textAlign: 'left'
-          }
+          },
+          format: '{value:,.0f}',
         },
         min: 20,
         tickAmount: 5, // This will show 5 labels on the y-axis
