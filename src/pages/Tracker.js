@@ -38,6 +38,7 @@ function Sites() {
   const [startDate, setStartDate] = useState(null);
   const [selectedItemUt, setSelectedItemUt] = useState(null);
   const [selectedItemFt, setSelectedItemFt] = useState(null);
+  const [clientName, setClientName] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [siteData, setSiteData] = useState({});
   const [loading, setloading] = useState(true);
@@ -75,7 +76,18 @@ function Sites() {
       reporttype : 'Daily',
       startdate: yesterday,
     }
+
+    const clientBody = {
+      funcName:"getProjectBySitename",
+      sitename: sitesList[0].name,
+    }
+    getClienDetail(clientBody)
     getData(body)
+  }
+
+  const getClienDetail = async (clientBody)=>{
+    const clientName = await postAlertsApiDataToAws(clientBody)
+    setClientName(clientName.project)
   }
 
   const getData = async (body) => {
@@ -139,7 +151,11 @@ function Sites() {
 
   const handleSelectChange = (value) => {
     setSelectedItem(value);
-    //checkSelectedValues(value)
+    const clientBody = {
+      funcName:"getProjectBySitename",
+      sitename: value,
+    }
+    getClienDetail(clientBody)
   };
 
   const handleSelectChangeUt = (value) => {
@@ -263,7 +279,7 @@ function Sites() {
         <Col span={12}>
           {(tracker && Object.keys(tracker).length !== 0) &&
           <Card className="custom-card" style={{height:'100%'}}>
-              <div className="semibold" style={{ color: '#C5C5C5', marginBottom: '20px',fontSize:'18px' }}>{tracker.siteAddress}</div>
+              <div className="semibold" style={{ color: '#C5C5C5', marginBottom: '20px',fontSize:'18px' }}>{clientName}</div>
               <div className="semibold" style={{ color: '#C5C5C5', marginBottom: '20px',fontSize:'18px' }}>{tracker.reportName?.replace(tracker.reportName?.split("-")[0] + "-", "")}</div>
               <div className="semibold" style={{ color: '#C5C5C5' ,fontSize:'18px'}}>{tracker.siteAddress}
               </div>
