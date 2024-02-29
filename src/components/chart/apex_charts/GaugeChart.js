@@ -130,7 +130,7 @@ const GaugeChart = ({gaugeData, repFreq, title, utilityType}) => {
                 {title===""?gaugeData.conTarPerColorName.toUpperCase():""}{title!==""?title:repFreq=="Daily"?" DAY":repFreq=="Weekly"?" WEEK": repFreq=="Monthly"?" MONTH": " YEAR"}
             </big>
             <HighchartsReact highcharts={Highcharts} options={options} />
-            <p style={{ textAlign: 'center', color: '#C5C5C5', fontSize: '14px', marginTop: '-20px' }}>{repFreq} Cunsumption</p>
+            <p style={{ textAlign: 'center', color: '#C5C5C5', fontSize: '14px', marginTop: '-20px' }}>{repFreq} Consumption</p>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', color: '#C5C5C5', alignItems: 'center' }}>
                     <img src={utilityType == "gas" ? gas : utilityType == "water" ? water : Vector} alt='' width={25} height={25} />

@@ -288,7 +288,7 @@ function Sites() {
               <Rate allowHalf style={{ color: '#008DB1' , marginBottom: '20px'}} disabled value={tracker.currentStarRatingTarget}
                 count={6} 
               />
-              <span style={{ color: '#C5C5C5', marginLeft: '4px',fontSize:'12px' }}>current Target</span>
+              <span style={{ color: '#C5C5C5', marginLeft: '4px',fontSize:'12px' }}>Target Star Rating</span>
               <p style={{color:'#C5C5C5',marginBottom:'0px'}}>Rating Period (RP)</p>
               <div>
                 <Progress percent={tracker.ratingPeriodPassedFactor*100} showInfo={false} strokeWidth={18} trailColor={'#8E8E8E33'} strokeColor={{ '0%': '#4397F6', '100%': '#3069b9' }} />
