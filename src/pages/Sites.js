@@ -19,6 +19,7 @@ import {
 import spinnerjiff from "../assets/images/loader.gif";
 import { CSVLink } from 'react-csv';
 import { useReducer } from "react";
+import ResizableTable from "../components/widgets/ResizeTable/ResizableTable";
 const layout = {
   labelCol: {
     span: 8,
@@ -834,19 +835,7 @@ function Sites() {
         </Form>
       </Modal>
       <Spin spinning={isLoading} indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} />}>
-        <Table
-          columns={visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns}
-          dataSource={site}
-          rowKey={"id"}
-          scroll={{
-            y: screenHeight,
-            x: 1000,
-          }}
-          pagination={{
-            total:totalRows,
-            showTotal:(total, range) => (`Total Sites ${total}`)
-          }}
-        />
+        <ResizableTable total={totalRows} screenHeight = {screenHeight} site={site} columnsData = {visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} />
       </Spin>
     </>
   );

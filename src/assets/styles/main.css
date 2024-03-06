@@ -3940,6 +3940,21 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile .header-
   cursor: pointer;
 }
 
+.react-resizable {
+  position: relative;
+  background-clip: padding-box;
+}
+
+.react-resizable-handle {
+  position: absolute;
+  right: -5px;
+  bottom: 0;
+  z-index: 1;
+  width: 10px;
+  height: 100%;
+  cursor: col-resize;
+}
+
 .logout-button {
   background-color: transparent;
   border: none;
