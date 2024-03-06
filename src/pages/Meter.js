@@ -20,6 +20,8 @@ import { isAuthenticated, userInfo } from "../services/apis";
 import { useHistory } from 'react-router-dom';
 import { AppContext } from "../App";
 import { CSVLink } from 'react-csv';
+import ResizableTable from "../components/widgets/ResizeTable/ResizableTable";
+
 const layout = {
   labelCol: {
     span: 8,
@@ -50,7 +52,7 @@ function Meter() {
   const history = useHistory();
 
   const screenHeight = window.innerHeight - 310;
-  const totolRows = meters.length;
+  const totalRows = meters.length;
 
   const validateMessages = {
     required: "${label} is required!",
@@ -794,19 +796,7 @@ function Meter() {
         </Form>
       </Modal >
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
-        <Table
-          columns={visibleColumns.length>0? columns.filter((item) => visibleColumns.includes(item.key)):columns}
-          dataSource={meters}
-          rowKey={"id"}
-          scroll={{
-            x: 1000,
-            y: screenHeight
-          }}
-          pagination={{
-            total:totolRows,
-            showTotal:(total,range) => (`Total Meters ${total}`)
-          }}
-        />
+        <ResizableTable total={totalRows} name={"Meters"} screenHeight = {screenHeight} site={meters} columnsData = {visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} />
       </Spin>
     </>
   );

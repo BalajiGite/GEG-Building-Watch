@@ -13,6 +13,7 @@ import { isAuthenticated, userInfo, getRecompueteProfile } from "../services/api
 import { useHistory } from 'react-router-dom';
 import { AppContext } from "../App";
 import { CSVLink } from 'react-csv';
+import ResizableTable from "../components/widgets/ResizeTable/ResizableTable";
 
 function Targets() {
   const [activeButton, setActiveButton] = useState(1);
@@ -1054,22 +1055,15 @@ const isFieldEditable = (fieldName) => {
         </Form>
       </Modal>
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
-        <Table
+        <ResizableTable total={totalRows}
+          name={"Targets"} 
+          screenHeight = {screenHeight} 
+          site={targets}
           onRow={(record) => ({
             onClick: () => clickEventMpPoint(record.siteRef),
             style: { backgroundColor: record.siteRef === active ? "#0A1016" : '' }
-
-          })}
-          columns={visibleColumns.length>0? columns.filter((item) => visibleColumns.includes(item.key)):columns}
-          dataSource={targets}
-          scroll={{
-            x: 1000,
-            y: screenHeight
-          }}
-          pagination={{
-            total:totalRows,
-            showTotal:(total, range) => (`Total Targets ${total}`)
-          }}
+          })} 
+          columnsData = {visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} 
         />
       </Spin>
     </div>

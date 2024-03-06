@@ -31,7 +31,7 @@ const ResizableTitle = (props) => {
   );
 };
 
-const ResizableTable = ({columnsData, site, screenHeight, total}) => {
+const ResizableTable = ({columnsData, site, screenHeight, total, name, onRow}) => {
   const [columns, setColumns] = useState(columnsData);
 
   useEffect(() => {
@@ -69,6 +69,7 @@ const ResizableTable = ({columnsData, site, screenHeight, total}) => {
     <Table
       components={components}
       columns={columnsWithResizable}
+      onRow = {onRow}
       dataSource={site}
       rowKey={"id"}
       scroll={{
@@ -77,7 +78,7 @@ const ResizableTable = ({columnsData, site, screenHeight, total}) => {
       }}
       pagination={{
         total:total,
-        showTotal:(total, range) => (`Total Sites ${total}`)
+        showTotal:(total, range) => (`Total ${name} ${total}`)
       }}
     />
   );

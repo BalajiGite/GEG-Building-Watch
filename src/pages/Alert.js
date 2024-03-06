@@ -24,6 +24,7 @@ import { isAuthenticated, userInfo } from "../services/apis";
 import { useHistory } from 'react-router-dom';
 import { AppContext } from "../App";
 import { CSVLink } from 'react-csv';
+import ResizableTable from "../components/widgets/ResizeTable/ResizableTable";
 
 const layout = {
   labelCol: {
@@ -1009,24 +1010,17 @@ function Alerts() {
       </Modal>{" "}
 
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
-        <Table
+        
+        <ResizableTable total={totalRows}
+          name={"Alerts"} 
+          screenHeight = {screenHeight} 
+          site={alerts}
           onRow={(record) => ({
             onClick: () => clickEventAlert(record.id),
             style: { backgroundColor: record.id === active ? "#0A1016" : '' }
 
           })}
-          columns={visibleColumns.length>0? columns.filter((item)=> visibleColumns.includes(item.key)):columns}
-          dataSource={alerts}
-          rowKey={"id"}
-          scroll={{
-            y: screenHeight,
-            x: 1000
-          }}
-          pagination={{
-            total: totalRows,
-            showTotal: (total, range) => (`Total Alerts ${total}`),
-          }}
-          
+          columnsData = {visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} 
         />
       </Spin>
       <AlertModel

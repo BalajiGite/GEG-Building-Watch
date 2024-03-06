@@ -15,6 +15,7 @@ import {
 import { useHistory } from 'react-router-dom';
 import spinnerjiff from "../assets/images/loader.gif";
 import { CSVLink } from 'react-csv';
+import ResizableTable from "../components/widgets/ResizeTable/ResizableTable";
 
 const layout = {
   labelCol: {
@@ -300,19 +301,7 @@ function Sites() {
       )}
       {mpReadings.length > 0 && (
         <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
-            <Table
-              columns={columns}
-              dataSource={mpReadings}
-              rowKey={"id"}
-              scroll={{
-                x: 1000,
-                y:screenHeight
-              }}
-              pagination={{
-                total:totalRows,
-                showTotal: (total, range) => (`Total Readings ${total}`)
-              }}
-            />
+            <ResizableTable total={totalRows} name={"Readings"} screenHeight = {screenHeight} site={mpReadings} columnsData = { columns} />
         </Spin>
       )}
       

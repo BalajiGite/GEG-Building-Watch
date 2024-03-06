@@ -835,7 +835,7 @@ function Sites() {
         </Form>
       </Modal>
       <Spin spinning={isLoading} indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} />}>
-        <ResizableTable total={totalRows} screenHeight = {screenHeight} site={site} columnsData = {visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} />
+        <ResizableTable total={totalRows} name={"Sites"} screenHeight = {screenHeight} site={site} columnsData = {visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} />
       </Spin>
     </>
   );
