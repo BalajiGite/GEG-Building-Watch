@@ -219,8 +219,12 @@ function Config() {
   };
 
   const changeWidgets = (widget) => {
-    setActiveButton(widget);
-    getData(widget);
+    if(widget === 4){
+      history.push('/sites');
+    }else{
+      setActiveButton(widget);
+      getData(widget);
+    }
   }
   const onDelete = async (id) => {
     try {
@@ -365,18 +369,20 @@ function Config() {
 
   useEffect(() => {
     const authenticated = isAuthenticated()
+    const storedData = localStorage.getItem('activeButton');
     if(authenticated){
-      getData(1);
-      setActiveButton(1);
+      getData(storedData == null?1:parseInt(storedData));
+      setActiveButton(storedData == null?1:parseInt(storedData));
     }else {
       var userData = userInfo(context.token);
       if(userData == null){
         history.push('/');
       }else{
-        getData(1);
-        setActiveButton(1);
+        getData(storedData == null?1:parseInt(storedData));
+        setActiveButton(storedData == null?1:parseInt(storedData));
       }
     }
+    localStorage.removeItem('activeButton');
   }, []);
 
   const content = (record) => (
@@ -562,6 +568,12 @@ function Config() {
                 color: activeButton === 2 ? '#FFFFFF' : '#8E8E8E',
               }}
               onClick={() => changeWidgets(2)} >Region</Radio.Button>
+            <Radio.Button className="ant-radio-button-css"
+              style={{
+                fontWeight: activeButton === 4 ? 'bold' : 'normal',
+                color: activeButton === 4 ? '#FFFFFF' : '#8E8E8E',
+              }}
+              onClick={() => changeWidgets(4)} >Site</Radio.Button>
             <Radio.Button className="ant-radio-button-css"
               style={{
                 fontWeight: activeButton === 3 ? 'bold' : 'normal',

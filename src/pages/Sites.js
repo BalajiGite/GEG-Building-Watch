@@ -33,6 +33,7 @@ function Sites() {
   const [form] = Form.useForm();
   const [searchText, setSearchText] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
+  const [activeButton, setActiveButton] = useState(4);
   const [isLoading, setIsLoading] = useState(false);
   const [siteData, setSiteData] = useState({});
   const [loading, setloading] = useState(true);
@@ -325,6 +326,16 @@ function Sites() {
     },
   ]
 
+  const changeWidgets = (widget) => {
+    if(widget === 4){
+      setActiveButton(widget);
+    }else{
+      localStorage.setItem('activeButton', widget);
+      history.push('/GeoConfigs');
+      setActiveButton(widget);
+    }
+  }
+
   const getData = async () => {
     setIsLoading(true);
     try {
@@ -500,7 +511,31 @@ function Sites() {
     <>
       <Row>
         <Col span={12}>
-          <button onClick={() => onOpenModal()} className="mb-4 custom-button">ADD New Site</button>
+        <Radio.Group>
+            <Radio.Button className="ant-radio-button-css" style={{
+              fontWeight: activeButton === 1 ? 'bold' : 'normal',
+              color: activeButton === 1 ? '#FFFFFF' : '#8E8E8E',
+            }} onClick={() => changeWidgets(1)} >State</Radio.Button>
+            <Radio.Button className="ant-radio-button-css"
+              style={{
+                fontWeight: activeButton === 2 ? 'bold' : 'normal',
+                color: activeButton === 2 ? '#FFFFFF' : '#8E8E8E',
+              }}
+              onClick={() => changeWidgets(2)} >Region</Radio.Button>
+            <Radio.Button className="ant-radio-button-css"
+              style={{
+                fontWeight: activeButton === 4 ? 'bold' : 'normal',
+                color: activeButton === 4 ? '#FFFFFF' : '#8E8E8E',
+              }}
+              onClick={() => changeWidgets(4)} >Site</Radio.Button>
+            <Radio.Button className="ant-radio-button-css"
+              style={{
+                fontWeight: activeButton === 3 ? 'bold' : 'normal',
+                color: activeButton === 3 ? '#FFFFFF' : '#8E8E8E',
+              }}
+              onClick={() => changeWidgets(3)} >Level</Radio.Button>
+          </Radio.Group>
+          <button onClick={() => onOpenModal()} className="mb-4 ml-4 custom-button">ADD New Site</button>
         </Col>
         <Col span={12} style={{ marginBottom: 10,  textAlign: 'right'  }}>
           <Input
