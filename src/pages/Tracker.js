@@ -11,6 +11,7 @@ import { AppContext } from "../App";
 import MeterReadings from "../components/chart/apex_charts/MeterReadings"
 import CunsumptionChart from "../components/chart/apex_charts/CunsumptionChart";
 import  ConsumptionChart  from "../components/chart/apex_charts/ConsumptionChart";
+import BaseLoadPeakLoad from "../components/chart/apex_charts/BaseLoadPeakLoadChart";
 import { getApiDataFromAws, postAlertsApiDataToAws, postMpReadingsDataToAws, isAuthenticated, userInfo } from "../services/apis";
 import {
   addSites,
@@ -311,7 +312,9 @@ function Sites() {
        {/**(tracker && Object.keys(tracker).length !== 0) && <CunsumptionChart seriesData={tracker.consumpionProfile} temp={tracker.temp} utilityType={tracker.utilityType} unit={tracker.uom}/>*/}
        {(tracker && Object.keys(tracker).length !== 0) && <ConsumptionChart resData={tracker} />}
       </Row>
-      {(tracker && Object.keys(tracker).length !== 0) && <BaseLoadChart seriesConData={tracker.baseloadPeakConsumptionData} seriesTempData={tracker.baseloadPeakTemp} utilityType={tracker.utilityType} unit={tracker.uom}/>}
+      {/** (tracker && Object.keys(tracker).length !== 0) && <BaseLoadChart seriesConData={tracker.baseloadPeakConsumptionData} seriesTempData={tracker.baseloadPeakTemp} utilityType={tracker.utilityType} unit={tracker.uom}/>**/}
+      {(tracker && Object.keys(tracker).length !== 0) && <BaseLoadPeakLoad resData={tracker} />}
+      
     </>
   );
 }

@@ -341,7 +341,6 @@ function ConsumptionChart({ resData }) {
                 lineWidth: 1,
                 dashStyle: 'Solid'
             },
-
             column: {
                 borderRadius: 5,// Adjust this value as needed
                 color: '#4397F6',
