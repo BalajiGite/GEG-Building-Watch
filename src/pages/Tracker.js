@@ -63,6 +63,7 @@ function Sites() {
   }
 
   const loadSiteData = async () => {
+    setIsLoading(true);
     const sitesList = await getApiDataFromAws("queryType=dropdownSite");
     setSiteData(sitesList);
 
@@ -93,7 +94,7 @@ function Sites() {
   }
 
   const getData = async (body) => {
-    setIsLoading(true);
+    
     try {
 
       const trackerData = await postAlertsApiDataToAws(body)
@@ -278,6 +279,7 @@ function Sites() {
           </Tooltip>
         </Col>
       </Row>
+      
       <Row gutter={[16]} style={{ marginBottom: '20px'}}>
         <Col span={12}>
           {(tracker && Object.keys(tracker).length !== 0) &&
@@ -307,14 +309,16 @@ function Sites() {
           {(tracker && Object.keys(tracker).length !== 0) && <GaugeChart gaugeData={tracker.ytdPerformance} repFreq={tracker.reportFrequencyType} title={"RP START TO DATE"} utilityType={tracker.utilityType}/> }
         </Col>
       </Row>
-
-      <Row style={{ marginBottom: '20px' }}>
-       {/**(tracker && Object.keys(tracker).length !== 0) && <CunsumptionChart seriesData={tracker.consumpionProfile} temp={tracker.temp} utilityType={tracker.utilityType} unit={tracker.uom}/>*/}
-       {(tracker && Object.keys(tracker).length !== 0) && <ConsumptionChart resData={tracker} />}
-      </Row>
+      <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50}} alt="Custom Spin GIF" />}>
+        <Row style={{ marginBottom: '20px' }}>
+            {/**(tracker && Object.keys(tracker).length !== 0) && <CunsumptionChart seriesData={tracker.consumpionProfile} temp={tracker.temp} utilityType={tracker.utilityType} unit={tracker.uom}/>*/}
+            {(tracker && Object.keys(tracker).length !== 0) && <ConsumptionChart resData={tracker} />}
+        </Row>
+      </Spin>
+      <Row>
       {/** (tracker && Object.keys(tracker).length !== 0) && <BaseLoadChart seriesConData={tracker.baseloadPeakConsumptionData} seriesTempData={tracker.baseloadPeakTemp} utilityType={tracker.utilityType} unit={tracker.uom}/>**/}
-      {(tracker && Object.keys(tracker).length !== 0) && <BaseLoadPeakLoad resData={tracker} />}
-      
+        {(tracker && Object.keys(tracker).length !== 0) && <BaseLoadPeakLoad resData={tracker} />}
+      </Row>
     </>
   );
 }
