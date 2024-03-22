@@ -1,15 +1,13 @@
-import React, { useState, useRef } from "react";
-import { Spin, Divider, Select, Tooltip, Space   } from "antd";
-import { MailOutlined } from '@ant-design/icons';
-import { Form, Input, Table, Checkbox } from "antd";
-import { Button, Row, Col, Modal, Popover, ConfigProvider, message, DatePicker } from "antd";
-import { EllipsisOutlined } from "@ant-design/icons";
+import React, { useState, useRef,useEffect, useContext} from "react";
+import { Form, Input, Table, Checkbox,Spin, Divider, Select, Tooltip, 
+Space,Button, Row, Col, Modal, Popover, ConfigProvider, message, DatePicker, Card } from "antd";
+import { EllipsisOutlined ,MailOutlined, CaretDownOutlined, PlusOutlined, CloseOutlined} from "@ant-design/icons";
 import "reactjs-popup/dist/index.css";
-import { useEffect, useContext } from "react";
 import { getAlertConfList } from "../services/alertConfService";
 import { getApiDataFromAws, postAlertsApiDataToAws, getConfigDataFromAws } from "../services/apis";
 import { showalertscolumns } from "../components/widgets/AlertTableswidgest/AlertTable";
 import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
+import { FilterColumnsData } from "../components/widgets/SelectedColumns/FilterColumns";
 import {
   deleteAlerts,
   editAlerts,
@@ -25,6 +23,7 @@ import { useHistory } from 'react-router-dom';
 import { AppContext } from "../App";
 import { CSVLink } from 'react-csv';
 import ResizableTable from "../components/widgets/ResizeTable/ResizableTable";
+import vector_ from "../../src/assets/images/vector_.png";
 
 const layout = {
   labelCol: {
@@ -53,22 +52,24 @@ function Alerts() {
   const [alert, setAlert] = useState();
   const [showalertsData, setShowAlertsData] = useState([]);
   const [btnValues, setbtnValue] = useState(0);
-  const [isEditable , setEditable] = useState({});
-  const [addNewform , setAddNewForm] = useState(false);
+  const [isEditable, setEditable] = useState({});
+  const [addNewform, setAddNewForm] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [open, setOpen] = useState(false);
   const [openSendAlert, setOpenSendAlert] = useState(false);
   const [selectedRepFreq, setSelectedRepFreq] = useState("");
+  const [visibleCard, setvisibleCard] = useState(false);
+
   const [form] = Form.useForm();
   const Id = useRef(1);
   const context = useContext(AppContext);
   const history = useHistory();
-  
+
   const DATE_FORMAT = 'YYYY-MM-DD';
   const isEditableFormField = (fieldName) => {
-    return(
-    typeof isEditable.editKeysUneditable === "object" &&
-            isEditable.editKeysUneditable.hasOwnProperty(fieldName)
+    return (
+      typeof isEditable.editKeysUneditable === "object" &&
+      isEditable.editKeysUneditable.hasOwnProperty(fieldName)
     )
 
   };
@@ -85,10 +86,10 @@ function Alerts() {
       range: "${label} must be between ${min} and ${max}",
     },
   };
- 
+
   let resp = [];
   const onAlertClick = async (record) => {
-    
+
     try {
       resp = await getAlertConfList();
     } catch (error) { }
@@ -299,7 +300,7 @@ function Alerts() {
       sorter: (a, b) => a.id - b.id,
       render: (text, record) => (
         <Space>
-          <MailOutlined  onClick={() => onSendEmail(record)} />
+          <MailOutlined onClick={() => onSendEmail(record)} />
           {text}
         </Space>
       ),
@@ -311,14 +312,14 @@ function Alerts() {
       width: 160,
       ellipsis: true,
       render: (text, record, index) => (
-        isEditable?.isEditable?
-        <>
-          <ConfigProvider>
-            <Popover overlayStyle={{ width: '100px' }} placement="right" content={() => content(record)}>
-              <EllipsisOutlined style={{ fontSize: "30px" }} />
-            </Popover>
-          </ConfigProvider>
-        </>:null
+        isEditable?.isEditable ?
+          <>
+            <ConfigProvider>
+              <Popover overlayStyle={{ width: '100px' }} placement="right" content={() => content(record)}>
+                <EllipsisOutlined style={{ fontSize: "30px" }} />
+              </Popover>
+            </ConfigProvider>
+          </> : null
       ),
     }
   ];
@@ -331,7 +332,7 @@ function Alerts() {
       };
       const alertsData = await postAlertsApiDataToAws(body);
       const alertList = await getApiDataFromAws("queryType=dropdownSite");
-    
+
       const AlertConfigurationData = await getConfigDataFromAws("alertConfiguration");
       setEditable(AlertConfigurationData);
       setSiteListData(alertList);
@@ -367,7 +368,7 @@ function Alerts() {
     }
   }
 
-  const getProjectName = async(siteName) =>{
+  const getProjectName = async (siteName) => {
 
     console.log('Selected Value:', siteName);
 
@@ -382,8 +383,8 @@ function Alerts() {
   }
 
 
-  const getFormatedDate = (startDate) =>{
-       
+  const getFormatedDate = (startDate) => {
+
     const year = startDate.toDate().getFullYear();
     const month = (startDate.toDate().getMonth() + 1).toString().padStart(2, '0');
     const day = startDate.toDate().getDate().toString().padStart(2, '0');
@@ -391,18 +392,18 @@ function Alerts() {
     //console.log(formattedDate);
     return formattedDate;
 
-}
+  }
 
-  const sendAlerts = async() =>{
+  const sendAlerts = async () => {
     try {
 
       var formData = form.getFieldsValue();
       const modifiedFormData = {
-        startDate:getFormatedDate(formData.dates),
-        recipientEmails:formData.recipientemails,
-        errorEmails:formData.erroremails,
+        startDate: getFormatedDate(formData.dates),
+        recipientEmails: formData.recipientemails,
+        errorEmails: formData.erroremails,
         funcName: 'insertAdhocAlert',
-        alertconfigurationid:AlertsId
+        alertconfigurationid: AlertsId
       };
       const sentAlert = await postAlertsApiDataToAws(modifiedFormData)
       if (sentAlert) {
@@ -412,7 +413,7 @@ function Alerts() {
         console.log(sentAlert.message);
         message.info(sentAlert.message);
       }
-    }catch(err){
+    } catch (err) {
       console.log(err);
     }
   }
@@ -425,14 +426,14 @@ function Alerts() {
       if (AlertsId) {
         const prjName = await getProjectName(formData.sitename)
         const modifiedFormData = {
-          ...formData, 
-          project:prjName,
-          freq:formData.reporttype=="Daily"? "H":"D",
+          ...formData,
+          project: prjName,
+          freq: formData.reporttype == "Daily" ? "H" : "D",
           funcName: 'updateAlertConfiguration',
-          id:AlertsId
+          id: AlertsId
         };
         const updateAlert = await postAlertsApiDataToAws(modifiedFormData)
-        if (updateAlert && updateAlert.message ==="Success") {
+        if (updateAlert && updateAlert.message === "Success") {
           console.log('Alert updated successfully:', updateAlert);
           message.success('Alert updated successfully');
         } else {
@@ -440,20 +441,21 @@ function Alerts() {
           message.info(updateAlert.message);
         }
       } else {
-        const modifiedFormData = {...formData, 
-          project:prjNameData,
-          freq:formData.reporttype=="Daily"? "H":"D",
+        const modifiedFormData = {
+          ...formData,
+          project: prjNameData,
+          freq: formData.reporttype == "Daily" ? "H" : "D",
           funcName: 'insertAlertConfiguration'
         };
         const addNewAlert = await postAlertsApiDataToAws(modifiedFormData)
-        if (addNewAlert && addNewAlert.message ==="Success") {
+        if (addNewAlert && addNewAlert.message === "Success") {
           console.log('Alert added successfully:', addNewAlert);
           message.success('Alert added successfully');
         } else {
           console.log(addNewAlert.message);
           message.info(addNewAlert.message);
         }
-        
+
       }
       getData();
       onCancelModal();
@@ -479,17 +481,17 @@ function Alerts() {
   const onSendEmail = async (record) => {
     form.setFieldsValue(record);
     setAlertsId(record.id);
-    const freq = record.reporttype=="Daily"?"date":record.reporttype == "Weekly"? "week": "month";
+    const freq = record.reporttype == "Daily" ? "date" : record.reporttype == "Weekly" ? "week" : "month";
     setSelectedRepFreq(freq)
     setOpenSendAlert(true);
   };
 
- 
+
   const content = (record) => (
-    <div style={{marginLeft:"10px", backgroundColor:"#0A1016",paddingTop:"10px", marginRight:"10px",paddingLeft:"10px", paddingRight:"10px"}}>
+    <div style={{ marginLeft: "10px", backgroundColor: "#0A1016", paddingTop: "10px", marginRight: "10px", paddingLeft: "10px", paddingRight: "10px" }}>
       <a onClick={() => onEdit(record)} style={{ color: "white" }}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)} style={{ color: "white",display:"none" }}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{ color: "white", display: "none" }}>DELETE</a>
     </div>
   )
   // const filter = (text) => {
@@ -525,21 +527,21 @@ function Alerts() {
     if (text == "" || !text || text.length < searchText.length) {
       setAlerts(tempData);
       setSearchText(text);
-      filter(text,tempData);
-    }else{
+      filter(text, tempData);
+    } else {
       setSearchText(text);
       filter(text, alerts);
     }
   };
   useEffect(() => {
     const authenticated = isAuthenticated()
-    if(authenticated){
+    if (authenticated) {
       getData();
-    }else {
+    } else {
       var userData = userInfo(context.token);
-      if(userData == null){
+      if (userData == null) {
         history.push('/');
-      }else{
+      } else {
         getData();
       }
     }
@@ -597,25 +599,27 @@ function Alerts() {
     setAlert(elementbutton);
     setActive(RowId)
   }
-  
-   const handleSelectColumns = (selectedColumns) => {
-        setVisibleColumns(selectedColumns);
-    }
 
-    const disabledDate = (current, picker) => {
-      if (picker === 'week') {
-        return current && current.day() !== 1; // Disable all days except Monday for weekly selection
-      } else if (picker === 'month') {
-        return current && current.date() !== 1; // Disable all days except the first day of the month for monthly selection
-      }
-      // For daily selection, no dates are disabled
-      return false;
-    };
+  const handleSelectColumns = (selectedColumns) => {
+    setVisibleColumns(selectedColumns);
+  }
+
+  const disabledDate = (current, picker) => {
+    if (picker === 'week') {
+      return current && current.day() !== 1; // Disable all days except Monday for weekly selection
+    } else if (picker === 'month') {
+      return current && current.date() !== 1; // Disable all days except the first day of the month for monthly selection
+    }
+    // For daily selection, no dates are disabled
+    return false;
+  };
 
   const totalRows = alerts.length;
+  const handleChange = (value) => {
+    console.log(value);
+  };
   return (
     <>
-
       <Modal title={btnValues === 1 ? "Show Sent Alert" : btnValues === 2 ? "Show Queued Alert" : "Show Failed Alert"}
         width="70%"
         open={openModal} onOk={handleOk}
@@ -647,19 +651,27 @@ function Alerts() {
         <Col span={9}>{alert}</Col>
         <Col span={12} style={{ marginBottom: 10, textAlign: 'right' }}>
           <Input
-            size="small"  
+            size="small"
             placeholder="search here ..."
             value={searchText}
             onChange={(e) => onChangeText(e.target.value)}
             className="custom-input"
           />
+          <button className="ant-dropdown-link custom-button" style={{ marginLeft: "5px", paddingLeft: "10px", paddingRight: "10px" }} onClick={()=>setvisibleCard(!visibleCard)}>
+          <img src={vector_} alt="vector_png" width={16} height={16}/>
+          </button>
           <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
-
           <CSVLink data={exportToCSV()} filename={"mpReadings.csv"}>
-          <button type="button" className="custom-button">Export to CSV</button>
-              </CSVLink> 
+            <button type="button" className="custom-button">Export to CSV</button>
+          </CSVLink>
         </Col>
       </Row>
+      {visibleCard && <Card className="custom-card1">
+        <div style={{ justifyContent: 'end', display: 'flex' }}>
+          <CloseOutlined style={{ color: "#FFFFFF", fontSize: "15px", cursor: 'pointer' }} onClick={() => setvisibleCard(!visibleCard)} />
+        </div>
+        <FilterColumnsData columns={columns} onSelectColumns={handleSelectColumns} />
+      </Card>}
       <Modal
         style={{ textAlign: "left" }}
         title="Send Ad-Hoc Alerts"
@@ -690,13 +702,13 @@ function Alerts() {
                     message: 'Please Select Date.',
                   },
                 ]}>
-                  <DatePicker
-                    className='form_input dtPicker'
-                    picker="date"
-                    disabledDate={(current) => disabledDate(current, selectedRepFreq)} // Initial disabled dates based on week picker
-                    format={DATE_FORMAT}
-                    inputReadOnly={true}
-                  />
+                <DatePicker
+                  className='form_input dtPicker'
+                  picker="date"
+                  disabledDate={(current) => disabledDate(current, selectedRepFreq)} // Initial disabled dates based on week picker
+                  format={DATE_FORMAT}
+                  inputReadOnly={true}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -710,7 +722,7 @@ function Alerts() {
                   {
                     required: true,
                     message: 'Please enter the Recipients Emails.',
-                  },{
+                  }, {
                     validator: (_, value) => validateEmails(value),
                   },
                 ]}
@@ -734,7 +746,7 @@ function Alerts() {
                   {
                     required: true,
                     message: 'Please enter the Error Emails.',
-                  },{
+                  }, {
                     validator: (_, value) => validateEmails(value),
                   },
                 ]}
@@ -805,13 +817,13 @@ function Alerts() {
                   }}
                   size="large"
                   style={{ width: "100%" }}
-                  disabled = {addNewform?false:isEditableFormField('sitename')}
+                  disabled={addNewform ? false : isEditableFormField('sitename')}
                 >
                   {siteListData.length > 0 &&
-                      siteListData.map((item, index) => (
-                        <Select.Option key={index} value={item.name}>{item.name}</Select.Option>
-                      ))
-                    }
+                    siteListData.map((item, index) => (
+                      <Select.Option key={index} value={item.name}>{item.name}</Select.Option>
+                    ))
+                  }
                 </Select>
 
               </Form.Item>
@@ -838,7 +850,7 @@ function Alerts() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                  disabled = {addNewform?false:isEditableFormField('utilitytype')}
+                  disabled={addNewform ? false : isEditableFormField('utilitytype')}
                 >
                   {
                     [...new Set(alerts.map(item => item.utilitytype))].map((item, index) => (
@@ -870,7 +882,7 @@ function Alerts() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                  disabled = {addNewform?false:isEditableFormField('reporttype')}
+                  disabled={addNewform ? false : isEditableFormField('reporttype')}
 
                 >
                   {
@@ -901,7 +913,7 @@ function Alerts() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                  disabled = {addNewform?false:isEditableFormField('tz')}
+                  disabled={addNewform ? false : isEditableFormField('tz')}
                 >
                   {[...new Set(alerts.map(item => item.tz))].map((item, index) => (
                     <Select.Option key={index} value={item}>{item}</Select.Option>
@@ -923,7 +935,7 @@ function Alerts() {
                   {
                     required: true,
                     message: 'Please enter the Recipients Emails.',
-                  },{
+                  }, {
                     validator: (_, value) => validateEmails(value),
                   },
                 ]}
@@ -948,11 +960,11 @@ function Alerts() {
                   {
                     required: true,
                     message: 'Please enter the Error Emails.',
-                  },{
+                  }, {
                     validator: (_, value) => validateEmails(value),
                   },
                 ]}
-              
+
               >
                 <Input.TextArea
                   className="form_input"
@@ -983,7 +995,7 @@ function Alerts() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                  disabled = {addNewform?false:isEditableFormField('isactive')}
+                  disabled={addNewform ? false : isEditableFormField('isactive')}
                 >
                   {[...new Set(alerts.map(item => item.isactive))].map((item, index) => (
                     <Select.Option key={index} value={item}>{item ? "true" : "false"}</Select.Option>
@@ -1010,17 +1022,17 @@ function Alerts() {
       </Modal>{" "}
 
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
-        
+
         <ResizableTable total={totalRows}
-          name={"Alerts"} 
-          screenHeight = {screenHeight} 
+          name={"Alerts"}
+          screenHeight={screenHeight}
           site={alerts}
           onRow={(record) => ({
             onClick: () => clickEventAlert(record.id),
             style: { backgroundColor: record.id === active ? "#0A1016" : '' }
 
           })}
-          columnsData = {visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} 
+          columnsData={visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns}
         />
       </Spin>
       <AlertModel

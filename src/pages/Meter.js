@@ -1,12 +1,8 @@
-import React, { useState } from "react";
-import { Spin, Divider, Select, Radio, Tooltip } from "antd";
-import { Form, Input, Table } from "antd";
-import { Button, Row, Col, Modal, Popover, ConfigProvider } from "antd";
-import { message } from 'antd';
+import React, { useState ,useEffect, useContext } from "react";
+import { Button, Row, Col, Modal, Popover, ConfigProvider , Card,message,Form, Input,Spin, Divider, Select, Radio} from "antd";
 import "reactjs-popup/dist/index.css";
-import { EllipsisOutlined } from "@ant-design/icons";
-import { useEffect, useContext } from "react";
-import {SelectColumns} from '../components/widgets/SelectedColumns/SelectedColumns';
+import { EllipsisOutlined, CaretDownOutlined, PlusOutlined, CloseOutlined } from "@ant-design/icons";
+import { SelectColumns } from '../components/widgets/SelectedColumns/SelectedColumns';
 import { getApiDataFromAws, postApiDataToAws, getConfigDataFromAws } from "../services/apis";
 import {
   addMeter,
@@ -21,7 +17,8 @@ import { useHistory } from 'react-router-dom';
 import { AppContext } from "../App";
 import { CSVLink } from 'react-csv';
 import ResizableTable from "../components/widgets/ResizeTable/ResizableTable";
-
+import vector_ from "../../src/assets/images/vector_.png";
+import { FilterColumnsData } from "../components/widgets/SelectedColumns/FilterColumns";
 const layout = {
   labelCol: {
     span: 8,
@@ -47,6 +44,7 @@ function Meter() {
   const [isEditables, setIsEditables] = useState({});
   const [newForm, setNewForm] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState([]);
+  const [visibleCard, setvisibleCard] = useState(false);
 
   const context = useContext(AppContext);
   const history = useHistory();
@@ -108,7 +106,7 @@ function Meter() {
 
         })
     }
-    if(data.some(item => item.gegNabersExclusionPercent)){
+    if (data.some(item => item.gegNabersExclusionPercent)) {
       dynamicColumns.push(
         {
           title: "Geg Nabers Exclusion Percent",
@@ -131,7 +129,7 @@ function Meter() {
     return dynamicColumns;
   }
   const columns = [
-    
+
     {
       title: "Name",
       dataIndex: "name",
@@ -177,7 +175,7 @@ function Meter() {
       filterMode: "tree",
       filterSearch: false,
       onFilter: (value, record) => record.gateMeter == value,
-    },    
+    },
     {
       title: "GEG Equip Type",
       dataIndex: "gegEquipType",
@@ -208,7 +206,7 @@ function Meter() {
       filterSearch: false,
       onFilter: (value, record) => record.gegNabersInclusionPercent == value,
     },
-    
+
     {
       title: "Level Reference",
       dataIndex: "levelRef",
@@ -269,23 +267,23 @@ function Meter() {
       width: 200,
       ellipsis: true,
       render: (text, record, index) => (
-        isEditables?.isEditable?
-        <>
-          <ConfigProvider>
-            <Popover overlayStyle={{ width: '100px' }} placement="right" content={() => content(record)}>
-              <EllipsisOutlined style={{ fontSize: "30px" }} />
-            </Popover>
-          </ConfigProvider>
-        </>
-        :null
+        isEditables?.isEditable ?
+          <>
+            <ConfigProvider>
+              <Popover overlayStyle={{ width: '100px' }} placement="right" content={() => content(record)}>
+                <EllipsisOutlined style={{ fontSize: "30px" }} />
+              </Popover>
+            </ConfigProvider>
+          </>
+          : null
       ),
     },
   ];
 
   const isFieldEditable = (fieldName) => {
     return (
-    typeof isEditables.editKeysUneditable === 'object'&&
-    isEditables.editKeysUneditable.hasOwnProperty(fieldName)
+      typeof isEditables.editKeysUneditable === 'object' &&
+      isEditables.editKeysUneditable.hasOwnProperty(fieldName)
     );
   };
 
@@ -331,15 +329,15 @@ function Meter() {
       var formData = form.getFieldsValue();
 
       const modifiedFormData = {
-        ...formData, 
-        meterAdditionalName: formData.name, 
-        siteName: formData.siteRef, 
-        levelName: formData.levelRef.replace(formData.siteRef, "").trim(), 
-        gegNabersExclusionPercent: formData.gegNabersExclusionPercent !=""?Number(formData.gegNabersExclusionPercent):"", 
-        gegNabersInclusionPercent: formData.gegNabersInclusionPercent !=""?Number(formData.gegNabersInclusionPercent):"",  
+        ...formData,
+        meterAdditionalName: formData.name,
+        siteName: formData.siteRef,
+        levelName: formData.levelRef.replace(formData.siteRef, "").trim(),
+        gegNabersExclusionPercent: formData.gegNabersExclusionPercent != "" ? Number(formData.gegNabersExclusionPercent) : "",
+        gegNabersInclusionPercent: formData.gegNabersInclusionPercent != "" ? Number(formData.gegNabersInclusionPercent) : "",
         isGateMeter: formData.gateMeter,
       };
-      const { name,levelRef,gateMeter,siteRef, ...objectWithoutName } = modifiedFormData
+      const { name, levelRef, gateMeter, siteRef, ...objectWithoutName } = modifiedFormData
 
       if (MeterId) {
         const objectWithMeterId = {
@@ -351,9 +349,9 @@ function Meter() {
           recList: [objectWithMeterId]
         };
         const updateNewMeter = await postApiDataToAws(body)
-        if (updateNewMeter && updateNewMeter.message ==="Success") {
+        if (updateNewMeter && updateNewMeter.message === "Success") {
           message.success('Meter Updated successfully');
-        } else  {
+        } else {
           message.error(updateNewMeter[0].row1[0]);
         }
       } else {
@@ -362,9 +360,9 @@ function Meter() {
           recList: [objectWithoutName]
         };
         const addNewMeter = await postApiDataToAws(body)
-        if (addNewMeter && addNewMeter.message ==="Success") {
+        if (addNewMeter && addNewMeter.message === "Success") {
           message.success('Meter added successfully');
-        } else  {
+        } else {
           message.error(addNewMeter[0].row1[0]);
         }
       }
@@ -390,20 +388,20 @@ function Meter() {
   };
 
   const content = (record) => (
-    <div style={{marginLeft:"10px", backgroundColor:"#0A1016",paddingTop:"10px", marginRight:"10px",paddingLeft:"10px", paddingRight:"10px"}}>
-      <a onClick={() => onEdit(record)} style={{color:"white"}}>EDIT</a>
+    <div style={{ marginLeft: "10px", backgroundColor: "#0A1016", paddingTop: "10px", marginRight: "10px", paddingLeft: "10px", paddingRight: "10px" }}>
+      <a onClick={() => onEdit(record)} style={{ color: "white" }}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)} style={{color:"white",display:"none"}}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{ color: "white", display: "none" }}>DELETE</a>
     </div>
   )
 
-  
+
   const onChangeText = (text) => {
     if (text == "" || !text || text.length < searchText.length) {
       setMeters(tempData);
       setSearchText(text);
       filterData(text, tempData)
-    }else{
+    } else {
       setSearchText(text);
       filterData(text, tempData)
     }
@@ -427,7 +425,7 @@ function Meter() {
     return csvData;
   };
   const handleSiteChange = async (siteId) => {
-    
+
     // Fetch level data based on the selected site
     //const levelData = await getLevelDataForSite(siteId);
     const base64SiteId = btoa(siteId).replace(/=+$/, '');
@@ -449,21 +447,21 @@ function Meter() {
         return "";
     }
   };
-  
+
   useEffect(() => {
     form.setFieldsValue({ gegEquipType: getDefaultGegEquipType(activeButton) });
   }, [activeButton, onCancelModal]);
 
   useEffect(() => {
     const authenticated = isAuthenticated()
-    if(authenticated){
+    if (authenticated) {
       getData(1);
       setActiveButton(1);
-    }else {
+    } else {
       var userData = userInfo(context.token);
-      if(userData == null){
+      if (userData == null) {
         history.push('/');
-      }else{
+      } else {
         getData(1);
         setActiveButton(1);
       }
@@ -473,6 +471,10 @@ function Meter() {
   const handleSelectColumns = (selectedColumns) => {
     setVisibleColumns(selectedColumns);
   };
+  const handleChange = (value) => {
+    console.log(value);
+  };
+  
 
   return (
     <>
@@ -500,10 +502,10 @@ function Meter() {
           </Radio.Group>
 
           <button className="mb-4 custom-button" onClick={() => onOpenModal()} style={{ marginLeft: "20px" }}>
-            {activeButton===1?"Add New Electric":activeButton===2?"Add New Water":"Add New Gas"}
+            {activeButton === 1 ? "Add New Electric" : activeButton === 2 ? "Add New Water" : "Add New Gas"}
           </button>
         </Col>
-        <Col span={12} style={{ marginBottom: 10,textAlign: 'right' }}>
+        <Col span={12} style={{ marginBottom: 10, textAlign: 'right' }}>
           <Input
             size="small"
             placeholder="search here ..."
@@ -511,12 +513,21 @@ function Meter() {
             onChange={(e) => onChangeText(e.target.value)}
             className="custom-input"
           />
+          <button className="ant-dropdown-link custom-button" style={{ marginLeft: "5px", paddingLeft: "10px", paddingRight: "10px" }} onClick={()=>setvisibleCard(!visibleCard)} >
+          <img src={vector_} alt="vector_png" width={16} height={16}/>
+          </button>
           <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
           <CSVLink data={exportToCSV()} filename={"meter.csv"}>
-          <button type="button" className="custom-button">Export to CSV</button>
-              </CSVLink>   
+            <button type="button" className="custom-button">Export to CSV</button>
+          </CSVLink>
         </Col>
       </Row>
+      {visibleCard && <Card className="custom-card1">
+        <div style={{ justifyContent: 'end', display: 'flex' }}>
+          <CloseOutlined style={{ color: "#FFFFFF", fontSize: "15px", cursor: 'pointer' }} onClick={() => setvisibleCard(!visibleCard)} />
+        </div>
+        <FilterColumnsData columns={columns} onSelectColumns={handleSelectColumns} />
+      </Card>}
       <Modal
         style={{ textAlign: "left" }}
         title="Create New Meter"
@@ -551,7 +562,7 @@ function Meter() {
                   },
                 ]}
               >
-                <Input className="form_input" readOnly={newForm?false:true}/> 
+                <Input className="form_input" readOnly={newForm ? false : true} />
                 {/**  isFieldEditable('name') */}
               </Form.Item>
             </Col>
@@ -565,7 +576,7 @@ function Meter() {
                 wrapperCol={{ span: 24 }}
               // rules={[{ required: "" }]}
               >
-                <Input className="form_input" readOnly={true}/>
+                <Input className="form_input" readOnly={true} />
                 {/**isFieldEditable('gegEquipType')*/}
               </Form.Item>
             </Col>
@@ -591,7 +602,7 @@ function Meter() {
                   onChange={handleSiteChange}
                   size="large"
                   style={{ width: "100%" }}
-                  disabled = {newForm?false:true}
+                  disabled={newForm ? false : true}
                 >
                   {siteListData.length > 0 &&
                     siteListData.map((item, index) => (
@@ -623,7 +634,7 @@ function Meter() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                  disabled={newForm?false:true}
+                  disabled={newForm ? false : true}
                 >
                   {levelListData.length > 0 &&
                     levelListData.map((item, index) => (
@@ -670,7 +681,7 @@ function Meter() {
                     message: "Please select Sub-meter of",
                   },
                 ]}
-                
+
               >
                 <Select
                   placeholder="Select Sub-meter of"
@@ -678,7 +689,7 @@ function Meter() {
                   onChange={setSelectedItems}
                   size="large"
                   style={{ width: "100%" }}
-                  disabled = {form.getFieldValue("gateMeter") === true?true:newForm ? false : isFieldEditable('submeterOf')}
+                  disabled={form.getFieldValue("gateMeter") === true ? true : newForm ? false : isFieldEditable('submeterOf')}
                 >
                   {gateListData.length > 0 &&
                     gateListData.map((item, index) => (
@@ -709,9 +720,9 @@ function Meter() {
                   ({ getFieldValue }) => ({
                     validator(_, value) {
                       const exclusionPercent = getFieldValue('gegNabersExclusionPercent');
-                        if (exclusionPercent && value) {
-                          return Promise.reject('Please enter only one of Inclusion Percent or Exclusion Percent.');
-                        }
+                      if (exclusionPercent && value) {
+                        return Promise.reject('Please enter only one of Inclusion Percent or Exclusion Percent.');
+                      }
                       return Promise.resolve();
                     },
                   }),
@@ -743,10 +754,10 @@ function Meter() {
                     validator(_, value) {
                       const inclusionPercent = getFieldValue('gegNabersInclusionPercent');
                       if (inclusionPercent && value) {
-                          return Promise.reject('Please enter only one of Inclusion Percent or Exclusion Percent.');
+                        return Promise.reject('Please enter only one of Inclusion Percent or Exclusion Percent.');
                       }
-                      if(getFieldValue('gateMeter') && value){
-                          return Promise.reject('gegNabersExclusionPercent cannot be a gateMeter.');
+                      if (getFieldValue('gateMeter') && value) {
+                        return Promise.reject('gegNabersExclusionPercent cannot be a gateMeter.');
                       }
                       return Promise.resolve();
                     },
@@ -796,7 +807,7 @@ function Meter() {
         </Form>
       </Modal >
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
-        <ResizableTable total={totalRows} name={"Meters"} screenHeight = {screenHeight} site={meters} columnsData = {visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} />
+        <ResizableTable total={totalRows} name={"Meters"} screenHeight={screenHeight} site={meters} columnsData={visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} />
       </Spin>
     </>
   );

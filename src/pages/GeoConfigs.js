@@ -1,22 +1,22 @@
 import React from "react";
-import { useEffect, useContext } from "react";
-import Region from "../components/widgets/Region";
-import Level from "../components/widgets/Level";
+import { useEffect, useContext, useState } from "react";
 import { getApiDataFromAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
 import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
 import {
   Select, Divider, Modal, Table, Form,
   Input, Button, Card, Col, Row, Spin,
-  Popover, ConfigProvider, Radio,message,Tooltip
+  Popover, ConfigProvider, Radio, message, Tooltip
 } from "antd";
-import { EllipsisOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { EllipsisOutlined, CaretDownOutlined, PlusOutlined, CloseOutlined, MinusOutlined } from "@ant-design/icons";
 import spinnerjiff from "../assets/images/loader.gif";
 import { isAuthenticated, userInfo } from "../services/apis";
 import { useHistory } from 'react-router-dom';
 import { AppContext } from "../App";
 import { CSVLink } from 'react-csv';
+import vector_ from "../../src/assets/images/vector_.png";
+import { FilterColumnsData } from "../components/widgets/SelectedColumns/FilterColumns";
 import ResizableTable from "../components/widgets/ResizeTable/ResizableTable";
+
 const layout = {
   labelCol: {
     span: 8,
@@ -27,7 +27,6 @@ const layout = {
 };
 
 const validateMessages = {};
-
 
 function Config() {
   const [open, setOpen] = useState(false);
@@ -41,18 +40,17 @@ function Config() {
   const [activeButton, setActiveButton] = useState(1);
   const [searchText, setSearchText] = useState("");
   const [templocationData, setTempLocationData] = useState([])
-  const [isEditable , setIsEditable] = useState();
+  const [isEditable, setIsEditable] = useState();
   const [visibleColumns, setVisibleColumns] = useState([]);
+  const [visibleCard, setVisibleCard] = useState(false);
   const [form] = Form.useForm();
   const context = useContext(AppContext);
   const history = useHistory();
-
   const screenHeight = window.innerHeight - 310;
   const totalRows = locationData.length;
 
   const dynamicColumns = (data) => {
     const dynamicColumns = [];
-
     // Add logic here to extract dynamic column information from the data structure
     // For example, if "stateRef" exists in any of the items, add a column for it
     if (data.some(item => item.stateRef)) {
@@ -71,7 +69,7 @@ function Config() {
         filterSearch: false,
         onFilter: (value, record) => record.stateRef.startsWith(value),
       });
-    }
+    };
     if (data.some(item => item.region)) {
       dynamicColumns.push({
         title: "Region",
@@ -95,8 +93,8 @@ function Config() {
         title: "State",
         dataIndex: "state",
         key: "state",
-        ellipsis:true,
-        width:150,
+        ellipsis: true,
+        width: 150,
         sorter: (a, b) => a.state.localeCompare(b.state),
         filters: Array.from(new Set(locationData.map(item => item.state))).map((name, index) => ({
           text: name,
@@ -113,8 +111,8 @@ function Config() {
         title: "Level",
         dataIndex: "level",
         key: "level",
-        ellipsis:true,
-        width:150,
+        ellipsis: true,
+        width: 150,
         sorter: (a, b) => a.level.localeCompare(b.level),
         filters: Array.from(new Set(locationData.map(item => item.level))).map((name, index) => ({
           text: name,
@@ -130,8 +128,8 @@ function Config() {
         title: "Site",
         dataIndex: "siteRef",
         key: "siteRef",
-        ellipsis:true,
-        width:150,
+        ellipsis: true,
+        width: 150,
         sorter: (a, b) => a.siteRef.localeCompare(b.siteRef),
         filters: Array.from(new Set(locationData.map(item => item.siteRef))).map((name, index) => ({
           text: name,
@@ -141,7 +139,7 @@ function Config() {
         filterSearch: false,
         onFilter: (value, record) => record.siteRef.startsWith(value),
       })
-    }
+    };
     if (data.some(item => item.projId)) {
       dynamicColumns.push({
         title: "Project ID",
@@ -162,7 +160,6 @@ function Config() {
     return dynamicColumns;
   };
   const columns = [
-    
     {
       title: "Name",
       dataIndex: "name",
@@ -192,17 +189,17 @@ function Config() {
       dataIndex: "delete",
       key: "delete",
       ellipsis: true,
-      width:150,
+      width: 150,
       render: (text, record, index) => (
-        isEditable?
-        <>
-          <ConfigProvider>
-            <Popover overlayStyle={{ width: '100px' }} placement="right" content={() => content(record)}>
-              <EllipsisOutlined style={{ fontSize: "30px" }} />
-            </Popover>
-          </ConfigProvider>
-        </>
-        :null
+        isEditable ?
+          <>
+            <ConfigProvider>
+              <Popover overlayStyle={{ width: '100px' }} placement="right" content={() => content(record)}>
+                <EllipsisOutlined style={{ fontSize: "30px" }} />
+              </Popover>
+            </ConfigProvider>
+          </>
+          : null
       ),
     },
   ];
@@ -219,9 +216,9 @@ function Config() {
   };
 
   const changeWidgets = (widget) => {
-    if(widget === 4){
+    if (widget === 4) {
       history.push('/sites');
-    }else{
+    } else {
       setActiveButton(widget);
       getData(widget);
     }
@@ -249,12 +246,12 @@ function Config() {
       } else if (dataValues === 2) {
         locationData = await getApiDataFromAws("queryType=region")
         locationConfigData = await getConfigDataFromAws("region")
-        setIsEditable(locationConfigData.isEditable)  
+        setIsEditable(locationConfigData.isEditable)
 
       } else if (dataValues === 3) {
         locationData = await getApiDataFromAws("queryType=level")
         locationConfigData = await getConfigDataFromAws("level")
-        setIsEditable(locationConfigData.isEditable)  
+        setIsEditable(locationConfigData.isEditable)
       }
 
       const sitesList = await getApiDataFromAws("queryType=dropdownSite");
@@ -270,19 +267,19 @@ function Config() {
       setTempLocationData(locationData);
       setloading(false);
       setIsLoading(false);
-      if(searchText !=""){
+      if (searchText != "") {
         filterData(searchText, locationData)
       }
     } catch (error) { }
   };
 
   const onChangeSelectedValue = (value) => {
-    
+
     if (value == "" || !value || value.length < searchText.length) {
       setLocationData(templocationData);
       setSearchText(value);
       filterData(value, templocationData);
-    }else{
+    } else {
       setSearchText(value);
       filterData(value, locationData);
     }
@@ -303,6 +300,7 @@ function Config() {
 
     return csvData;
   };
+
   const setData = async () => {
     try {
 
@@ -312,33 +310,33 @@ function Config() {
 
       var functionName = "";
       var typeName = ""
-      if(activeButton == 1){
+      if (activeButton == 1) {
         functionName = 'createStateRecordsFromJson';
         const modifiedFormData = {
-          ...formData, 
+          ...formData,
           stateName: formData.name,
         };
         const { name, ...objectWithoutName } = modifiedFormData;
         objecttoPass = objectWithoutName;
         typeName = "State"
-      }else if(activeButton == 2){
+      } else if (activeButton == 2) {
         functionName = 'createRegionRecordsFromJson';
         const modifiedFormData = {
-          ...formData, 
+          ...formData,
           regionName: formData.name,
-          stateName:formData.stateRef
+          stateName: formData.stateRef
         };
-        const { name,stateRef, ...objectWithoutName } = modifiedFormData;
+        const { name, stateRef, ...objectWithoutName } = modifiedFormData;
         objecttoPass = objectWithoutName;
         typeName = "Region"
-      }else if(activeButton == 3){
+      } else if (activeButton == 3) {
         functionName = 'createLevelRecordsFromJson';
         const modifiedFormData = {
-          ...formData, 
+          ...formData,
           levelName: formData.name,
-          siteName:formData.siteRef
+          siteName: formData.siteRef
         };
-        const { level,siteRef, ...objectWithoutName } = modifiedFormData
+        const { level, siteRef, ...objectWithoutName } = modifiedFormData
         objecttoPass = objectWithoutName;
         typeName = "Level"
       }
@@ -351,7 +349,7 @@ function Config() {
           recList: [objecttoPass]
         };
         const addNewLoc = await postApiDataToAws(body)
-        if (addNewLoc && addNewLoc.message ==="Success") {
+        if (addNewLoc && addNewLoc.message === "Success") {
           // console.log(typeName +' added successfully:', addNewLoc);
           message.success(typeName + ' added successfully');
         } else {
@@ -370,32 +368,34 @@ function Config() {
   useEffect(() => {
     const authenticated = isAuthenticated()
     const storedData = localStorage.getItem('activeButton');
-    if(authenticated){
-      getData(storedData == null?1:parseInt(storedData));
-      setActiveButton(storedData == null?1:parseInt(storedData));
-    }else {
+    if (authenticated) {
+      getData(storedData == null ? 1 : parseInt(storedData));
+      setActiveButton(storedData == null ? 1 : parseInt(storedData));
+    } else {
       var userData = userInfo(context.token);
-      if(userData == null){
+      if (userData == null) {
         history.push('/');
-      }else{
-        getData(storedData == null?1:parseInt(storedData));
-        setActiveButton(storedData == null?1:parseInt(storedData));
+      } else {
+        getData(storedData == null ? 1 : parseInt(storedData));
+        setActiveButton(storedData == null ? 1 : parseInt(storedData));
       }
     }
     localStorage.removeItem('activeButton');
   }, []);
 
   const content = (record) => (
-    <div style={{marginLeft:"10px", backgroundColor:"#0A1016",paddingTop:"10px", marginRight:"10px",paddingLeft:"10px", paddingRight:"10px"}}>
-      <a onClick={() => onEdit(record)} style={{color:"white"}}>EDIT</a>
+    <div style={{ marginLeft: "10px", backgroundColor: "#0A1016", paddingTop: "10px", marginRight: "10px", paddingLeft: "10px", paddingRight: "10px" }}>
+      <a onClick={() => onEdit(record)} style={{ color: "white" }}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)} style={{color:"white",display:"none"}}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{ color: "white", display: "none" }}>DELETE</a>
     </div>
-  )
-      const handleSelectColumns = (SelectColumns) => {
-        setVisibleColumns(SelectColumns);
-      }
+  );
+  const handleSelectColumns = (SelectColumns) => {
+    setVisibleColumns(SelectColumns);
+  }
+  // const renderdCardBlock = (
 
+  // );
   const activeWidgestInputFields = () => {
     switch (activeButton) {
       case 1:
@@ -550,9 +550,7 @@ function Config() {
           </>
         )
     }
-  }
-
-
+  };
   return (
     <>
       <Row>
@@ -586,22 +584,28 @@ function Config() {
           </button>
         </Col>
         <Col span={12} style={{ marginBottom: 10, textAlign: 'right' }}>
-            <Input
-              size="small"
-              placeholder="search here ..."
-              value={searchText}
-              onChange={(e) => onChangeSelectedValue(e.target.value)}
-              className="custom-input"
-            />
-            <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
-            <CSVLink data={exportToCSV()} filename={"location.csv"}>
-          <button type="button" className="custom-button">Export to CSV</button>
-              </CSVLink>   
+          <Input
+            size="small"
+            placeholder="search here ..."
+            value={searchText}
+            onChange={(e) => onChangeSelectedValue(e.target.value)}
+            className="custom-input"
+          />
+          <button className="ant-dropdown-link custom-button" style={{ marginLeft: "5px", paddingLeft: "10px", paddingRight: "10px" }} onClick={() => setVisibleCard(!visibleCard)}>
+            <img src={vector_} alt="vector_png" width={16} height={16} />
+          </button>
+          <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
+          <CSVLink data={exportToCSV()} filename={"location.csv"}>
+            <button type="button" className="custom-button">Export to CSV</button>
+          </CSVLink>
         </Col>
-        {/* <Col span={3} style={{ marginBottom: 10, textAlign: 'right' }}>
-           
-        </Col> */}
       </Row>
+      {visibleCard && <Card className="custom-card1">
+        <div style={{ justifyContent: 'end', display: 'flex' }}>
+          <CloseOutlined style={{ color: "#FFFFFF", fontSize: "15px", cursor: 'pointer' }} onClick={() => setVisibleCard(!visibleCard)} />
+        </div>
+        <FilterColumnsData columns={columns} onSelectColumns={handleSelectColumns} />
+      </Card>}
       <Modal
         style={{ textAlign: "left" }}
         title={activeButton == 1 ? "Add New State" : activeButton == 2 ? "Add New Region" : "Add New Level"}
@@ -622,14 +626,14 @@ function Config() {
           labelAlign=""
         >
           {activeWidgestInputFields()}
-          <Form.Item  wrapperCol={{
-              offset: 11,
-              span: 16,
-            }}>
+          <Form.Item wrapperCol={{
+            offset: 11,
+            span: 16,
+          }}>
             <Row>
-              <Col span={20}  className="custom-modal-column">
+              <Col span={20} className="custom-modal-column">
                 <button
-                 className="custom-modal-button"
+                  className="custom-modal-button"
                   type=""
                   htmlType="button"
                   onClick={() => onCancelModal()}
@@ -639,7 +643,7 @@ function Config() {
                 <button
                   type="primary"
                   htmlType="submit"
-                  //onClick={()=>setData()}
+                //onClick={()=>setData()}
                 >
                   Save
                 </button>
@@ -649,7 +653,7 @@ function Config() {
         </Form>
       </Modal>
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
-        <ResizableTable total={totalRows} name={"Locations"} screenHeight = {screenHeight} site={locationData} columnsData = {visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} />
+        <ResizableTable total={totalRows} name={"Locations"} screenHeight={screenHeight} site={locationData} columnsData={visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} />
       </Spin>
     </>
   );

@@ -1,8 +1,6 @@
 import React from 'react';
-import { Button, Row, Col, Modal, Select, Popover, ConfigProvider, DatePicker } from "antd";
-import { Form, Input, Table, Divider, Spin, Radio, message, Tooltip } from "antd";
-import { EllipsisOutlined } from '@ant-design/icons';
-import { InfoCircleOutlined } from '@ant-design/icons';
+import { Button, Row, Col, Modal, Select, Popover, ConfigProvider, DatePicker,Form, Input, Table, Divider, Spin, Radio, message, Card } from "antd";
+import { EllipsisOutlined, InfoCircleOutlined,CaretDownOutlined, PlusOutlined, CloseOutlined } from "@ant-design/icons";
 import moment from 'moment';
 import { useState, useEffect, useContext } from 'react';
 import { getApiDataFromAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
@@ -14,7 +12,8 @@ import { useHistory } from 'react-router-dom';
 import { AppContext } from "../App";
 import { CSVLink } from 'react-csv';
 import ResizableTable from "../components/widgets/ResizeTable/ResizableTable";
-
+import vector_ from "../../src/assets/images/vector_.png";
+import { FilterColumnsData } from "../components/widgets/SelectedColumns/FilterColumns";
 function Targets() {
   const [activeButton, setActiveButton] = useState(1);
   const [targets, setTargets] = useState([])
@@ -31,6 +30,7 @@ function Targets() {
   const [active, setActive] = useState(null);
   const [showButton, setShowButton] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState([]);
+  const [visibleCard, setvisibleCard] = useState(false);
   // const isEditable = useRef({});
   const [form] = Form.useForm();
   const context = useContext(AppContext);
@@ -39,15 +39,15 @@ function Targets() {
   const DATE_FORMAT = 'YYYY-MM-DD';
   const screenHeight = window.innerHeight - 310;
   const totalRows = targets.length;
-// let edit = [];
-//  edit = Array.isArray(isEditable.current.editKeysUneditable)
+  // let edit = [];
+  //  edit = Array.isArray(isEditable.current.editKeysUneditable)
 
-const isFieldEditable = (fieldName) => {
-  return (
-    typeof isEditables.editKeysUneditable === 'object' &&
-    isEditables.editKeysUneditable.hasOwnProperty(fieldName)
-  );
-};
+  const isFieldEditable = (fieldName) => {
+    return (
+      typeof isEditables.editKeysUneditable === 'object' &&
+      isEditables.editKeysUneditable.hasOwnProperty(fieldName)
+    );
+  };
 
   const onOpenModal = () => {
     setOpen(true);
@@ -77,26 +77,26 @@ const isFieldEditable = (fieldName) => {
     setActive(RowId)
   }
 
-  const handleButtonClick = async(siteName) => {
+  const handleButtonClick = async (siteName) => {
     var base64SiteId = btoa(active).replace(/=+$/, '');
-    if(typeof siteName === 'string'){
+    if (typeof siteName === 'string') {
       base64SiteId = btoa(siteName).replace(/=+$/, '');
     }
     setIsLoading(true)
-    const utilityType = activeButton == 1?"elec":activeButton==2?"water":"gas"
-    const computeRes = await getRecompueteProfile("siteName="+base64SiteId+"&pointType=" + utilityType)
-    if(computeRes == undefined){
+    const utilityType = activeButton == 1 ? "elec" : activeButton == 2 ? "water" : "gas"
+    const computeRes = await getRecompueteProfile("siteName=" + base64SiteId + "&pointType=" + utilityType)
+    if (computeRes == undefined) {
       message.error('Error in fetching data')
       setShowButton(false);
       setIsLoading(false)
       return false
-    }else{
-      if(computeRes.message === "Success"){
+    } else {
+      if (computeRes.message === "Success") {
         message.success("Target Recomputed Sucessfully")
-      }else{
+      } else {
         message.success(computeRes.message)
       }
-      
+
       setActive();
       setShowButton(false);
       setIsLoading(false)
@@ -485,7 +485,7 @@ const isFieldEditable = (fieldName) => {
     setTargetId(record.id);
     const startDate = moment(record.ratingPeriodStart); // You can set any date you want here
     const endDate = moment(record.ratingPeriodEnd); // You can set any date you want here
-    
+
     form.setFieldsValue({
       ratingPeriodEnd: endDate,
     });
@@ -497,10 +497,10 @@ const isFieldEditable = (fieldName) => {
   };
 
   const content = (record) => (
-    <div style={{marginLeft:"10px", backgroundColor:"#0A1016",paddingTop:"10px", marginRight:"10px",paddingLeft:"10px", paddingRight:"10px"}}>
+    <div style={{ marginLeft: "10px", backgroundColor: "#0A1016", paddingTop: "10px", marginRight: "10px", paddingLeft: "10px", paddingRight: "10px" }}>
       <a onClick={() => onEdit(record)} style={{ color: "white" }}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)} style={{ color: "white",display:"none  " }}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{ color: "white", display: "none  " }}>DELETE</a>
     </div>
   )
 
@@ -531,7 +531,7 @@ const isFieldEditable = (fieldName) => {
       setIsEditables(targetConfigData)
       setloading(false);
       setIsLoading(false);
-      
+
     } catch (error) { }
   };
 
@@ -542,14 +542,14 @@ const isFieldEditable = (fieldName) => {
     }
   }, [targetTempData]);
 
-  const getFormatedDate = (startDate) =>{
-       
-        const year = startDate.toDate().getFullYear();
-        const month = (startDate.toDate().getMonth() + 1).toString().padStart(2, '0');
-        const day = startDate.toDate().getDate().toString().padStart(2, '0');
-        const formattedDate = `${year}-${month}-${day}`;
-        //console.log(formattedDate);
-        return formattedDate;
+  const getFormatedDate = (startDate) => {
+
+    const year = startDate.toDate().getFullYear();
+    const month = (startDate.toDate().getMonth() + 1).toString().padStart(2, '0');
+    const day = startDate.toDate().getDate().toString().padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    //console.log(formattedDate);
+    return formattedDate;
 
   }
 
@@ -560,55 +560,55 @@ const isFieldEditable = (fieldName) => {
       var objecttoPass = null;
       var functionName = "";
       var typeName = ""
-      if(activeButton == 1){
+      if (activeButton == 1) {
         functionName = 'createElecTargetProfileRecordsFromJson';
         const modifiedFormData = {
-          ...formData, 
+          ...formData,
           siteName: formData.siteRef,
           ratingPeriodStart: getFormatedDate(formData.ratingPeriodStart),
           ratingPeriodEnd: getFormatedDate(formData.ratingPeriodEnd),
           pointId: formData.id,
-          targetKwh0:Number(formData.targetKwh0),
-          targetKwh1:formData.targetKwh1==""?0:Number(formData.targetKwh1),
-          targetKwh2:formData.targetKwh2==""?0:Number(formData.targetKwh2),
-          currentRating:Number(formData.currentRating),
-          targetRating:Number(formData.targetRating)
+          targetKwh0: Number(formData.targetKwh0),
+          targetKwh1: formData.targetKwh1 == "" ? 0 : Number(formData.targetKwh1),
+          targetKwh2: formData.targetKwh2 == "" ? 0 : Number(formData.targetKwh2),
+          currentRating: Number(formData.currentRating),
+          targetRating: Number(formData.targetRating)
 
         };
         const { siteRef, id, ...objectWithoutName } = modifiedFormData;
         objecttoPass = objectWithoutName;
         typeName = "Electric"
-      }else if(activeButton == 2){
+      } else if (activeButton == 2) {
         functionName = 'createWaterTargetProfileRecordsFromJson';
         const modifiedFormData = {
-          ...formData, 
+          ...formData,
           siteName: formData.siteRef,
           ratingPeriodStart: getFormatedDate(formData.ratingPeriodStart),
           ratingPeriodEnd: getFormatedDate(formData.ratingPeriodEnd),
           pointId: formData.id,
-          targetKl0:Number(formData.targetKl0),
-          targetKl1:formData.targetKl1==""?0:Number(formData.targetKl1),
-          targetKl2:formData.targetKl2==""?0:Number(formData.targetKl2),
-          currentRating:Number(formData.currentRating),
-          targetRating:Number(formData.targetRating)
+          targetKl0: Number(formData.targetKl0),
+          targetKl1: formData.targetKl1 == "" ? 0 : Number(formData.targetKl1),
+          targetKl2: formData.targetKl2 == "" ? 0 : Number(formData.targetKl2),
+          currentRating: Number(formData.currentRating),
+          targetRating: Number(formData.targetRating)
 
         };
         const { siteRef, id, ...objectWithoutName } = modifiedFormData;
         objecttoPass = objectWithoutName;
         typeName = "Water"
-      }else if(activeButton == 3){
+      } else if (activeButton == 3) {
         functionName = 'createGasTargetProfileRecordsFromJson';
         const modifiedFormData = {
-          ...formData, 
+          ...formData,
           siteName: formData.siteRef,
           ratingPeriodStart: getFormatedDate(formData.ratingPeriodStart),
           ratingPeriodEnd: getFormatedDate(formData.ratingPeriodEnd),
           pointId: formData.id,
-          targetCum0:Number(formData.targetCum0),
-          targetCum1:formData.targetCum1==""?0:Number(formData.targetCum1),
-          targetCum2:formData.targetCum2==""?0:Number(formData.targetCum2),
-          currentRating:Number(formData.currentRating),
-          targetRating:Number(formData.targetRating)
+          targetCum0: Number(formData.targetCum0),
+          targetCum1: formData.targetCum1 == "" ? 0 : Number(formData.targetCum1),
+          targetCum2: formData.targetCum2 == "" ? 0 : Number(formData.targetCum2),
+          currentRating: Number(formData.currentRating),
+          targetRating: Number(formData.targetRating)
 
         };
         const { siteRef, id, ...objectWithoutName } = modifiedFormData;
@@ -621,8 +621,8 @@ const isFieldEditable = (fieldName) => {
           funcName: functionName,
           recList: [objecttoPass]
         };
-        const addNewTarget =await postApiDataToAws(body)
-        if (addNewTarget && addNewTarget.message ==="Success") {
+        const addNewTarget = await postApiDataToAws(body)
+        if (addNewTarget && addNewTarget.message === "Success") {
           // console.log(typeName +' target added successfully:', addNewTarget);
           message.success(typeName + ' target updated successfully');
         } else {
@@ -636,7 +636,7 @@ const isFieldEditable = (fieldName) => {
           recList: [objecttoPass]
         };
         const addNewTarget = await postApiDataToAws(body)
-        if (addNewTarget && addNewTarget.message ==="Success") {
+        if (addNewTarget && addNewTarget.message === "Success") {
           // console.log(typeName +' target added successfully:', addNewTarget);
           message.success(typeName + ' target added successfully');
         } else {
@@ -648,7 +648,7 @@ const isFieldEditable = (fieldName) => {
       onCancelModal();
       handleButtonClick(formData.siteRef)
     }
-    catch(error){
+    catch (error) {
       console.log(error)
     }
   }
@@ -658,10 +658,10 @@ const isFieldEditable = (fieldName) => {
       setTargets(targetTempData)
       setSearchText(text);
       searchFilter(text, targetTempData);
-    }else{
+    } else {
       setSearchText(text);
       searchFilter(text, targets);
-    } 
+    }
   }
   const searchFilter = (text, data) => {
     const filterData = data.filter((record) => (
@@ -698,14 +698,14 @@ const isFieldEditable = (fieldName) => {
 
   useEffect(() => {
     const authenticated = isAuthenticated()
-    if(authenticated){
+    if (authenticated) {
       getData(1);
       setActiveButton(1);
-    }else {
+    } else {
       var userData = userInfo(context.token);
-      if(userData == null){
+      if (userData == null) {
         history.push('/');
-      }else{
+      } else {
         getData(1);
         setActiveButton(1);
       }
@@ -713,9 +713,9 @@ const isFieldEditable = (fieldName) => {
   }, []);
 
   const handleSelectColumns = (selectedCoumns) => {
-      setVisibleColumns(selectedCoumns)
+    setVisibleColumns(selectedCoumns)
   }
-
+ 
   return (
     <div className="App">
       <Row>
@@ -749,10 +749,10 @@ const isFieldEditable = (fieldName) => {
           </button>
         </Col>
         <Col span={4} style={{ textAlign: 'left' }}>
-        {showButton && (
-          <button onClick={handleButtonClick} className="mb-4 ml-4 custom-button" type="primary">
-            Recompute Profile
-          </button>)}
+          {showButton && (
+            <button onClick={handleButtonClick} className="mb-4 ml-4 custom-button" type="primary">
+              Recompute Profile
+            </button>)}
         </Col>
         <Col span={12} style={{ marginBottom: 10, textAlign: 'right' }}>
           <Form>
@@ -763,13 +763,22 @@ const isFieldEditable = (fieldName) => {
               onChange={(e) => onChangeText(e.target.value)}
               className='custom-input'
             />
+            <button className="ant-dropdown-link custom-button" style={{ marginLeft: "5px", paddingLeft: "10px", paddingRight: "10px" }} onClick={()=>setvisibleCard(!visibleCard)}>
+          <img src={vector_} alt="vector_png" width={16} height={16}/>
+          </button>
             <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
             <CSVLink data={exportToCSV()} filename={"targets.csv"}>
-          <button type='button' className="custom-button">Export to CSV</button>
-              </CSVLink> 
+              <button type='button' className="custom-button">Export to CSV</button>
+            </CSVLink>
           </Form>
         </Col>
       </Row>
+      {visibleCard && <Card className="custom-card1">
+        <div style={{ justifyContent: 'end', display: 'flex' }}>
+          <CloseOutlined style={{ color: "#FFFFFF", fontSize: "15px", cursor: 'pointer' }} onClick={() => setvisibleCard(!visibleCard)} />
+        </div>
+        <FilterColumnsData columns={columns} onSelectColumns={handleSelectColumns} />
+      </Card>}
       <Modal
         style={{ textAlign: "left" }}
         title={activeButton === 2 ? "Add New Water Target Profile" :
@@ -789,7 +798,7 @@ const isFieldEditable = (fieldName) => {
           style={{ maxWidth: 1000 }}
           form={form}
           validateMessages={validateMessages}
-         
+
         >
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
@@ -810,14 +819,14 @@ const isFieldEditable = (fieldName) => {
                   onClick={setSelectedItem}
                   size='large'
                   style={{ width: "100%" }}
-                  disabled = {newForm?false:isFieldEditable("siteName")}
-                  
+                  disabled={newForm ? false : isFieldEditable("siteName")}
+
                 >
                   {siteListData.length > 0 &&
-                      siteListData.map((item, index) => (
-                        <Select.Option key={index} value={item.name}>{item.name}</Select.Option>
-                      ))
-                    }
+                    siteListData.map((item, index) => (
+                      <Select.Option key={index} value={item.name}>{item.name}</Select.Option>
+                    ))
+                  }
 
                 </Select>
               </Form.Item>
@@ -845,7 +854,7 @@ const isFieldEditable = (fieldName) => {
                     message: 'Please enter the Current Rating.',
                   },
                 ]}>
-                <Input className='form_input' type="number" step={0.5} min={0} max={6}/>
+                <Input className='form_input' type="number" step={0.5} min={0} max={6} />
               </Form.Item>
             </Col>
           </Row>
@@ -895,12 +904,12 @@ const isFieldEditable = (fieldName) => {
                     message: 'Please Select Rating Period Start.',
                   },
                 ]}>
-                  <DatePicker
-                    className='form_input dtPicker'
-                    format={DATE_FORMAT}
-                    readOnly={newForm ? false : !isFieldEditable('ratingPeriodStart')}
-                    inputReadOnly={true}
-                  />
+                <DatePicker
+                  className='form_input dtPicker'
+                  format={DATE_FORMAT}
+                  readOnly={newForm ? false : !isFieldEditable('ratingPeriodStart')}
+                  inputReadOnly={true}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -921,22 +930,22 @@ const isFieldEditable = (fieldName) => {
                       if (!startDate || !value) {
                         return Promise.resolve();
                       }
-          
+
                       const diffInDays = value.diff(startDate, 'days');
                       const isValid = diffInDays >= 363 && diffInDays <= 367;
-          
+
                       return isValid
                         ? Promise.resolve()
                         : Promise.reject('The difference in days should be between 363 and 367.');
                     },
                   }),
                 ]}>
-                  <DatePicker
-                    className='form_input dtPicker'
-                    format={DATE_FORMAT}
-                    readOnly={newForm ? false : !isFieldEditable('ratingPeriodEnd')}
-                    inputReadOnly={true}
-                  />
+                <DatePicker
+                  className='form_input dtPicker'
+                  format={DATE_FORMAT}
+                  readOnly={newForm ? false : !isFieldEditable('ratingPeriodEnd')}
+                  inputReadOnly={true}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -945,7 +954,7 @@ const isFieldEditable = (fieldName) => {
               <Form.Item
                 name={activeButton === 2 ? "targetKl0" : activeButton === 3 ? "targetCum0" : "targetKwh0"}
                 label={activeButton === 2 ? "Lower Performance Target P.A." : activeButton === 3 ? "Lower Performance Target P.A." : "Lower Performance Target P.A."}
-                tooltip={{ title: 'e.g. -0.5 stars NABERS', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }}/> }}
+                tooltip={{ title: 'e.g. -0.5 stars NABERS', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 wrapperCol={24}
                 rules={[
                   {
@@ -954,11 +963,11 @@ const isFieldEditable = (fieldName) => {
                   },
                 ]}
               >
-                  <Input
-                    className='form_input'
-                    type="number"
-                    readOnly={newForm ? false : activeButton === 2 ? isFieldEditable('targetKl0') : activeButton === 3 ? isFieldEditable("targetCum0") : isFieldEditable('targetKwh0')}
-                  />
+                <Input
+                  className='form_input'
+                  type="number"
+                  readOnly={newForm ? false : activeButton === 2 ? isFieldEditable('targetKl0') : activeButton === 3 ? isFieldEditable("targetCum0") : isFieldEditable('targetKwh0')}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -972,9 +981,9 @@ const isFieldEditable = (fieldName) => {
                 rules={[
                   {
                     validator: (_, value) => {
-                      const targetValue = parseFloat(value); 
+                      const targetValue = parseFloat(value);
                       const targetKl0Value = parseFloat(form.getFieldValue(activeButton === 2 ? 'targetKl0' : activeButton === 3 ? 'targetCum0' : 'targetKwh0')); // Parse the other field's value to a number
-                  
+
                       if (targetValue === "" || isNaN(targetValue)) {
                         return Promise.resolve();
                       } else if (targetValue > targetKl0Value) {
@@ -983,7 +992,7 @@ const isFieldEditable = (fieldName) => {
                       return Promise.resolve();
                     },
                   }
-                  
+
                 ]}
                 initialValue=""
               >
@@ -998,16 +1007,16 @@ const isFieldEditable = (fieldName) => {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name={activeButton === 2 ? "targetKl2" :activeButton === 3 ? "targetCum2": "targetKwh2"}
-                label={activeButton === 2 ? "Higher Performance Target P.A." :activeButton === 3 ? "Higher Performance target P.A.":  "Higher Performance Target P.A."}
-                tooltip={{ title: 'e.g. +0.5 stars NABERS', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }}/> }}
+                name={activeButton === 2 ? "targetKl2" : activeButton === 3 ? "targetCum2" : "targetKwh2"}
+                label={activeButton === 2 ? "Higher Performance Target P.A." : activeButton === 3 ? "Higher Performance target P.A." : "Higher Performance Target P.A."}
+                tooltip={{ title: 'e.g. +0.5 stars NABERS', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 wrapperCol={24}
                 rules={[
                   {
                     validator: (_, value) => {
-                      const targetValue = parseFloat(value); 
+                      const targetValue = parseFloat(value);
                       const targetKl1Value = parseFloat(form.getFieldValue(activeButton === 2 ? 'targetKl1' : activeButton === 3 ? 'targetCum1' : 'targetKwh1')); // Parse the other field's value to a number
-                  
+
                       if (isNaN(targetValue) || targetValue === "") {
                         return Promise.resolve();
                       } else if (targetValue > targetKl1Value) {
@@ -1018,7 +1027,7 @@ const isFieldEditable = (fieldName) => {
                   }
                 ]}
                 initialValue="">
-                  <Input className='form_input' type='number' readOnly={newForm?false:activeButton===2?isFieldEditable('targetKl2'):isFieldEditable('targetKwh2')}/>
+                <Input className='form_input' type='number' readOnly={newForm ? false : activeButton === 2 ? isFieldEditable('targetKl2') : isFieldEditable('targetKwh2')} />
               </Form.Item>
             </Col>
           </Row>
@@ -1030,7 +1039,7 @@ const isFieldEditable = (fieldName) => {
                 wrapperCol={24}>
                 <Input
                   className='form_input'
-                  readOnly={newForm?true:isFieldEditable("unit")}
+                  readOnly={newForm ? true : isFieldEditable("unit")}
                 />
               </Form.Item>
             </Col>
@@ -1042,7 +1051,7 @@ const isFieldEditable = (fieldName) => {
                 label="Point ID"
                 initialValue=""
                 wrapperCol={24}>
-                <Input className='form_input' readOnly/>
+                <Input className='form_input' readOnly />
               </Form.Item>
             </Col>
           </Row>
@@ -1056,14 +1065,14 @@ const isFieldEditable = (fieldName) => {
       </Modal>
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
         <ResizableTable total={totalRows}
-          name={"Targets"} 
-          screenHeight = {screenHeight} 
+          name={"Targets"}
+          screenHeight={screenHeight}
           site={targets}
           onRow={(record) => ({
             onClick: () => clickEventMpPoint(record.siteRef),
             style: { backgroundColor: record.siteRef === active ? "#0A1016" : '' }
-          })} 
-          columnsData = {visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} 
+          })}
+          columnsData={visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns}
         />
       </Spin>
     </div>
