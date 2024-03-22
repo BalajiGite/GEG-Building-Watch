@@ -1,12 +1,10 @@
 import React, { useContext, useRef, useState } from "react";
-import { Spin, Divider, Select, Checkbox, Menu, Dropdown } from "antd";
-import { Form, Input, Table } from "antd";
-import { Button, Row, Col, Modal, Popover, ConfigProvider } from "antd";
+import { Button, Row, Col, Modal, Popover, ConfigProvider, Card ,Form, Input, Spin, Divider, Select} from "antd";
+import { EllipsisOutlined, CaretDownOutlined, PlusOutlined, CloseOutlined } from "@ant-design/icons";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { AppContext } from "../App";
 import { message } from 'antd';
-import { EllipsisOutlined , DownOutlined} from "@ant-design/icons";
 import { Radio } from 'antd';
 import { getApiDataFromAws, postApiDataToAws, getConfigDataFromAws } from "../services/apis";
 import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
@@ -16,6 +14,8 @@ import {
   deleteSites,
   editSites,
 } from "../services/sitesService";
+import { FilterColumnsData } from "../components/widgets/SelectedColumns/FilterColumns";
+import vector_ from "../../src/assets/images/vector_.png";
 import spinnerjiff from "../assets/images/loader.gif";
 import { CSVLink } from 'react-csv';
 import { useReducer } from "react";
@@ -42,11 +42,11 @@ function Sites() {
   const [open, setOpen] = useState(false);
   const [regionListData, setRegionListData] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState([]);
-
+  const [visibleCard, setvisibleCard] = useState(false);
   const siteConfigData = useRef();
   const context = useContext(AppContext);
   const history = useHistory();
-  
+
   const screenHeight = window.innerHeight - 310;
   const validateMessages = {
     required: "${label} is required!",
@@ -68,7 +68,7 @@ function Sites() {
   const totalRows = site.length;
 
   const columns = [
-    
+
     {
       title: "Name",
       dataIndex: "name",
@@ -327,9 +327,9 @@ function Sites() {
   ]
 
   const changeWidgets = (widget) => {
-    if(widget === 4){
+    if (widget === 4) {
       setActiveButton(widget);
-    }else{
+    } else {
       localStorage.setItem('activeButton', widget);
       history.push('/GeoConfigs');
       setActiveButton(widget);
@@ -349,7 +349,7 @@ function Sites() {
       setSite(sites);
       setloading(false);
       setIsLoading(false);
-      if(searchText !=""){
+      if (searchText != "") {
         filter(searchText)
       }
     } catch (error) { }
@@ -417,7 +417,7 @@ function Sites() {
       setSite(siteData);
       setSearchText(text);
       filter(text, siteData);
-    }else{
+    } else {
       setSearchText(text);
       filter(text, site);
     }
@@ -450,13 +450,13 @@ function Sites() {
   };
   useEffect(() => {
     const authenticated = isAuthenticated()
-    if(authenticated){
+    if (authenticated) {
       getData();
-    }else {
+    } else {
       var userData = userInfo(context.token);
-      if(userData == null){
+      if (userData == null) {
         history.push('/');
-      }else{
+      } else {
         getData();
       }
     }
@@ -466,7 +466,7 @@ function Sites() {
   // console.log(ObjectKeys);
 
   const content = (record) => (
-    <div style={{marginLeft:"10px", backgroundColor:"#0A1016",paddingTop:"10px", marginRight:"10px",paddingLeft:"10px", paddingRight:"10px"}}>
+    <div style={{ marginLeft: "10px", backgroundColor: "#0A1016", paddingTop: "10px", marginRight: "10px", paddingLeft: "10px", paddingRight: "10px" }}>
       <a onClick={() => onEdit(record)} style={{ color: "white" }}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
       <a onClick={() => onDelete(record.id)} style={{ color: "white", display: "none" }}>DELETE</a>
@@ -486,7 +486,7 @@ function Sites() {
   //   setVisibleColumns(selectedColumns);
   //   setPopoverVisible(false);
   // }
-  
+
   // const contents = (
   //   <>
   //     <Menu style={{ maxHeight: '200px', overflowY: 'auto' ,backgroundColor:"#0A1016"}}>
@@ -504,14 +504,22 @@ function Sites() {
   //     </div>
   //   </>
   // );
-            const handleSelectedColumns = (selectedColumns) => {
-              setVisibleColumns(selectedColumns)
-            }
+  const handleSelectColumns = (SelectColumns) => {
+    setVisibleColumns(SelectColumns);
+  }
+  const handleChange = (value) => {
+    console.log(value);
+  };
+
+  const handleSelectedColumns = (selectedColumns) => {
+    setVisibleColumns(selectedColumns)
+  }
+ 
   return (
     <>
       <Row>
         <Col span={12}>
-        <Radio.Group>
+          <Radio.Group>
             <Radio.Button className="ant-radio-button-css" style={{
               fontWeight: activeButton === 1 ? 'bold' : 'normal',
               color: activeButton === 1 ? '#FFFFFF' : '#8E8E8E',
@@ -537,7 +545,7 @@ function Sites() {
           </Radio.Group>
           <button onClick={() => onOpenModal()} className="mb-4 ml-4 custom-button">ADD New Site</button>
         </Col>
-        <Col span={12} style={{ marginBottom: 10,  textAlign: 'right'  }}>
+        <Col span={12} style={{ marginBottom: 10, textAlign: 'right' }}>
           <Input
             size="small"
             placeholder="search here ..."
@@ -545,12 +553,21 @@ function Sites() {
             onChange={(e) => onChangeText(e.target.value)}
             className="custom-input"
           />
-           <SelectColumns columns={columns} onSelectColumns={handleSelectedColumns}/>
-           <CSVLink data={exportToCSV()} filename={"sites.csv"}>
-          <button type="button" className="custom-button">Export to CSV</button>
-              </CSVLink>   
+          <button className="ant-dropdown-link custom-button" style={{ marginLeft: "5px", paddingLeft: "10px", paddingRight: "10px" }} onClick={() => setvisibleCard(!visibleCard)} >
+            <img src={vector_} alt="vector_png" width={16} height={16} />
+          </button>
+          <SelectColumns columns={columns} onSelectColumns={handleSelectedColumns}/>
+          <CSVLink data={exportToCSV()} filename={"sites.csv"}>
+            <button type="button" className="custom-button">Export to CSV</button>
+          </CSVLink>
         </Col>
       </Row>
+      {visibleCard && <Card className="custom-card1">
+        <div style={{ justifyContent: 'end', display: 'flex' }}>
+          <CloseOutlined style={{ color: "#FFFFFF", fontSize: "15px", cursor: 'pointer' }} onClick={() => setvisibleCard(!visibleCard)} />
+        </div>
+        <FilterColumnsData columns={columns} onSelectColumns={handleSelectColumns} />
+      </Card>}
       <Modal
         // className="custom-modale"
         title="Add New Sites"
@@ -870,7 +887,7 @@ function Sites() {
         </Form>
       </Modal>
       <Spin spinning={isLoading} indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} />}>
-        <ResizableTable total={totalRows} name={"Sites"} screenHeight = {screenHeight} site={site} columnsData = {visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} />
+        <ResizableTable total={totalRows} name={"Sites"} screenHeight={screenHeight} site={site} columnsData={visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} />
       </Spin>
     </>
   );

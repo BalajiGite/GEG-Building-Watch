@@ -1,12 +1,12 @@
 import "reactjs-popup/dist/index.css";
 import React, { useState, useContext } from "react";
-import { Spin, Divider, Select,Tooltip } from "antd";
-import { Form, Input, Table,Radio } from "antd";
-import { Button, Row, Col, Modal, Popover, ConfigProvider , message} from "antd";
-import { EllipsisOutlined } from "@ant-design/icons";
+import { Button, Row, Col, Modal, Popover, ConfigProvider, message ,Form, Input, Card ,Table, Radio,Spin, Divider, Select, Tooltip } from "antd";
+import { EllipsisOutlined, CaretDownOutlined, PlusOutlined, CloseOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
-import { getApiDataFromAws ,getConfigDataFromAws, postApiDataToAws} from "../services/apis";
+import { getApiDataFromAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
 import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
+import vector_ from "../../src/assets/images/vector_.png";
+import { FilterColumnsData } from "../components/widgets/SelectedColumns/FilterColumns";
 import {
   addSites,
   deleteSites,
@@ -42,6 +42,8 @@ export default function Point() {
   const [activeButton, setActiveButton] = useState(1);
   const [isEditable, setIsEditable] = useState();
   const [visibleColumns, setVisibleColumns] = useState([]);
+  const [visibleCard, setvisibleCard] = useState(false);
+
   const [form] = Form.useForm();
   const context = useContext(AppContext);
   const history = useHistory();
@@ -154,7 +156,7 @@ export default function Point() {
     return dynamicColumns;
   }
 
-  const columns = [ 
+  const columns = [
     {
       title: "Name",
       dataIndex: "name",
@@ -298,15 +300,15 @@ export default function Point() {
       ellipsis: true,
       width: 200,
       render: (text, record, index) => (
-        isEditable?
-        <>
-          <ConfigProvider>
-            <Popover overlayStyle={{ width: '100px' }} placement="right" content={() => content(record)}>
-              <EllipsisOutlined style={{ fontSize: "30px" }} />
-            </Popover>
-          </ConfigProvider>
-        </>
-        :null
+        isEditable ?
+          <>
+            <ConfigProvider>
+              <Popover overlayStyle={{ width: '100px' }} placement="right" content={() => content(record)}>
+                <EllipsisOutlined style={{ fontSize: "30px" }} />
+              </Popover>
+            </ConfigProvider>
+          </>
+          : null
       ),
     },
     // Add more columns as needed
@@ -341,7 +343,7 @@ export default function Point() {
       setPoint(points);
       setloading(false);
       setIsLoading(false);
-      if(searchText !=""){
+      if (searchText != "") {
         filter(searchText)
       }
     } catch (error) { }
@@ -353,12 +355,12 @@ export default function Point() {
       var formData = form.getFieldsValue();
 
       const modifiedFormData = {
-        ...formData, 
+        ...formData,
         nem12PointAdditionalName: formData.name,
-        nem12PointIdentifier:formData.nem12Id,
-        pointId:""
+        nem12PointIdentifier: formData.nem12Id,
+        pointId: ""
       };
-      const { name,nem12Id, ...objectWithoutName } = modifiedFormData
+      const { name, nem12Id, ...objectWithoutName } = modifiedFormData
 
       if (PointsId) {
         const resp = await editSites(PointsId, formData);
@@ -368,7 +370,7 @@ export default function Point() {
           recList: [objectWithoutName]
         };
         const addNewPoint = await postApiDataToAws(body)
-        if (addNewPoint && addNewPoint.message ==="Success") {
+        if (addNewPoint && addNewPoint.message === "Success") {
           message.success('Point added successfully');
         } else {
           message.error('Failed to add Point');
@@ -381,18 +383,18 @@ export default function Point() {
     }
   };
 
-  const onSiteNameChange = async (value) =>  {
+  const onSiteNameChange = async (value) => {
     // Fetch the corresponding armsProjectIds based on the selected siteName
     let siteBase64 = btoa(value).replace(/=+$/, '');
-    var meterDt =null;
-    if(activeButton ==1){
+    var meterDt = null;
+    if (activeButton == 1) {
       meterDt = await getApiDataFromAws("queryType=dropdownElecMeters&dropdownSiteFilter=" + siteBase64)
-    }else if(activeButton ==2){
+    } else if (activeButton == 2) {
       meterDt = await getApiDataFromAws("queryType=dropdownWaterMeters&dropdownSiteFilter=" + siteBase64)
-    }else if(activeButton ==3){
+    } else if (activeButton == 3) {
       meterDt = await getApiDataFromAws("queryType=dropdownGasMeters&dropdownSiteFilter=" + siteBase64)
     }
-   
+
     setMeterOptions(meterDt);
 
     // Clear the value of meterDis in the form
@@ -422,16 +424,16 @@ export default function Point() {
       setPoint(pointData);
       setSearchText(text);
       filter(text, pointData);
-    }else{
+    } else {
       setSearchText(text);
-      filter(text,point);
+      filter(text, point);
     }
   };
   const content = (record) => (
-    <div style={{marginLeft:"10px", backgroundColor:"#0A1016",paddingTop:"10px", marginRight:"10px",paddingLeft:"10px", paddingRight:"10px"}}>
-      <a onClick={() => onEdit(record)} style={{color:"white"}}>EDIT</a>
+    <div style={{ marginLeft: "10px", backgroundColor: "#0A1016", paddingTop: "10px", marginRight: "10px", paddingLeft: "10px", paddingRight: "10px" }}>
+      <a onClick={() => onEdit(record)} style={{ color: "white" }}>EDIT</a>
       <Divider type="horizontal" style={{ margin: "5px" }} />
-      <a onClick={() => onDelete(record.id)} style={{color:"white",display:"none"}}>DELETE</a>
+      <a onClick={() => onDelete(record.id)} style={{ color: "white", display: "none" }}>DELETE</a>
     </div>
   )
 
@@ -455,21 +457,24 @@ export default function Point() {
 
   useEffect(() => {
     const authenticated = isAuthenticated()
-    if(authenticated){
+    if (authenticated) {
       getData(1);
-    }else {
+    } else {
       var userData = userInfo(context.token);
-      if(userData == null){
+      if (userData == null) {
         history.push('/');
-      }else{
+      } else {
         getData(1);
       }
     }
   }, []);
 
-    const handleSelectColumns = (selectedColumns) => {
-      setVisibleColumns(selectedColumns);
-    }
+  const handleSelectColumns = (selectedColumns) => {
+    setVisibleColumns(selectedColumns);
+  }
+  const handleChange = (value) => {
+    console.log(value);
+  };
 
   return (
     <>
@@ -498,20 +503,29 @@ export default function Point() {
             {activeButton === 1 ? "Add New Electric" : activeButton === 2 ? "Add New Water" : "Add New Gas"}
           </button>
         </Col>
-        <Col span={12} style={{ marginBottom: 10, textAlign: 'right' }}> 
-          <Input 
+        <Col span={12} style={{ marginBottom: 10, textAlign: 'right' }}>
+          <Input
             size="small"
             placeholder="search here ..."
             value={searchText}
             onChange={(e) => onChangeText(e.target.value)}
             className="custom-input"
           />
+          <button className="ant-dropdown-link custom-button" style={{ marginLeft: "5px", paddingLeft: "10px", paddingRight: "10px" }} onClick={()=>setvisibleCard(!visibleCard)}>
+          <img src={vector_} alt="vector_png" width={16} height={16}/>
+          </button>
           <SelectColumns columns={columns} onSelectColumns={handleSelectColumns}/>
           <CSVLink data={exportToCSV()} filename={"point.csv"}>
-          <button type="button" className="custom-button">Export to CSV</button>
-              </CSVLink>   
+            <button type="button" className="custom-button">Export to CSV</button>
+          </CSVLink>
         </Col>
       </Row>
+      {visibleCard && <Card className="custom-card1">
+        <div style={{ justifyContent: 'end', display: 'flex' }}>
+          <CloseOutlined style={{ color: "#FFFFFF", fontSize: "15px", cursor: 'pointer' }} onClick={() => setvisibleCard(!visibleCard)} />
+        </div>
+        <FilterColumnsData columns={columns} onSelectColumns={handleSelectColumns} />
+      </Card>}
       <Modal
         style={{ textAlign: "left" }}
         title="Add New Point"
@@ -529,7 +543,7 @@ export default function Point() {
           onFinish={setData}
           style={{ maxWidth: 700 }}
           form={form}
-          //validateMessages={validateMessages}
+        //validateMessages={validateMessages}
         >
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
@@ -557,7 +571,7 @@ export default function Point() {
                     message: 'Please Enter Nem 12 Point Idenfier.',
                   },
                 ]}
-                
+
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -586,13 +600,13 @@ export default function Point() {
                   style={{ width: "100%" }}
                 >
                   {activeButton === 1 ? (
-                      <>
-                        <Select.Option value={"totalenergyactiveimport"}>totalenergyactiveimport</Select.Option>
-                        <Select.Option value={"totalenergyactiveexport"}>totalenergyactiveexport</Select.Option>
-                      </>
-                    ) : activeButton === 2?(
-                      <Select.Option value={"volumewater"}>volumewater</Select.Option>
-                    ):<Select.Option value={"volumegas"}>volumegas</Select.Option>}
+                    <>
+                      <Select.Option value={"totalenergyactiveimport"}>totalenergyactiveimport</Select.Option>
+                      <Select.Option value={"totalenergyactiveexport"}>totalenergyactiveexport</Select.Option>
+                    </>
+                  ) : activeButton === 2 ? (
+                    <Select.Option value={"volumewater"}>volumewater</Select.Option>
+                  ) : <Select.Option value={"volumegas"}>volumegas</Select.Option>}
                 </Select>
               </Form.Item>
             </Col>
@@ -703,14 +717,14 @@ export default function Point() {
             <Row >
               <Col span={20} className="custom-modal-column">
                 <button
-                className="custom-modal-button"
+                  className="custom-modal-button"
                   type=""
                   htmlType="button"
                   onClick={() => onCancelModal()}
                 >
                   Cancel
                 </button>
-                <button type=""  htmlType="submit">
+                <button type="" htmlType="submit">
                   Save
                 </button>
               </Col>
@@ -720,7 +734,7 @@ export default function Point() {
         </Form>
       </Modal>
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}>
-        <ResizableTable total={totalRows} name={"Points"} screenHeight = {screenHeight} site={point} columnsData = {visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} />
+        <ResizableTable total={totalRows} name={"Points"} screenHeight={screenHeight} site={point} columnsData={visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} />
       </Spin>
     </>
   );
