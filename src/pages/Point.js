@@ -1,7 +1,7 @@
 import "reactjs-popup/dist/index.css";
 import React, { useState, useContext } from "react";
 import { Button, Row, Col, Modal, Popover, ConfigProvider, message ,Form, Input, Card ,Table, Radio,Spin, Divider, Select, Tooltip } from "antd";
-import { EllipsisOutlined, CaretDownOutlined, PlusOutlined, CloseOutlined } from "@ant-design/icons";
+import { EllipsisOutlined, InfoCircleOutlined, CloseOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
 import { getApiDataFromAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
 import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
@@ -550,6 +550,7 @@ export default function Point() {
               <Form.Item
                 name={"name"}
                 label="Nem 12 Point Additional Name"
+                tooltip={{ title: 'Provide an additional name or identifier for the NEM (National Electricity Market) 12-point connection, if necessary.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 initialValue=""
                 wrapperCol={{ span: 24 }}
               // rules={[{ required: "" }]}
@@ -564,6 +565,7 @@ export default function Point() {
               <Form.Item
                 name={"nem12Id"}
                 label="Nem 12 Point Idenfier"
+                tooltip={{ title: 'Specify the unique identifier for the NEM 12-point connection related to water usage.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 wrapperCol={{ span: 24 }}
                 rules={[
                   {
@@ -671,6 +673,7 @@ export default function Point() {
               <Form.Item
                 name={"meterDis"}
                 label="Select Meter Dis"
+                tooltip={{ title: 'Choose the meter disposition from a list of available options for gas usage tracking.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
                 rules={[

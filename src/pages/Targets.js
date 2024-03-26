@@ -838,6 +838,7 @@ function Targets() {
               <Form.Item
                 name={"currentRating"}
                 label="Current Rating"
+                tooltip={{ title: 'Enter the current rating or performance level for electricity usage or efficiency.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 wrapperCol={24}
                 rules={[
                   {
@@ -863,6 +864,7 @@ function Targets() {
               <Form.Item
                 name={"targetRating"}
                 label="Target Rating"
+                tooltip={{ title: 'Specify the target rating or goal for water usage efficiency or conservation.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 wrapperCol={24}
                 rules={[
                   {
@@ -954,7 +956,7 @@ function Targets() {
               <Form.Item
                 name={activeButton === 2 ? "targetKl0" : activeButton === 3 ? "targetCum0" : "targetKwh0"}
                 label={activeButton === 2 ? "Lower Performance Target P.A." : activeButton === 3 ? "Lower Performance Target P.A." : "Lower Performance Target P.A."}
-                tooltip={{ title: 'e.g. -0.5 stars NABERS', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                tooltip={{ title: 'Define the lower performance target per annum, such as a reduction in energy usage or efficiency. For example, -0.5 stars NABERS.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 wrapperCol={24}
                 rules={[
                   {
@@ -976,7 +978,7 @@ function Targets() {
               <Form.Item
                 name={activeButton === 2 ? "targetKl1" : activeButton === 3 ? "targetCum1" : "targetKwh1"}
                 label={activeButton === 2 ? "Current Performance Target P.A." : activeButton === 3 ? "Current Performance Target P.A." : "Current Performance Target P.A."}
-                tooltip={{ title: 'e.g. Current NABERS star rating', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                tooltip={{ title: 'Enter the current performance target per annum, reflecting the current efficiency or rating level. For example, the current NABERS star rating. ', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 wrapperCol={24}
                 rules={[
                   {
@@ -1009,7 +1011,7 @@ function Targets() {
               <Form.Item
                 name={activeButton === 2 ? "targetKl2" : activeButton === 3 ? "targetCum2" : "targetKwh2"}
                 label={activeButton === 2 ? "Higher Performance Target P.A." : activeButton === 3 ? "Higher Performance target P.A." : "Higher Performance Target P.A."}
-                tooltip={{ title: 'e.g. +0.5 stars NABERS', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                tooltip={{ title: 'Define the higher performance target per annum, aiming for an improvement in efficiency or rating. For example, +0.5 stars NABERS.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 wrapperCol={24}
                 rules={[
                   {
