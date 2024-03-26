@@ -1,7 +1,7 @@
 import React, { useState, useRef,useEffect, useContext} from "react";
 import { Form, Input, Table, Checkbox,Spin, Divider, Select, Tooltip, 
 Space,Button, Row, Col, Modal, Popover, ConfigProvider, message, DatePicker, Card } from "antd";
-import { EllipsisOutlined ,MailOutlined, CaretDownOutlined, PlusOutlined, CloseOutlined} from "@ant-design/icons";
+import { EllipsisOutlined ,MailOutlined, InfoCircleOutlined, PlusOutlined, CloseOutlined} from "@ant-design/icons";
 import "reactjs-popup/dist/index.css";
 import { getAlertConfList } from "../services/alertConfService";
 import { getApiDataFromAws, postAlertsApiDataToAws, getConfigDataFromAws } from "../services/apis";
@@ -929,6 +929,7 @@ function Alerts() {
               <Form.Item
                 name={"recipientemails"}
                 label="Recipients Emails"
+                tooltip={{ title: 'List the email addresses of individuals who should receive alerts related to this category.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 // labelCol={{ span: 8 }}
                 wrapperCol={{ span: 24 }}
                 rules={[
@@ -954,6 +955,7 @@ function Alerts() {
               <Form.Item
                 name={"erroremails"}
                 label="Error Emails"
+                tooltip={{ title: 'Specify the email addresses to be notified in case of errors or issues.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 // labelCol={{ span: 5 }}
                 wrapperCol={{ span: 24 }}
                 rules={[
@@ -980,6 +982,7 @@ function Alerts() {
               <Form.Item
                 name={"isactive"}
                 label="Is Active"
+                tooltip={{ title: 'Indicate whether the alert system is active or inactive for this parameter.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 // labelCol={{ span: 8 }}
                 wrapperCol={{ span: 24 }}
                 rules={[

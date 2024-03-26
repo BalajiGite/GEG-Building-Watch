@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from "react";
 import { Button, Row, Col, Modal, Popover, ConfigProvider, Card ,Form, Input, Spin, Divider, Select} from "antd";
-import { EllipsisOutlined, CaretDownOutlined, PlusOutlined, CloseOutlined } from "@ant-design/icons";
+import { EllipsisOutlined, CaretDownOutlined, InfoCircleOutlined, CloseOutlined } from "@ant-design/icons";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { AppContext } from "../App";
@@ -591,6 +591,7 @@ function Sites() {
             <Col span={24}>
               <Form.Item name="name"
                 label="Site Name"
+                tooltip={{ title: 'Provide the name of the specific site or location being monitored or assessed.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
                 rules={[
@@ -609,6 +610,7 @@ function Sites() {
               <Form.Item
                 name="area"
                 label="Area"
+                tooltip={{ title: 'Enter the designated area within the site, if applicable.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 rules={[
                   {
                     pattern: /^[0-9]*$/,
@@ -631,6 +633,7 @@ function Sites() {
               <Form.Item
                 name="armsProj"
                 label="Arms Prj"
+                tooltip={{ title: 'Specify the name of the associated ARMS project within the site.	to be removed', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
                 rules={[
@@ -650,6 +653,7 @@ function Sites() {
               <Form.Item
                 name="armsProjectId"
                 label="Arms Proj ID"
+                tooltip={{ title: 'Provide the unique ARMS project ID.	to be removed', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
                 rules={[
@@ -736,6 +740,7 @@ function Sites() {
               <Form.Item
                 name="observesHolidays"
                 label="Select Observe Holidays"
+                tooltip={{ title: 'Choose whether to observe local holidays for scheduling or operational purposes when the local holiay falls on a weekend. Typically True for Offices, False for Shopping Centres.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
                 rules={[
@@ -767,6 +772,7 @@ function Sites() {
               <Form.Item
                 name="regionRef"
                 label="Select Region ID"
+                tooltip={{ title: 'Select the ID that corresponds to the site\'s region from a predefined list.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
                 rules={[
@@ -829,6 +835,7 @@ function Sites() {
               <Form.Item
                 name="geoAddress"
                 label="Geo Address"
+                tooltip={{ title: 'Enter the full geographical address of the site for mapping purposes.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
                 rules={[

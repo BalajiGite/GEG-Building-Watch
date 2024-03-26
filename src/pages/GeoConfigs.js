@@ -481,6 +481,7 @@ function Config() {
                 <Form.Item
                   name={"name"}
                   label="Region Name"
+                  tooltip={{ title: 'Specify the name of the region within the state.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                   // labelCol={{ span: 4 }}
                   wrapperCol={{ span: 24 }}
                   rules={[
@@ -558,6 +559,7 @@ function Config() {
                 <Form.Item
                   name={"name"}
                   label="Level Name"
+                  tooltip={{ title: 'Specify the level within the building or structure, if applicable.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                   // labelCol={{ span: 4 }}
                   wrapperCol={{ span: 24 }}
                   rules={[

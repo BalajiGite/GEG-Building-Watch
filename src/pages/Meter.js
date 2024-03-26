@@ -1,7 +1,7 @@
 import React, { useState ,useEffect, useContext } from "react";
 import { Button, Row, Col, Modal, Popover, ConfigProvider , Card,message,Form, Input,Spin, Divider, Select, Radio} from "antd";
 import "reactjs-popup/dist/index.css";
-import { EllipsisOutlined, CaretDownOutlined, PlusOutlined, CloseOutlined } from "@ant-design/icons";
+import { EllipsisOutlined, CaretDownOutlined, InfoCircleOutlined, CloseOutlined } from "@ant-design/icons";
 import { SelectColumns } from '../components/widgets/SelectedColumns/SelectedColumns';
 import { getApiDataFromAws, postApiDataToAws, getConfigDataFromAws } from "../services/apis";
 import {
@@ -553,6 +553,7 @@ function Meter() {
               <Form.Item
                 name={"name"}
                 label="Meter Additional Name"
+                tooltip={{ title: 'Provide an additional name or descriptor for the electricity meter, if necessary.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
                 rules={[
@@ -706,6 +707,7 @@ function Meter() {
               <Form.Item
                 name={"gegNabersInclusionPercent"}
                 label="Geg Nabers Inclusion Percent"
+                tooltip={{ title: 'Enter the percentage of water usage to be included in NABERS (National Australian Built Environment Rating System) calculations.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 initialValue=""
                 wrapperCol={{ span: 24 }}
                 rules={[
@@ -738,6 +740,7 @@ function Meter() {
               <Form.Item
                 name={"gegNabersExclusionPercent"}
                 label="Geg Nabers Exclusion Percent"
+                tooltip={{ title: ' Enter the percentage of gas usage to be excluded from NABERS calculations.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 initialValue=""
                 wrapperCol={{ span: 24 }}
                 rules={[
@@ -773,6 +776,7 @@ function Meter() {
               <Form.Item
                 name={"help"}
                 label="Help"
+                tooltip={{ title: 'Access help documentation or support for gas meter configurations and settings.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 initialValue=""
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
