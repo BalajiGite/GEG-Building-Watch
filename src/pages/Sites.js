@@ -633,7 +633,7 @@ function Sites() {
               <Form.Item
                 name="armsProj"
                 label="Arms Prj"
-                tooltip={{ title: 'Specify the name of the associated ARMS project within the site.	to be removed', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                //tooltip={{ title: 'Specify the name of the associated ARMS project within the site.	to be removed', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
                 rules={[
@@ -653,7 +653,7 @@ function Sites() {
               <Form.Item
                 name="armsProjectId"
                 label="Arms Proj ID"
-                tooltip={{ title: 'Provide the unique ARMS project ID.	to be removed', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                //tooltip={{ title: 'Provide the unique ARMS project ID.	to be removed', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
                 rules={[

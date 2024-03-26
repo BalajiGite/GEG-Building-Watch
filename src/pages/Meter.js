@@ -553,7 +553,7 @@ function Meter() {
               <Form.Item
                 name={"name"}
                 label="Meter Additional Name"
-                tooltip={{ title: 'Provide an additional name or descriptor for the electricity meter, if necessary.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                tooltip={{ title: 'Provide an additional name or descriptor for the electricity/water/gas meter, if necessary.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
                 rules={[

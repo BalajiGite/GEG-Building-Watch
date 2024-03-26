@@ -838,7 +838,7 @@ function Targets() {
               <Form.Item
                 name={"currentRating"}
                 label="Current Rating"
-                tooltip={{ title: 'Enter the current rating or performance level for electricity usage or efficiency.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                tooltip={{ title: 'Enter the current rating or performance level for electricity/water/gas usage or efficiency.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 wrapperCol={24}
                 rules={[
                   {
@@ -864,7 +864,7 @@ function Targets() {
               <Form.Item
                 name={"targetRating"}
                 label="Target Rating"
-                tooltip={{ title: 'Specify the target rating or goal for water usage efficiency or conservation.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                tooltip={{ title: 'Specify the target rating or goal for electricity/water/gas usage efficiency or conservation.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 wrapperCol={24}
                 rules={[
                   {

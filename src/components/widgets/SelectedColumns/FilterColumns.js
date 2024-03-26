@@ -60,7 +60,7 @@ export const FilterColumnsData = ({ columns, isVisible, onSearch }) => {
     };
 
     const handleClear = () =>{
-        setRows([])
+        setRows([{ id: 1, selectValue: '', compareValue: "equalTo", inputValue: '', condition:'' }])
         onSearch("Reset");
     }
 

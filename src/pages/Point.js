@@ -565,7 +565,7 @@ export default function Point() {
               <Form.Item
                 name={"nem12Id"}
                 label="Nem 12 Point Idenfier"
-                tooltip={{ title: 'Specify the unique identifier for the NEM 12-point connection related to water usage.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                tooltip={{ title: 'Specify the unique identifier for the NEM 12-point connection related to electricity/water/gas usage.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 wrapperCol={{ span: 24 }}
                 rules={[
                   {
@@ -673,7 +673,7 @@ export default function Point() {
               <Form.Item
                 name={"meterDis"}
                 label="Select Meter Dis"
-                tooltip={{ title: 'Choose the meter disposition from a list of available options for gas usage tracking.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                tooltip={{ title: 'Choose the meter disposition from a list of available options for electricity/water/gas usage tracking.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
                 rules={[
