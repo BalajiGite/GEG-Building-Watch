@@ -7,7 +7,7 @@ import {
   Input, Button, Card, Col, Row, Spin,
   Popover, ConfigProvider, Radio, message, Tooltip
 } from "antd";
-import { EllipsisOutlined, CaretDownOutlined, PlusOutlined, CloseOutlined, MinusOutlined } from "@ant-design/icons";
+import { EllipsisOutlined, CaretDownOutlined, PlusOutlined, CloseOutlined, MinusOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import spinnerjiff from "../assets/images/loader.gif";
 import { isAuthenticated, userInfo } from "../services/apis";
 import { useHistory } from 'react-router-dom';
@@ -457,7 +457,7 @@ function Config() {
                 <Form.Item
                   name={"name"}
                   label="State Name"
-                  // labelCol={{ span: 4 }}
+                  tooltip={{ title: 'Enter the abbreviation of the state. For example, NSW for New South Wales.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                   wrapperCol={{ span: 24 }}
                   rules={[
                     {
