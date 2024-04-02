@@ -52,6 +52,16 @@ export const FilterColumnsData = ({ columns, isVisible, onSearch }) => {
             }
         }
 
+        // Check if compareValue is "greaterThan" or "lessThan", then validate inputValue as number
+        const invalidRows = rows.filter(row =>
+            (row.compareValue === 'greaterThan' || row.compareValue === 'lessThan') && isNaN(Number(row.inputValue))
+        );
+
+        if (invalidRows.length > 0) {
+            message.error('Enter a valid number for fields "greater than" or "less than".');
+            return;
+        }
+
         const selectValues = rows.map(row => row.selectValue);
         const inputValues = rows.map(row => row.inputValue);
         const comapareValues = rows.map(row => row.compareValue);
@@ -77,7 +87,7 @@ export const FilterColumnsData = ({ columns, isVisible, onSearch }) => {
                             size="large"
                         >
                             {columns?.map((item, index) => (
-                                <Option key={item.key} value={item.key} style={{ color: "#8E8E8E" }}>
+                                <Option key={item.key} value={item.dataIndex} style={{ color: "#8E8E8E" }}>
                                     {item.title}
                                 </Option>
                             ))}

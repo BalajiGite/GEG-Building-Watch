@@ -328,6 +328,23 @@ function Config() {
               query = query || record[column].toLowerCase().includes(value.toLowerCase()) 
             }
           }
+          else if (condition === "greaterThan") {
+            if (andor === "and") {
+                query === '' ? query = Number(record[column]) > (value) :
+                    query = query && Number(record[column]) > (value)
+            } else {
+                query === '' ? query = Number(record[column]) > (value) :
+                    query = query || Number(record[column]) > (value)
+            }
+          } else if (condition === "lessThan") {
+            if (andor === "and") {
+                query === '' ? query = Number(record[column]) < (value) :
+                    query = query && Number(record[column]) < (value)
+            } else {
+                query === '' ? query = Number(record[column]) < (value) :
+                    query = query || Number(record[column]) < (value)
+            }
+          }
         }
         return query
         
