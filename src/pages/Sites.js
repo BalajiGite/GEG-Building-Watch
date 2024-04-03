@@ -423,6 +423,74 @@ function Sites() {
     }
   };
 
+  const advancedFilterData = (value) =>{
+    if(value === "Reset"){
+      setSite(siteData);
+    }else{
+      console.log(value);
+      let fillColumns = value[0];
+      let fillCondition = value[2];
+      let fillValue = value[1]; 
+      let fillAndOr = value[3];
+      
+      const filtersData = site.filter((record) => {
+        //record["name"].toLowerCase() === "nsw"
+        let query = '';
+        for (let i = 0; i < fillColumns.length; i++) {
+          let column = fillColumns[i];
+          let condition = fillCondition[i]
+          let value = fillValue[i]
+          let andor = i===0?'':fillAndOr[i-1]
+          if(condition === "equalTo"){
+            if(andor === "and"){
+              query == ''? query = record[column] === value:
+              query = query && record[column] === value 
+            }else{
+              query == ''? query = record[column] === value:
+              query = query || record[column] === value 
+            }
+          }else if(condition === "notEqualTo"){
+            if(andor === "and"){
+              query == ''? query = record[column] !== value:
+              query = query && record[column] !== value 
+            }else{
+              query == ''? query = record[column] !== value:
+              query = query || record[column] !== value 
+            }
+          }else if(condition === "includes"){
+            if(andor === "and"){
+              query == ''? query = record[column].toLowerCase().includes(value.toLowerCase()):
+              query = query && record[column].toLowerCase().includes(value.toLowerCase()) 
+            }else{
+              query == ''? query = record[column].toLowerCase().includes(value.toLowerCase()):
+              query = query || record[column].toLowerCase().includes(value.toLowerCase()) 
+            }
+          }
+          else if (condition === "greaterThan") {
+            if (andor === "and") {
+                query === '' ? query = Number(record[column]) > (value) :
+                    query = query && Number(record[column]) > (value)
+            } else {
+                query === '' ? query = Number(record[column]) > (value) :
+                    query = query || Number(record[column]) > (value)
+            }
+          } else if (condition === "lessThan") {
+            if (andor === "and") {
+                query === '' ? query = Number(record[column]) < (value) :
+                    query = query && Number(record[column]) < (value)
+            } else {
+                query === '' ? query = Number(record[column]) < (value) :
+                    query = query || Number(record[column]) < (value)
+            }
+          }
+        }
+        return query
+        
+      });
+      setSite(filtersData);
+    }
+  }
+
   const onOpenModal = () => {
     setOpen(true);
     form.resetFields();
@@ -566,7 +634,7 @@ function Sites() {
         <div style={{ justifyContent: 'end', display: 'flex' }}>
           <CloseOutlined style={{ color: "#FFFFFF", fontSize: "15px", cursor: 'pointer' }} onClick={() => setvisibleCard(!visibleCard)} />
         </div>
-        <FilterColumnsData columns={columns} onSelectColumns={handleSelectColumns} />
+        <FilterColumnsData columns={columns} onSelectColumns={handleSelectColumns} onSearch = {advancedFilterData}/>
       </Card>}
       <Modal
         // className="custom-modale"
