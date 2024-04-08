@@ -226,6 +226,7 @@ function ConsumptionChart({ resData }) {
             text: '',
             align: 'left'
         },
+        
         credits: {
             enabled: false
         },
@@ -284,7 +285,7 @@ function ConsumptionChart({ resData }) {
             },
             tickAmount: 6,
             gridLineDashStyle: 'longdash',
-            allowDecimals: false,
+            allowDecimals: true,
             labels: {
                 //format: '{value:,.0f} ' + resData.uom,
                 formatter: function () {
@@ -303,7 +304,17 @@ function ConsumptionChart({ resData }) {
             gridLineColor: '#8E8E8E4D'
         }],
         tooltip: {
-            shared: true
+            shared: true,
+            formatter: function () {
+                let weekdays = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                let weekdayName = weekdays[isNaN(new Date(this.points[0].key).getDay())?new Date().getDay():new Date(this.points[0].key).getDay()];
+                let  tooltip = '<span style="font-size: 12px">'+this.points[0].key+' (' + weekdayName + ')</span><br/>'
+                debugger;
+                this.points.forEach(function (point) {
+                     tooltip += '<span style="color:' + point.color + '">\u25CF</span> ' + point.series.name + ': <b>' + point.y + ' ' + point.series.userOptions.tooltip.valueSuffix + '</b><br/>';
+                });
+                return tooltip;
+             }
         },
         legend: {
             //layout: 'horizontal',
