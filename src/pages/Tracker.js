@@ -112,9 +112,11 @@ function Sites() {
       } else {
         if(trackerData == "Not Found"){
           message.error('No data available for the selected measures.');
+          setTracker({})
         }else{
           if (trackerData?.reporthaserror == true) {
             message.error('No report available for the selected measures.');
+            setTracker({})
           }else{
             setTracker(trackerData);
             setCurrentStarRatingTarget(trackerData.currentStarRatingTarget)
@@ -169,6 +171,19 @@ function Sites() {
 
   const handleSelectChangeFt = (value) => {
     setSelectedItemFt(value);
+    if(value == "Daily"){
+      const yesterday = moment(moment().subtract(1, 'day').format(DATE_FORMAT), DATE_FORMAT);
+      setStartDate(yesterday);
+      
+    }else if(value == "Monthly"){
+      const firstDayOfPreviousMonth = moment().subtract(1, 'month').startOf('month').format(DATE_FORMAT);
+      setStartDate(firstDayOfPreviousMonth);
+    }else if(value == "Weekly"){
+      const today = moment();
+      const previousMonday = today.clone().startOf('isoWeek').subtract(1, 'week').format(DATE_FORMAT);
+      setStartDate(previousMonday);
+      console.log(previousMonday)
+    }
     //checkSelectedValues(value)
   };
 
@@ -258,6 +273,7 @@ function Sites() {
             disabledDate={(current) => disabledDate(current, selectedItemFt)} // Initial disabled dates based on week picker
             format={DATE_FORMAT}
             defaultValue={moment(moment().subtract(1, 'day').format(DATE_FORMAT), DATE_FORMAT)}
+            value={startDate ? moment(startDate, DATE_FORMAT) : null}
             style={{ marginRight: '10px' }}
             onChange={handleStartDateChange}
           />
