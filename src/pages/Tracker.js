@@ -70,9 +70,12 @@ function Sites() {
     setSiteData(sitesList);
 
     const projectList = await getApiDataFromAws("queryType=userProjList");
-    setProjectData(projectList);
+    const allProj = { "id": "allProjects", "name": "All Projects" }
+    const projs = [...projectList, allProj]
+    setProjectData(projs);
 
 
+    setSelectedItemProj("allProjects")
     setSelectedItem(sitesList[0].name); // Set first site as default
     setSelectedItemUt('elec'); // Set utility type as 'elec' by default
     setSelectedItemFt('Daily'); // Set frequency as 'Daily' by default
@@ -162,9 +165,15 @@ function Sites() {
 
   const handleSelectChangeProj = async (value) => {
     setSelectedItemProj(value);
-    const sitesList = await getApiDataFromAws("queryType=dropdownSite&dropdownProjFilter="+value);
-    setSiteData(sitesList);
-    setSelectedItem(sitesList[0].name);
+    if(value ==="allProjects"){
+      const sitesList = await getApiDataFromAws("queryType=dropdownSite");
+      setSiteData(sitesList);
+      setSelectedItem(sitesList[0].name);
+    }else{
+      const sitesList = await getApiDataFromAws("queryType=dropdownSite&dropdownProjFilter="+value);
+      setSiteData(sitesList);
+      setSelectedItem(sitesList[0].name);
+    }
   };
 
   const handleSelectChange = (value) => {
