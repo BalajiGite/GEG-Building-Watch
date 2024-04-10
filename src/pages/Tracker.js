@@ -36,6 +36,7 @@ const layout = {
 const DATE_FORMAT = 'YYYY-MM-DD';
 function Sites() {
   const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItemProj, setSelectedItemProj] = useState(null);
   const [currentStarRatingTarget, setCurrentStarRatingTarget] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [selectedItemUt, setSelectedItemUt] = useState(null);
@@ -43,6 +44,7 @@ function Sites() {
   const [clientName, setClientName] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [siteData, setSiteData] = useState({});
+  const [projectData, setProjectData] = useState({});
   const [loading, setloading] = useState(true);
   const [tracker, setTracker] = useState({});
   const context = useContext(AppContext);
@@ -66,6 +68,10 @@ function Sites() {
     setIsLoading(true);
     const sitesList = await getApiDataFromAws("queryType=dropdownSite");
     setSiteData(sitesList);
+
+    const projectList = await getApiDataFromAws("queryType=userProjList");
+    setProjectData(projectList);
+
 
     setSelectedItem(sitesList[0].name); // Set first site as default
     setSelectedItemUt('elec'); // Set utility type as 'elec' by default
@@ -154,6 +160,12 @@ function Sites() {
     }
   }, [selectedItem, selectedItemUt, startDate, selectedItemFt]);
 
+  const handleSelectChangeProj = async (value) => {
+    setSelectedItemProj(value);
+    const sitesList = await getApiDataFromAws("queryType=dropdownSite&dropdownProjFilter="+value);
+    setSiteData(sitesList);
+    setSelectedItem(sitesList[0].name);
+  };
 
   const handleSelectChange = (value) => {
     setSelectedItem(value);
@@ -228,7 +240,21 @@ function Sites() {
     <>
       {" "}
       <Row>
-        <Col span={20}>
+        <Col span={22}>
+          <Select
+            placeholder="Select Project"
+            value={selectedItemProj}
+            onChange={handleSelectChangeProj}
+            size="large"
+            style={{ marginRight: '10px', minWidth: '200px' }}
+          >
+            {projectData?.length > 0 &&
+              projectData.map((item, index) => (
+                <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
+              ))
+            }
+
+          </Select>
           <Select
             placeholder="Select Site"
             value={selectedItem}
@@ -278,7 +304,7 @@ function Sites() {
             onChange={handleStartDateChange}
           />
         </Col>
-        <Col span={4} style={{ marginBottom: 10, textAlign: 'right' }}>
+        <Col span={2} style={{ marginBottom: 10, textAlign: 'right' }}>
           <Tooltip placement="leftBottom" title={
              <div>
              <p style={{ fontSize: '16px', color:'#c5c5c5', fontWeight: 'bold', marginBottom: '8px' }}>Disclaimer:</p>
