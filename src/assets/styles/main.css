@@ -9,6 +9,31 @@ body {
   font-family: 'Inter', Arial, sans-serif;
 }
 
+.custom_bg_unAuth{
+  background: rgba(134, 134, 134, 0.10);
+  backdrop-filter: blur(7.5px);
+  border: 1px solid rgba(17, 0, 0, 0.30)
+}
+
+.text8e8e{
+  color: #8E8E8E;
+  text-align: center;
+  font-family: 'Inter';
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  }
+
+  .textc5c5{
+    color: #C5C5C5;
+    font-family: 'Inter';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+
 /* .custom-select{
   background-color: #0A1016;
  color: #C5C5C5;
@@ -3956,6 +3981,16 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile .header-
 
 .rate-stars:hover {
   color: rgb(171, 162, 162) !important;
+}
+
+.unauthorised-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cart-container {
+  margin-top: 20px; /* Adjust margin as needed */
 }
 
 .custom-modal-column {

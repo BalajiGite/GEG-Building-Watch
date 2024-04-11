@@ -4,7 +4,7 @@ import { Spin, Divider, Select } from "antd";
 import { useLocation, useHistory } from 'react-router-dom';
 import { AppContext } from "../../App";
 import spinnerjiff from "../../assets/images/loader.gif";
-import { login, setupTokens } from '../../services/apis';
+import { login, setupTokens, validateAuth } from '../../services/apis';
 
 const Callback = () => {
   const location = useLocation();
@@ -16,10 +16,17 @@ const Callback = () => {
       try {
         const callbackCode = new URLSearchParams(location.search).get('code');
         const awsTokens = await login(callbackCode);
-        setupTokens(awsTokens)
-        context.setToken(awsTokens.id_token);
-        context.setRefreshToken(awsTokens.refresh_token)
-        history.push('/Tracker');
+
+        const validateUser = await validateAuth(awsTokens.id_token)
+        if(validateUser.isTokenValid){
+          setupTokens(awsTokens)
+          context.setToken(awsTokens.id_token);
+          context.setRefreshToken(awsTokens.refresh_token)
+          history.push('/Tracker');
+        }else{
+          history.push("/UnAuth")
+        }
+       
       } catch (error) {
         console.error('Error during login:', error);
       }

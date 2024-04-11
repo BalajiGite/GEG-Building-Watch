@@ -21,6 +21,7 @@ import Tracker from "./pages/Tracker";
 import BuildingPerformance from "./pages/BuildingPerformance";
 import React, { useState } from "react";
 import Report from "./pages/report/Report";
+import UnAuth from './components/layout/UnAuth';
 
 export const AppContext = React.createContext();
 function App() {
@@ -55,8 +56,9 @@ function App() {
             <Route path="/sign-up" exact component={SignUp} />
             <Route path="/sign-in" exact component={SignIn} />
             <Route path='/' exact component={Login} />
-            <Main>
+            <Route path='/UnAuth' exact component={UnAuth} />
             <Route path="/callback" exact component={callback} /> 
+            <Main>
               <Route exact path="/dashboard" component={Home} />
               <Route exact path="/sites" component={Sites} />
               <Route exact path="/projects" component={Projects} />

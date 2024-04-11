@@ -5,6 +5,7 @@ const POST_Alerts_API_URL = `https://kiln7uoo76.execute-api.ap-southeast-2.amazo
 const CONFIG_URL = `https://ooq5mqxlu8.execute-api.ap-southeast-2.amazonaws.com/default/neptuneViewerApis?queryType=viewerConfig`
 const MP_READINGS_URL = `https://2uwa6zvw9a.execute-api.ap-southeast-2.amazonaws.com/default/generateSiteConsumptionsForView`
 const COMPUTE_PROFILE_URL = 'https://yn6x0486e6.execute-api.ap-southeast-2.amazonaws.com/default/generateSiteUtilityProfile?'
+const AUTH_URL = 'https://df6no14ahf.execute-api.ap-southeast-2.amazonaws.com/default/validateJwtTokenAndGetUserWidgetAccess'
 
 var localToken = "";
 const decodeIdToken = (token) => {
@@ -147,6 +148,27 @@ export const getConfigDataFromAws = async (item) => {
         return data;
     } catch (error) {
         return console.error('Error fetching data:', error);
+    }
+}
+
+export const validateAuth = async (token) => {
+    try {
+        try {
+            const headers = {
+                'Authorization': token,
+                'Content-Type': 'application/json',
+                'x-api-key': 'rAQSMoSRmE3fCPvbe6q0Q7z0UbDh9qJh4tXFLs13'
+            };
+            const response = await axios.get(AUTH_URL, {headers});
+            console.log(response)
+            const data = response.data;
+            return data;
+        } catch (error) {
+            return {isTokenValid: false};
+             console.error('Error fetching data:', error);    
+        }
+    }catch(error){
+
     }
 }
 
