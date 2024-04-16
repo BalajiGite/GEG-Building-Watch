@@ -13,7 +13,8 @@ import tracker from "../../assets/images/sidebarSVG/tracker.svg";
 import { AppContext } from "../../App";
 function Sidenav({ color }) {
   const context = useContext(AppContext);
-
+  const isPolicyExist = context.isPolicyExist;
+  const isWidgetAccessFilter = context.isWidgetAccessFilter;
   const { pathname } = useLocation();
   const page = pathname.replace("/", "");
   const dark = "#454545";
@@ -49,12 +50,13 @@ function Sidenav({ color }) {
       <Divider className="custom-divider"/>
       <div className="menu-wrapper">
         <Menu theme="light" mode="inline">
-          <Menu.Item className="menu-item-header" key="8">
-            <span className ="ant-menu-item-text">
-              Monitoring
-            </span>
-          </Menu.Item>
-          <Menu.Item key="10">
+          {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("tracker")? 
+            <Menu.Item className="menu-item-header" key="8">
+              <span className ="ant-menu-item-text">
+                Monitoring
+              </span>
+            </Menu.Item>:""}
+          {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("tracker")?<Menu.Item key="10">
             <NavLink to="/tracker">
             <span className="icon">
                 <img src={tracker} alt="trackerIcon" />
@@ -63,8 +65,8 @@ function Sidenav({ color }) {
                 Tracker
               </span>
             </NavLink>
-          </Menu.Item>
-          <Menu.Item key="9">
+          </Menu.Item>:""}
+          {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("meterReadings")?<Menu.Item key="9">
             <NavLink to="/pointsReadings">
             <span className="icon">
                 <img src={mpReadings} alt="profieIcon" />
@@ -73,43 +75,14 @@ function Sidenav({ color }) {
               Meter Readings
               </span>
             </NavLink>
-          </Menu.Item>
+          </Menu.Item>:""}
           <Divider className="custom-divider" />
-          <Menu.Item className="menu-item-header" key="0">
+          {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("GeoConfigs")?<Menu.Item className="menu-item-header" key="0">
             <span className ="ant-menu-item-text">
               Configuration
             </span>
-          </Menu.Item>
-          {/*
-          <Menu.Item key="1">
-            <NavLink to="/dashboard">
-              <span
-                className="icon"
-                style={{
-                  background: page === "dashboard" ? color : "",
-                }}
-              >
-                {dashboard}
-              </span>
-
-              <span
-                style={{
-                  color:
-                    (context.backgroundColor === dark) & (page === "dashboard")
-                      ? "black"
-                      : (context.backgroundColor === dark) &
-                        (page !== "dashboard")
-                      ? "white"
-                      : "black",
-                }}
-                className="label"
-              >
-                Dashboard
-              </span>
-            </NavLink>
-          </Menu.Item>
-          */}
-          <Menu.Item key="5">
+          </Menu.Item>:""}
+          {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("GeoConfigs")?<Menu.Item key="5">
             <NavLink to="/GeoConfigs">
             <span className="icon">
                 <img src={configIcon} alt="configIcon" />
@@ -118,20 +91,8 @@ function Sidenav({ color }) {
                 Location
               </span>
             </NavLink>
-          </Menu.Item>
-          {/** 
-          <Menu.Item key="2">
-            <NavLink to="/sites">
-              <span className="icon">
-                <img src={sitesIcons} alt="sites_svg icons" />
-              </span>
-              <span className ="ant-menu-item-text">
-                Sites
-              </span>
-            </NavLink>
-          </Menu.Item>
-          */}
-          <Menu.Item key="3">
+          </Menu.Item>:""}
+          {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("meter")?<Menu.Item key="3">
             <NavLink to="/meter">
             <span className="icon">
                 <img src={meterIcon} alt="meterIcon" />
@@ -140,9 +101,9 @@ function Sidenav({ color }) {
                 Meters
               </span>
             </NavLink>
-          </Menu.Item>
+          </Menu.Item>:""}
 
-          <Menu.Item key="4">
+          {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("point")?<Menu.Item key="4">
             <NavLink to="/point">
             <span className="icon">
                 <img src={pointIcon} alt="pointIcon" />
@@ -151,8 +112,8 @@ function Sidenav({ color }) {
                 Points
               </span>
             </NavLink>
-          </Menu.Item>
-          <Menu.Item key="7">
+          </Menu.Item>:""}
+          {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("targets")?<Menu.Item key="7">
             <NavLink to="/targets">
             <span className="icon">
                 <img src={targetIcon} alt="profieIcon" />
@@ -161,8 +122,8 @@ function Sidenav({ color }) {
                 Targets
               </span>
             </NavLink>
-          </Menu.Item>
-          <Menu.Item key="6">
+          </Menu.Item>:""}
+          {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("alert")?<Menu.Item key="6">
             <NavLink to="/alert">
             <span className="icon">
                 <img src={alertsIcon} alt="alertIcon" />
@@ -171,113 +132,8 @@ function Sidenav({ color }) {
                 Alerts
               </span>
             </NavLink>
-          </Menu.Item>
+          </Menu.Item>:""}
           <Divider className="custom-divider"/>
-          {/* <Menu.Item key="5">
-            <NavLink to="/projects">
-              <span
-                className="icon"
-                style={{
-                  background: page === "projects" ? color : "",
-                }}
-              >
-                {projects}
-              </span>
-              <span
-                style={{
-                  color:
-                    (context.backgroundColor === dark) & (page === "projects")
-                      ? "black"
-                      : (context.backgroundColor === dark) & (page !== "projects")
-                      ? "white"
-                      : "black",
-                }}
-                className="label"
-              >
-                Projects
-              </span>
-            </NavLink>
-            </Menu.Item> */}
-          {/**
-          <Menu.Item key="5">
-            <NavLink to="/buildingPerformance">
-              <span
-                className="icon"
-                style={{
-                  background: page === "buildingPerformance" ? color : "",
-                }}
-              >
-                {buildings}
-              </span>
-              <span
-                style={{
-                  color:
-                    (context.backgroundColor === dark) &
-                    (page === "buildingPerformance")
-                      ? "black"
-                      : (context.backgroundColor === dark) &
-                        (page !== "buildingPerformance")
-                      ? "white"
-                      : "black",
-                }}
-                className="label"
-              >
-                Building Performance
-              </span>
-            </NavLink>
-          </Menu.Item>
-          */}
-
-          {/** 
-          <Menu.Item key="7">
-            <NavLink to="/report">
-              <span
-                className="icon"
-                style={{
-                  background: page === "report" ? color : "",
-                }}
-              >
-                {report}
-              </span>
-              <span
-                style={{
-                  color:
-                    (context.backgroundColor === dark) & (page === "report")
-                      ? "black"
-                      : (context.backgroundColor === dark) & (page !== "report")
-                      ? "white"
-                      : "black",
-                }}
-              >
-                Report
-              </span>
-            </NavLink>
-          </Menu.Item>
-          */}
-          {/*
-          <Menu.Item className="menu-item-header" key="8">
-            Account Pages
-          </Menu.Item>
-
-          <Menu.Item key="10">
-            <NavLink to="/sign-in">
-              <span className="icon">{signin}</span>
-              <span
-                style={{
-                  color: context.backgroundColor === dark ? "white" : "black",
-                }}
-                className="label"
-              >
-                Sign In
-              </span>
-            </NavLink>
-          </Menu.Item>
-          <Menu.Item key="11">
-            {/* <NavLink to="/sign-up">
-              <span className="icon">{signup}</span>
-              <span className="label">Sign Up</span>
-            </NavLink> //}
-              </Menu.Item> */}
         </Menu>
       </div>
     </>

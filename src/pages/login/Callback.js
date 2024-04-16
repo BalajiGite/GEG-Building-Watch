@@ -18,10 +18,13 @@ const Callback = () => {
         const awsTokens = await login(callbackCode);
 
         const validateUser = await validateAuth(awsTokens.id_token)
+        //console.log(validateUser)
         if(validateUser.isTokenValid){
           setupTokens(awsTokens)
           context.setToken(awsTokens.id_token);
           context.setRefreshToken(awsTokens.refresh_token)
+          context.setIsPolicyExist(validateUser.userPolicyExists);
+          context.setIsWidgetAccessFilter(JSON.parse(validateUser.widgetAccessFilter.replace(/'/g, '"')));
           history.push('/Tracker');
         }else{
           history.push("/UnAuth")

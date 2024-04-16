@@ -243,6 +243,8 @@ export const login = async (code) => {
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('expires_in');
+    localStorage.removeItem("isPolicyExist");
+    localStorage.removeItem("isWidgetAccessFilter");
   }
   
   export const setupTokens = async(awsTokens)=>{

@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { Switch, Route, Redirect, useHistory } from "react-router-dom";
 import Home from "./pages/Home";
 import Sites from "./pages/Sites";
@@ -19,9 +20,9 @@ import Targets from "./pages/Targets";
 import PointsReadings from "./pages/PointsReadings";
 import Tracker from "./pages/Tracker";
 import BuildingPerformance from "./pages/BuildingPerformance";
-import React, { useState } from "react";
 import Report from "./pages/report/Report";
 import UnAuth from './components/layout/UnAuth';
+import { validateAuth } from "./services/apis";
 
 export const AppContext = React.createContext();
 function App() {
@@ -33,6 +34,20 @@ function App() {
   const [backgroundColor, setBackgroundColor] = useState("#0A1016");
   const [token, setToken] = useState({});
   const [refreshToken, setRefreshToken] = useState({});
+
+  const [isPolicyExist, setIsPolicyExist] = useState(() => {
+    const storedPolicyExist = localStorage.getItem("isPolicyExist");
+    return storedPolicyExist ? storedPolicyExist : false;
+  });
+  const [isWidgetAccessFilter, setIsWidgetAccessFilter] = useState(() => {
+    const storedWidgetAccessFilter = localStorage.getItem("isWidgetAccessFilter");
+    return storedWidgetAccessFilter ? storedWidgetAccessFilter : "";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("isPolicyExist", isPolicyExist);
+    localStorage.setItem("isWidgetAccessFilter", isWidgetAccessFilter);
+  }, [isPolicyExist, isWidgetAccessFilter]);
   
   return (
     <>
@@ -48,7 +63,11 @@ function App() {
           setToken,
           token,
           refreshToken,
-          setRefreshToken
+          setRefreshToken,
+          isPolicyExist,
+          setIsPolicyExist,
+          isWidgetAccessFilter,
+          setIsWidgetAccessFilter
         }}
       >
         <div className="App">
@@ -59,22 +78,18 @@ function App() {
             <Route path='/UnAuth' exact component={UnAuth} />
             <Route path="/callback" exact component={callback} /> 
             <Main>
-              <Route exact path="/dashboard" component={Home} />
-              <Route exact path="/sites" component={Sites} />
-              <Route exact path="/projects" component={Projects} />
-              <Route
-                exact
-                path="/buildingPerformance"
-                component={BuildingPerformance}
-              />
-              <Route exact path="/meter" component={Meter} />
-              <Route exact path="/point" component={Point} />
-              <Route exact path="/alert" component={Alert} />
-              <Route exact path="/GeoConfigs" component={Config} />
-              <Route exact path="/targets" component={Targets}/>
-              <Route exact path="/pointsReadings" component={PointsReadings}/>
-              <Route exact path="/tracker" component={Tracker} /> 
-              <Route exact path="/report" component={Report} />             
+              {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("dashboard")? <Route exact path="/dashboard" component={Home} />:""}
+              {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("sites") ? <Route exact path="/sites" component={Sites} />:""}
+              {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("projects") ? <Route exact path="/projects" component={Projects} />:""}
+              {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("buildingPerformance") ? <Route exact path="/buildingPerformance" component={BuildingPerformance} />:""}
+              {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("meter") ?<Route exact path="/meter" component={Meter} />:""}
+              {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("point") ?<Route exact path="/point" component={Point} />:""}
+              {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("alert") ? <Route exact path="/alert" component={Alert} />:""}
+              {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("GeoConfigs") ?<Route exact path="/GeoConfigs" component={Config} />:""}
+              {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("targets") ?<Route exact path="/targets" component={Targets}/>:""}
+              {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("meterReadings") ?<Route exact path="/pointsReadings" component={PointsReadings}/>:""}
+              {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("tracker") ?<Route exact path="/tracker" component={Tracker} /> : ""}
+              {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("report") ?<Route exact path="/report" component={Report} /> :""}            
             </Main>
           </Switch>
         </div>

@@ -31,6 +31,8 @@ const screenHeight = window.innerHeight-310;
 function Sites() {
   const [searchText, setSearchText] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
+  const [projectData, setProjectData] = useState({});
+  const [selectedItemProj, setSelectedItemProj] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selectedItemUt, setSelectedItemUt] = useState(null);
@@ -101,6 +103,12 @@ function Sites() {
   const loadSiteData = async() =>{
     const sitesList = await getApiDataFromAws("queryType=dropdownSite");
     setSiteData(sitesList);
+
+    const projectList = await getApiDataFromAws("queryType=userProjList");
+    const allProj = { "id": "allProjects", "name": "All Projects" }
+    const projs = [...projectList, allProj]
+    setProjectData(projs);
+
   }
 
   const getData = async () => {
@@ -199,6 +207,19 @@ function Sites() {
     //checkSelectedValues(date)
   };
 
+  const handleSelectChangeProj = async (value) => {
+    setSelectedItemProj(value);
+    if(value ==="allProjects"){
+      const sitesList = await getApiDataFromAws("queryType=dropdownSite");
+      setSiteData(sitesList);
+      setSelectedItem(sitesList[0].name);
+    }else{
+      const sitesList = await getApiDataFromAws("queryType=dropdownSite&dropdownProjFilter="+value);
+      setSiteData(sitesList);
+      setSelectedItem(sitesList[0].name);
+    }
+  };
+
 
   const exportToCSV = () => {
     const csvData = mpReadings.map(item => ({
@@ -249,6 +270,20 @@ function Sites() {
       <Row>
         <Col span={20}>
           <Select
+            placeholder="Select Project"
+            value={selectedItemProj}
+            onChange={handleSelectChangeProj}
+            size="large"
+            style={{ marginRight: '10px', minWidth: '200px' }}
+          >
+            {projectData?.length > 0 &&
+              projectData.map((item, index) => (
+                <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
+              ))
+            }
+
+          </Select>
+          <Select
             placeholder="Select Site"
             value={selectedItem}
             onChange={handleSelectChange}
@@ -290,7 +325,7 @@ function Sites() {
         </Col>
         <Col span={4} style={{ marginBottom: 10, textAlign: 'right'  }}>
           <CSVLink data={exportToCSV()} filename={"meterReadings.csv"}>
-          <button  className="custom-button"style={{ marginTop: '10px' }}>Export to CSV</button>
+          <button  className="custom-button">Export to CSV</button>
               </CSVLink>      
           </Col>
       </Row>
