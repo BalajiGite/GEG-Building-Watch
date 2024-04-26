@@ -40,13 +40,13 @@ function App() {
     return storedPolicyExist ? storedPolicyExist : false;
   });
   const [isWidgetAccessFilter, setIsWidgetAccessFilter] = useState(() => {
-    const storedWidgetAccessFilter = localStorage.getItem("isWidgetAccessFilter");
+    const storedWidgetAccessFilter = JSON.parse(localStorage.getItem("isWidgetAccessFilter"));
     return storedWidgetAccessFilter ? storedWidgetAccessFilter : "";
   });
 
   useEffect(() => {
     localStorage.setItem("isPolicyExist", isPolicyExist);
-    localStorage.setItem("isWidgetAccessFilter", isWidgetAccessFilter);
+    localStorage.setItem("isWidgetAccessFilter", JSON.stringify(isWidgetAccessFilter));
   }, [isPolicyExist, isWidgetAccessFilter]);
   
   return (
