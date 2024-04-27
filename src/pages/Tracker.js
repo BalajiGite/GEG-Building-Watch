@@ -232,8 +232,10 @@ function Sites() {
     } else {
       var userData = userInfo(context.token);
       if (userData == null) {
-        history.push('/');
+        console.log("its coming here userData == null")
+        history.push('/');    
       } else {
+        console.log("its coming here")
         loadSiteData();
       }
     }

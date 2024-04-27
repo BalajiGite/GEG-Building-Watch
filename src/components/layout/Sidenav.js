@@ -76,7 +76,11 @@ function Sidenav({ color }) {
               </span>
             </NavLink>
           </Menu.Item>:""}
-          <Divider className="custom-divider" />
+          {(isWidgetAccessFilter.hasOwnProperty("GeoConfigs") ||
+           isWidgetAccessFilter.hasOwnProperty("meter") || isWidgetAccessFilter.hasOwnProperty("point")
+           || isWidgetAccessFilter.hasOwnProperty("targets") || isWidgetAccessFilter.hasOwnProperty("alert"))?
+            <Divider className="custom-divider" />:""
+          }
           {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("GeoConfigs")?<Menu.Item className="menu-item-header" key="0">
             <span className ="ant-menu-item-text">
               Configuration

@@ -14,19 +14,22 @@ const decodeIdToken = (token) => {
     const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
     return JSON.parse(jsonPayload);
 };
-export const isAuthenticated = (tokenData=false) =>{
+export const isAuthenticated = async (tokenData=false) =>{
     var decodedToken = null;
     var isValidToken = false;
     try {
-
+        console.log("Inside is Authentication")
         if(localStorage.getItem('jwtToken') !=null){
             decodedToken = decodeIdToken(localStorage.getItem('jwtToken'));
+            //console.log("decodedToken" +  decodeIdToken)
             const date = new Date(decodedToken.exp * 1000); 
             date.setMinutes(date.getMinutes() - 15);
             if(date <= new Date()){
-                refreshToken()
+                //console.log("inside Refresh token" +  date + "new date" + new Date())
+                isValidToken = await refreshToken()
+            }else{
+                isValidToken = true;
             }
-            isValidToken = true;
         }
         //console.log('Decoded Token:', decodedToken);
     } catch (error) {
@@ -35,6 +38,7 @@ export const isAuthenticated = (tokenData=false) =>{
     if(tokenData){
         return decodedToken;
     }
+    console.log("isValidToken")
     return isValidToken;
 }
 
@@ -209,6 +213,7 @@ export const login = async (code) => {
   export const refreshToken = async () => {
     try {
 
+        console.log("refreshToken:" + localStorage.getItem('refreshToken'))
         if (localStorage.getItem('refreshToken') === null || localStorage.getItem('refreshToken') === "undefined") {
            handleSignOut()
         }
@@ -232,10 +237,12 @@ export const login = async (code) => {
       // Handle the response, which may contain the JWT token.
       const tokensData = response.data;
       setupTokens(tokensData)
-      return tokensData;
+      console.log("tokensData:" + tokensData)
+      return true;
     } catch (error) {
       // Handle errors
       console.error('Errorupdating id_token:', error);
+      return false
     }
   };
 

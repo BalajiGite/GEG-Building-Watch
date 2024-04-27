@@ -87,7 +87,7 @@ function BaseLoadPeakLoad({ resData }) {
                let weekdays = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                let weekdayName = weekdays[new Date(this.points[0].key).getDay()];
                let  tooltip = '<span style="font-size: 12px">'+this.points[0].key+' (' + weekdayName + ')</span><br/>'
-               debugger;
+               //debugger;
                this.points.forEach(function (point) {
                     tooltip += '<span style="color:' + point.color + '">\u25CF</span> ' + point.series.name + ': <b>' + point.y + ' ' + point.series.userOptions.tooltip.valueSuffix + '</b><br/>';
                });
