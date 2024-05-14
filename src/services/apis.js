@@ -24,11 +24,14 @@ export const isAuthenticated = async (tokenData=false) =>{
             //console.log("decodedToken" +  decodeIdToken)
             const date = new Date(decodedToken.exp * 1000); 
             date.setMinutes(date.getMinutes() - 15);
-            if(date <= new Date()){
-                //console.log("inside Refresh token" +  date + "new date" + new Date())
+            //console.log("inside Refresh token" +  date + "new date" + new Date())
+            if(date < new Date()){
+                console.log("inside Refresh token" +  date + "new date" + new Date())
                 isValidToken = await refreshToken()
             }else{
+
                 isValidToken = true;
+                onsole.log("Refresh token not called" +  date + "new date" + new Date())
             }
         }
         //console.log('Decoded Token:', decodedToken);
