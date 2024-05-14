@@ -31,7 +31,7 @@ export const isAuthenticated = async (tokenData=false) =>{
             }else{
 
                 isValidToken = true;
-                onsole.log("Refresh token not called" +  date + "new date" + new Date())
+                console.log("Refresh token not called" +  date + "new date" + new Date())
             }
         }
         //console.log('Decoded Token:', decodedToken);
