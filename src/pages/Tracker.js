@@ -35,6 +35,7 @@ const layout = {
 
 const DATE_FORMAT = 'YYYY-MM-DD';
 function Sites() {
+
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedItemProj, setSelectedItemProj] = useState(null);
   const [currentStarRatingTarget, setCurrentStarRatingTarget] = useState(null);
@@ -226,20 +227,24 @@ function Sites() {
 
 
   useEffect(() => {
-    const authenticated = isAuthenticated()
-    if (authenticated) {
-      loadSiteData();
-    } else {
-      var userData = userInfo(context.token);
-      if (userData == null) {
-        console.log("its coming here userData == null")
-        history.push('/');    
-      } else {
-        console.log("its coming here")
+    const checkAuthentication = async () => {
+      const authenticated = await isAuthenticated();
+      if (authenticated) {
         loadSiteData();
+      } else {
+        var userData = userInfo(context.token);
+        if (userData == null) {
+          console.log("its coming here userData == null");
+          history.push('/');    
+        } else {
+          console.log("its coming here");
+          loadSiteData();
+        }
       }
-    }
-  }, []);
+    };
+
+    checkAuthentication();
+  }, [context.token]);
 
   useEffect(() => {
     // Do something when tracker changes, maybe fetch more data or update some UI

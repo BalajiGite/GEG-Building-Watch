@@ -66,7 +66,7 @@ const content = (
         <div style={{ justifyContent: "center", display: "flex" }}>
           <img src={BPM} alt="BPM_svg" />
         </div>
-        <p >BPM</p>
+        <p ><a style={{color:"#c5c5c5"}} href={"https://bpm.verdeos.com"}>BPM</a></p>
       </Col>
       <Col>
         <div style={{ justifyContent: "center", display: "flex" }}>

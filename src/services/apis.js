@@ -14,36 +14,35 @@ const decodeIdToken = (token) => {
     const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
     return JSON.parse(jsonPayload);
 };
-export const isAuthenticated = async (tokenData=false) =>{
+
+export const isAuthenticated = async (tokenData = false) => {
     var decodedToken = null;
     var isValidToken = false;
     try {
-        console.log("Inside is Authentication")
-        if(localStorage.getItem('jwtToken') !=null){
-            decodedToken = decodeIdToken(localStorage.getItem('jwtToken'));
-            //console.log("decodedToken" +  decodeIdToken)
-            const date = new Date(decodedToken.exp * 1000); 
+        console.log("Inside is Authentication");
+        const jwtToken = localStorage.getItem('jwtToken');
+        if (jwtToken != null) {
+            decodedToken = decodeIdToken(jwtToken);
+            const date = new Date(decodedToken.exp * 1000);
             date.setMinutes(date.getMinutes() - 15);
-            //console.log("inside Refresh token" +  date + "new date" + new Date())
-            if(date < new Date()){
-                console.log("inside Refresh token" +  date + "new date" + new Date())
-                isValidToken = await refreshToken()
-            }else{
-
+            if (date < new Date()) {
+                console.log("inside Refresh token" + date + "new date" + new Date());
+                isValidToken = await refreshToken();
+            } else {
                 isValidToken = true;
-                console.log("Refresh token not called" +  date + "new date" + new Date())
+                console.log("Refresh token not called" + date + "new date" + new Date());
             }
         }
-        //console.log('Decoded Token:', decodedToken);
     } catch (error) {
         console.error('Error decoding token:', error.message);
     }
-    if(tokenData){
+    if (tokenData) {
         return decodedToken;
     }
-    console.log("isValidToken")
+    //console.log("isValidToken: " + isValidToken);
     return isValidToken;
 }
+
 
 export const userInfo = (token) =>{
     var decodedToken = null;
@@ -61,6 +60,9 @@ export const userInfo = (token) =>{
 
 export const getApiDataFromAws = async (item) => {
     try {
+        //console.log("local storage: "+localStorage.getItem('jwtToken') )
+        //console.log("local token: "+localToken )
+        //console.log("Tokens Data:" + localStorage.getItem('jwtToken') == null?localToken:localStorage.getItem('jwtToken'))
         const headers = {
             'Authorization': localStorage.getItem('jwtToken') == null?localToken:localStorage.getItem('jwtToken'),
         };
@@ -89,6 +91,7 @@ export const getRecompueteProfile = async (item) => {
   
 export const postApiDataToAws = async (body) => {
     try {
+        //console.log("My jwtToken" + localStorage.getItem('jwtToken') == null?localToken:localStorage.getItem('jwtToken'))
         const headers = {
             'Content-Type': 'application/json',
             'x-api-key': '5DwkxSENaM4vfLyRYMeRHaxViuV7Nhvv21sYu9P4',
@@ -201,7 +204,7 @@ export const login = async (code) => {
             redirect_uri: 'https://sbm.verdeos.com/callback',
         };
 
-       console.log("Checking code" + code);
+       //console.log("Checking code" + code);
        const response = await axios.post('https://auth.apeiron.network/oauth2/token',params, {headers});
 
       // Handle the response, which may contain the JWT token.
@@ -216,7 +219,7 @@ export const login = async (code) => {
   export const refreshToken = async () => {
     try {
 
-        console.log("refreshToken:" + localStorage.getItem('refreshToken'))
+        //console.log("refreshToken:" + localStorage.getItem('refreshToken'))
         if (localStorage.getItem('refreshToken') === null || localStorage.getItem('refreshToken') === "undefined") {
            handleSignOut()
         }
@@ -240,7 +243,7 @@ export const login = async (code) => {
       // Handle the response, which may contain the JWT token.
       const tokensData = response.data;
       setupTokens(tokensData)
-      console.log("tokensData:" + tokensData)
+      //console.log("tokensData:" + tokensData)
       return true;
     } catch (error) {
       // Handle errors
@@ -259,6 +262,7 @@ export const login = async (code) => {
   
   export const setupTokens = async(awsTokens)=>{
     const token = awsTokens.id_token; 
+    localToken = token;
     const refresh_token = awsTokens.refresh_token;
     const expires_in = awsTokens.expires_in;
     localStorage.setItem('jwtToken', token);
