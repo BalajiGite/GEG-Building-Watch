@@ -1069,9 +1069,8 @@ function Alerts() {
                   style={{ width: "100%" }}
                   disabled={addNewform ? false : isEditableFormField('isactive')}
                 >
-                  {[...new Set(alerts.map(item => item.isactive))].map((item, index) => (
-                    <Select.Option key={index} value={item}>{item ? "true" : "false"}</Select.Option>
-                  ))}
+                  <Select.Option key={1} value={true}>{"true"}</Select.Option>
+                  <Select.Option key={2} value={false}>{"false"}</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
