@@ -50,7 +50,7 @@ function UnAuth() {
                 <img src={empty} alt='' style={{width:"150px", width:"150px"}}/><br/>
                 <Meta
                   title={<span className="textc5c5" >Sorry!</span>}
-                  description={<span className="text8e8e" >We regret to inform you that you do not have authorization to access SBM, To gain access, please get in touch with the Verdeos Team at admin@verdeos.co. <br/> Thank you for your cooperation.</span>} 
+                  description={<span className="text8e8e" >We regret to inform you that you do not have authorization to access SBM, To gain access, please get in touch with the Verdeos Team at support@verdeos.com <br/> Thank you for your cooperation.</span>} 
                   style={{ textAlign: 'center' }}
                 />
               </div>
