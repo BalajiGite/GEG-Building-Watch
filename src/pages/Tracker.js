@@ -170,10 +170,20 @@ function Sites() {
       const sitesList = await getApiDataFromAws("queryType=dropdownSite");
       setSiteData(sitesList);
       setSelectedItem(sitesList[0].name);
+      const clientBody = {
+        funcName:"getProjectBySitename",
+        sitename: sitesList[0].name,
+      }
+      getClienDetail(clientBody)
     }else{
       const sitesList = await getApiDataFromAws("queryType=dropdownSite&dropdownProjFilter="+value);
       setSiteData(sitesList);
       setSelectedItem(sitesList[0].name);
+      const clientBody = {
+        funcName:"getProjectBySitename",
+        sitename: sitesList[0].name,
+      }
+      getClienDetail(clientBody)
     }
   };
 
