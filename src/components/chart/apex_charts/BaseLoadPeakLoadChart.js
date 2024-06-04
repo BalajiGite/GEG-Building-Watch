@@ -84,7 +84,7 @@ function BaseLoadPeakLoad({ resData }) {
         tooltip: {
             shared: true,
             formatter: function () {
-               let weekdays = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+               let weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
                let weekdayName = weekdays[new Date(this.points[0].key).getDay()];
                let  tooltip = '<span style="font-size: 12px">'+this.points[0].key+' (' + weekdayName + ')</span><br/>'
                //debugger;
