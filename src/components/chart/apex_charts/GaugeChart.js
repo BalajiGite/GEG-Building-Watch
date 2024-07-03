@@ -9,7 +9,7 @@ import water from '../../../assets/images/water.svg'
 
 const GaugeChart = ({gaugeData, repFreq, title, utilityType}) => {
 
-    let perValue = parseFloat(gaugeData.conTarPer.replace(",", ""));
+    let perValue = parseFloat(gaugeData?.conTarPer.replace(",", ""));
     let dataValue = perValue;
     if(perValue < 75){
         dataValue = 75;

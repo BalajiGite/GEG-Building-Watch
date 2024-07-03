@@ -7,6 +7,7 @@ import pointIcon from "../../assets/images/sidebarSVG/Point.svg";
 import targetIcon from "../../assets/images/sidebarSVG/targets.svg";
 import configIcon from "../../assets/images/sidebarSVG/location.svg";
 import alertsIcon from "../../assets/images/sidebarSVG/Alerts.svg";
+import usersIcon from "../../assets/images/sidebarSVG/users.svg";
 import mpReadings from "../../assets/images/sidebarSVG/mpReadings.svg";
 import tracker from "../../assets/images/sidebarSVG/tracker.svg";
 // import logo from "../../assets/images/buildlogo.jpg";
@@ -138,6 +139,16 @@ function Sidenav({ color }) {
             </NavLink>
           </Menu.Item>:""}
           <Divider className="custom-divider"/>
+          {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("users")?<Menu.Item key="">
+            <NavLink to="/users">
+            <span className="icon">
+                <img src={usersIcon} alt="alertIcon" />
+              </span>
+              <span className ="ant-menu-item-text">
+                Users
+              </span>
+            </NavLink>
+          </Menu.Item>:""}
         </Menu>
       </div>
     </>

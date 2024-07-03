@@ -101,7 +101,9 @@ function Main({ children }) {
         </Sider>
         <Layout>
           <Content className="content-ant" >{children}</Content>
-          <Footer />
+          <Affix offsetBottom={0}>
+            <Footer />
+          </Affix>
         </Layout>
       </Layout>
     </Layout>

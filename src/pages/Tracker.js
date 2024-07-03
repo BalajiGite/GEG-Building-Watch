@@ -371,21 +371,21 @@ function Sites() {
             </Card>}
         </Col>
         <Col span={6} >
-          {(tracker && Object.keys(tracker).length !== 0) && <GaugeChart gaugeData={tracker.rangePerformance} repFreq={tracker.reportFrequencyType} title={""} utilityType={tracker.utilityType}/>  }
+          {(tracker &&  Object.keys(tracker).length !== 0 && tracker.rangePerformance ) && <GaugeChart gaugeData={tracker.rangePerformance} repFreq={tracker.reportFrequencyType} title={""} utilityType={tracker.utilityType}/>  }
         </Col>
         <Col span={6}>
-          {(tracker && Object.keys(tracker).length !== 0) && <GaugeChart gaugeData={tracker.ytdPerformance} repFreq={tracker.reportFrequencyType} title={"RP START TO DATE"} utilityType={tracker.utilityType}/> }
+          {(tracker && Object.keys(tracker).length !== 0 &&  tracker.ytdPerformance ) && <GaugeChart gaugeData={tracker.ytdPerformance} repFreq={tracker.reportFrequencyType} title={"RP START TO DATE"} utilityType={tracker.utilityType}/> }
         </Col>
       </Row>
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50}} alt="Custom Spin GIF" />}>
-        <Row style={{ marginBottom: '20px' }}>
+        <Row style={{ marginBottom: '35px' }}>
             {/**(tracker && Object.keys(tracker).length !== 0) && <CunsumptionChart seriesData={tracker.consumpionProfile} temp={tracker.temp} utilityType={tracker.utilityType} unit={tracker.uom}/>*/}
-            {(tracker && Object.keys(tracker).length !== 0) && <ConsumptionChart resData={tracker} />}
+            {(tracker && Object.keys(tracker).length !== 0 && tracker.consumpionProfile) && <ConsumptionChart resData={tracker} />}
         </Row>
       </Spin>
       <Row>
       {/** (tracker && Object.keys(tracker).length !== 0) && <BaseLoadChart seriesConData={tracker.baseloadPeakConsumptionData} seriesTempData={tracker.baseloadPeakTemp} utilityType={tracker.utilityType} unit={tracker.uom}/>**/}
-        {(tracker && Object.keys(tracker).length !== 0) && <BaseLoadPeakLoad resData={tracker} />}
+        {(tracker && Object.keys(tracker).length !== 0 && tracker.baseloadPeakConsumptionData) && <BaseLoadPeakLoad resData={tracker} />}
       </Row>
     </>
   );

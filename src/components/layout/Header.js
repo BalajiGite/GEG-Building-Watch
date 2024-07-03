@@ -254,6 +254,7 @@ function Header({
   const { Title, Text } = Typography;
   const [visible, setVisible] = useState(false);
   const [sidenavType, setSidenavType] = useState("transparent");
+  const [showIframe, setShowIframe] = useState(false);
   
   var userData = userInfo(context.token);
   if(userData == null){
@@ -261,6 +262,18 @@ function Header({
       userData = userInfo(localStorage.getItem('jwtToken'))
     }
   }
+
+  const toggleIframe = () => {
+    setShowIframe(!showIframe);
+  };
+
+  const iframeContainerStyle = {
+    position: "fixed",
+    top: 16,
+    left: 435,
+    zIndex: 1000,
+    margin: "1px",
+  };
   
   
   useEffect(() => {
@@ -296,51 +309,33 @@ function Header({
       >
         <IoIosSettings />
       </div> */}
-      <Row gutter={[24, 0]}>
-        <Col span={24} md={6}>
+      <Row>
+        <Col span={24} md={4}>
           <img src={context.logoUrl} alt="" width={150} />
         </Col>
-        <Col span={24} md={6}>
-          <Breadcrumb style={{ display: "none" }}>
-            <Breadcrumb.Item>
-              <NavLink to="/">
-                {" "}
-                <span
-                  style={{
-                    color: context.backgroundColor === dark ? "white" : "",
-                  }}
+        <Col span={24} md={8}>
+          {/**<button className="custom-button" onClick={toggleIframe} style={{marginLeft:"10px"}}>
+            Automated Insights:
+           </button> **/}
+           {showIframe && (
+              <div style={iframeContainerStyle}>
+                <iframe 
+                   src={`https://www.appified.ai/embed/asst_aXkbi6GIHnuPoeWfO72DYfG9?authToken=${context.token}`}
+                  style={{ border: "0px #ffffff none", borderRadius: "10px" }}
+                  name="myiFrame"
+                  scrolling="no"
+                  frameBorder="1"
+                  marginHeight="0px"
+                  marginWidth="0px"
+                  height="500px"
+                  width="800px"
+                  allowFullScreen
                 >
-                  Pages
-                </span>
-              </NavLink>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item style={{ textTransform: "capitalize" }}>
-              <span
-                style={{
-                  color: context.backgroundColor === dark ? "white" : "",
-                }}
-              >
-                {" "}
-                {name.replace("/", "")}
-              </span>
-            </Breadcrumb.Item>
-          </Breadcrumb>
-          <div className="ant-page-header-heading">
-            <span
-              className="ant-page-header-heading-title"
-              style={{ textTransform: "capitalize" }}
-            >
-              <span
-                style={{
-                  color: context.backgroundColor === dark ? "white" : "",
-                }}
-              >
-                {" "}
-                {/* subName.replace("/", "")*/}
-              </span>
-            </span>
-          </div>
+                </iframe>
+              </div>
+          )}
         </Col>
+        
         <Col span={24} md={12} className="header-control">
          {/*<Button type="link" onClick={showDrawer}>
               <IoSettingsOutline />

@@ -245,6 +245,17 @@ body {
 }
 
 
+.ant-header-fixed-footer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  background-color: #001529; /* Example background color */
+  color: white; /* Example text color */
+  padding: 10px 20px; /* Example padding */
+  z-index: 1000; /* Example z-index */
+}
+
 
 /* Webkit (Chrome, Safari, Opera) */
 html::-webkit-scrollbar {

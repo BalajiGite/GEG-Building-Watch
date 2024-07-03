@@ -1,0 +1,808 @@
+import React, { useContext, useRef, useState } from "react";
+import { Button, Row, Col, Modal, Popover, ConfigProvider, Card ,Form, Input, Spin, Divider, Select} from "antd";
+import { EllipsisOutlined, CaretDownOutlined, InfoCircleOutlined, CloseOutlined } from "@ant-design/icons";
+import "reactjs-popup/dist/index.css";
+import { useEffect } from "react";
+import { AppContext } from "../App";
+import { message } from 'antd';
+import { Radio } from 'antd';
+import { getApiDataFromAws, postApiDataToAws, getConfigDataFromAws } from "../services/apis";
+import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
+import { isAuthenticated, userInfo } from "../services/apis";
+import { useHistory } from 'react-router-dom';
+import {
+  deleteSites,
+  editSites,
+} from "../services/sitesService";
+import { FilterColumnsData } from "../components/widgets/SelectedColumns/FilterColumns";
+import vector_ from "../../src/assets/images/vector_.png";
+import spinnerjiff from "../assets/images/loader.gif";
+import { CSVLink } from 'react-csv';
+import { useReducer } from "react";
+import ResizableTable from "../components/widgets/ResizeTable/ResizableTable";
+const layout = {
+  labelCol: {
+    span: 8,
+  },
+  wrapperCol: {
+    span: 16,
+  },
+};
+
+function Users() {
+  const [form] = Form.useForm();
+  const [searchText, setSearchText] = useState("");
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [activeButton, setActiveButton] = useState(4);
+  const [isLoading, setIsLoading] = useState(false);
+  const [siteData, setSiteData] = useState({});
+  const [loading, setloading] = useState(true);
+  const [SitesId, setSitesId] = useState();
+  const [site, setSite] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [regionListData, setRegionListData] = useState([]);
+  const [visibleColumns, setVisibleColumns] = useState([]);
+  const [visibleCard, setvisibleCard] = useState(false);
+  const siteConfigData = useRef();
+  const context = useContext(AppContext);
+  const history = useHistory();
+
+  const screenHeight = window.innerHeight - 310;
+  const validateMessages = {
+    required: "${label} is required!",
+    types: {
+      email: "${label} is not a valid email!",
+      number: "${label} is not a valid number!",
+    },
+    number: {
+      range: "${label} must be between ${min} and ${max}",
+    },
+  };
+
+  const onCancelModal = () => {
+    setOpen(false);
+    setSitesId();
+    form.resetFields();
+  };
+
+  const totalRows = site.length;
+
+  const columns = [
+
+    {
+      title: "Company ID",
+      dataIndex: "companyId",
+      key: "2",
+      width: 200,
+      ellipsis: true,
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      hidden: false,
+      filters: Array.from(new Set(site.map(item => item.name))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: false,
+      onFilter: (value, record) => record.name.startsWith(value),
+    },
+    {
+      title: "Initials",
+      dataIndex: "initials",
+      key: "3",
+      width: 120,
+      ellipsis: true,
+      sorter: (a, b) => a.area - b.area,
+      filters: Array.from(new Set(site.map(item => item.area))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: false,
+      onFilter: (value, record) => record.area.startsWith(value),
+    },
+    {
+      title: "Full Name",
+      dataIndex: "fullName",
+      key: "4",
+      width: 140,
+      ellipsis: true,
+      sorter: (a, b) => a.projId.localeCompare(b.projId),
+      filters: Array.from(new Set(site.map(item => item.projId))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: false,
+      onFilter: (value, record) => record.projId.startsWith(value),
+    },
+    {
+      title: "Designation",
+      dataIndex: "designation",
+      key: "5",
+      width: 120,
+      ellipsis: true,
+      sorter: (a, b) => (a.site === b.site ? 0 : a.site ? -1 : 1),
+      filters: Array.from(new Set(site.map(item => item.site))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: false,
+      onFilter: (value, record) => record.site.startsWith(value),
+    },
+    {
+      title: "Username",
+      dataIndex: "username",
+      key: "7",
+      width: 150,
+      ellipsis: true,
+      sorter: (a, b) => a.tz.localeCompare(b.tz),
+      filters: Array.from(new Set(site.map(item => item.tz))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: false,
+      onFilter: (value, record) => record.tz.startsWith(value),
+    },
+    {
+      title: "Permissions",
+      dataIndex: "permissions",
+      key: "9",
+      width: 190,
+      ellipsis: true,
+      sorter: (a, b) => a.observesHolidays.localeCompare(b.observesHolidays),
+      filters: Array.from(new Set(site.map(item => item.observesHolidays))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: false,
+      onFilter: (value, record) => record.observesHolidays.startsWith(value),
+    },
+    {
+      title: "Role",
+      dataIndex: "role",
+      key: "10",
+      width: 200,
+      ellipsis: true,
+      sorter: (a, b) => a.geoCountry.localeCompare(b.geoCountry),
+      filters: Array.from(new Set(site.map(item => item.geoCountry))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: false,
+      onFilter: (value, record) => record.geoCountry.startsWith(value),
+    },
+    {
+      title: "Proj Access",
+      dataIndex: "projAccessFilter",
+      key: "11",
+      width: 200,
+      ellipsis: true,
+      sorter: (a, b) => a.geoAddress.localeCompare(b.geoAddress),
+      filters: Array.from(new Set(site.map(item => item.geoAddress))).map((name, index) => ({
+        text: name,
+        value: name,
+      })),
+      filterMode: "tree",
+      filterSearch: false,
+      onFilter: (value, record) => record.geoAddress.startsWith(value),
+    },
+    {
+      title: "Site Access",
+      dataIndex: "siteAccessFilter",
+      key: "12",
+      width: 140,
+      ellipsis: true,
+      sorter: (a, b) => a.long.localeCompare(b.long),
+    },
+    /*{
+      title: "Actions",
+      dataIndex: "delete",
+      key: "18",
+      width: 200,
+      ellipsis: true,
+      render: (text, record, index) => (
+        siteConfigData.current ?
+          <>
+            <ConfigProvider>
+              <Popover overlayStyle={{ width: '100px' }} placement="right" content={() => content(record)} >
+                <EllipsisOutlined style={{ fontSize: "30px", }} />
+              </Popover>
+            </ConfigProvider>
+          </>
+          : null
+      ),
+    },*/
+  ]
+
+  const changeWidgets = (widget) => {
+    if (widget === 4) {
+      setActiveButton(widget);
+    } else {
+      localStorage.setItem('activeButton', widget);
+      history.push('/GeoConfigs');
+      setActiveButton(widget);
+    }
+  }
+
+  const getData = async () => {
+    setIsLoading(true);
+    try {
+
+      const sites = await getApiDataFromAws("queryType=site")
+      const sitesConfigData = await getConfigDataFromAws("site");
+      siteConfigData.current = sitesConfigData.isEditable;
+      const regionList = await getApiDataFromAws("queryType=dropdownRegion");
+      setRegionListData(regionList);
+      setSiteData(sites);
+      setSite(sites);
+      setloading(false);
+      setIsLoading(false);
+      if (searchText != "") {
+        filter(searchText)
+      }
+    } catch (error) { }
+  };
+  // console.log(site);
+  const setData = async () => {
+    try {
+
+      var formData = form.getFieldsValue();
+
+      const modifiedFormData = {
+        ...formData,
+        siteName: formData.name,
+        siteId: "",
+        area: Number(formData.area),
+        armsProjectId: Number(formData.armsProjectId),
+        regionRecId: formData.regionRef,
+      };
+
+      const { name, regionRef, site, ...objectWithoutName } = modifiedFormData
+      // console.log(objectWithoutName); // Log the form data to check its structure
+      if (SitesId) {
+        const resp = await editSites(SitesId, formData);
+      } else {
+        //const resp = await addSites(formData);
+        const body = {
+          funcName: 'createSiteRecordsFromJson',
+          recList: [objectWithoutName]
+        };
+        const addSites = await postApiDataToAws(body)
+        // Check if the addSites operation was successful
+        if (addSites && addSites.message === "Success") {
+          console.log('Site added successfully:', addSites);
+          // Display a success message using Ant Design message component
+          message.success('Site added successfully');
+        } else {
+          // console.log('Failed to add site:', addSites);
+          // Display an error message using Ant Design message component
+          message.error('Failed to add site');
+        }
+      }
+      onCancelModal();
+      getData();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onDelete = async (id) => {
+    try {
+      const resp = await deleteSites(id);
+      getData();
+    } catch (error) { }
+  };
+
+  const onEdit = async (record) => {
+    form.setFieldsValue(record);
+    setSitesId(record.id);
+    setOpen(true);
+  };
+
+  const onChangeText = (text) => {
+
+    if (text == "" || !text || text.length < searchText.length) {
+      setSite(siteData);
+      setSearchText(text);
+      filter(text, siteData);
+    } else {
+      setSearchText(text);
+      filter(text, site);
+    }
+  };
+
+  const advancedFilterData = (value) =>{
+    if(value === "Reset"){
+      setSite(siteData);
+    }else{
+      console.log(value);
+      let fillColumns = value[0];
+      let fillCondition = value[2];
+      let fillValue = value[1]; 
+      let fillAndOr = value[3];
+      
+      const filtersData = site.filter((record) => {
+        //record["name"].toLowerCase() === "nsw"
+        let query = '';
+        for (let i = 0; i < fillColumns.length; i++) {
+          let column = fillColumns[i];
+          let condition = fillCondition[i]
+          let value = fillValue[i]
+          let andor = i===0?'':fillAndOr[i-1]
+          if(condition === "equalTo"){
+            if(andor === "and"){
+              query == ''? query = record[column] === value:
+              query = query && record[column] === value 
+            }else{
+              query == ''? query = record[column] === value:
+              query = query || record[column] === value 
+            }
+          }else if(condition === "notEqualTo"){
+            if(andor === "and"){
+              query == ''? query = record[column] !== value:
+              query = query && record[column] !== value 
+            }else{
+              query == ''? query = record[column] !== value:
+              query = query || record[column] !== value 
+            }
+          }else if(condition === "includes"){
+            if(andor === "and"){
+              query == ''? query = record[column].toLowerCase().includes(value.toLowerCase()):
+              query = query && record[column].toLowerCase().includes(value.toLowerCase()) 
+            }else{
+              query == ''? query = record[column].toLowerCase().includes(value.toLowerCase()):
+              query = query || record[column].toLowerCase().includes(value.toLowerCase()) 
+            }
+          }
+          else if (condition === "greaterThan") {
+            if (andor === "and") {
+                query === '' ? query = Number(record[column]) > (value) :
+                    query = query && Number(record[column]) > (value)
+            } else {
+                query === '' ? query = Number(record[column]) > (value) :
+                    query = query || Number(record[column]) > (value)
+            }
+          } else if (condition === "lessThan") {
+            if (andor === "and") {
+                query === '' ? query = Number(record[column]) < (value) :
+                    query = query && Number(record[column]) < (value)
+            } else {
+                query === '' ? query = Number(record[column]) < (value) :
+                    query = query || Number(record[column]) < (value)
+            }
+          }
+        }
+        return query
+        
+      });
+      setSite(filtersData);
+    }
+  }
+
+  const onOpenModal = () => {
+    setOpen(true);
+    form.resetFields();
+  };
+
+  const filter = (text, data) => {
+    const filteredData = data.filter(
+      (record) =>
+        record.name?.toLowerCase().includes(text.toLowerCase()) ||
+        record.area?.toLowerCase().includes(text.toLowerCase()) ||
+        record.projId?.toLowerCase().includes(text.toLowerCase()) ||
+        record.stateRef?.toLowerCase().includes(text.toLowerCase()) ||
+        record.regionRef?.toLowerCase().includes(text.toLowerCase()) ||
+        record.weatherStationRef?.toLowerCase().includes(text.toLowerCase()) ||
+        record.armsProjId?.toLowerCase().includes(text.toLowerCase())
+    );
+    setSite(filteredData);
+  };
+  const exportToCSV = () => {
+    const csvData = site.map(item => ({
+      ...item, // Assuming mpReadings is an array of objects
+    }));
+
+    return csvData;
+  };
+  useEffect(() => {
+    const authenticated = isAuthenticated()
+    if (authenticated) {
+      //getData();
+    } else {
+      var userData = userInfo(context.token);
+      if (userData == null) {
+        history.push('/');
+      } else {
+        //getData();
+      }
+    }
+  }, []);
+
+  // let ObjectKeys = [...new Set(site.map(Obj => Object.keys(Obj)))];
+  // console.log(ObjectKeys);
+
+  const content = (record) => (
+    <div style={{ marginLeft: "10px", backgroundColor: "#0A1016", paddingTop: "10px", marginRight: "10px", paddingLeft: "10px", paddingRight: "10px" }}>
+      <a onClick={() => onEdit(record)} style={{ color: "white" }}>EDIT</a>
+      <Divider type="horizontal" style={{ margin: "5px" }} />
+      <a onClick={() => onDelete(record.id)} style={{ color: "white", display: "none" }}>DELETE</a>
+    </div>
+  );
+
+  const handleSelectColumns = (SelectColumns) => {
+    setVisibleColumns(SelectColumns);
+  }
+  const handleChange = (value) => {
+    console.log(value);
+  };
+
+  const handleSelectedColumns = (selectedColumns) => {
+    setVisibleColumns(selectedColumns)
+  }
+ 
+  return (
+    <>
+      <Row>
+        <Col span={12}>
+          <button onClick={() => onOpenModal()} className="mb-4 custom-button">Create User Policy</button>
+        </Col>
+        <Col span={12} style={{ marginBottom: 10, textAlign: 'right' }}>
+          <Input
+            size="small"
+            placeholder="search here ..."
+            value={searchText}
+            onChange={(e) => onChangeText(e.target.value)}
+            className="custom-input"
+          />
+          <button className="ant-dropdown-link custom-button" style={{ marginLeft: "5px", paddingLeft: "10px", paddingRight: "10px" }} onClick={() => setvisibleCard(!visibleCard)} >
+            <img src={vector_} alt="vector_png" width={16} height={16} />
+          </button>
+          <SelectColumns columns={columns} onSelectColumns={handleSelectedColumns}/>
+          <CSVLink data={exportToCSV()} filename={"sites.csv"}>
+            <button type="button" className="custom-button">Export to CSV</button>
+          </CSVLink>
+        </Col>
+      </Row>
+      {visibleCard && <Card className="custom-card1">
+        <div style={{ justifyContent: 'end', display: 'flex' }}>
+          <CloseOutlined style={{ color: "#FFFFFF", fontSize: "15px", cursor: 'pointer' }} onClick={() => setvisibleCard(!visibleCard)} />
+        </div>
+        <FilterColumnsData columns={columns} onSelectColumns={handleSelectColumns} onSearch = {advancedFilterData}/>
+      </Card>}
+      <Modal
+        // className="custom-modale"
+        title="Add New Sites"
+        centered
+        open={open}
+        onCancel={() => onCancelModal()}
+        width={700}
+        footer={null}
+        maskClosable={false}
+      >
+        <Form
+          {...layout}
+          name="nest-messages"
+          onFinish={setData}
+          layout="vertical"
+          style={{ maxWidth: 1000 }}
+          form={form}
+          validateMessages={validateMessages}
+        >
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item name="name"
+                label="Site Name"
+                tooltip={{ title: 'Provide the name of the specific site or location being monitored or assessed.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter the Site Name.',
+                  },
+                ]}
+              >
+                <Input className="form_input" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name="area"
+                label="Area"
+                tooltip={{ title: 'Enter the designated area within the site, if applicable.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                rules={[
+                  {
+                    pattern: /^[0-9]*$/,
+                    message: 'Please enter a valid number for the area.',
+                  },
+                  {
+                    required: true,
+                    message: 'Please enter the area.',
+                  },
+                ]}
+                wrapperCol={{ span: 24 }}
+              >
+                <Input className="form_input" type="number" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name="armsProj"
+                label="Arms Prj"
+                //tooltip={{ title: 'Specify the name of the associated ARMS project within the site.	to be removed', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter the Arms Project.',
+                  },
+                ]}
+              >
+                <Input className="form_input" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name="armsProjectId"
+                label="Arms Proj ID"
+                //tooltip={{ title: 'Provide the unique ARMS project ID.	to be removed', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    pattern: /^[0-9]*$/,
+                    message: 'Please enter a valid number for the Arms Proj ID.',
+                  },
+                  {
+                    required: true,
+                    message: 'Please enter the Arms Proj ID.',
+                  },
+                ]}
+              >
+                <Input className="form_input" type="number" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name="projId"
+                label="Select Project"
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Proj ID.',
+                  },
+                ]}
+              >
+                <Select
+                  placeholder="Select Project"
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                  size="large"
+                  style={{ width: "100%" }}
+                >
+                  {[...new Set(site.map(item => item.projId))].map((item, index) => (
+                    <Select.Option key={index} value={item} >
+                      {item}
+                    </Select.Option>
+                  ))}
+                </Select>
+                {/* <Input className="form_input" /> */}
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name="tz"
+                label="Select TZ"
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Select TZ.',
+                  },
+                ]}
+              >
+                <Select
+                  placeholder="Select TZ"
+                  style={{ width: "100%" }}
+                  value={selectedItems}
+                  size="large"
+                  onChange={setSelectedItems}
+                >
+                  {
+                    [...new Set(site.map(item => item.tz))].map((item, index) => (
+                      <Select.Option key={index} value={item}>{item}</Select.Option>
+                    ))
+                  }
+                </Select>
+
+                {/* <Input className="form_input" /> */}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name="observesHolidays"
+                label="Select Observe Holidays"
+                tooltip={{ title: 'Choose whether to observe local holidays for scheduling or operational purposes when the local holiay falls on a weekend. Typically True for Offices, False for Shopping Centres.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Observe Holidays.',
+                  },
+                ]}
+              >
+                <Select
+                  placeholder="Select Observe Holidays"
+                  size="large"
+                  style={{ width: "100%" }}
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                >
+                  {
+                    [...new Set(site.map(item => item.observesHolidays))].map((item, index) => (
+                      <Select.Option key={index} value={item}>{item}</Select.Option>
+                    ))
+                  }
+                </Select>
+                {/* <Input className="form_input" /> */}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name="regionRef"
+                label="Select Region ID"
+                tooltip={{ title: 'Select the ID that corresponds to the site\'s region from a predefined list.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Region.',
+                  },
+                ]}
+              >
+                <Select
+                  placeholder="Select Region ID"
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                  size="large"
+                  style={{ width: "100%" }}
+                >
+                  {regionListData.length > 0 &&
+                    regionListData.map((item, index) => (
+                      <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
+                    ))
+                  }
+                </Select>
+                {/* <Input className="form_input" /> */}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name="geoCountry"
+                label="Select Geo Country"
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Select Geo Country.',
+                  },
+                ]}
+              >
+                <Select
+                  placeholder="Select Geo Country"
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                  size="large"
+                  style={{ width: "100%" }}
+                >
+                  {
+                    [...new Set(site.map(item => item.geoCountry))].map((item, index) => (
+                      <Select.Option key={index} value={item}>{item}</Select.Option>
+                    ))
+                  }
+                </Select>
+                {/* <Input className="form_input" /> */}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name="geoAddress"
+                label="Geo Address"
+                tooltip={{ title: 'Enter the full geographical address of the site for mapping purposes.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter the Geo Address.',
+                  },
+                ]}
+              >
+                <Input className="form_input" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name="help"
+                label="Help"
+                initialValue=""
+                wrapperCol={{ span: 24 }}
+              >
+                <Input className="form_input" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"center"} gutter={[30, 30]}>
+            <Col span={24}>
+              <Form.Item
+                name="site"
+                label="Site ID"
+                // labelCol={{ span: 4 }}
+                wrapperCol={{ span: 24 }}
+              // rules={[{ required: "" }]}
+              >
+                <Input className="form_input" readOnly />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Form.Item
+            wrapperCol={{
+              offset: 11,
+              span: 16,
+            }}
+          >
+            <Row>
+              <Col span={20} className="custom-modal-column"  >
+                <button onClick={() => onCancelModal()} type="" htmlType=" " className="custom-modal-button">
+                  Cancel
+                </button>
+                <button htmlType="submit">
+                  Save
+                </button>
+              </Col>
+            </Row>
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Spin spinning={isLoading} indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} />}>
+        <ResizableTable total={totalRows} name={"Sites"} screenHeight={screenHeight} site={site} columnsData={visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} />
+      </Spin>
+    </>
+  );
+}
+
+export default Users;
