@@ -110,38 +110,57 @@ function Sites() {
     setProjectData(projs);
 
   }
-
+  
   const getData = async () => {
     setIsLoading(true);
-    setMpReadings([{ts:""}])
+    setMpReadings([{ ts: "" }]);
+    
+    // Create a timeout promise
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Please select a shorter date range.")), 15000) // 10 seconds timeout
+    );
+  
     try {
-
       const body = {
-        siteName:selectedItem,
-        utilityType:selectedItemUt,
-        startDate:getFormatedDate(startDate),
-        endDate:getFormatedDate(endDate)
-    }
-      const pointsData = await postMpReadingsDataToAws(body)
+        siteName: selectedItem,
+        utilityType: selectedItemUt,
+        startDate: getFormatedDate(startDate),
+        endDate: getFormatedDate(endDate)
+      };
+  
+      // Race the pointsData promise against the timeoutPromise
+      const pointsData = await Promise.race([postMpReadingsDataToAws(body), timeoutPromise]);
+  
       if (!Array.isArray(pointsData) || pointsData.length === 0) {
-        setMpReadings([])
+        setMpReadings([]);
         setloading(false);
         setIsLoading(false);
         message.error({
-          content: pointsData.length === 0?"Readings not found for selected site or utility":pointsData, // Display the error message
+          content: pointsData.length === 0 ? "Readings not found for selected site or utility" : pointsData, // Display the error message
           style: {
-              marginTop: 'calc(50vh - 30px)', // Center vertically
-              marginLeft: 'calc(20vw - 150px)', // Center horizontally
+            marginTop: 'calc(50vh - 30px)', // Center vertically
+            marginLeft: 'calc(20vw - 150px)', // Center horizontally
           },
-      });
-    } else {
-      setMpReadings(pointsData);
+        });
+      } else {
+        setMpReadings(pointsData);
+        setloading(false);
+        setIsLoading(false);
+      }
+  
+    } catch (error) {
       setloading(false);
       setIsLoading(false);
+      message.error({
+        content: error.message,
+        style: {
+          marginTop: 'calc(50vh - 30px)', // Center vertically
+          marginLeft: 'calc(20vw - 150px)', // Center horizontally
+        },
+      });
     }
-      
-    } catch (error) { }
   };
+  
 
   const setData = async (formData) => {
     try {
