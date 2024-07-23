@@ -4,7 +4,7 @@ import { EllipsisOutlined, CaretDownOutlined, InfoCircleOutlined, CloseOutlined 
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { AppContext } from "../App";
-import { message } from 'antd';
+import { message ,Checkbox ,Table} from 'antd';
 import { Radio } from 'antd';
 import { getApiDataFromAws, postApiDataToAws, getConfigDataFromAws } from "../services/apis";
 import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
@@ -43,6 +43,7 @@ function Users() {
   const [regionListData, setRegionListData] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [visibleCard, setvisibleCard] = useState(false);
+
   const siteConfigData = useRef();
   const context = useContext(AppContext);
   const history = useHistory();
@@ -443,7 +444,132 @@ function Users() {
   const handleSelectedColumns = (selectedColumns) => {
     setVisibleColumns(selectedColumns)
   }
- 
+
+  const column = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Read',
+      dataIndex: 'read',
+      key: 'read',
+    },
+    {
+      title: 'Update',
+      dataIndex: 'update',
+      key: 'update',
+    },
+    {
+      title: 'Delete',
+      dataIndex: 'delete',
+      key: 'delete',
+    },
+  ];
+  
+  const initialData = [
+    {
+      key: 1,
+      name: 'Sites',
+      read: 'Read',
+      update: 'Update',
+      delete: 'Delete',
+      readChecked: false,
+      updateChecked: false,
+      deleteChecked: false,
+    },
+    {
+      key: 2,
+      name: 'Meters',
+      read: 'Read',
+      update: 'Update',
+      delete: 'Delete',
+      readChecked: false,
+      updateChecked: false,
+      deleteChecked: false,
+    },
+    {
+      key: 3,
+      name: 'Points',
+      read: 'Read',
+      update: 'Update',
+      delete: 'Delete',
+      readChecked: false,
+      updateChecked: false,
+      deleteChecked: false,
+    },
+    {
+      key: 4,
+      name: 'Geo Locations',
+      read: 'Read',
+      update: 'Update',
+      delete: 'Delete',
+      readChecked: false,
+      updateChecked: false,
+      deleteChecked: false,
+    },
+    {
+      key: 5,
+      name: 'Alerts',
+      read: 'Read',
+      update: 'Update',
+      delete: 'Delete',
+      readChecked: false,
+      updateChecked: false,
+      deleteChecked: false,
+    },
+    {
+      key: 6,
+      name: 'Targets',
+      read: 'Read',
+      update: 'Update',
+      delete: 'Delete',
+      readChecked: false,
+      updateChecked: false,
+      deleteChecked: false,
+    },
+    {
+      key: 7,
+      name: 'MP Readings',
+      read: 'Read',
+      update: 'Update',
+      delete: 'Delete',
+      readChecked: false,
+      updateChecked: false,
+      deleteChecked: false,
+    },
+  ];
+  
+const [data, setDatas] = useState(initialData);
+
+const handleCheckboxChange = (record, field) => {
+  const newData = data.map((item) => {
+    if (item.key === record.key) {
+      return { ...item, [field]: !item[field] };
+    }
+    return item;
+  });
+  setDatas(newData);
+};
+  const columnsWithCheckbox = column.map((col) => {
+    if (col.dataIndex !== 'name') {
+      return {
+        ...col,
+        render: (text, record) => (
+          <Checkbox
+          className="custom-checkbox"
+            checked={record[`${col.dataIndex}Checked`]}
+            onChange={() => handleCheckboxChange(record, `${col.dataIndex}Checked`)}
+          >
+            <span className="checkbox-text">{text}</span>
+            </Checkbox>
+        ),
+      };
+    }
+    return col;
+  });
+
   return (
     <>
       <Row>
@@ -475,7 +601,7 @@ function Users() {
       </Card>}
       <Modal
         // className="custom-modale"
-        title="Add New Sites"
+        title="Create Policy"
         centered
         open={open}
         onCancel={() => onCancelModal()}
@@ -494,17 +620,17 @@ function Users() {
         >
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
-              <Form.Item name="name"
-                label="Site Name"
-                tooltip={{ title: 'Provide the name of the specific site or location being monitored or assessed.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
-                labelCol={{ span: 4 }}
+              <Form.Item name=""
+                label="Enter Principal Name"
+                // tooltip={{ title: 'Provide the name of the specific site or location being monitored or assessed.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter the Site Name.',
-                  },
-                ]}
+                // rules={[
+                //   {
+                //     required: true,
+                //     message: 'Please Enter Principal Name.',
+                //   },
+                // ]}
               >
                 <Input className="form_input" />
               </Form.Item>
@@ -513,85 +639,19 @@ function Users() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name="area"
-                label="Area"
-                tooltip={{ title: 'Enter the designated area within the site, if applicable.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
-                rules={[
-                  {
-                    pattern: /^[0-9]*$/,
-                    message: 'Please enter a valid number for the area.',
-                  },
-                  {
-                    required: true,
-                    message: 'Please enter the area.',
-                  },
-                ]}
-                wrapperCol={{ span: 24 }}
-              >
-                <Input className="form_input" type="number" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name="armsProj"
-                label="Arms Prj"
-                //tooltip={{ title: 'Specify the name of the associated ARMS project within the site.	to be removed', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
+                name=""
+                label="Select Action"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter the Arms Project.',
-                  },
-                ]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name="armsProjectId"
-                label="Arms Proj ID"
-                //tooltip={{ title: 'Provide the unique ARMS project ID.	to be removed', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-                rules={[
-                  {
-                    pattern: /^[0-9]*$/,
-                    message: 'Please enter a valid number for the Arms Proj ID.',
-                  },
-                  {
-                    required: true,
-                    message: 'Please enter the Arms Proj ID.',
-                  },
-                ]}
-              >
-                <Input className="form_input" type="number" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name="projId"
-                label="Select Project"
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please Select Proj ID.',
-                  },
-                ]}
+                // rules={[
+                //   {
+                //     required: true,
+                //     message: 'Please Select Action.',
+                //   },
+                // ]}
               >
                 <Select
-                  placeholder="Select Project"
+                  placeholder=""
                   value={selectedItems}
                   onChange={setSelectedItems}
                   size="large"
@@ -611,19 +671,19 @@ function Users() {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item
-                name="tz"
-                label="Select TZ"
+                name=""
+                label="Select Project Access Filters"
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please Select Select TZ.',
-                  },
-                ]}
+                // rules={[
+                //   {
+                //     required: true,
+                //     message: 'Please Select Project Access Filters.',
+                //   },
+                // ]}
               >
                 <Select
-                  placeholder="Select TZ"
+                  placeholder=""
                   style={{ width: "100%" }}
                   value={selectedItems}
                   size="large"
@@ -640,161 +700,28 @@ function Users() {
               </Form.Item>
             </Col>
           </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name="observesHolidays"
-                label="Select Observe Holidays"
-                tooltip={{ title: 'Choose whether to observe local holidays for scheduling or operational purposes when the local holiay falls on a weekend. Typically True for Offices, False for Shopping Centres.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please Select Observe Holidays.',
-                  },
-                ]}
-              >
-                <Select
-                  placeholder="Select Observe Holidays"
-                  size="large"
-                  style={{ width: "100%" }}
-                  value={selectedItems}
-                  onChange={setSelectedItems}
-                >
-                  {
-                    [...new Set(site.map(item => item.observesHolidays))].map((item, index) => (
-                      <Select.Option key={index} value={item}>{item}</Select.Option>
-                    ))
-                  }
-                </Select>
-                {/* <Input className="form_input" /> */}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name="regionRef"
-                label="Select Region ID"
-                tooltip={{ title: 'Select the ID that corresponds to the site\'s region from a predefined list.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please Select Region.',
-                  },
-                ]}
-              >
-                <Select
-                  placeholder="Select Region ID"
-                  value={selectedItems}
-                  onChange={setSelectedItems}
-                  size="large"
-                  style={{ width: "100%" }}
-                >
-                  {regionListData.length > 0 &&
-                    regionListData.map((item, index) => (
-                      <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
-                    ))
-                  }
-                </Select>
-                {/* <Input className="form_input" /> */}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name="geoCountry"
-                label="Select Geo Country"
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please Select Geo Country.',
-                  },
-                ]}
-              >
-                <Select
-                  placeholder="Select Geo Country"
-                  value={selectedItems}
-                  onChange={setSelectedItems}
-                  size="large"
-                  style={{ width: "100%" }}
-                >
-                  {
-                    [...new Set(site.map(item => item.geoCountry))].map((item, index) => (
-                      <Select.Option key={index} value={item}>{item}</Select.Option>
-                    ))
-                  }
-                </Select>
-                {/* <Input className="form_input" /> */}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name="geoAddress"
-                label="Geo Address"
-                tooltip={{ title: 'Enter the full geographical address of the site for mapping purposes.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter the Geo Address.',
-                  },
-                ]}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name="help"
-                label="Help"
-                initialValue=""
-                wrapperCol={{ span: 24 }}
-              >
-                <Input className="form_input" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row justify={"center"} gutter={[30, 30]}>
-            <Col span={24}>
-              <Form.Item
-                name="site"
-                label="Site ID"
-                // labelCol={{ span: 4 }}
-                wrapperCol={{ span: 24 }}
-              // rules={[{ required: "" }]}
-              >
-                <Input className="form_input" readOnly />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Form.Item
-            wrapperCol={{
-              offset: 11,
-              span: 16,
-            }}
-          >
-            <Row>
-              <Col span={20} className="custom-modal-column"  >
-                <button onClick={() => onCancelModal()} type="" htmlType=" " className="custom-modal-button">
+          <Row>
+            <Col span={24}  style={{marginBottom:'15px'}}>
+            <span style={{color:'#C5C5C5', fontWeight:600, fontSize:'14px'}}>Give Permission’s for </span>
+          <Table
+          showHeader={false}
+         columns={columnsWithCheckbox}
+         dataSource={data}
+         pagination={false}/>
+      </Col>
+      </Row>
+      <Form.Item
+            wrapperCol={{span: 24 }}>
+      <Row>
+      <Col span={24} className="custom-modal-column"  >
+       <button onClick={() => onCancelModal()} type="" htmlType="" className="custom-modal-button">
                   Cancel
                 </button>
                 <button htmlType="submit">
-                  Save
+                  Create Policy
                 </button>
               </Col>
-            </Row>
+              </Row>
           </Form.Item>
         </Form>
       </Modal>
