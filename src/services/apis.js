@@ -6,6 +6,7 @@ const CONFIG_URL = `https://ooq5mqxlu8.execute-api.ap-southeast-2.amazonaws.com/
 const MP_READINGS_URL = `https://2uwa6zvw9a.execute-api.ap-southeast-2.amazonaws.com/default/generateSiteConsumptionsForView`
 const COMPUTE_PROFILE_URL = 'https://yn6x0486e6.execute-api.ap-southeast-2.amazonaws.com/default/generateSiteUtilityProfile?'
 const AUTH_URL = 'https://df6no14ahf.execute-api.ap-southeast-2.amazonaws.com/default/validateJwtTokenAndGetUserWidgetAccess'
+const UserPolicy_URL = 'https://or3yvho811.execute-api.ap-southeast-2.amazonaws.com/default/avpPolicies'
 
 var localToken = "";
 const decodeIdToken = (token) => {
@@ -88,6 +89,29 @@ export const getRecompueteProfile = async (item) => {
          console.error('Error fetching data:', error);    
     }
 }
+
+export const getUserProfiles = async () => {
+  try {
+    const response = await axios.get(UserPolicy_URL);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    if (error.response) {
+      // Server responded with a status other than 200 range
+      console.error('Error response:', error.response.data);
+      console.error('Error status:', error.response.status);
+      console.error('Error headers:', error.response.headers);
+    } else if (error.request) {
+      // Request was made but no response received
+      console.error('Error request:', error.request);
+    } else {
+      // Something happened in setting up the request
+      console.error('Error message:', error.message);
+    }
+    console.error('Error config:', error.config);
+  }
+};
+
   
 export const postApiDataToAws = async (body) => {
     try {

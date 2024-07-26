@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { AppContext } from "../App";
 import { message ,Checkbox ,Table} from 'antd';
 import { Radio } from 'antd';
-import { getApiDataFromAws, postApiDataToAws, getConfigDataFromAws } from "../services/apis";
+import { getApiDataFromAws, postApiDataToAws, getConfigDataFromAws , getUserProfiles} from "../services/apis";
 import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
 import { isAuthenticated, userInfo } from "../services/apis";
 import { useHistory } from 'react-router-dom';
@@ -35,10 +35,10 @@ function Users() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [activeButton, setActiveButton] = useState(4);
   const [isLoading, setIsLoading] = useState(false);
-  const [siteData, setSiteData] = useState({});
+  const [userListsData, setUserListsData] = useState({});
   const [loading, setloading] = useState(true);
   const [SitesId, setSitesId] = useState();
-  const [site, setSite] = useState([]);
+  const [userLists, setUserLists] = useState([]);
   const [open, setOpen] = useState(false);
   const [regionListData, setRegionListData] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState([]);
@@ -66,19 +66,18 @@ function Users() {
     form.resetFields();
   };
 
-  const totalRows = site.length;
+  const totalRows = userLists.length;
 
   const columns = [
-
     {
-      title: "Company ID",
-      dataIndex: "companyId",
+      title: "Policy ID",
+      dataIndex: "policyId",
       key: "2",
-      width: 200,
+      width: 100,
       ellipsis: true,
       sorter: (a, b) => a.name.localeCompare(b.name),
-      hidden: false,
-      filters: Array.from(new Set(site.map(item => item.name))).map((name, index) => ({
+      hidden: true,
+      filters: Array.from(new Set(userLists.map(item => item.name))).map((name, index) => ({
         text: name,
         value: name,
       })),
@@ -88,12 +87,12 @@ function Users() {
     },
     {
       title: "Initials",
-      dataIndex: "initials",
+      dataIndex: "entityId",
       key: "3",
-      width: 120,
+      width: 80,
       ellipsis: true,
       sorter: (a, b) => a.area - b.area,
-      filters: Array.from(new Set(site.map(item => item.area))).map((name, index) => ({
+      filters: Array.from(new Set(userLists.map(item => item.area))).map((name, index) => ({
         text: name,
         value: name,
       })),
@@ -105,10 +104,10 @@ function Users() {
       title: "Full Name",
       dataIndex: "fullName",
       key: "4",
-      width: 140,
+      width: 120,
       ellipsis: true,
       sorter: (a, b) => a.projId.localeCompare(b.projId),
-      filters: Array.from(new Set(site.map(item => item.projId))).map((name, index) => ({
+      filters: Array.from(new Set(userLists.map(item => item.projId))).map((name, index) => ({
         text: name,
         value: name,
       })),
@@ -117,73 +116,13 @@ function Users() {
       onFilter: (value, record) => record.projId.startsWith(value),
     },
     {
-      title: "Designation",
-      dataIndex: "designation",
-      key: "5",
-      width: 120,
-      ellipsis: true,
-      sorter: (a, b) => (a.site === b.site ? 0 : a.site ? -1 : 1),
-      filters: Array.from(new Set(site.map(item => item.site))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: false,
-      onFilter: (value, record) => record.site.startsWith(value),
-    },
-    {
-      title: "Username",
-      dataIndex: "username",
-      key: "7",
-      width: 150,
-      ellipsis: true,
-      sorter: (a, b) => a.tz.localeCompare(b.tz),
-      filters: Array.from(new Set(site.map(item => item.tz))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: false,
-      onFilter: (value, record) => record.tz.startsWith(value),
-    },
-    {
-      title: "Permissions",
-      dataIndex: "permissions",
-      key: "9",
-      width: 190,
-      ellipsis: true,
-      sorter: (a, b) => a.observesHolidays.localeCompare(b.observesHolidays),
-      filters: Array.from(new Set(site.map(item => item.observesHolidays))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: false,
-      onFilter: (value, record) => record.observesHolidays.startsWith(value),
-    },
-    {
-      title: "Role",
-      dataIndex: "role",
-      key: "10",
-      width: 200,
-      ellipsis: true,
-      sorter: (a, b) => a.geoCountry.localeCompare(b.geoCountry),
-      filters: Array.from(new Set(site.map(item => item.geoCountry))).map((name, index) => ({
-        text: name,
-        value: name,
-      })),
-      filterMode: "tree",
-      filterSearch: false,
-      onFilter: (value, record) => record.geoCountry.startsWith(value),
-    },
-    {
       title: "Proj Access",
       dataIndex: "projAccessFilter",
       key: "11",
       width: 200,
       ellipsis: true,
       sorter: (a, b) => a.geoAddress.localeCompare(b.geoAddress),
-      filters: Array.from(new Set(site.map(item => item.geoAddress))).map((name, index) => ({
+      filters: Array.from(new Set(userLists.map(item => item.geoAddress))).map((name, index) => ({
         text: name,
         value: name,
       })),
@@ -199,14 +138,21 @@ function Users() {
       ellipsis: true,
       sorter: (a, b) => a.long.localeCompare(b.long),
     },
-    /*{
+    {
+      title: "Permissions",
+      dataIndex: "widgetAccessFilter",
+      key: "13",
+      width: 200,
+      ellipsis: true,
+      sorter: (a, b) => a.long.localeCompare(b.long),
+    },
+    {
       title: "Actions",
       dataIndex: "delete",
       key: "18",
-      width: 200,
+      width: 80,
       ellipsis: true,
       render: (text, record, index) => (
-        siteConfigData.current ?
           <>
             <ConfigProvider>
               <Popover overlayStyle={{ width: '100px' }} placement="right" content={() => content(record)} >
@@ -214,9 +160,8 @@ function Users() {
               </Popover>
             </ConfigProvider>
           </>
-          : null
       ),
-    },*/
+    },
   ]
 
   const changeWidgets = (widget) => {
@@ -233,13 +178,19 @@ function Users() {
     setIsLoading(true);
     try {
 
-      const sites = await getApiDataFromAws("queryType=site")
+      const userListData = await getUserProfiles()
+      const transformedPolicies = userListData.map(policy => ({
+        ...policy,
+        entityId: policy.principal.entityId,
+        fullName: policy.definition.static.description,
+        projAccessFilter: ((policy.content.resources.projAccessFilter)?.split("[")[1].split("]")[0])?.replace(/'/g, ''),
+        siteAccessFilter:policy.content.resources.siteAccessFilter,
+        widgetAccessFilter:policy.content.resources.widgetAccessFilter,
+      }));
       const sitesConfigData = await getConfigDataFromAws("site");
       siteConfigData.current = sitesConfigData.isEditable;
-      const regionList = await getApiDataFromAws("queryType=dropdownRegion");
-      setRegionListData(regionList);
-      setSiteData(sites);
-      setSite(sites);
+      setUserListsData(transformedPolicies);
+      setUserLists(transformedPolicies);
       setloading(false);
       setIsLoading(false);
       if (searchText != "") {
@@ -249,6 +200,9 @@ function Users() {
   };
   // console.log(site);
   const setData = async () => {
+    /**
+     * 
+     
     try {
 
       var formData = form.getFieldsValue();
@@ -288,7 +242,7 @@ function Users() {
       getData();
     } catch (error) {
       console.log(error);
-    }
+    } */
   };
 
   const onDelete = async (id) => {
@@ -307,18 +261,18 @@ function Users() {
   const onChangeText = (text) => {
 
     if (text == "" || !text || text.length < searchText.length) {
-      setSite(siteData);
+      setUserLists(userListsData);
       setSearchText(text);
-      filter(text, siteData);
+      filter(text, userListsData);
     } else {
       setSearchText(text);
-      filter(text, site);
+      filter(text, userLists);
     }
   };
 
   const advancedFilterData = (value) =>{
     if(value === "Reset"){
-      setSite(siteData);
+      setUserLists(userListsData);
     }else{
       console.log(value);
       let fillColumns = value[0];
@@ -326,7 +280,7 @@ function Users() {
       let fillValue = value[1]; 
       let fillAndOr = value[3];
       
-      const filtersData = site.filter((record) => {
+      const filtersData = userLists.filter((record) => {
         //record["name"].toLowerCase() === "nsw"
         let query = '';
         for (let i = 0; i < fillColumns.length; i++) {
@@ -380,7 +334,7 @@ function Users() {
         return query
         
       });
-      setSite(filtersData);
+      setUserLists(filtersData);
     }
   }
 
@@ -400,10 +354,10 @@ function Users() {
         record.weatherStationRef?.toLowerCase().includes(text.toLowerCase()) ||
         record.armsProjId?.toLowerCase().includes(text.toLowerCase())
     );
-    setSite(filteredData);
+    setUserLists(filteredData);
   };
   const exportToCSV = () => {
-    const csvData = site.map(item => ({
+    const csvData = userLists.map(item => ({
       ...item, // Assuming mpReadings is an array of objects
     }));
 
@@ -412,13 +366,13 @@ function Users() {
   useEffect(() => {
     const authenticated = isAuthenticated()
     if (authenticated) {
-      //getData();
+      getData();
     } else {
       var userData = userInfo(context.token);
       if (userData == null) {
         history.push('/');
       } else {
-        //getData();
+        getData();
       }
     }
   }, []);
@@ -621,7 +575,7 @@ const handleCheckboxChange = (record, field) => {
           <Row justify={"center"} gutter={[30, 30]}>
             <Col span={24}>
               <Form.Item name=""
-                label="Enter Principal Name"
+                label="Full Name"
                 // tooltip={{ title: 'Provide the name of the specific site or location being monitored or assessed.', icon: <InfoCircleOutlined style={{ color: '#c5c5c5' }} /> }}
                 // labelCol={{ span: 4 }}
                 wrapperCol={{ span: 24 }}
@@ -657,11 +611,11 @@ const handleCheckboxChange = (record, field) => {
                   size="large"
                   style={{ width: "100%" }}
                 >
-                  {[...new Set(site.map(item => item.projId))].map((item, index) => (
+                  {/*[...new Set(userListsData.map(item => item.projId))].map((item, index) => (
                     <Select.Option key={index} value={item} >
                       {item}
                     </Select.Option>
-                  ))}
+                  ))*/}
                 </Select>
                 {/* <Input className="form_input" /> */}
               </Form.Item>
@@ -690,7 +644,7 @@ const handleCheckboxChange = (record, field) => {
                   onChange={setSelectedItems}
                 >
                   {
-                    [...new Set(site.map(item => item.tz))].map((item, index) => (
+                    [...new Set(userLists.map(item => item.tz))].map((item, index) => (
                       <Select.Option key={index} value={item}>{item}</Select.Option>
                     ))
                   }
@@ -726,7 +680,7 @@ const handleCheckboxChange = (record, field) => {
         </Form>
       </Modal>
       <Spin spinning={isLoading} indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} />}>
-        <ResizableTable total={totalRows} name={"Sites"} screenHeight={screenHeight} site={site} columnsData={visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} />
+        <ResizableTable total={totalRows} name={"Users"} screenHeight={screenHeight} site={userLists} columnsData={visibleColumns.length > 0 ? columns.filter((item) => visibleColumns.includes(item.key)) : columns} />
       </Spin>
     </>
   );
