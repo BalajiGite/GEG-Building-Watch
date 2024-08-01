@@ -75,16 +75,16 @@ function Sites() {
     const projs = [...projectList, allProj]
     setProjectData(projs);
 
-
+    const isMoorebankOfficePresent = sitesList.some(item => item.name === "Moorebank Office");
     setSelectedItemProj("allProjects")
-    setSelectedItem(sitesList[0].name); // Set first site as default
+    setSelectedItem(isMoorebankOfficePresent?"Moorebank Office":sitesList[0].name); // Set first site as default
     setSelectedItemUt('elec'); // Set utility type as 'elec' by default
     setSelectedItemFt('Daily'); // Set frequency as 'Daily' by default
     const yesterday = moment().subtract(1, 'day').format(DATE_FORMAT);
     setStartDate(yesterday);
     const body = {
       funcName:"getPreprocessedReportData",
-      sitename: sitesList[0].name,
+      sitename: isMoorebankOfficePresent?"Moorebank Office":sitesList[0].name,
       utilitytype: 'elec',
       reporttype : 'Daily',
       startdate: yesterday,
@@ -92,7 +92,7 @@ function Sites() {
 
     const clientBody = {
       funcName:"getProjectBySitename",
-      sitename: sitesList[0].name,
+      sitename: isMoorebankOfficePresent?"Moorebank Office":sitesList[0].name,
     }
     getClienDetail(clientBody)
     getData(body)
