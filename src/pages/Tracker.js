@@ -54,6 +54,7 @@ function Sites() {
  
   const getFormatedDate = (startDate) => {
     try{
+      console.log(startDate)
       const year = startDate.toDate().getFullYear();
       const month = (startDate.toDate().getMonth() + 1).toString().padStart(2, '0');
       const day = startDate.toDate().getDate().toString().padStart(2, '0');
@@ -79,15 +80,15 @@ function Sites() {
     setSelectedItemProj("allProjects")
     setSelectedItem(isMoorebankOfficePresent?"Moorebank Office":sitesList[0].name); // Set first site as default
     setSelectedItemUt('elec'); // Set utility type as 'elec' by default
-    setSelectedItemFt('Daily'); // Set frequency as 'Daily' by default
-    const yesterday = moment().subtract(1, 'day').format(DATE_FORMAT);
-    setStartDate(yesterday);
+    setSelectedItemFt('Monthly'); // Set frequency as 'Daily' by default
+    const lastMonthFirstDay = moment().subtract(1, 'month').startOf('month').format(DATE_FORMAT);
+    setStartDate(lastMonthFirstDay);
     const body = {
       funcName:"getPreprocessedReportData",
       sitename: isMoorebankOfficePresent?"Moorebank Office":sitesList[0].name,
       utilitytype: 'elec',
-      reporttype : 'Daily',
-      startdate: yesterday,
+      reporttype : 'Monthly',
+      startdate: lastMonthFirstDay,
     }
 
     const clientBody = {

@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Spin, Divider, Select,DatePicker, message } from "antd";
 import { Form, Input, Table } from "antd";
+import moment from 'moment';
 import { Button, Row, Col, Modal } from "antd";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
@@ -90,7 +91,7 @@ function Sites() {
   });
 
   const getFormatedDate = (startDate) =>{
-       
+    console.log(startDate)
     const year = startDate.toDate().getFullYear();
     const month = (startDate.toDate().getMonth() + 1).toString().padStart(2, '0');
     const day = startDate.toDate().getDate().toString().padStart(2, '0');
@@ -100,7 +101,8 @@ function Sites() {
 
   }
 
-  const loadSiteData = async() =>{
+  const loadSiteData = async () => {
+    setIsLoading(true);
     const sitesList = await getApiDataFromAws("queryType=dropdownSite");
     setSiteData(sitesList);
 
@@ -109,10 +111,24 @@ function Sites() {
     const projs = [...projectList, allProj]
     setProjectData(projs);
 
+    const isMoorebankOfficePresent = sitesList.some(item => item.name === "Moorebank Office");
+    setSelectedItemProj("allProjects")
+    setSelectedItem(isMoorebankOfficePresent?"Moorebank Office":sitesList[0].name); // Set first site as default
+    setSelectedItemUt('elec'); // Set utility type as 'elec' by default
+    const firstDayLastMonth = moment().subtract(1, 'month').startOf('month').format(DATE_FORMAT);
+    const lastDayLastMonth = moment().subtract(1, 'month').endOf('month').format(DATE_FORMAT);
+    setStartDate(firstDayLastMonth);
+    setEndDate(lastDayLastMonth);
+    const body = {
+      siteName: isMoorebankOfficePresent?"Moorebank Office":sitesList[0].name,
+      utilityType: 'elec',
+      startDate: firstDayLastMonth,
+      endDate: lastDayLastMonth
+    }
+    getData(body)
   }
-  
-  const getData = async () => {
-    setIsLoading(true);
+
+  const getData = async (body) => {
     setMpReadings([{ ts: "" }]);
     
     // Create a timeout promise
@@ -121,13 +137,7 @@ function Sites() {
     );
   
     try {
-      const body = {
-        siteName: selectedItem,
-        utilityType: selectedItemUt,
-        startDate: getFormatedDate(startDate),
-        endDate: getFormatedDate(endDate)
-      };
-  
+    
       // Race the pointsData promise against the timeoutPromise
       const pointsData = await Promise.race([postMpReadingsDataToAws(body), timeoutPromise]);
   
@@ -199,7 +209,13 @@ function Sites() {
 
   useEffect(() => {
     if(selectedItem !=null && selectedItemUt !=null && startDate !=null && endDate !=null){
-      getData();
+      const body = {
+        siteName: selectedItem,
+        utilityType: selectedItemUt,
+        startDate: startDate,//getFormatedDate(startDate),
+        endDate: endDate//getFormatedDate(endDate)
+      };
+      getData(body);
     }
   }, [selectedItem, selectedItemUt, startDate, endDate]);
 
@@ -332,6 +348,8 @@ function Sites() {
             placeholder="Select Start Date"
             className='form_input dtPickerMPReadings'
             format={DATE_FORMAT}
+            defaultValue={moment(moment().subtract(1, 'day').format(DATE_FORMAT), DATE_FORMAT)}
+            value={startDate ? moment(startDate, DATE_FORMAT) : null}
             style={{ marginRight: '10px' }}
             onChange={handleStartDateChange}
           />
@@ -339,6 +357,8 @@ function Sites() {
             placeholder="Select End Date"
             className='form_input dtPickerMPReadings'
             format={DATE_FORMAT}
+            defaultValue={moment(moment().subtract(1, 'day').format(DATE_FORMAT), DATE_FORMAT)}
+            value={endDate ? moment(endDate, DATE_FORMAT) : null}
             onChange={handleEndDateChange}
           />
         </Col>
