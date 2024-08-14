@@ -92,11 +92,13 @@ function Sites() {
 
   const getFormatedDate = (startDate) =>{
     console.log(startDate)
-    const year = startDate.toDate().getFullYear();
-    const month = (startDate.toDate().getMonth() + 1).toString().padStart(2, '0');
-    const day = startDate.toDate().getDate().toString().padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
-    //console.log(formattedDate);
+    let formattedDate = startDate
+    try {
+      formattedDate = startDate.format(DATE_FORMAT)
+      console.log(formattedDate);
+    } catch (error) {
+      
+    }
     return formattedDate;
 
   }
@@ -212,8 +214,8 @@ function Sites() {
       const body = {
         siteName: selectedItem,
         utilityType: selectedItemUt,
-        startDate: startDate,//getFormatedDate(startDate),
-        endDate: endDate//getFormatedDate(endDate)
+        startDate: getFormatedDate(startDate),
+        endDate: getFormatedDate(endDate)
       };
       getData(body);
     }
