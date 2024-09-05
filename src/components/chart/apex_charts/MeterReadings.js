@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import ReactApexChart from "react-apexcharts";
 import { Spin, Card, Col, Row } from "antd";
 import spinnerjiff from "../../../assets/images/loader.gif";
-import { Background } from "devextreme-react/range-selector";
 
 class MeterReadings extends Component {
   constructor(props) {

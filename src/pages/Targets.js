@@ -4,7 +4,6 @@ import { EllipsisOutlined, InfoCircleOutlined,CaretDownOutlined, PlusOutlined, C
 import moment from 'moment';
 import { useState, useEffect, useContext } from 'react';
 import { getApiDataFromAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
-import { targetEdit, addTarget } from '../services/targetService';
 import spinnerjiff from "../assets/images/loader.gif";
 import { SelectColumns } from '../components/widgets/SelectedColumns/SelectedColumns';
 import { isAuthenticated, userInfo, getRecompueteProfile } from "../services/apis";

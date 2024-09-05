@@ -1,13 +1,3 @@
-// export default  function AlertTabeWidget(props){
-//   const [data , setData] = useState([]);
-//   setData(props.data)
-//     console.log(data)
-//     return(
-//       <>
-    
-//       </>
-//     )
-// }
 
 const DynamicColumns = (data) => {
   let dynamicColumns = [];

@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from "react";
-import { Button, Row, Col, Modal, Popover, ConfigProvider, Card ,Form, Input, Spin, Divider, Select} from "antd";
-import { EllipsisOutlined, CaretDownOutlined, InfoCircleOutlined, CloseOutlined } from "@ant-design/icons";
+import { Row, Col, Modal, Popover, ConfigProvider, Card ,Form, Input, Spin, Divider, Select} from "antd";
+import { EllipsisOutlined, InfoCircleOutlined, CloseOutlined } from "@ant-design/icons";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { AppContext } from "../App";
@@ -10,15 +10,10 @@ import { getApiDataFromAws, postApiDataToAws, getConfigDataFromAws } from "../se
 import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
 import { isAuthenticated, userInfo } from "../services/apis";
 import { useHistory } from 'react-router-dom';
-import {
-  deleteSites,
-  editSites,
-} from "../services/sitesService";
 import { FilterColumnsData } from "../components/widgets/SelectedColumns/FilterColumns";
 import vector_ from "../../src/assets/images/vector_.png";
 import spinnerjiff from "../assets/images/loader.gif";
 import { CSVLink } from 'react-csv';
-import { useReducer } from "react";
 import ResizableTable from "../components/widgets/ResizeTable/ResizableTable";
 const layout = {
   labelCol: {
@@ -372,7 +367,7 @@ function Sites() {
       const { name, regionRef, site, ...objectWithoutName } = modifiedFormData
       // console.log(objectWithoutName); // Log the form data to check its structure
       if (SitesId) {
-        const resp = await editSites(SitesId, formData);
+        //const resp = await editSites(SitesId, formData);
       } else {
         //const resp = await addSites(formData);
         const body = {
@@ -400,7 +395,7 @@ function Sites() {
 
   const onDelete = async (id) => {
     try {
-      const resp = await deleteSites(id);
+      //const resp = await deleteSites(id);
       getData();
     } catch (error) { }
   };

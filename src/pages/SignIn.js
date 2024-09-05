@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import {
   Layout,
-  Menu,
   Button,
   Row,
   Col,
@@ -14,12 +12,6 @@ import {
 } from "antd";
 import signinbg from "../assets/images/illustration.jpg";
 import signinLogo from "../assets/images/verdeos_logo.png";
-import {
-  DribbbleOutlined,
-  TwitterOutlined,
-  InstagramOutlined,
-  GithubOutlined,
-} from "@ant-design/icons";
 function onChange(checked) {
   console.log(`switch to ${checked}`);
 }

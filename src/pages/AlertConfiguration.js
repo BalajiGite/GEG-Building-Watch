@@ -12,13 +12,6 @@ import {
 import { GrEdit } from "react-icons/gr";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import React, { useEffect, useState } from "react";
-import { getApiDataFromAws, postApiDataToAws } from "../services/apis";
-import {
-  addAlertConf,
-  deleteAlertConf,
-  editAlertConf,
-  getAlertConfList,
-} from "../services/alertConfService";
 const layout = {
   labelCol: {
     span: 8,
@@ -53,23 +46,23 @@ function AlertConfiguration(props) {
     try {
       let tempp = [];
       if (alertConfId) {
-        const resp = await editAlertConf(alertConfId, {
+        /**const resp = await editAlertConf(alertConfId, {
           ...formData,
           alertId: selectedRecord.id,
         });
         const res = await getAlertConfList();
-        populateConfList(selectedRecord, res);
+        populateConfList(selectedRecord, res);**/
         setAlertConfId();
         confForm.resetFields();
         populateForm(selectedRecord);
       } else {
         if (formData.name !== "") {
-          const resp = await addAlertConf({
+          /**const resp = await addAlertConf({
             ...formData,
             alertId: selectedRecord.id,
           });
           const res = await getAlertConfList();
-          populateConfList(selectedRecord, res);
+          populateConfList(selectedRecord, res);**/
           confForm.resetFields();
           populateForm(selectedRecord);
         }
@@ -87,8 +80,8 @@ function AlertConfiguration(props) {
   const onDelete = async (id) => {
     let res = [];
     try {
-      const resp = await deleteAlertConf(id);
-      res = await getAlertConfList();
+      //const resp = await deleteAlertConf(id);
+      //res = await getAlertConfList();
     } catch (error) {}
     populateConfList(selectedRecord, res);
   };

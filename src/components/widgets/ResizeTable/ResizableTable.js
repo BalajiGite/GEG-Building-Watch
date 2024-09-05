@@ -10,7 +10,6 @@ const ResizableTitle = (props) => {
   if (!width) {
     return <th {...restProps} />;
   }
-
   return (
     <Resizable
       width={width}
@@ -56,6 +55,7 @@ const ResizableTable = ({columnsData, site, screenHeight, total, name, onRow}) =
       cell: ResizableTitle,
     },
   };
+
 
   const columnsWithResizable = columns.map((col, index) => ({
     ...col,

@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Switch, Route, Redirect, useHistory } from "react-router-dom";
-import Home from "./pages/Home";
 import Sites from "./pages/Sites";
 import Meter from "./pages/Meter";
 import Point from "./pages/Point";
-import Projects from "./pages/projects/projects";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Login from "./pages/login/Login";
@@ -19,8 +17,6 @@ import Alert from "./pages/Alert";
 import Targets from "./pages/Targets";
 import PointsReadings from "./pages/PointsReadings";
 import Tracker from "./pages/Tracker";
-import BuildingPerformance from "./pages/BuildingPerformance";
-import Report from "./pages/report/Report";
 import Users from "./pages/Users"
 import UnAuth from './components/layout/UnAuth';
 import { validateAuth } from "./services/apis";
@@ -79,10 +75,7 @@ function App() {
             <Route path='/UnAuth' exact component={UnAuth} />
             <Route path="/callback" exact component={callback} /> 
             <Main>
-              {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("dashboard")? <Route exact path="/dashboard" component={Home} />:""}
               {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("sites") ? <Route exact path="/sites" component={Sites} />:""}
-              {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("projects") ? <Route exact path="/projects" component={Projects} />:""}
-              {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("buildingPerformance") ? <Route exact path="/buildingPerformance" component={BuildingPerformance} />:""}
               {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("meter") ?<Route exact path="/meter" component={Meter} />:""}
               {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("point") ?<Route exact path="/point" component={Point} />:""}
               {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("alert") ? <Route exact path="/alert" component={Alert} />:""}
@@ -90,7 +83,6 @@ function App() {
               {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("targets") ?<Route exact path="/targets" component={Targets}/>:""}
               {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("meterReadings") ?<Route exact path="/pointsReadings" component={PointsReadings}/>:""}
               {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("tracker") ?<Route exact path="/tracker" component={Tracker} /> : ""}
-              {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("report") ?<Route exact path="/report" component={Report} /> :""}
               {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("users") ?<Route exact path="/Users" component={Users} /> :""}            
             </Main>
           </Switch>

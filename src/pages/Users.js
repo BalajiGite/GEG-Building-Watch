@@ -1,24 +1,18 @@
 import React, { useContext, useRef, useState } from "react";
-import { Button, Row, Col, Modal, Popover, ConfigProvider, Card, Form, Input, Spin, Divider, Select, Space } from "antd";
-import { EllipsisOutlined, CaretDownOutlined, InfoCircleOutlined, CloseOutlined } from "@ant-design/icons";
+import { Row, Col, Modal, Popover, ConfigProvider, Card, Form, Input, Spin, Divider, Select, Space } from "antd";
+import { EllipsisOutlined, CloseOutlined } from "@ant-design/icons";
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { AppContext } from "../App";
-import { message, Checkbox, Table } from 'antd';
-import { Radio } from 'antd';
-import { getApiDataFromAws, postApiDataToAws, getConfigDataFromAws, getUserProfiles } from "../services/apis";
+import { Checkbox, Table } from 'antd';
+import { getConfigDataFromAws, getUserProfiles } from "../services/apis";
 import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
 import { isAuthenticated, userInfo } from "../services/apis";
 import { useHistory } from 'react-router-dom';
-import {
-  deleteSites,
-  editSites,
-} from "../services/sitesService";
 import { FilterColumnsData } from "../components/widgets/SelectedColumns/FilterColumns";
 import vector_ from "../../src/assets/images/vector_.png";
 import spinnerjiff from "../assets/images/loader.gif";
 import { CSVLink } from 'react-csv';
-import { useReducer } from "react";
 import ResizableTable from "../components/widgets/ResizeTable/ResizableTable";
 const layout = {
   labelCol: {
@@ -234,7 +228,7 @@ function Users() {
 
   const onDelete = async (id) => {
     try {
-      const resp = await deleteSites(id);
+      //const resp = await deleteSites(id);
       getData();
     } catch (error) { }
   };

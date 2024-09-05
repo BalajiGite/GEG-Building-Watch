@@ -1,5 +1,4 @@
 import { Col, Rate } from "antd";
-import { Size } from "devextreme-react/bar-gauge";
 import React, { useState } from "react";
 
 function NebersRate() {

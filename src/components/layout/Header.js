@@ -1,37 +1,26 @@
 import { useState, useEffect, useContext } from "react";
-import { Divider, Form, Upload } from "antd";
-import { IoIosSettings } from "react-icons/io";
 // import ImageUploading from 'react-images-uploading';
 import React from "react";
 import { AppContext } from "../../App";
-import { IoSettingsOutline } from "react-icons/io5";
 import {
   Row,
   Col,
-  Breadcrumb,
-  Badge,
-  Dropdown,
   Button,
   List,
   Avatar,
-  Input,
-  Drawer,
   Typography,
-  Image,
   Popover,
   ConfigProvider,
 } from "antd";
-import { userInfo,removeToken, handleSignOut } from "../../services/apis";
+import { userInfo,handleSignOut } from "../../services/apis";
 
 
 import { } from "@ant-design/icons";
 
-import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import avtar from "../../assets/images/img-signin.jpg";
 import menubar from "../../assets/images/menu_bar_svg.svg";
 import alert from "../../assets/images/alert_svg.svg";
-import Ellips from "../../assets/images/Ellipse 45.svg";
 import BPM from "../../assets/images/Header-section/BPM.svg";
 import managment from "../../assets/images/Header-section/Management.svg";
 import BMM from "../../assets/images/Header-section/BMM.svg"

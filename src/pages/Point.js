@@ -1,18 +1,12 @@
 import "reactjs-popup/dist/index.css";
 import React, { useState, useContext } from "react";
-import { Button, Row, Col, Modal, Popover, ConfigProvider, message ,Form, Input, Card ,Table, Radio,Spin, Divider, Select, Tooltip } from "antd";
+import { Row, Col, Modal, Popover, ConfigProvider, message ,Form, Input, Card ,Radio,Spin, Divider, Select, Tooltip } from "antd";
 import { EllipsisOutlined, InfoCircleOutlined, CloseOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
 import { getApiDataFromAws, getConfigDataFromAws, postApiDataToAws } from "../services/apis";
 import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
 import vector_ from "../../src/assets/images/vector_.png";
 import { FilterColumnsData } from "../components/widgets/SelectedColumns/FilterColumns";
-import {
-  addSites,
-  deleteSites,
-  editSites,
-  getSitesList,
-} from "../services/sitesService";
 import spinnerjiff from "../assets/images/loader.gif";
 import { isAuthenticated, userInfo } from "../services/apis";
 import { useHistory } from 'react-router-dom';
@@ -363,7 +357,7 @@ export default function Point() {
       const { name, nem12Id, ...objectWithoutName } = modifiedFormData
 
       if (PointsId) {
-        const resp = await editSites(PointsId, formData);
+        //const resp = await editSites(PointsId, formData);
       } else {
         const body = {
           funcName: 'createNem12PointRecordsFromJson',
@@ -406,7 +400,7 @@ export default function Point() {
 
   const onDelete = async (id) => {
     try {
-      const res = await deleteSites(id);
+      //const res = await deleteSites(id);
       getData();
     } catch (error) {
       console.log(error);

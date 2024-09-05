@@ -3,16 +3,11 @@ import { Form, Input, Table, Checkbox,Spin, Divider, Select, Tooltip,
 Space,Button, Row, Col, Modal, Popover, ConfigProvider, message, DatePicker, Card } from "antd";
 import { EllipsisOutlined ,MailOutlined, InfoCircleOutlined, PlusOutlined, CloseOutlined} from "@ant-design/icons";
 import "reactjs-popup/dist/index.css";
-import { getAlertConfList } from "../services/alertConfService";
 import { getApiDataFromAws, postAlertsApiDataToAws, getConfigDataFromAws } from "../services/apis";
 import { showalertscolumns } from "../components/widgets/AlertTableswidgest/AlertTable";
 import { SelectColumns } from "../components/widgets/SelectedColumns/SelectedColumns";
 import { FilterColumnsData } from "../components/widgets/SelectedColumns/FilterColumns";
-import {
-  deleteAlerts,
-  editAlerts,
-  getAlertsList,
-} from "../services/alertsService";
+
 import { RiDeleteBin6Line } from "react-icons/ri";
 import AlertModel from "./AlertConfiguration";
 import spinnerjiff from "../assets/images/loader.gif";
@@ -91,10 +86,10 @@ function Alerts() {
   const onAlertClick = async (record) => {
 
     try {
-      resp = await getAlertConfList();
+      //resp = await getAlertConfList();
     } catch (error) { }
 
-    populateConfList(record, resp);
+    //populateConfList(record, resp);
     setSelectedRecord(record);
     onOpenConf();
   };
@@ -466,7 +461,7 @@ function Alerts() {
 
   const onDelete = async (id) => {
     try {
-      const resp = await deleteAlerts(id);
+      //const resp = await deleteAlerts(id);
       getData();
     } catch (error) { }
   };

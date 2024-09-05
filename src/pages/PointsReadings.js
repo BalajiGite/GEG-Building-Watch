@@ -8,11 +8,6 @@ import { useEffect } from "react";
 import { AppContext } from "../App";
 import MeterReadings  from   "../components/chart/apex_charts/MeterReadings"
 import { getApiDataFromAws, postMpReadingsDataToAws, isAuthenticated, userInfo } from "../services/apis";
-import {
-  addSites,
-  deleteSites,
-  editSites
-} from "../services/sitesService";
 import { useHistory } from 'react-router-dom';
 import spinnerjiff from "../assets/images/loader.gif";
 import { CSVLink } from 'react-csv';
@@ -177,9 +172,9 @@ function Sites() {
   const setData = async (formData) => {
     try {
       if (SitesId) {
-        const resp = await editSites(SitesId, formData);
+        //const resp = await editSites(SitesId, formData);
       } else {
-        const resp = await addSites(formData);
+        //const resp = await addSites(formData);
       }
       onCancelModal();
       getData();
@@ -190,7 +185,7 @@ function Sites() {
 
   const onDelete = async (id) => {
     try {
-      const resp = await deleteSites(id);
+      //const resp = await deleteSites(id);
       getData();
     } catch (error) { }
   };

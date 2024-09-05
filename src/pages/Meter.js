@@ -1,16 +1,9 @@
 import React, { useState ,useEffect, useContext } from "react";
-import { Button, Row, Col, Modal, Popover, ConfigProvider , Card,message,Form, Input,Spin, Divider, Select, Radio} from "antd";
+import { Row, Col, Modal, Popover, ConfigProvider , Card,message,Form, Input,Spin, Divider, Select, Radio} from "antd";
 import "reactjs-popup/dist/index.css";
-import { EllipsisOutlined, CaretDownOutlined, InfoCircleOutlined, CloseOutlined } from "@ant-design/icons";
+import { EllipsisOutlined, InfoCircleOutlined, CloseOutlined } from "@ant-design/icons";
 import { SelectColumns } from '../components/widgets/SelectedColumns/SelectedColumns';
 import { getApiDataFromAws, postApiDataToAws, getConfigDataFromAws } from "../services/apis";
-import {
-  addMeter,
-  deleteMeter,
-  editMeter,
-  getMeterList,
-} from "../services/meterService";
-import { Item } from "devextreme-react/accordion";
 import spinnerjiff from "../assets/images/loader.gif";
 import { isAuthenticated, userInfo } from "../services/apis";
 import { useHistory } from 'react-router-dom';
@@ -375,7 +368,7 @@ function Meter() {
 
   const onDelete = async (id) => {
     try {
-      const resp = await deleteMeter(id);
+      //const resp = await deleteMeter(id);
       getData();
     } catch (error) { }
   };

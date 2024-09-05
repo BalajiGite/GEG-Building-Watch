@@ -46,7 +46,7 @@ function Sidenav({ color }) {
     <>
       <div className="brand">
         {/*<img src={context.logoUrl} alt=""  width={150} />*/}
-        Sustainable Building Manager(SBM)
+        Sustainable Building Manager
       </div>
       <Divider className="custom-divider"/>
       <div className="menu-wrapper">

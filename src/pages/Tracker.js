@@ -1,25 +1,15 @@
 import React, { useState, useContext } from "react";
-import { Spin, Divider, Select, DatePicker, message, Rate,Progress,Space, Tooltip  } from "antd";
+import { Spin, Select, DatePicker, message, Rate,Progress,Tooltip  } from "antd";
 import moment from 'moment';
-import { Form, Input, Table } from "antd";
-import { Button, Row, Col, Modal,Card } from "antd";
-import { EllipsisOutlined } from '@ant-design/icons';
+import { Row, Col, Card } from "antd";
 import { InfoCircleOutlined } from '@ant-design/icons';
 import "reactjs-popup/dist/index.css";
 import { useEffect } from "react";
 import { AppContext } from "../App";
-import MeterReadings from "../components/chart/apex_charts/MeterReadings"
-import CunsumptionChart from "../components/chart/apex_charts/CunsumptionChart";
 import  ConsumptionChart  from "../components/chart/apex_charts/ConsumptionChart";
 import BaseLoadPeakLoad from "../components/chart/apex_charts/BaseLoadPeakLoadChart";
-import { getApiDataFromAws, postAlertsApiDataToAws, postMpReadingsDataToAws, isAuthenticated, userInfo } from "../services/apis";
-import {
-  addSites,
-  deleteSites,
-  editSites
-} from "../services/sitesService";
+import { getApiDataFromAws, postAlertsApiDataToAws, isAuthenticated, userInfo } from "../services/apis";
 import GaugeChart from "../components/chart/apex_charts/GaugeChart";
-import BaseLoadChart from "../components/chart/apex_charts/BaseLoadChart";
 import { useHistory } from 'react-router-dom';
 import spinnerjiff from "../assets/images/loader.gif";
 
@@ -380,12 +370,10 @@ function Sites() {
       </Row>
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50}} alt="Custom Spin GIF" />}>
         <Row style={{ marginBottom: '35px' }}>
-            {/**(tracker && Object.keys(tracker).length !== 0) && <CunsumptionChart seriesData={tracker.consumpionProfile} temp={tracker.temp} utilityType={tracker.utilityType} unit={tracker.uom}/>*/}
             {(tracker && Object.keys(tracker).length !== 0 && tracker.consumpionProfile) && <ConsumptionChart resData={tracker} />}
         </Row>
       </Spin>
       <Row>
-      {/** (tracker && Object.keys(tracker).length !== 0) && <BaseLoadChart seriesConData={tracker.baseloadPeakConsumptionData} seriesTempData={tracker.baseloadPeakTemp} utilityType={tracker.utilityType} unit={tracker.uom}/>**/}
         {(tracker && Object.keys(tracker).length !== 0 && tracker.baseloadPeakConsumptionData) && <BaseLoadPeakLoad resData={tracker} />}
       </Row>
     </>

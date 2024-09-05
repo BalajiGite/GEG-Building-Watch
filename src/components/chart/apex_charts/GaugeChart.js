@@ -6,7 +6,12 @@ import { Card, Col, Row } from 'antd';
 import Vector from '../../../assets/images/elec.svg'
 import gas from '../../../assets/images/gas.svg'
 import water from '../../../assets/images/water.svg'
+import * as ChartModuleMore from 'highcharts/highcharts-more.js';
+import HCSoldGauge from 'highcharts/modules/solid-gauge';
 
+
+ChartModuleMore(Highcharts);
+HCSoldGauge(Highcharts);
 const GaugeChart = ({gaugeData, repFreq, title, utilityType}) => {
 
     let perValue = parseFloat(gaugeData?.conTarPer.replace(",", ""));
