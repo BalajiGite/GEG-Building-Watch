@@ -223,8 +223,8 @@ export const login = async (code) => {
             client_id: '6jk6h3n6hukhkqvul7hcqfh05u',
             client_secret: '1vuaa8jb2m5t4hb95cgtmuuhb0nptm7bjfasp9lpovjrssj9kflo',
             scope: 'email openid phone profile',
-            //redirect_uri: 'https://gems2.d2hjsv3slbr4gu.amplifyapp.com/callback',
-            redirect_uri: 'http://localhost:3000/callback',
+            redirect_uri: 'https://gems2.d2hjsv3slbr4gu.amplifyapp.com/callback',
+            //redirect_uri: 'http://localhost:3000/callback',
             //redirect_uri: 'https://sbm.verdeos.com/callback',
         };
 
