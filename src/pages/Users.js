@@ -250,6 +250,7 @@ function Users() {
     });
     setDefaultProjAccess(arrayOfValues);
     form.setFieldsValue(record);
+
     try {
       let widgetAccessObject = (record.widgetAccessFilter);
       let jsonString = widgetAccessObject.replace(/'/g, '"');
@@ -273,12 +274,12 @@ function Users() {
       filter(text, userLists);
     }
   };
-  console.log(defaultProjaccess)
+  
+
   const advancedFilterData = (value) => {
     if (value === "Reset") {
       setUserLists(userListsData);
     } else {
-      console.log(value);
       let fillColumns = value[0];
       let fillCondition = value[2];
       let fillValue = value[1];
@@ -508,11 +509,10 @@ function Users() {
       updateChecked: false,
     },
   ];
-
+  const [permissions, setPermissions] = useState(initialData); 
   const updateDataWithPermissions = (data, widgetAccess) => {
     data.forEach(item => {
       for (const [key, permissions] of Object.entries(widgetAccess)) {
-        console.log(key, "and", permissions);
         if (item.name === key) {
           // Update checks based on permissions
           item.createChecked = permissions?.includes('C');
@@ -520,9 +520,32 @@ function Users() {
           item.updateChecked = permissions?.includes('U');
         }
       }
-
     });
+
   };
+
+  useEffect(() => {
+    if (changePopupFormValue.current === "update") {
+      setSelectedItems(defaultProjaccess); // Set the selected project access filters
+  
+      // Update the table's checkbox states for permissions (create, read, update)
+      const widgetAccessObject = widgetAccess.current; 
+      const updatedData = initialData.map(item => {
+        if (widgetAccessObject[item.name]) {
+          return {
+            ...item,
+            createChecked: widgetAccessObject[item.name].includes('C'),
+            readChecked: widgetAccessObject[item.name].includes('R'),
+            updateChecked: widgetAccessObject[item.name].includes('U'),
+          };
+        }
+        return item;
+      });
+      
+      setPermissions(updatedData); // Update the initial data with the correct checkbox states
+    }
+  }, [changePopupFormValue.current, defaultProjaccess]);
+  
 
   const columnsWithCheckbox = column.map((col) => {
     if (col.dataIndex !== 'name') {
@@ -564,7 +587,6 @@ function Users() {
   let projAccessFilter = [];
 
   userLists.forEach((item) => {
-    console.log(item.projAccessFilter)
     let userdata = item.projAccessFilter;
 
     if (typeof userdata === 'string') {
@@ -670,7 +692,7 @@ function Users() {
                 name="entityId"
                 label="Initial"
                 wrapperCol={{ span: 24 }}>
-                <Input className="form_input" />
+                <Input className="form_input" readOnly={changePopupFormValue.current == "update" ? true:false}/>
               </Form.Item>
             </Col>
           </Row>
@@ -692,9 +714,9 @@ function Users() {
                     }}
                     allowClear
                     placeholder="Select Project Access Filters"
+                    // defaultValue={['abc','xyz','rto']}
                     value={selectedItems}
                     size="large"
-                    defaultValue={changePopupFormValue.current == "update" ? defaultProjaccess : ""}
                     onChange={setSelectedItems}
                     options={changePopupFormValue.current == "create" ? options : changePopupFormValue.current == "update" ? projAccessFilter : ""}
                   />
@@ -709,7 +731,7 @@ function Users() {
               <Table
                 showHeader={false}
                 columns={columnsWithCheckbox}
-                dataSource={initialData}
+                dataSource={permissions}
                 pagination={false} />
 
             </Col>
