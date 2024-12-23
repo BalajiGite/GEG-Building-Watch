@@ -17,6 +17,7 @@ import Alert from "./pages/Alert";
 import Targets from "./pages/Targets";
 import PointsReadings from "./pages/PointsReadings";
 import Tracker from "./pages/Tracker";
+import Portfolio from "./pages/PortfolioData";
 import Users from "./pages/Users"
 import UnAuth from './components/layout/UnAuth';
 import { validateAuth } from "./services/apis";
@@ -83,6 +84,7 @@ function App() {
               {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("targets") ?<Route exact path="/targets" component={Targets}/>:""}
               {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("meterReadings") ?<Route exact path="/pointsReadings" component={PointsReadings}/>:""}
               {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("tracker") ?<Route exact path="/tracker" component={Tracker} /> : ""}
+              {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("tracker") ?<Route exact path="/portfolio" component={Portfolio} /> : ""}
               {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("users") ?<Route exact path="/Users" component={Users} /> :""}            
             </Main>
           </Switch>

@@ -156,7 +156,7 @@ function ConsumptionProfile() {
 
   return (
    
-         <Card style={{  marginTop:20 }}>
+    <Card style={{  marginTop:20 }}>
     <h2 className={styles.title1} style={{textAlign:'center'}}>{"Consumption Profile"}</h2>
     <div style={{width:"100%", marginBottom:10, textAlign: 'center'}}>
         <HighchartsReact

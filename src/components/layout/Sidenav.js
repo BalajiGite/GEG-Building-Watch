@@ -57,6 +57,7 @@ function Sidenav({ color }) {
                 Monitoring
               </span>
             </Menu.Item>:""}
+            
           {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("tracker")?<Menu.Item key="10">
             <NavLink to="/tracker">
             <span className="icon">
@@ -67,6 +68,17 @@ function Sidenav({ color }) {
               </span>
             </NavLink>
           </Menu.Item>:""}
+          {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("tracker")? 
+            <Menu.Item key="11">
+              <NavLink to="/portfolio">
+                <span className="icon">
+                  <img src={mpReadings} alt="profieIcon" />
+                </span>
+                <span className ="ant-menu-item-text">
+                  Portfolio
+                </span>
+              </NavLink>
+            </Menu.Item>:""}
           {isPolicyExist && isWidgetAccessFilter.hasOwnProperty("meterReadings")?<Menu.Item key="9">
             <NavLink to="/pointsReadings">
             <span className="icon">
