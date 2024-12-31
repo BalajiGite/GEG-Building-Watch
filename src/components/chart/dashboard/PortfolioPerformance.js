@@ -4,28 +4,55 @@ import HighchartsReact from "highcharts-react-official";
 import { Spin, Card } from "antd";
 import spinnerjiff from "../../../assets/images/loader.gif";
 
-const PortfolioPerformance = ({ data, color }) => {
+const PortfolioPerformance = ({ jsonData, color }) => {
   const [spin, setSpin] = useState(false);
 
-  if (!data || data.length === 0) {
-    // If data is not available or empty, show a placeholder or nothing
+  if (!jsonData || jsonData.length === 0) {
     return (
       <Card className="custom-card" style={{ width: "100%" }}>
         <Spin
-        spinning={spin}
-        size="large"
-        style={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
-        indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}
+          spinning={spin}
+          size="large"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+          indicator={<img src={spinnerjiff} style={{ fontSize: 50 }} alt="Custom Spin GIF" />}
         >
           <div style={{ fontSize: "18px", color: "#C5C5C5" }}>Loading..</div>
-        </Spin>       
+        </Spin>
       </Card>
     );
   }
 
+  // Transform JSON data
+  const sites = [];
+  const consumptionData = [];
+  const targetData = [];
+  let unit = ""; // Default unit
+
+  jsonData.forEach((item) => {
+    if (item.data) {
+      const { site, data } = item;
+      sites.push(site);
+
+      // Remove commas and extract numeric values
+      const consumptionValue = parseFloat(data.consumption.replace(/,/g, ""));
+      const targetValue = parseFloat(data.target.replace(/,/g, ""));
+      unit = data.consumption.replace(/[\d,]/g, "").trim();
+
+      consumptionData.push(consumptionValue);
+      targetData.push(targetValue);
+    }else{
+      const { site } = item;
+      sites.push(site);
+      consumptionData.push(0);
+      targetData.push(0);
+    }
+  });
+
+  // Configure Highcharts
   const chartOptions = {
     chart: {
-      type: "column",
+      marginBottom: sites.length>12? 110:80,
+      marginTop: 25,
       height: 280,
       backgroundColor: "transparent",
     },
@@ -44,22 +71,50 @@ const PortfolioPerformance = ({ data, color }) => {
       enabled: false,
     },
     xAxis: {
-      categories: data[0]?.labels,
-      lineColor: "#8E8E8E",
+      categories: sites,
+      crosshair: true,
+      lineWidth: 1,
       labels: {
-        style: {
-          color: "#C5C5C5",
-          fontWeight: "400",
-        },
-      },
+          style: {
+              color: '#C5C5C5' // Set the color of the x-axis labels to red
+          }
+      }
     },
     yAxis: [
       {
-        gridLineWidth: 1,
-        gridLineColor: "#8E8E8E4D",
-        gridLineDashStyle: "Dash",
+        labels: {
+            format: `{value} ${unit}`,
+            formatter: function () {
+              return Highcharts.numberFormat(this.value, -1, undefined, ',') + " " + `${unit}`;
+            },
+            style: {
+                color: '#C5C5C5',
+                fontSize: '12px',
+                fontWeight: 400,
+                lineHeight: '12px',
+                letterSpacing: '0em',
+            },
+        },
+        tickAmount: 6,
+        gridLineDashStyle: 'longdash',
+        allowDecimals: true,
         title: {
-          text: data[0]?.unit,
+            text: `Consumption (${unit})`,
+            style: {
+              fontFamily: "Inter, sans-serif",
+              fontWeight: "400",
+              fontSize: "12px",
+              lineHeight: "12.1px",
+              color: "#C5C5C5",
+            },
+        },
+        //opposite: true,
+        gridLineWidth: 0.5,
+        gridLineColor: '#8E8E8E4D'      
+      },
+      {
+        title: {
+          text: `Target (${unit})`,
           style: {
             fontFamily: "Inter, sans-serif",
             fontWeight: "400",
@@ -68,15 +123,48 @@ const PortfolioPerformance = ({ data, color }) => {
             color: "#C5C5C5",
           },
         },
+        tickAmount: 6,
+        gridLineDashStyle: 'longdash',
+        allowDecimals: true,
         labels: {
+          format: `{value} ${unit}`,
+          formatter: function () {
+              return Highcharts.numberFormat(this.value, -1, undefined, ',') + " " + `${unit}`;
+          },
           style: {
-            color: "#C5C5C5",
-            fontWeight: "400",
+              color: '#C5C5C5',
+              fontSize: '12px',
+              fontWeight: 400,
+              lineHeight: '12px',
+              letterSpacing: '0em',
           },
         },
+        opposite: true,
+        gridLineWidth: 0.5,
+        gridLineColor: '#8E8E8E4D'
       },
     ],
+    tooltip: {
+      shared: true,
+      useHTML: true, // Allows more control over tooltip rendering
+      formatter: function () {
+        let tooltip = `<b>${this.x}</b><br/>`; // Display the x-axis category
+        const unit = this.points?.[0]?.series?.userOptions?.tooltip?.valueSuffix || ""; // Default to an empty string if no unit
+        this.points.forEach(function (point) {
+          tooltip += `
+            <span style="color:${point.color}">\u25CF</span> 
+            ${point.series.name}: <b>${Highcharts.numberFormat(point.y, 0,'.', ',')} ${unit}</b><br/>
+          `;
+        });
+        return tooltip;
+      },
+    },    
     legend: {
+      align: 'center',
+      x: 0,
+      verticalAlign: 'bottom',
+      y: 0,
+      floating: true,
       backgroundColor: "transparent",
       itemStyle: {
         color: "#C5C5C5",
@@ -89,23 +177,36 @@ const PortfolioPerformance = ({ data, color }) => {
       },
     },
     plotOptions: {
-      line: {
-        dataLabels: {
-          enabled: true,
-        },
+      series: {
+          lineWidth: 1,
+          dashStyle: 'Solid'
       },
       column: {
-        borderWidth: 0,
-        pointWidth: 15,
-        borderRadius: 10,
-      },
+          borderRadius: 5,// Adjust this value as needed
+          color: '#4397F6',
+          borderWidth: 0,
+          pointWidth: 10
+      }
     },
     series: [
       {
-        name: "",
-        showInLegend: false,
-        data: data[0]?.data,
-        color: color === "color-1" ? "#1BC388" : "",
+        name: "Consumption",
+        data: consumptionData,
+        type: 'column',
+        color: color === "color-1" ? "#1BC388" : "#0073E6",
+        tooltip: {
+          valueSuffix: unit, // Add the unit dynamically
+        },
+      },
+      {
+        name: "Target",
+        data: targetData,
+        type: 'spline',
+        yAxis: 1,
+        color: "#FFA726",
+        tooltip: {
+          valueSuffix: unit, // Add the unit dynamically
+        },
       },
     ],
   };

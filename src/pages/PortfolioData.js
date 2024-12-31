@@ -9,6 +9,7 @@ import { AppContext } from "../App";
 import  ConsumptionChart  from "../components/chart/apex_charts/ConsumptionChart";
 import ResizableTable from "../components/widgets/ResizeTable/ResizableTable";
 import PortfolioPerformanceChart from "../components/chart/dashboard/PortfolioPerformanceChart";
+import PortfolioPerformance from "../components/chart/dashboard/PortfolioPerformance";
 import { getApiDataFromAws, postAlertsApiDataToAws, isAuthenticated, userInfo } from "../services/apis";
 import GaugeChart from "../components/chart/apex_charts/GaugeChart";
 import { useHistory } from 'react-router-dom';
@@ -40,6 +41,7 @@ function Portfolio() {
   const [projectData, setProjectData] = useState({});
   const [loading, setloading] = useState(true);
   const [tracker, setTracker] = useState({});
+  const [portfolioData, setPortfolioData] = useState({});
   const context = useContext(AppContext);
   const history = useHistory();
 
@@ -111,16 +113,16 @@ function Portfolio() {
 
   const loadSiteData = async () => {
     setIsLoading(true);
-    const sitesList = await getApiDataFromAws("queryType=dropdownSite");
+    const sitesList = await getApiDataFromAws("queryType=dropdownSite&dropdownProjFilter=grosvenor");
     setSiteData(sitesList);
 
     const projectList = await getApiDataFromAws("queryType=userProjList");
-    const allProj = { "id": "allProjects", "name": "All Projects" }
-    const projs = [...projectList, allProj]
+    //const allProj = { "id": "allProjects", "name": "All Projects" }
+    const projs = [...projectList]
     setProjectData(projs);
 
     const isMoorebankOfficePresent = sitesList.some(item => item.name === "Moorebank Office");
-    setSelectedItemProj("allProjects")
+    setSelectedItemProj("grosvenor")
     setSelectedItem(isMoorebankOfficePresent?"Moorebank Office":sitesList[0].name); // Set first site as default
     setSelectedItemUt('elec'); // Set utility type as 'elec' by default
     setSelectedItemFt('Monthly'); // Set frequency as 'Daily' by default
@@ -140,7 +142,42 @@ function Portfolio() {
     }
     getClienDetail(clientBody)
     getData(body)
+    getConsumptionDataAllSite(sitesList, lastMonthFirstDay)
   }
+
+  const getConsumptionDataAllSite = async (sitesList, startDate) => {
+    if (!sitesList || sitesList.length === 0) {
+      console.error("Invalid site list");
+      return;
+    }
+  
+    try {
+      const promises = sitesList.map(async site => {
+        const body = {
+          funcName: "getPreprocessedReportData",
+          sitename: site.name,
+          utilitytype: "elec",
+          reporttype: "Monthly",
+          startdate: startDate,
+        };
+        const data = await postAlertsApiDataToAws(body);
+        return ({
+          site: site.name,
+          data: !data || data === "Not Found" || data?.reporthaserror ? null : data.rangePerformance,
+        });
+      });
+  
+      const allSitesData = await Promise.all(promises);
+      setPortfolioData(allSitesData); // Store aggregated data
+    } catch (error) {
+      console.error("Error fetching data for sites:", error);
+      setPortfolioData([]);
+    } finally {
+      setloading(false);
+      setIsLoading(false);
+    }
+  };
+  
 
   const getClienDetail = async (clientBody)=>{
     const clientName = await postAlertsApiDataToAws(clientBody)
@@ -205,6 +242,7 @@ function Portfolio() {
         startdate: getFormatedDate(startDate),
       }
       getData(body);
+      getConsumptionDataAllSite(siteData, getFormatedDate(startDate))
     }
   }, [selectedItem, selectedItemUt, startDate, selectedItemFt]);
 
@@ -426,12 +464,11 @@ function Portfolio() {
             {(tracker && Object.keys(tracker).length !== 0 && tracker.consumpionProfile) && <ConsumptionChart resData={tracker} />}
         </Row>
         <Row style={{ marginBottom: '20px' }}>
-            <PortfolioPerformanceChart
-              buildingType={"All"}
-              dateSpan={selectedDateSpan}
-              dataSet={"All"}
-              setOpen={true}
+        {(Object.keys(portfolioData).length !== 0) &&
+            <PortfolioPerformance
+            jsonData={portfolioData}
             />
+        }
         </Row>
         <Row style={{ marginBottom: '35px' }}>
           <ResizableTable total={totalRows} name={"Ratings"} screenHeight = {screenHeight} site={ratingData} columnsData = { columnsData} />
