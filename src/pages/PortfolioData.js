@@ -129,11 +129,11 @@ function Portfolio() {
       sitename: isMoorebankOfficePresent?"Moorebank Office":sitesList[0].name,
     }
     getClienDetail(clientBody)
-    getData(body)
-    getConsumptionDataAllSite(sitesList, lastMonthFirstDay)
+    //getData(body)
+    getConsumptionDataAllSite(sitesList, lastMonthFirstDay,'Monthly')
   }
 
-  const getConsumptionDataAllSite = async (sitesList, startDate) => {
+  const getConsumptionDataAllSite = async (sitesList, startDate, reportType) => {
     if (!sitesList || sitesList.length === 0) {
       console.error("Invalid site list");
       return;
@@ -145,7 +145,7 @@ function Portfolio() {
           funcName: "getPreprocessedReportData",
           sitename: site.name,
           utilitytype: "elec",
-          reporttype: "Monthly",
+          reporttype: reportType,
           startdate: startDate,
         };
         const data = await postAlertsApiDataToAws(body);
@@ -232,8 +232,8 @@ function Portfolio() {
         reporttype : selectedItemFt,
         startdate: getFormatedDate(startDate),
       }
-      getData(body);
-      getConsumptionDataAllSite(siteData, getFormatedDate(startDate))
+      //getData(body);
+      getConsumptionDataAllSite(siteData, getFormatedDate(startDate),selectedItemFt)
     }
   }, [selectedItem, selectedItemUt, startDate, selectedItemFt]);
 
@@ -354,7 +354,7 @@ function Portfolio() {
             }
 
           </Select>
-          <Select
+          {/*<Select
             placeholder="Select Site"
             value={selectedItem}
             onChange={handleSelectChange}
@@ -367,7 +367,7 @@ function Portfolio() {
               ))
             }
 
-          </Select>
+          </Select>*/}
           <Select
             className="mb-4"
             placeholder="Select Utility Type"
@@ -451,9 +451,9 @@ function Portfolio() {
         </Col>
       </Row>*/}
       <Spin spinning={isLoading} size="large" indicator={<img src={spinnerjiff} style={{ fontSize: 50}} alt="Custom Spin GIF" />}>
-        <Row style={{ marginBottom: '20px' }}>
+        {/*<Row style={{ marginBottom: '20px' }}>
             {(tracker && Object.keys(tracker).length !== 0 && tracker.consumpionProfile) && <ConsumptionChart resData={tracker} />}
-        </Row>
+        </Row>*/}
         <Row style={{ marginBottom: '20px' }}>
         {(Object.keys(portfolioData).length !== 0) &&
             <PortfolioPerformance
