@@ -4070,3 +4070,49 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile .header-
   font-family: 'Inter', Arial, sans-serif;
   line-height: 12px;
 }
+
+
+.nabers-widget {
+  display: flex;
+  align-items: center;
+}
+
+.logo-container {
+  padding: 16px;
+  margin-top: 0;
+  border-radius: 8px;
+}
+
+.table-container {
+  width: 100%;
+  padding: 8px;
+  /*border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;*/
+}
+
+.ratings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.parent-grid {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dotted-vertical-line {
+  width: 1px;
+  height: 20px;
+  border-left: 1px dotted #ccc;
+  margin-top: 8px; /* Adjust this to control spacing between the image and the line */
+}
+
+
+.rating-text {
+  text-align: center;
+  font-size: 14px;
+  color: #C5C5C5;
+}

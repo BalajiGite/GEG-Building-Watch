@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { AppContext } from "../App";
 import  ConsumptionChart  from "../components/chart/apex_charts/ConsumptionChart";
 import ResizableTable from "../components/widgets/ResizeTable/ResizableTable";
-import PortfolioPerformanceChart from "../components/chart/dashboard/PortfolioPerformanceChart";
+import NabersRatingWidget from "../components/chart/dashboard/NabersRatingWidget";
 import PortfolioPerformance from "../components/chart/dashboard/PortfolioPerformance";
 import { getApiDataFromAws, postAlertsApiDataToAws, isAuthenticated, userInfo } from "../services/apis";
 import GaugeChart from "../components/chart/apex_charts/GaugeChart";
@@ -42,26 +42,27 @@ function Portfolio() {
   const [loading, setloading] = useState(true);
   const [tracker, setTracker] = useState({});
   const [portfolioData, setPortfolioData] = useState({});
+  const [ratingsData, setRatingsData] = useState({});
   const context = useContext(AppContext);
   const history = useHistory();
 
   const columnsData = [
     {
-      title: "Certification",
-      dataIndex: "certification",
-      key: "certification",
+      title: "Site Name",
+      dataIndex: "site",
+      key: "site",
       width: 200,
     },
     {
       title: "Name",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "ratingCert",
+      key: "ratingCert",
       width: 150,
     },
     {
       title: "Star Score",
-      dataIndex: "starScore",
-      key: "starScore",
+      dataIndex: "rating",
+      key: "rating",
       width: 100,
     },
     {
@@ -72,30 +73,17 @@ function Portfolio() {
     },
     {
       title: "Valid Date",
-      dataIndex: "validDate",
-      key: "validDate",
+      dataIndex: "ratingDate",
+      key: "ratingDate",
       width: 150,
     },
-  ];
-
-  const ratingData = [
-    { id: 1, certification: "Industrial - 1", name: "NABERS", starScore: "6/6", ratingType: "Energy", validDate: "2024-04-29" },
-    { id: 2, certification: "Industrial - 2", name: "NABERS", starScore: "6/6", ratingType: "Energy", validDate: "2024-04-29" },
-    { id: 3, certification: "Industrial - 4", name: "NABERS", starScore: "6/6", ratingType: "Energy", validDate: "2024-04-29" },
-    { id: 4, certification: "Offices - 6", name: "NABERS", starScore: "6/6", ratingType: "Energy", validDate: "2023-11-30" },
-    { id: 5, certification: "Retail - 8", name: "NABERS", starScore: "6/6", ratingType: "Energy", validDate: "2024-04-29" },
-    { id: 6, certification: "Industrial - 7", name: "NABERS", starScore: "6/6", ratingType: "Energy", validDate: "2024-04-29" },
-    { id: 7, certification: "Offices - 5", name: "NABERS", starScore: "6/6", ratingType: "Energy", validDate: "2023-11-02" },
-    { id: 8, certification: "Industrial - 6", name: "NABERS", starScore: "6/6", ratingType: "Energy", validDate: "2024-04-29" },
-    { id: 9, certification: "Industrial - 12", name: "NABERS", starScore: "6/6", ratingType: "Energy", validDate: "2024-04-29" },
-    { id: 10, certification: "Industrial - 3", name: "NABERS", starScore: "6/6", ratingType: "Energy", validDate: "2024-04-29" },
   ];
 
   // Screen height for scrolling
   const screenHeight = 400;
 
   // Total rows and name for pagination
-  const totalRows = ratingData.length;
+  const totalRows = ratingsData.length;
  
   const getFormatedDate = (startDate) => {
     try{
@@ -161,14 +149,17 @@ function Portfolio() {
           startdate: startDate,
         };
         const data = await postAlertsApiDataToAws(body);
+        const ratingData = {site:site.name,ratingCert:"NABERS", rating:data?.currentStarRatingTarget, ratingType:"Energy", ratingDate:data?.ratingPeriodEndDate}
         return ({
           site: site.name,
           data: !data || data === "Not Found" || data?.reporthaserror ? null : data.rangePerformance,
+          starData: !ratingData || ratingData === "Not Found"  ? null : ratingData
         });
       });
   
       const allSitesData = await Promise.all(promises);
       setPortfolioData(allSitesData); // Store aggregated data
+      setRatingsData(allSitesData.filter(item => item.starData).map(item => item.starData))
     } catch (error) {
       console.error("Error fetching data for sites:", error);
       setPortfolioData([]);
@@ -471,7 +462,12 @@ function Portfolio() {
         }
         </Row>
         <Row style={{ marginBottom: '35px' }}>
-          <ResizableTable total={totalRows} name={"Ratings"} screenHeight = {screenHeight} site={ratingData} columnsData = { columnsData} />
+        {(Object.keys(ratingsData).length !== 0) &&
+          <NabersRatingWidget jsonData={ratingsData}/>
+        }
+        {(Object.keys(ratingsData).length !== 0) &&
+          <ResizableTable total={totalRows} name={"Ratings"} screenHeight = {screenHeight} site={ratingsData} columnsData = { columnsData} />
+        }
         </Row>
       </Spin>
     </>

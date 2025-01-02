@@ -28,24 +28,28 @@ const PortfolioPerformance = ({ jsonData, color }) => {
   const targetData = [];
   let unit = ""; // Default unit
 
-  jsonData.forEach((item) => {
+  // Create a combined array for sorting
+  const combinedData = jsonData.map((item) => {
     if (item.data) {
       const { site, data } = item;
-      sites.push(site);
-
-      // Remove commas and extract numeric values
       const consumptionValue = parseFloat(data.consumption.replace(/,/g, ""));
       const targetValue = parseFloat(data.target.replace(/,/g, ""));
       unit = data.consumption.replace(/[\d,]/g, "").trim();
-
-      consumptionData.push(consumptionValue);
-      targetData.push(targetValue);
-    }else{
+      return { site, consumptionValue, targetValue };
+    } else {
       const { site } = item;
-      sites.push(site);
-      consumptionData.push(0);
-      targetData.push(0);
+      return { site, consumptionValue: 0, targetValue: 0 };
     }
+  });
+
+  // Sort the combined array based on `consumptionValue` in descending order
+  combinedData.sort((a, b) => b.consumptionValue - a.consumptionValue);
+
+  // Populate the arrays based on the sorted data
+  combinedData.forEach((item) => {
+    sites.push(item.site);
+    consumptionData.push(item.consumptionValue);
+    targetData.push(item.targetValue);
   });
 
   // Configure Highcharts
