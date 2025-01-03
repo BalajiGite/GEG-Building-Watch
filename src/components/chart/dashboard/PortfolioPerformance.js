@@ -206,11 +206,17 @@ const PortfolioPerformance = ({ jsonData, color }) => {
         name: "Target",
         data: targetData,
         type: 'spline',
+        lineWidth: 0,
         yAxis: 1,
         color: "#FFA726",
         tooltip: {
           valueSuffix: unit, // Add the unit dynamically
         },
+        states: {
+          hover: {
+              lineWidthPlus: 0
+          }
+        }
       },
     ],
   };

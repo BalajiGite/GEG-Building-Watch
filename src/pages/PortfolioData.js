@@ -132,6 +132,7 @@ function Portfolio() {
     //getData(body)
     getConsumptionDataAllSite(sitesList, lastMonthFirstDay,'Monthly')
   }
+  
 
   const getConsumptionDataAllSite = async (sitesList, startDate, reportType) => {
     if (!sitesList || sitesList.length === 0) {
@@ -159,7 +160,19 @@ function Portfolio() {
   
       const allSitesData = await Promise.all(promises);
       setPortfolioData(allSitesData); // Store aggregated data
-      setRatingsData(allSitesData.filter(item => item.starData).map(item => item.starData))
+      const jsonData = allSitesData.filter(item => item.starData).map(item => item.starData)
+      const sortedData = jsonData.sort((a, b) => {
+        // Check if `rating` exists in both objects
+        if (a.rating !== undefined && b.rating !== undefined) {
+          return b.rating - a.rating; // Descending order
+        }
+        // Move objects with no `rating` to the end
+        if (a.rating === undefined) return 1;
+        if (b.rating === undefined) return -1;
+        return 0;
+      });
+
+      setRatingsData(sortedData)
     } catch (error) {
       console.error("Error fetching data for sites:", error);
       setPortfolioData([]);
